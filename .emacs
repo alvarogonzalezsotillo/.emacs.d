@@ -19,6 +19,9 @@
 ;; ESTO ES PARA VER SI AUTOCOMPLETA TEX
 (require 'auto-complete-auctex)
 
+;; MOSTRAR LOS PARENTESIS ASOCIADOS
+(show-paren-mode)
+
 
 ;; INDENTACIONES
 (setq-default indent-tabs-mode nil)
@@ -44,6 +47,9 @@
       (lambda ()
         (list "All")))
 
+
+;; NUMEROS DE LINEA
+(global-linum-mode t)
 
 ;; kate-like line wrapping:
 ;; done by enabling adaptive-wrap minor mode in all buffers
