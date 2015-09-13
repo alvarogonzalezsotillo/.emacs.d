@@ -22,7 +22,6 @@
 ;; MOSTRAR LOS PARENTESIS ASOCIADOS
 (show-paren-mode)
 
-
 ;; INDENTACIONES
 (setq-default indent-tabs-mode nil)
 (setq tab-width 2)
@@ -36,20 +35,25 @@
 ;; BUSCAR FICHERO EN PROYECTO .git
 (global-set-key (kbd "C-x F") 'find-file-in-project)
 
+;; NUMEROS DE LINEA
+(global-linum-mode t)
+
+
 ;; ECB
 (require 'ecb-autoloads)
 
 ;; QUITAR PANTALLA DE INICIO
 (setq inhibit-startup-message t)
 
-;; TABBAR
+;; MODO SERVIDOR
+(server-start)
+
+;; TABBAR, PARA QUE NO AGRUPE NADA
 (setq tabbar-buffer-groups-function
       (lambda ()
         (list "All")))
 
 
-;; NUMEROS DE LINEA
-(global-linum-mode t)
 
 ;; kate-like line wrapping:
 ;; done by enabling adaptive-wrap minor mode in all buffers
@@ -88,3 +92,4 @@
  )
 (put 'LaTeX-narrow-to-environment 'disabled nil)
 (put 'TeX-narrow-to-group 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
