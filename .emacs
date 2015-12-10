@@ -1,3 +1,10 @@
+;; SCROLL SUAVE
+(setq redisplay-dont-pause t
+  scroll-margin 1
+  scroll-step 1
+  scroll-conservatively 10000
+  scroll-preserve-screen-position 1)
+
 ;; ESTO ERA PARA LOS PAQUETES
 (require 'package)
 (add-to-list 'package-archives
@@ -6,6 +13,16 @@
 ;; For important compatibility libraries like cl-lib
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 (package-initialize)
+
+;; HABILITAR EL MODO IDO
+(require 'ido)
+(ido-mode t)
+
+;; QUITAR LA TOOLBAR
+(tool-bar-mode -1)
+
+;; ANCHURA DE PAGINAS DEL MAN
+(setenv "MANWIDTH" "80")
 
 
 ;; ESTO ES PARA EL AUTOCOMPLETE
@@ -46,7 +63,7 @@
 (setq inhibit-startup-message t)
 
 ;; MODO SERVIDOR
-(server-start)
+;;(server-start)
 
 ;; TABBAR, PARA QUE NO AGRUPE NADA
 (setq tabbar-buffer-groups-function
@@ -79,11 +96,12 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#ad7fa8" "#8cc4ff" "#eeeeec"])
+ '(chess-default-display (quote (chess-images chess-ics1 chess-plain)))
  '(custom-enabled-themes (quote (tsdh-dark)))
  '(fill-column 120)
- '(linum-mode 1)
- '(tabbar-mode 1)
- '(line-number-mode nil))
+ '(line-number-mode nil)
+ '(linum-mode 1 t)
+ '(tabbar-mode 1 nil (tabbar)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -93,3 +111,4 @@
 (put 'LaTeX-narrow-to-environment 'disabled nil)
 (put 'TeX-narrow-to-group 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
