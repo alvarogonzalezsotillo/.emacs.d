@@ -1,2 +1,7 @@
 set
 exit
+ls
+ls -la
+tail -f /var/log/apache2/access.log
+netstat -a
+exit
