@@ -118,3 +118,8 @@
 (put 'TeX-narrow-to-group 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
+
+
+;; F8 PARA NEOTREE
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
