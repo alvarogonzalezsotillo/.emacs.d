@@ -1,3 +1,17 @@
+;; TRANSIENT MARK MODE, PARA C-X TAB
+(transient-mark-mode 1)
+
+;; YASNIPPET
+(add-to-list 'load-path  "~/.emacs.d/elpa/yasnippet-20150415.244")
+(require 'yasnippet)
+(yas-global-mode 1)
+;; Remove Yasnippet's default tab key binding
+(define-key yas-minor-mode-map (kbd "<tab>") nil)
+(define-key yas-minor-mode-map (kbd "TAB") nil)
+;; Alternatively use Control-c + tab
+(define-key yas-minor-mode-map (kbd "\C-c TAB") 'yas-expand)
+
+
 ;; SCROLL SUAVE
 (setq redisplay-dont-pause t
   scroll-margin 1
@@ -26,7 +40,6 @@
 
 
 ;; ESTO ES PARA EL AUTOCOMPLETE
-(add-to-list 'load-path "~/.emacs.d/")
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict")
 (ac-config-default)
@@ -65,13 +78,6 @@
 ;; MODO SERVIDOR
 ;;(server-start)
 
-;; TABBAR, PARA QUE NO AGRUPE NADA
-(setq tabbar-buffer-groups-function
-      (lambda ()
-        (list "All")))
-
-
-
 ;; kate-like line wrapping:
 ;; done by enabling adaptive-wrap minor mode in all buffers
 ;; globalized minor mode is required for this (hooks don't work)
@@ -101,7 +107,7 @@
  '(fill-column 120)
  '(line-number-mode nil)
  '(linum-mode 1 t)
- '(tabbar-mode 1 nil (tabbar)))
+ '(send-mail-function (quote sendmail-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

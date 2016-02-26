@@ -2,7 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("alvarogonzalezprofesor@koding"
+(("192.168.1.103"
+ (filename . "/ssh:alvaro@192.168.1.103:/home/alvaro/.bashrc")
+ (front-context-string . "# ~/.bashrc: exe")
+ (rear-context-string)
+ (position . 1))
+("alvarogonzalezprofesor@koding"
  (filename . "/ssh:alvarogonzalezprofesor@koding:/")
  (front-context-string . "bin\n  drwxr-xr-x")
  (rear-context-string . "96 Oct 28 09:39 ")
@@ -23,7 +28,7 @@
  (rear-context-string . "96 feb  4  2015 ")
  (position . 243))
 ("2015-2016-Rey Fernando VI"
- (filename . "~/SincronizadoCloud/copy/2015-2016-Rey Fernando VI/")
+ (filename . "~/SincronizadoCloud/MEGASync/2015-2016-Rey Fernando VI/")
  (front-context-string . "curso-erp\n  drwx")
  (rear-context-string . "96 sep 11 09:51 ")
  (position . 271))
