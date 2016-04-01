@@ -1,9 +1,6 @@
 ;; TRANSIENT MARK MODE, PARA C-X TAB
 (transient-mark-mode 1)
 
-;; FFAP BINDINGS
-(ffap-bindings)
-
 ;; SCROLL SUAVE
 (setq redisplay-dont-pause t
   scroll-margin 1

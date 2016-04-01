@@ -2,7 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("192.168.1.103"
+(("grading-questionnaire"
+ (filename . "~/github/grading-questionnaire/")
+ (front-context-string . "20160124\n  drwxr")
+ (rear-context-string . "96 ene 25 12:37 ")
+ (position . 258))
+("192.168.1.103"
  (filename . "/ssh:alvaro@192.168.1.103:/home/alvaro/.bashrc")
  (front-context-string . "# ~/.bashrc: exe")
  (rear-context-string)
