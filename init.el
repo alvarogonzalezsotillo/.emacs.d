@@ -1,16 +1,8 @@
 ;; TRANSIENT MARK MODE, PARA C-X TAB
 (transient-mark-mode 1)
 
-;; YASNIPPET
-(add-to-list 'load-path  "~/.emacs.d/elpa/yasnippet-20150415.244")
-(require 'yasnippet)
-(yas-global-mode 1)
-;; Remove Yasnippet's default tab key binding
-(define-key yas-minor-mode-map (kbd "<tab>") nil)
-(define-key yas-minor-mode-map (kbd "TAB") nil)
-;; Alternatively use Control-c + tab
-(define-key yas-minor-mode-map (kbd "\C-c TAB") 'yas-expand)
-
+;; FFAP BINDINGS
+(ffap-bindings)
 
 ;; SCROLL SUAVE
 (setq redisplay-dont-pause t
@@ -76,7 +68,7 @@
 (setq inhibit-startup-message t)
 
 ;; MODO SERVIDOR
-;;(server-start)
+(server-start)
 
 ;; kate-like line wrapping:
 ;; done by enabling adaptive-wrap minor mode in all buffers
@@ -105,17 +97,25 @@
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#ad7fa8" "#8cc4ff" "#eeeeec"])
  '(chess-default-display (quote (chess-images chess-ics1 chess-plain)))
  '(custom-enabled-themes (quote (tsdh-dark)))
+ '(desktop-save t)
  '(desktop-save-mode t)
  '(fill-column 120)
  '(line-number-mode nil)
  '(linum-mode 1 t)
- '(send-mail-function (quote sendmail-send-it)))
+ '(neo-hidden-regexp-list (quote ("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" ".git")))
+ '(neo-smart-open t)
+ '(neo-theme (quote nerd))
+ '(send-mail-function (quote sendmail-send-it))
+ '(w3m-use-cookies t)
+ '(w3m-use-favicon nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "black" :foreground "white smoke" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "unknown" :family "Ubuntu Mono")))))
+ '(default ((t (:inherit nil :stipple nil :background "black" :foreground "white smoke" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "unknown" :family "Ubuntu Mono"))))
+ '(neo-dir-link-face ((t (:height 0.8))))
+ '(neo-file-link-face ((t (:foreground "White" :height 0.8)))))
 (put 'LaTeX-narrow-to-environment 'disabled nil)
 (put 'TeX-narrow-to-group 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
@@ -125,3 +125,17 @@
 ;; F8 PARA NEOTREE
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
+
+;; imagex PARA HACER ZOOM EN IMÁGENES
+(imagex-global-sticky-mode)
+(imagex-auto-adjust-mode)
+
+;; YASNIPPET
+(add-to-list 'load-path  "~/.emacs.d/elpa/yasnippet-20150415.244/snippets")
+(require 'yasnippet)
+(yas-global-mode 1)
+;; Remove Yasnippet's default tab key binding
+(define-key yas-minor-mode-map (kbd "<tab>") nil)
+(define-key yas-minor-mode-map (kbd "TAB") nil)
+;; Alternatively use Control-c + tab
+(define-key yas-minor-mode-map (kbd "\C-c TAB") 'yas-expand)
