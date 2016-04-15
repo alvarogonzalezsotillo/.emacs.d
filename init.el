@@ -1,3 +1,9 @@
+;; ESTO ES PARA LOS PAQUETES
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(package-initialize)
+
+
 ;; TRANSIENT MARK MODE, PARA C-X TAB
 (transient-mark-mode 1)
 
@@ -8,18 +14,25 @@
   scroll-conservatively 10000
   scroll-preserve-screen-position 1)
 
-;; ESTO ERA PARA LOS PAQUETES
-(require 'package)
-(add-to-list 'package-archives
-'("melpa" . "http://melpa.org/packages/") t)
-(when (< emacs-major-version 24)
-;; For important compatibility libraries like cl-lib
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-(package-initialize)
+;; HABILITAR EL MODO IDO, AHORA USO HELM
+;;(require 'ido)
+;;(ido-mode t)
 
-;; HABILITAR EL MODO IDO
-(require 'ido)
-(ido-mode t)
+;; HELM
+(require 'helm)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(helm-mode 1)
+
+;; PROJECTILE
+(projectile-global-mode)
+(setq projectile-completion-system 'helm)
+(helm-projectile-on)
+
+;; EXPAND REGION
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+
 
 ;; QUITAR LA TOOLBAR
 (tool-bar-mode -1)
@@ -30,7 +43,7 @@
 
 ;; ESTO ES PARA EL AUTOCOMPLETE
 (require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict")
+(add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict") 
 (ac-config-default)
 (global-auto-complete-mode t)
 (add-to-list 'ac-modes 'sql-mode 'tex-mode)
@@ -51,15 +64,9 @@
 (setq TeX-save-query nil)
 (setq TeX-PDF-mode t)
 
-;; BUSCAR FICHERO EN PROYECTO .git
-(global-set-key (kbd "C-x F") 'find-file-in-project)
-
 ;; NUMEROS DE LINEA
 ;;(global-linum-mode t)
 ;;(global-linum-mode nil)
-
-;; ECB
-(require 'ecb-autoloads)
 
 ;; QUITAR PANTALLA DE INICIO
 (setq inhibit-startup-message t)
@@ -136,3 +143,6 @@
 (define-key yas-minor-mode-map (kbd "TAB") nil)
 ;; Alternatively use Control-c + tab
 (define-key yas-minor-mode-map (kbd "\C-c TAB") 'yas-expand)
+
+
+
