@@ -68,11 +68,12 @@
 ;;(global-linum-mode t)
 ;;(global-linum-mode nil)
 
-;; QUITAR PANTALLA DE INICIO
+;; QUITAR PANTALLA DE INICIO Y MENU
 (setq inhibit-startup-message t)
+(menu-bar-mode -1)
 
 ;; MODO SERVIDOR
-(server-start)
+;;(server-start)
 
 ;; kate-like line wrapping:
 ;; done by enabling adaptive-wrap minor mode in all buffers
@@ -109,9 +110,8 @@
  '(neo-hidden-regexp-list (quote ("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" ".git")))
  '(neo-smart-open t)
  '(neo-theme (quote nerd))
- '(send-mail-function (quote sendmail-send-it))
- '(w3m-use-cookies t)
- '(w3m-use-favicon nil))
+ '(send-mail-function (quote sendmail-send-it)))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -143,6 +143,7 @@
 (define-key yas-minor-mode-map (kbd "TAB") nil)
 ;; Alternatively use Control-c + tab
 (define-key yas-minor-mode-map (kbd "\C-c TAB") 'yas-expand)
+
 
 
 
