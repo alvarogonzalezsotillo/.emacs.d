@@ -1,4 +1,4 @@
-;; -*- emacs-lisp -*- <16/02/19 12:06:09 /home/alvaro/.emacs.d/tramp>
+;; -*- emacs-lisp -*- <16/04/20 20:13:03 /home/alvaro/.emacs.d/tramp>
 ;; Tramp connection history.  Don't change this file.
 ;; You can delete it, forcing Tramp to reapply the checks.
 
@@ -100,12 +100,6 @@
   ("tmpdir" "/sudo:root@localhost:/tmp")
   ("touch-t" t)
   ("touch" "\\touch"))
- (["scp" nil "ssh" nil nil]
-  nil)
- (["scp" nil "sshx" nil nil]
-  nil)
- (["ssh" "root" "debian8-examen-web.local" nil nil]
-  nil)
  (["ssh" "root" "debian8-examen-daw.local" nil nil]
   ("locale" "LC_ALL=en_US.utf8")
   ("uname" "Linux 3.16.0-4-amd64")
@@ -128,4 +122,6 @@
   ("~" "/root")
   ("tmpdir" "/ssh:root@debian8-examen-daw.local:/tmp")
   ("touch-t" t)
-  ("touch" "\\touch")))
+  ("touch" "\\touch"))
+ (["sudo" "root" "alvaro-vaio" nil nil]
+  nil))

@@ -3,6 +3,13 @@
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
+;; HABILITAR EL MODO ELECTRICO, CERRANDO AUTOMATICAMENTE DELIMITADORES
+(electric-pair-mode 1)
+
+;; YAFOLDING
+(add-hook 'prog-mode-hook
+          (lambda () (yafolding-mode)))
+
 
 ;; TRANSIENT MARK MODE, PARA C-X TAB
 (transient-mark-mode 1)
@@ -22,6 +29,7 @@
 (require 'helm)
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-<f6>") 'helm-mini)
 (helm-mode 1)
 
 ;; PROJECTILE
@@ -143,6 +151,7 @@
 (define-key yas-minor-mode-map (kbd "TAB") nil)
 ;; Alternatively use Control-c + tab
 (define-key yas-minor-mode-map (kbd "\C-c TAB") 'yas-expand)
+
 
 
 
