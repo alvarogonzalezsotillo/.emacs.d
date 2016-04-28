@@ -7,8 +7,10 @@
 (electric-pair-mode 1)
 
 ;; YAFOLDING
-(add-hook 'prog-mode-hook
-          (lambda () (yafolding-mode)))
+(define-globalized-minor-mode my-global-yafolding-mode yafolding-mode
+  (lambda () (yafolding-mode 1)))
+
+(my-global-yafolding-mode 1)
 
 
 ;; TRANSIENT MARK MODE, PARA C-X TAB
