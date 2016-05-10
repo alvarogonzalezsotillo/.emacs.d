@@ -3,25 +3,31 @@
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
+;; MULTIPLE CURSORS
+(require 'multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+(global-set-key (kbd "C-S-c C-S-v") 'mc/mark-all-like-this)
+
 ;; HABILITAR EL MODO ELECTRICO, CERRANDO AUTOMATICAMENTE DELIMITADORES
 (electric-pair-mode 1)
 
 ;; YAFOLDING
 (define-globalized-minor-mode my-global-yafolding-mode yafolding-mode
   (lambda () (yafolding-mode 1)))
-
 (my-global-yafolding-mode 1)
-
 
 ;; TRANSIENT MARK MODE, PARA C-X TAB
 (transient-mark-mode 1)
 
 ;; SCROLL SUAVE
 (setq redisplay-dont-pause t
-  scroll-margin 1
-  scroll-step 1
-  scroll-conservatively 10000
-  scroll-preserve-screen-position 1)
+      scroll-margin 1
+      scroll-step 1
+      scroll-conservatively 10000
+      scroll-preserve-screen-position 1)
 
 ;; HABILITAR EL MODO IDO, AHORA USO HELM
 ;;(require 'ido)
@@ -43,13 +49,11 @@
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 
-
 ;; QUITAR LA TOOLBAR
 (tool-bar-mode -1)
 
 ;; ANCHURA DE PAGINAS DEL MAN
 (setenv "MANWIDTH" "80")
-
 
 ;; ESTO ES PARA EL AUTOCOMPLETE
 (require 'auto-complete-config)
@@ -89,18 +93,18 @@
 ;; done by enabling adaptive-wrap minor mode in all buffers
 ;; globalized minor mode is required for this (hooks don't work)
 (defun turn-on-adaptive-wrap-prefix-mode (&optional arg)
-    (interactive)
-    (adaptive-wrap-prefix-mode (or arg 1)))
+  (interactive)
+  (adaptive-wrap-prefix-mode (or arg 1)))
 (defun turn-off-adaptive-wrap-prefix-mode (&optional arg)
-    (interactive)
-    (adaptive-wrap-prefix-mode (or arg -1)))
+  (interactive)
+  (adaptive-wrap-prefix-mode (or arg -1)))
 (defun adaptive-wrap-initialize ()
-    (unless (minibufferp)
-        (progn
-            (adaptive-wrap-prefix-mode 1)
-            (setq word-wrap t))))
+  (unless (minibufferp)
+    (progn
+      (adaptive-wrap-prefix-mode 1)
+      (setq word-wrap t))))
 (define-globalized-minor-mode adaptive-wrap-mode
-    adaptive-wrap-prefix-mode adaptive-wrap-initialize)
+  adaptive-wrap-prefix-mode adaptive-wrap-initialize)
 (adaptive-wrap-mode)
 
 (custom-set-variables
@@ -145,7 +149,6 @@
 (imagex-auto-adjust-mode)
 
 ;; YASNIPPET
-(add-to-list 'load-path  "~/.emacs.d/elpa/yasnippet-20150415.244/snippets")
 (require 'yasnippet)
 (yas-global-mode 1)
 ;; Remove Yasnippet's default tab key binding
