@@ -2,3 +2,7 @@
 **/#*#
 session.*
 .emacs.desktop
+elpa/archives/gnu/archive-contents
+elpa/archives/gnu/archive-contents.signed
+elpa/archives/melpa/archive-contents
+projectile-bookmarks.eld
