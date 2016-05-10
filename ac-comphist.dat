@@ -1,4 +1,6 @@
-((("my-global-yafolding-mode" .
+((("fi" .
+   [1 0])
+  ("my-global-yafolding-mode" .
    [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
   ("yafolding-mode" .
    [2 0 0 0 0 0 0 0 0 0 0 0 0 0])
