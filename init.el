@@ -3,6 +3,22 @@
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
+(require 'calfw)
+(require 'calfw-ical)
+
+(defun kk ()
+  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/cmr6tlofr4j2dm3hfdql1nf98g%40group.calendar.google.com/public/basic.ics"))
+
+
+;; GUIA DE TECLAS, TODAS LAS TECLAS
+(require 'guide-key)
+(guide-key-mode 1) ; Enable guide-key-mode
+(setq guide-key/guide-key-sequence t)
+
+
+;; NO PREGUNTAR CUANDO SE CIERRA EL BUFFER
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
+
 ;; MULTIPLE CURSORS
 (require 'multiple-cursors)
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
