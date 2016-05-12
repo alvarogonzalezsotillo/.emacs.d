@@ -3,6 +3,14 @@
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
+;; TRANSPOSE FRAME
+(require 'transpose-frame)
+(global-set-key (kbd "C-t") 'transpose-frame)
+
+
+;; VALIDACIONES
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
 (require 'calfw)
 (require 'calfw-ical)
 
@@ -126,6 +134,25 @@
 ;; MODO SERVIDOR
 ;;(server-start)
 
+;; F8 PARA NEOTREE
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+
+;; imagex PARA HACER ZOOM EN IMÁGENES
+(imagex-global-sticky-mode)
+(imagex-auto-adjust-mode)
+
+;; YASNIPPET
+(require 'yasnippet)
+(yas-global-mode 1)
+;; Remove Yasnippet's default tab key binding
+(define-key yas-minor-mode-map (kbd "<tab>") nil)
+(define-key yas-minor-mode-map (kbd "TAB") nil)
+;; Alternatively use Control-c + tab
+(define-key yas-minor-mode-map (kbd "\C-c TAB") 'yas-expand)
+
+
+
 ;; kate-like line wrapping:
 ;; done by enabling adaptive-wrap minor mode in all buffers
 ;; globalized minor mode is required for this (hooks don't work)
@@ -149,6 +176,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(TeX-source-correlate-mode t)
+ '(TeX-source-correlate-start-server t)
  '(ansi-color-names-vector
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#ad7fa8" "#8cc4ff" "#eeeeec"])
  '(chess-default-display (quote (chess-images chess-ics1 chess-plain)))
@@ -176,23 +205,6 @@
 (put 'narrow-to-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
-
-;; F8 PARA NEOTREE
-(require 'neotree)
-(global-set-key [f8] 'neotree-toggle)
-
-;; imagex PARA HACER ZOOM EN IMÁGENES
-(imagex-global-sticky-mode)
-(imagex-auto-adjust-mode)
-
-;; YASNIPPET
-(require 'yasnippet)
-(yas-global-mode 1)
-;; Remove Yasnippet's default tab key binding
-(define-key yas-minor-mode-map (kbd "<tab>") nil)
-(define-key yas-minor-mode-map (kbd "TAB") nil)
-;; Alternatively use Control-c + tab
-(define-key yas-minor-mode-map (kbd "\C-c TAB") 'yas-expand)
 
 
 
