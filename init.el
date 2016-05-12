@@ -9,6 +9,9 @@
 (defun kk ()
   (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/cmr6tlofr4j2dm3hfdql1nf98g%40group.calendar.google.com/public/basic.ics"))
 
+;; CAMBIAR DE FORMA VISUAL A UNA VENTANA
+(require 'switch-window)
+(global-set-key (kbd "C-x o") 'switch-window)
 
 ;; GUIA DE TECLAS, TODAS LAS TECLAS
 (require 'guide-key)
@@ -27,9 +30,27 @@
 (global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
 (global-set-key (kbd "C-S-c C-S-v") 'mc/mark-all-like-this)
 
-;; HABILITAR EL MODO ELECTRICO, CERRANDO AUTOMATICAMENTE DELIMITADORES
-(electric-pair-mode 1)
+;; HABILITAR EL MODO ELECTRICO, CERRANDO AUTOMATICAMENTE DELIMITADORES.
+;; AHORA USO SMARTPARENTS
+;; (electric-pair-mode 1)
+(require 'smartparens-config)
+(smartparens-global-mode 1)
 
+;; RAINBOW DELIMITERS
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+
+;;^L BONITOS
+(require 'page-break-lines)
+(global-page-break-lines-mode)
+
+;; RESALTAR EL SIMBOLO ACTUAL
+(require 'auto-highlight-symbol)
+(global-auto-highlight-symbol-mode t)
+
+;; INDENT GUIDE
+(require 'indent-guide)
+(indent-guide-global-mode)
+         
 ;; YAFOLDING
 (define-globalized-minor-mode my-global-yafolding-mode yafolding-mode
   (lambda () (yafolding-mode 1)))
