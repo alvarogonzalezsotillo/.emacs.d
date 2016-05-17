@@ -1,7 +1,17 @@
+;; LISTA DE PAQUETES INSTALADOS
+;; (adaptive-wrap alert log4e gntp auto-complete-auctex auto-complete popup yasnippet auto-complete-pcmp yaxception log4e auto-complete popup auto-highlight-symbol browse-at-remote s f dash s calfw google-maps chess company-auctex auctex company yasnippet crappy-jsp-mode discover makey ensime popup s dash company yasnippet sbt-mode scala-mode2 scala-mode2 expand-region f dash s find-file-in-project swiper ivy flycheck seq let-alist pkg-info epl dash git-timemachine gntp google-maps guide-key s popwin dash helm-projectile dash projectile pkg-info epl dash helm helm-core async popup async image+ indent-guide let-alist log4e magit magit-popup dash async git-commit with-editor dash async dash with-editor dash async dash async magit-popup dash async makey multiple-cursors neotree org page-break-lines php-mode popwin pos-tip projectile pkg-info epl dash rainbow-delimiters request-deferred request deferred s sbt-mode scala-mode2 scala-outline-popup flx-ido flx scala-mode2 popup dash seq smartparens dash sr-speedbar swiper ivy switch-window tablist transpose-frame web-mode with-editor dash async yafolding yasnippet yaxception)
+
 ;; ESTO ES PARA LOS PAQUETES
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
+
+(require 'calfw)
+(require 'calfw-ical)
+
+(defun kk ()
+  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/cmr6tlofr4j2dm3hfdql1nf98g%40group.calendar.google.com/public/basic.ics"))
+
 
 ;; TRANSPOSE FRAME
 (require 'transpose-frame)
@@ -11,11 +21,6 @@
 ;; VALIDACIONES
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
-(require 'calfw)
-(require 'calfw-ical)
-
-(defun kk ()
-  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/cmr6tlofr4j2dm3hfdql1nf98g%40group.calendar.google.com/public/basic.ics"))
 
 ;; CAMBIAR DE FORMA VISUAL A UNA VENTANA
 (require 'switch-window)
@@ -182,6 +187,9 @@
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#ad7fa8" "#8cc4ff" "#eeeeec"])
  '(chess-default-display (quote (chess-images chess-ics1 chess-plain)))
  '(custom-enabled-themes (quote (tsdh-dark)))
+ '(custom-safe-themes
+   (quote
+    ("b04425cc726711a6c91e8ebc20cf5a3927160681941e06bc7900a5a5bfe1a77f" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
  '(desktop-save t)
  '(desktop-save-mode t)
  '(fill-column 120)
