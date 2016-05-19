@@ -15,7 +15,14 @@
 (require 'calfw-ical)
 
 (defun kk ()
-  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/cmr6tlofr4j2dm3hfdql1nf98g%40group.calendar.google.com/public/basic.ics"))
+  (setq url-proxy-services '())
+
+  (setq url-proxy-services
+        '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+          ("http" . "213.0.88.85:8080")
+          ("https" . "213.0.88.85:8080")))
+  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/cmr6tlofr4j2dm3hfdql1nf98g%40group.calendar.google.com/public/basic.ics")
+  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/8albn16m4tqrm653ijeijqr2g0%40group.calendar.google.com/public/basic.ics"))
 
 ;; CAMBIAR DE FORMA VISUAL A UNA VENTANA
 (require 'switch-window)
@@ -25,6 +32,8 @@
 (require 'guide-key)
 (guide-key-mode 1) ; Enable guide-key-mode
 (setq guide-key/guide-key-sequence t)
+;(require 'guide-key-tip)
+;(setq guide-key-tip/enabled t)
 
 
 ;; NO PREGUNTAR CUANDO SE CIERRA EL BUFFER
