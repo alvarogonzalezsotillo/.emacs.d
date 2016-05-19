@@ -6,3 +6,11 @@ elpa/archives/gnu/archive-contents
 elpa/archives/gnu/archive-contents.signed
 elpa/archives/melpa/archive-contents
 projectile-bookmarks.eld
+projectile.cache
+recentf
+tramp
+.emacs.desktop.lock
+ac-comphist.dat
+ede-projects.el
+url/
+
