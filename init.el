@@ -1,7 +1,11 @@
+;; LISTA DE PAQUETES INSTALADOS
+;; (adaptive-wrap alert log4e gntp auto-complete-auctex auto-complete popup yasnippet auto-complete-pcmp yaxception log4e auto-complete popup auto-highlight-symbol browse-at-remote s f dash s calfw google-maps chess company-auctex auctex company yasnippet crappy-jsp-mode discover makey ensime popup s dash company yasnippet sbt-mode scala-mode2 scala-mode2 expand-region f dash s find-file-in-project swiper ivy flycheck seq let-alist pkg-info epl dash git-timemachine gntp google-maps guide-key s popwin dash helm-projectile dash projectile pkg-info epl dash helm helm-core async popup async image+ indent-guide let-alist log4e magit magit-popup dash async git-commit with-editor dash async dash with-editor dash async dash async magit-popup dash async makey multiple-cursors neotree org page-break-lines php-mode popwin pos-tip projectile pkg-info epl dash rainbow-delimiters request-deferred request deferred s sbt-mode scala-mode2 scala-outline-popup flx-ido flx scala-mode2 popup dash seq smartparens dash sr-speedbar swiper ivy switch-window tablist transpose-frame web-mode with-editor dash async yafolding yasnippet yaxception)
+
 ;; ESTO ES PARA LOS PAQUETES
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
+
 
 ;; TRANSPOSE FRAME
 (require 'transpose-frame)
@@ -10,6 +14,7 @@
 
 ;; VALIDACIONES
 (add-hook 'after-init-hook #'global-flycheck-mode)
+
 
 (require 'calfw)
 (require 'calfw-ical)
@@ -69,6 +74,7 @@
 (indent-guide-global-mode)
          
 ;; YAFOLDING
+(require 'yafolding)
 (define-globalized-minor-mode my-global-yafolding-mode yafolding-mode
   (lambda () (yafolding-mode 1)))
 (my-global-yafolding-mode 1)
@@ -95,6 +101,7 @@
 (helm-mode 1)
 
 ;; PROJECTILE
+(require 'projectile)
 (projectile-global-mode)
 (setq projectile-completion-system 'helm)
 (helm-projectile-on)
@@ -174,6 +181,9 @@
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#ad7fa8" "#8cc4ff" "#eeeeec"])
  '(chess-default-display (quote (chess-images chess-ics1 chess-plain)))
  '(custom-enabled-themes (quote (tsdh-dark)))
+ '(custom-safe-themes
+   (quote
+    ("c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "36d92f830c21797ce34896a4cf074ce25dbe0dabe77603876d1b42316530c99d" "b04425cc726711a6c91e8ebc20cf5a3927160681941e06bc7900a5a5bfe1a77f" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
  '(desktop-save t)
  '(desktop-save-mode t)
  '(fill-column 120)
@@ -182,14 +192,81 @@
  '(neo-hidden-regexp-list (quote ("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" ".git")))
  '(neo-smart-open t)
  '(neo-theme (quote nerd))
- '(send-mail-function (quote sendmail-send-it)))
+ '(send-mail-function (quote sendmail-send-it))
+ '(sml/mode-width
+   (if
+       (eq
+        (powerline-current-separator)
+        (quote arrow))
+       (quote right)
+     (quote full)))
+ '(sml/pos-id-separator
+   (quote
+    (""
+     (:propertize " " face powerline-active1)
+     (:eval
+      (propertize " "
+                  (quote display)
+                  (funcall
+                   (intern
+                    (format "powerline-%s-%s"
+                            (powerline-current-separator)
+                            (car powerline-default-separator-dir)))
+                   (quote powerline-active1)
+                   (quote powerline-active2))))
+     (:propertize " " face powerline-active2))))
+ '(sml/pos-minor-modes-separator
+   (quote
+    (""
+     (:propertize " " face powerline-active1)
+     (:eval
+      (propertize " "
+                  (quote display)
+                  (funcall
+                   (intern
+                    (format "powerline-%s-%s"
+                            (powerline-current-separator)
+                            (cdr powerline-default-separator-dir)))
+                   (quote powerline-active1)
+                   nil)))
+     (:propertize " " face sml/global))))
+ '(sml/pre-id-separator
+   (quote
+    (""
+     (:propertize " " face sml/global)
+     (:eval
+      (propertize " "
+                  (quote display)
+                  (funcall
+                   (intern
+                    (format "powerline-%s-%s"
+                            (powerline-current-separator)
+                            (car powerline-default-separator-dir)))
+                   nil
+                   (quote powerline-active1))))
+     (:propertize " " face powerline-active1))))
+ '(sml/pre-minor-modes-separator
+   (quote
+    (""
+     (:propertize " " face powerline-active2)
+     (:eval
+      (propertize " "
+                  (quote display)
+                  (funcall
+                   (intern
+                    (format "powerline-%s-%s"
+                            (powerline-current-separator)
+                            (cdr powerline-default-separator-dir)))
+                   (quote powerline-active2)
+                   (quote powerline-active1))))
+     (:propertize " " face powerline-active1))))
+ '(sml/pre-modes-separator (propertize " " (quote face) (quote sml/modes))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "black" :foreground "white smoke" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "unknown" :family "Ubuntu Mono"))))
  '(neo-dir-link-face ((t (:height 0.8))))
  '(neo-file-link-face ((t (:foreground "White" :height 0.8)))))
 (put 'LaTeX-narrow-to-environment 'disabled nil)
