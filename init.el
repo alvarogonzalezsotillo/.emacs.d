@@ -1,10 +1,45 @@
-;; LISTA DE PAQUETES INSTALADOS
-;; (adaptive-wrap alert log4e gntp auto-complete-auctex auto-complete popup yasnippet auto-complete-pcmp yaxception log4e auto-complete popup auto-highlight-symbol browse-at-remote s f dash s calfw google-maps chess company-auctex auctex company yasnippet crappy-jsp-mode discover makey ensime popup s dash company yasnippet sbt-mode scala-mode2 scala-mode2 expand-region f dash s find-file-in-project swiper ivy flycheck seq let-alist pkg-info epl dash git-timemachine gntp google-maps guide-key s popwin dash helm-projectile dash projectile pkg-info epl dash helm helm-core async popup async image+ indent-guide let-alist log4e magit magit-popup dash async git-commit with-editor dash async dash with-editor dash async dash async magit-popup dash async makey multiple-cursors neotree org page-break-lines php-mode popwin pos-tip projectile pkg-info epl dash rainbow-delimiters request-deferred request deferred s sbt-mode scala-mode2 scala-outline-popup flx-ido flx scala-mode2 popup dash seq smartparens dash sr-speedbar swiper ivy switch-window tablist transpose-frame web-mode with-editor dash async yafolding yasnippet yaxception)
+;; LISTA DE PAQUETES INSTALADOS (C-h v package-activated-list)
+;; (adaptive-wrap alert log4e gntp auto-complete-auctex auto-complete popup yasnippet auto-highlight-symbol browse-at-remote s f dash s calfw google-maps chess company-auctex auctex company yasnippet crappy-jsp-mode diffview discover makey ensime popup s dash company yasnippet sbt-mode scala-mode expand-region f dash s find-file-in-project swiper ivy flycheck seq let-alist pkg-info epl dash git-timemachine gntp google-maps guide-key-tip pos-tip guide-key s popwin dash helm-projectile dash projectile pkg-info epl dash helm helm-core async popup async image+ indent-guide let-alist magit magit-popup dash async git-commit with-editor dash async dash with-editor dash async dash async magit-popup dash async makey multiple-cursors neotree org-ac yaxception log4e auto-complete-pcmp yaxception log4e auto-complete popup org-present org page-break-lines php-mode popwin pos-tip projectile pkg-info epl dash rainbow-delimiters request-deferred request deferred s sbt-mode scala-mode scala-outline-popup flx-ido flx scala-mode2 popup dash seq smartparens dash sr-speedbar swiper ivy switch-window tablist transpose-frame web-mode with-editor dash async yafolding yasnippet yaxception)
 
 ;; ESTO ES PARA LOS PAQUETES
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
+
+;; EXPERIMENTOS
+(defun kk ()
+  (setq url-proxy-services '())
+
+  (setq url-proxy-services
+        '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+          ("http" . "213.0.88.85:8080")
+          ("https" . "213.0.88.85:8080")))
+  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/cmr6tlofr4j2dm3hfdql1nf98g%40group.calendar.google.com/public/basic.ics")
+  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/8albn16m4tqrm653ijeijqr2g0%40group.calendar.google.com/public/basic.ics"))
+
+
+;; PARA PRESENTACIONES DEL ORG-MODE
+(add-hook 'org-present-mode-hook
+          (lambda ()
+            (toggle-truncate-lines -1)
+            (adaptive-wrap-prefix-mode 1)
+            (toggle-word-wrap 1)
+            (org-present-big)
+            (setq mode-line-format nil)
+            (linum-mode -1)
+            (org-display-inline-images)))
+(add-hook 'epresent-start-presentation-hook
+          (lambda()
+            (toggle-truncate-lines -1)
+            (adaptive-wrap-prefix-mode 1)
+            (toggle-word-wrap 1)
+            (setq mode-line-format nil)
+            (linum-mode -1)))
+
+;; CALENDARIOS
+(require 'calfw)
+(require 'calfw-ical)
+
 
 
 ;; TRANSPOSE FRAME
@@ -15,19 +50,10 @@
 ;; VALIDACIONES
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
+;; EXPORTAR A REVEAL.JS
+(require 'ox-reveal)
 
-(require 'calfw)
-(require 'calfw-ical)
 
-(defun kk ()
-  (setq url-proxy-services '())
-
-  (setq url-proxy-services
-        '(("no_proxy" . "^\\(localhost\\|10.*\\)")
-          ("http" . "213.0.88.85:8080")
-          ("https" . "213.0.88.85:8080")))
-  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/cmr6tlofr4j2dm3hfdql1nf98g%40group.calendar.google.com/public/basic.ics")
-  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/8albn16m4tqrm653ijeijqr2g0%40group.calendar.google.com/public/basic.ics"))
 
 ;; CAMBIAR DE FORMA VISUAL A UNA VENTANA
 (require 'switch-window)
@@ -118,13 +144,16 @@
 
 ;; ESTO ES PARA EL AUTOCOMPLETE
 (require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict") 
 (ac-config-default)
 (global-auto-complete-mode t)
 (add-to-list 'ac-modes 'sql-mode 'tex-mode)
-
 ;; ESTO ES PARA VER SI AUTOCOMPLETA TEX
 (require 'auto-complete-auctex)
+;; AUTOCOMPLETE PARA ORG
+(require 'org-ac)
+;; Make config suit for you. About the config item, eval the following sexp.
+;; (customize-group "org-ac")
+(org-ac/config-default)
 
 ;; MOSTRAR LOS PARENTESIS ASOCIADOS
 (show-paren-mode)
@@ -267,8 +296,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(font-lock-comment-face ((t (:foreground "peru"))))
  '(neo-dir-link-face ((t (:height 0.8))))
- '(neo-file-link-face ((t (:foreground "White" :height 0.8)))))
+ '(neo-file-link-face ((t (:foreground "White" :height 0.8))))
+ '(org-block ((t (:inherit shadow :inverse-video t :family "courier"))))
+ '(org-level-1 ((t (:inherit outline-1 :box (:line-width 2 :color "grey75" :style released-button) :height 2.0))))
+ '(org-level-2 ((t (:inherit outline-2 :box nil :height 1.5))))
+ '(org-meta-line ((t (:inherit font-lock-comment-face :height 0.7)))))
 (put 'LaTeX-narrow-to-environment 'disabled nil)
 (put 'TeX-narrow-to-group 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
