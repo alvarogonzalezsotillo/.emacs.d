@@ -18,6 +18,33 @@
   (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/8albn16m4tqrm653ijeijqr2g0%40group.calendar.google.com/public/basic.ics"))
 
 
+(defun org-insert-clipboard-image()
+  "Save the image in the clipboard  into a time stamped unique-named file in the same directory as the org-buffer and inserta link to this file."
+  (interactive)
+  ; (setq tilde-buffer-filename (replace-regexp-in-string "/" "\\" (buffer-file-name) t t))
+  (setq filename
+        (concat
+         (make-temp-name
+          (concat buffer-file-name
+                  "_"
+                  (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
+  ;; Linux: ImageMagick:
+  (setq save-image-process (concat "-c \"xclip -selection clipboard -t image/png -o >  '" filename "'") )
+  (message save-image-process)
+  (call-process "/bin/sh" nil nil nil save-image-process)
+  ;; Windows: Irfanview
+  ;;(call-process "c:\\Programme\\IrfanView\\i_view32.exe" nil nil nil (concat "/clippaste /convert=" filename))
+  (insert (concat "[[file:" filename "]]"))
+  (org-display-inline-images))
+
+;; DIRECTORIOS DE BACKUP
+(setq backup-directory-alist `(("." . "~/.saves")))
+(setq backup-by-copying t)
+(setq delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)
+
 ;; PARA PRESENTACIONES DEL ORG-MODE
 (add-hook 'org-present-mode-hook
           (lambda ()
