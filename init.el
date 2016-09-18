@@ -29,7 +29,7 @@
                   "_"
                   (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
   ;; Linux: ImageMagick:
-  (setq save-image-process (concat "-c \"xclip -selection clipboard -t image/png -o >  '" filename "'") )
+  (setq save-image-process (concat "-c \"xclip -selection clipboard -t image/png -o >  '" filename "' \"") )
   (message save-image-process)
   (call-process "/bin/sh" nil nil nil save-image-process)
   ;; Windows: Irfanview
@@ -44,6 +44,13 @@
       kept-new-versions 6
       kept-old-versions 2
       version-control t)
+
+;; WINNER MODE
+(winner-mode 1)
+
+;; NO CORTAR LAS LÍNEAS
+(toggle-truncate-lines -1)
+
 
 ;; PARA PRESENTACIONES DEL ORG-MODE
 (add-hook 'org-present-mode-hook
@@ -151,6 +158,7 @@
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "C-<f6>") 'helm-mini)
+(global-set-key (kbd "<f6>") 'helm-mini)
 (helm-mode 1)
 
 ;; PROJECTILE
