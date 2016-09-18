@@ -2,9 +2,7 @@
 **/#*#
 session.*
 .emacs.desktop
-elpa/archives/gnu/archive-contents
-elpa/archives/gnu/archive-contents.signed
-elpa/archives/melpa/archive-contents
+elpa
 projectile-bookmarks.eld
 projectile.cache
 recentf
@@ -13,4 +11,6 @@ tramp
 ac-comphist.dat
 ede-projects.el
 url/
+.mc-lists.el
+.org-id-locations
 
