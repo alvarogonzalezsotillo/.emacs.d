@@ -1,21 +1,46 @@
-;; LISTA DE PAQUETES INSTALADOS (C-h v package-activated-list)
-;; (adaptive-wrap alert log4e gntp auto-complete-auctex auto-complete popup yasnippet auto-highlight-symbol browse-at-remote s f dash s calfw google-maps chess company-auctex auctex company yasnippet crappy-jsp-mode diffview discover makey ensime popup s dash company yasnippet sbt-mode scala-mode epresent org expand-region f dash s find-file-in-project ivy flycheck seq let-alist pkg-info epl dash git-link git-timemachine github-browse-file gntp google-maps guide-key-tip pos-tip guide-key s popwin dash helm-projectile dash projectile pkg-info epl dash helm helm-core async popup async htmlize image+ indent-guide let-alist magit magit-popup dash async git-commit with-editor dash async dash with-editor dash async dash async magit-popup dash async makey multiple-cursors neotree org-ac yaxception log4e auto-complete-pcmp yaxception log4e auto-complete popup org-present org ox-reveal org page-break-lines php-mode popwin pos-tip projectile pkg-info epl dash rainbow-delimiters rectangle-utils request-deferred request deferred s sbt-mode scala-mode scala-outline-popup flx-ido flx scala-mode2 popup dash seq smartparens dash sr-speedbar swiper ivy switch-window tablist transpose-frame web-mode with-editor dash async yafolding yasnippet yaxception)
-
 ;; ESTO ES PARA LOS PAQUETES
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
-;; EXPERIMENTOS
-(defun kk ()
-  (setq url-proxy-services '())
+;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
+(defun reinstalar-paquetes-en-emacs-nuevo() 
 
+  ;; LISTA DE PAQUETES INSTALADOS (C-h v package-activated-list)
+  (setq package-list '(adaptive-wrap alert log4e gntp auto-complete-auctex auto-complete popup yasnippet auto-highlight-symbol browse-at-remote s f dash s calfw google-maps chess company-auctex auctex company yasnippet crappy-jsp-mode diffview discover makey ensime popup s dash company yasnippet sbt-mode scala-mode epresent org expand-region f dash s find-file-in-project ivy flycheck seq let-alist pkg-info epl dash git-link git-timemachine github-browse-file gntp google-maps guide-key-tip pos-tip guide-key s popwin dash helm-projectile dash projectile pkg-info epl dash helm helm-core async popup async htmlize image+ indent-guide let-alist magit magit-popup dash async git-commit with-editor dash async dash with-editor dash async dash async magit-popup dash async makey multiple-cursors neotree org-ac yaxception log4e auto-complete-pcmp yaxception log4e auto-complete popup org-present org ox-reveal org page-break-lines php-mode popwin pos-tip projectile pkg-info epl dash rainbow-delimiters rectangle-utils request-deferred request deferred s sbt-mode scala-mode scala-outline-popup flx-ido flx scala-mode2 popup dash seq smartparens dash sr-speedbar swiper ivy switch-window tablist transpose-frame web-mode with-editor dash async yafolding yasnippet yaxception))
+  
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  (package-initialize)
+
+  (unless package-archive-contents
+    (package-refresh-contents))
+
+  (dolist (package package-list)
+    (message  package )
+    (unless (package-installed-p package)
+      (package-install package))))
+
+
+;; EXPERIMENTOS
+(defun horario()
+  (interactive)
+  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/ags.iesavellaneda%40gmail.com/private-8d8f10c04ef7daee164d8d8a8f4707d5/basic.ics"))
+
+(defun quitar-proxy()
+  (interactive)
+  (setq url-proxy-services '()))
+
+(defun proxy-educamadrid()
+  (interactive)
   (setq url-proxy-services
-        '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+        '(("no_proxy" . "^\\(localhost\\|10\\.*|192\\.*\\)")
           ("http" . "213.0.88.85:8080")
-          ("https" . "213.0.88.85:8080")))
-  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/cmr6tlofr4j2dm3hfdql1nf98g%40group.calendar.google.com/public/basic.ics")
-  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/8albn16m4tqrm653ijeijqr2g0%40group.calendar.google.com/public/basic.ics"))
+          ("https" . "213.0.88.85:8080"))))
+
+ 
+
+
+
 
 
 (defun org-insert-clipboard-image()
@@ -88,7 +113,6 @@
 (require 'ox-reveal)
 
 
-
 ;; CAMBIAR DE FORMA VISUAL A UNA VENTANA
 (require 'switch-window)
 (global-set-key (kbd "C-x o") 'switch-window)
@@ -102,6 +126,7 @@
 
 
 ;; NO PREGUNTAR CUANDO SE CIERRA EL BUFFER
+(setq kill-this-buffer-enabled-p t)
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 
 ;; MULTIPLE CURSORS
