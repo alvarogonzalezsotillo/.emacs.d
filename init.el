@@ -37,12 +37,6 @@
           ("http" . "213.0.88.85:8080")
           ("https" . "213.0.88.85:8080"))))
 
- 
-
-
-
-
-
 (defun org-insert-clipboard-image()
   "Save the image in the clipboard  into a time stamped unique-named file in the same directory as the org-buffer and inserta link to this file."
   (interactive)
@@ -61,6 +55,13 @@
   ;;(call-process "c:\\Programme\\IrfanView\\i_view32.exe" nil nil nil (concat "/clippaste /convert=" filename))
   (insert (concat "[[file:" filename "]]"))
   (org-display-inline-images))
+
+;; VISIBLE BOOKMARKS
+(require 'bm)
+(global-set-key (kbd "<C-f2>") 'bm-toggle)
+(global-set-key (kbd "<f2>")   'bm-next)
+(global-set-key (kbd "<S-f2>") 'bm-previous)
+
 
 ;; DIRECTORIOS DE BACKUP
 (setq backup-directory-alist `(("." . "~/.saves")))
@@ -281,6 +282,9 @@
  '(neo-hidden-regexp-list (quote ("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" ".git")))
  '(neo-smart-open t)
  '(neo-theme (quote nerd))
+ '(package-selected-packages
+   (quote
+    (org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors magit image+ htmlize helm-projectile guide-key-tip github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap)))
  '(send-mail-function (quote sendmail-send-it))
  '(sml/mode-width
    (if
