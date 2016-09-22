@@ -62,6 +62,8 @@
 (global-set-key (kbd "<f2>")   'bm-next)
 (global-set-key (kbd "<S-f2>") 'bm-previous)
 
+;; MAGIT STATUS
+(global-set-key (kbd "<f9>") 'magit-status)
 
 ;; DIRECTORIOS DE BACKUP
 (setq backup-directory-alist `(("." . "~/.saves")))
