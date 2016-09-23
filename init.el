@@ -2,7 +2,7 @@
 ;; ESTO ES PARA LOS PAQUETES
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-
+(package-initialize)  
 
 ;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
 (defun reinstalar-paquetes-en-emacs-nuevo() 
@@ -12,7 +12,7 @@
   (setq package-selected-packages '(org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors magit image+ htmlize helm-projectile guide-key-tip github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap))
   
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-  (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t )
+  ;; (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t )
 
   (package-refresh-contents)
   (package-initialize)  
