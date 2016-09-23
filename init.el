@@ -1,24 +1,25 @@
+
 ;; ESTO ES PARA LOS PAQUETES
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(package-initialize)
+(package-initialize)  
 
 ;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
 (defun reinstalar-paquetes-en-emacs-nuevo() 
 
-  ;; LISTA DE PAQUETES INSTALADOS (C-h v package-activated-list)
-  (setq package-list '(adaptive-wrap alert log4e gntp auto-complete-auctex auto-complete popup yasnippet auto-highlight-symbol browse-at-remote s f dash s calfw google-maps chess company-auctex auctex company yasnippet crappy-jsp-mode diffview discover makey ensime popup s dash company yasnippet sbt-mode scala-mode epresent org expand-region f dash s find-file-in-project ivy flycheck seq let-alist pkg-info epl dash git-link git-timemachine github-browse-file gntp google-maps guide-key-tip pos-tip guide-key s popwin dash helm-projectile dash projectile pkg-info epl dash helm helm-core async popup async htmlize image+ indent-guide let-alist magit magit-popup dash async git-commit with-editor dash async dash with-editor dash async dash async magit-popup dash async makey multiple-cursors neotree org-ac yaxception log4e auto-complete-pcmp yaxception log4e auto-complete popup org-present org ox-reveal org page-break-lines php-mode popwin pos-tip projectile pkg-info epl dash rainbow-delimiters rectangle-utils request-deferred request deferred s sbt-mode scala-mode scala-outline-popup flx-ido flx scala-mode2 popup dash seq smartparens dash sr-speedbar swiper ivy switch-window tablist transpose-frame web-mode with-editor dash async yafolding yasnippet yaxception))
+  (interactive) 
+  ;; LISTA DE PAQUETES INSTALADOS (C-h v package-selected-packages)
+  (setq package-selected-packages '(org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors magit image+ htmlize helm-projectile guide-key-tip github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap))
   
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-  (package-initialize)
+  ;; (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t )
 
-  (unless package-archive-contents
-    (package-refresh-contents))
+  (package-refresh-contents)
+  (package-initialize)  
 
-  (dolist (package package-list)
-    (message  package )
-    (unless (package-installed-p package)
-      (package-install package))))
+  (package-install-selected-packages))
+
+
 
 
 ;; EXPERIMENTOS
@@ -157,9 +158,6 @@
 (require 'auto-highlight-symbol)
 (global-auto-highlight-symbol-mode t)
 
-;; INDENT GUIDE
-(require 'indent-guide)
-(indent-guide-global-mode)
          
 ;; YAFOLDING
 (require 'yafolding)
