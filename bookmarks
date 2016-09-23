@@ -2,7 +2,17 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("root@centos-asgbd.local"
+(("ranger-"
+ (filename . "~/SincronizadoCloud/MEGASync/2016-2017-Rosa-Chacel/bases-de-datos/apuntes/7/")
+ (front-context-string . "backup-bancos.sq")
+ (rear-context-string . "1K jun  7  2013 ")
+ (position . 92))
+("ranger-m"
+ (filename . "~/SincronizadoCloud/MEGASync/2016-2017-Rosa-Chacel/bases-de-datos/apuntes/7/")
+ (front-context-string . "BD-7-ParticionHo")
+ (rear-context-string . "8M may  8  2013 ")
+ (position . 151))
+("root@centos-asgbd.local"
  (filename . "/ssh:root@centos-asgbd.local:/")
  (front-context-string . "bin -> usr/bin\n ")
  (rear-context-string . " 7 Sep 14 22:28 ")
