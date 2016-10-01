@@ -82,20 +82,23 @@
 
 
 ;; PARA PRESENTACIONES DEL ORG-MODE
+(defun bonito-para-proyector()
+  (interactive)
+  (toggle-truncate-lines -1)
+  (adaptive-wrap-prefix-mode 1)
+  (toggle-word-wrap 1)
+  (org-display-inline-images))
+
 (add-hook 'org-present-mode-hook
           (lambda ()
-            (toggle-truncate-lines -1)
-            (adaptive-wrap-prefix-mode 1)
-            (toggle-word-wrap 1)
+            (bonito-para-proyector)
             (org-present-big)
             (setq mode-line-format nil)
-            (linum-mode -1)
-            (org-display-inline-images)))
+            (linum-mode -1)))
+            
 (add-hook 'epresent-start-presentation-hook
           (lambda()
-            (toggle-truncate-lines -1)
-            (adaptive-wrap-prefix-mode 1)
-            (toggle-word-wrap 1)
+            (bonito-para-proyector)
             (setq mode-line-format nil)
             (linum-mode -1)))
 
@@ -107,7 +110,7 @@
 
 ;; TRANSPOSE FRAME
 (require 'transpose-frame)
-(global-set-key (kbd "C-t") 'transpose-frame)
+(global-set-key (kbd "<f5>") 'transpose-frame)
 
 
 ;; VALIDACIONES
@@ -267,6 +270,7 @@
  ;; If there is more than one, they won't work right.
  '(TeX-source-correlate-mode t)
  '(TeX-source-correlate-start-server t)
+ '(ac-ignore-case nil)
  '(ansi-color-names-vector
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#ad7fa8" "#8cc4ff" "#eeeeec"])
  '(chess-default-display (quote (chess-images chess-ics1 chess-plain)))
@@ -366,7 +370,7 @@
  '(org-block ((t (:inherit shadow :inverse-video t :family "courier"))))
  '(org-level-1 ((t (:inherit outline-1 :box (:line-width 2 :color "grey75" :style released-button) :height 2.0))))
  '(org-level-2 ((t (:inherit outline-2 :box nil :height 1.5))))
- '(org-meta-line ((t (:inherit font-lock-comment-face :height 0.7)))))
+ '(org-meta-line ((t (:inherit font-lock-comment-face :height 0.4)))))
 (put 'LaTeX-narrow-to-environment 'disabled nil)
 (put 'TeX-narrow-to-group 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
