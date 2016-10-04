@@ -1,0 +1,75 @@
+#+org_title: Instalación de emacs / git / Latex en entorno cygwin
+
+* Instalación de *Cygwin*
+1. Descargar el fichero [[https://www.cygwin.com/setup-x86_64.exe]]
+2. Realizar una instalación básica, añadiendo el paquete =wget=
+3. Instalar =apt-cyg=
+#+begin_src bash
+wget rawgit.com/transcode-open/apt-cyg/master/apt-cyg > apt-cyg
+install apt-cyg /bin
+#+end_src
+
+* Instalación de paquetes de *Cygwin*
+** *git*
+#+begin_src bash
+apt-cyg install git
+#+end_src
+
+** *Emacs*
+#+begin_src bash
+apt-cyg install emacs-w32
+#+end_src
+
+Para instalar una lista de paquetes *Emacs* puede usarse la siguiente función =elisp=
+#+BEGIN_SRC elisp
+;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
+(defun reinstalar-paquetes-en-emacs-nuevo() 
+
+  (interactive) 
+  ;; LISTA DE PAQUETES INSTALADOS (C-h v package-selected-packages)
+  (setq package-selected-packages '(org-attach-screenshot bm
+  yafolding web-mode transpose-frame tablist switch-window
+  swiper sr-speedbar smartparens scala-outline-popup
+  request-deferred rectangle-utils rainbow-delimiters
+  php-mode page-break-lines ox-reveal org-present org-ac
+  neotree multiple-cursors magit image+ htmlize
+  helm-projectile guide-key-tip github-browse-file
+  git-timemachine git-link flycheck find-file-in-project
+  expand-region epresent ensime discover diffview
+  crappy-jsp-mode company-auctex chess calfw
+  browse-at-remote auto-highlight-symbol
+  auto-complete-auctex alert adaptive-wrap))
+  
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  ;; (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t )
+
+  (package-refresh-contents)
+  (package-initialize)  
+
+  (package-install-selected-packages))
+#+END_SRC
+
+
+** *Latex*
+#+begin_src bash
+apt-cyg install texlive texlive-collection-basic \
+texlive-collection-binextra texlive-collection-fontsextra \
+texlive-collection-fontsrecommended \
+texlive-collection-fontutils \
+texlive-collection-formatsextra
+texlive-collection-genericextra \
+texlive-collection-genericrecommended \
+texlive-collection-langenglish \ 
+texlive-collection-langeuropean \
+texlive-collection-langspanish texlive-collection-latex
+texlive-collection-latexextra \
+texlive-collection-latexrecommended \ 
+texlive-collection-pictures texlive-collection-plainextra \
+texlive-collection-pstricks
+
+mktexlsr
+#+end_src
+
+ 
+
+
