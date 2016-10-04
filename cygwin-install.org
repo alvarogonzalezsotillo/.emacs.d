@@ -14,7 +14,7 @@ install apt-cyg /bin
 #+begin_src bash
 apt-cyg install git git-gui
 
-# Solución al problema de petición de contraseña
+# Solución al problema de petición de contraseña con magit (requiere XOrg)
 git config --global core.askpass /usr/libexec/git-core/git-gui--askpass
 #+end_src
 
@@ -43,8 +43,8 @@ Para instalar una lista de paquetes *Emacs* puede usarse la siguiente función =
   browse-at-remote auto-highlight-symbol
   auto-complete-auctex alert adaptive-wrap))
   
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-  ;; (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t )
+  (add-to-list 
+     'package-archives '("melpa" . "http://melpa.org/packages/") t)
 
   (package-refresh-contents)
   (package-initialize)  
