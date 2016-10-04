@@ -12,7 +12,10 @@ install apt-cyg /bin
 * Instalación de paquetes de *Cygwin*
 ** *git*
 #+begin_src bash
-apt-cyg install git
+apt-cyg install git git-gui
+
+# Solución al problema de petición de contraseña
+git config --global core.askpass /usr/libexec/git-core/git-gui--askpass
 #+end_src
 
 ** *Emacs*
