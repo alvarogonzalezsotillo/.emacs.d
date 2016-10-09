@@ -55,21 +55,9 @@ Para instalar una lista de paquetes *Emacs* puede usarse la siguiente función =
 
 ** *Latex*
 #+begin_src bash
-apt-cyg install texlive texlive-collection-basic \
-texlive-collection-binextra texlive-collection-fontsextra \
-texlive-collection-fontsrecommended \
-texlive-collection-fontutils \
-texlive-collection-formatsextra
-texlive-collection-genericextra \
-texlive-collection-genericrecommended \
-texlive-collection-langenglish \ 
-texlive-collection-langeuropean \
-texlive-collection-langspanish texlive-collection-latex
-texlive-collection-latexextra \
-texlive-collection-latexrecommended \ 
-texlive-collection-pictures texlive-collection-plainextra \
-texlive-collection-pstricks
+apt-cyg install texlive texlive-collection-basic texlive-collection-binextra texlive-collection-fontsextra texlive-collection-fontsrecommended texlive-collection-fontutils texlive-collection-formatsextra texlive-collection-genericextra texlive-collection-genericrecommended texlive-collection-langenglish texlive-collection-langeuropean texlive-collection-langspanish texlive-collection-latex texlive-collection-latexextra texlive-collection-latexrecommended texlive-collection-pictures texlive-collection-plainextra texlive-collection-pstricks
 
+texconfig rehash
 mktexlsr
 #+end_src
 
