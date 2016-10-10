@@ -12,9 +12,10 @@ install apt-cyg /bin
 * Instalación de paquetes de *Cygwin*
 ** *git*
 #+begin_src bash
-apt-cyg install git git-gui
+apt-cyg install git
 
 # Solución al problema de petición de contraseña con magit (requiere XOrg)
+apt-cyg install git git-gui xorg
 git config --global core.askpass /usr/libexec/git-core/git-gui--askpass
 #+end_src
 
@@ -55,7 +56,24 @@ Para instalar una lista de paquetes *Emacs* puede usarse la siguiente función =
 
 ** *Latex*
 #+begin_src bash
-apt-cyg install texlive texlive-collection-basic texlive-collection-binextra texlive-collection-fontsextra texlive-collection-fontsrecommended texlive-collection-fontutils texlive-collection-formatsextra texlive-collection-genericextra texlive-collection-genericrecommended texlive-collection-langenglish texlive-collection-langeuropean texlive-collection-langspanish texlive-collection-latex texlive-collection-latexextra texlive-collection-latexrecommended texlive-collection-pictures texlive-collection-plainextra texlive-collection-pstricks
+apt-cyg install texlive \ 
+texlive-collection-basic \ 
+texlive-collection-binextra \ 
+texlive-collection-fontsextra \ 
+texlive-collection-fontsrecommended \ 
+texlive-collection-fontutils \ 
+texlive-collection-formatsextra \ 
+texlive-collection-genericextra \ 
+texlive-collection-genericrecommended \ 
+texlive-collection-langenglish \ 
+texlive-collection-langeuropean \ 
+texlive-collection-langspanish \ 
+texlive-collection-latex \ 
+texlive-collection-latexextra \ 
+texlive-collection-latexrecommended \ 
+texlive-collection-pictures \ 
+texlive-collection-plainextra \ 
+texlive-collection-pstricks
 
 texconfig rehash
 mktexlsr
