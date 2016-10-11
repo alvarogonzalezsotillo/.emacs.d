@@ -262,7 +262,7 @@ function todosLosPuntosAlMismoLado(triangulo,puntos,tolerancia=1) =
    todosMayoresOIgualesQue(lados,-tolerancia) ||
         todosMayoresOIgualesQue(ladosNegados,-tolerancia);
         
-N = 20;      
+N = 4;      
 vertices = verticesPoliedroElectrostatico(N);
 
 //tripletes = todosLosTripletesHasta(N);
