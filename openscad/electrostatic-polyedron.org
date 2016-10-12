@@ -1,4 +1,10 @@
 #+org_title: Poliedros basados en configuraciones de mínima energía entre vértices
+#+latex_header: \usepackage[margin=2cm]{geometry}
+#+latex_header: \usepackage{amsmath}
+#+latex_header: \usepackage{xcolor}
+#+latex_header: \usepackage[spanish]{babel}
+#+latex_header_extra: \usepackage{listings}
+#+latex_header_extra: \lstset{frame=single,columns=fixed,basicstyle=\small\ttfamily,breaklines=true,postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}}}
 #+author: Álvaro González Sotillo
 
 * Resumen
@@ -15,8 +21,8 @@ Los poliedros generados presentan un alto grado se simetría. La forma final alc
 Para determinar la posición final de las cargas dentro de la esfera se realiza una simulación del movimiento de las cargas eléctricas dentro de la esfera, hasta que su posición se estabilice. Para ello se siguen los siguientes pasos:
 1. Se inicializan las $N$ cargas a posiciones $c_i$ aleatorias del espacio.
 2. Por cada carga $c_i$:
-   1. La fuerza de repulsión con cada una de las otras cargas $c_j$ se calcula como \[ f_{ij} = \frac{(c_i-c_j)}{|(c_i-c_j)|^2} \]
-   2. Se suman dichas fuerzas para encontrar la fuerza total resultante $f_i$ sobre $c_i$. \[ f_i = \sum_{j \neq i}^{N} f_{ij} \]
+   1. La fuerza de repulsión con cada una de las otras cargas $c_j$ se calcula como \[f_{ij} = \frac{(c_i-c_j)}{|(c_i-c_j)|^2}\]
+   2. Se suman dichas fuerzas para encontrar la fuerza total resultante $f_i$ sobre $c_i$. \[f_i = \sum_{j \neq i}^{N} f_{ij}\]
 3. Por cada carga $c_i$:
    1. Se calcula la nueva posición de la carga $i$ como $c'_i = c_i + K \cdot f_i$. La constante $K$ debería representar factores como el intervalo de tiempo de cada paso de la simulación y las masas de las cargas, aunque en la práctica se ajusta a valores más altos para acelerar el resultado.
    2. La posición resultante se proyecta sobre una esfera de radio $r$ centrada en el origen \[c''_i = \frac{c'_i}{|c'_i|}\]
@@ -36,7 +42,7 @@ El algoritmo utilizado para determinar las aristas exteriores del poliedro es el
    2. Se sustituye cada punto $c_i$ en la ecuación del plano obtenida. Si el triplete pertenece al cubrimiento convexo, todos los resultados tendrán el mismo signo (o $0$).
    3. Si el triplete pertenece al cubrimiento, sus aristas $\{t_1,t_2\}$, $\{t_2,t_3\}$ y $\{t_3,t_1\}$ se añaden al conjunto $A$ de aristas exteriores.  
 
-
+      
 * Ejemplos de poliedros para $N=4..24$
 
 #+caption[LIstado]: Generación de las imágenes de ejepmlo
@@ -63,8 +69,11 @@ done
 
 
 
-* Implementación
 
+
+
+* Implementación
+  
 ** Características del lenguaje
 
  El lenguaje de *OpenSCAD* es de tipo funcional, con funciones matemáticas básicas. 
@@ -80,7 +89,7 @@ done
 ** Cálculo de la posición final de las cargas
 
  #+caption[Listado]: Distancia entre puntos tridimensionales
- #+begin_src js
+ #+begin_src java
   function distancia(a,b) = 
     let(
       dx = a[0]-b[0],
@@ -92,7 +101,7 @@ done
 
 
  #+caption[Listado]: Distancia entre puntos tridimensionales
- #+begin_src js
+ #+begin_src java
   function sumaPuntos(lista) = suma(lista,[0,0,0],0);
   function suma(lista,retorno=0,i=0) = 
     i>=len(lista) ? 
@@ -106,7 +115,7 @@ done
 
 
  #+caption[Listado]: Suma de distancias entre dos listas de puntos
- #+begin_src js
+ #+begin_src java
   function distancias(puntos1, puntos2 ) =    [
        for( i =[0:1:len(puntos1)-1] )
            distancia(puntos1[i],puntos2[i])
@@ -119,7 +128,7 @@ done
 
 
  #+caption[Listado]: Cálclo de las fuerzas que actúan sobre una carga
- #+begin_src js
+ #+begin_src java
   function fuerzasParaPunto( p, puntos ) = [
    for( punto = puntos )
      let(
@@ -141,7 +150,7 @@ done
 
 
  #+caption[Listado]: Cálculo de las nuevas posiciones de las cargas a partir de las actuales
- #+begin_src js
+ #+begin_src java
   function normaliza( p, radio ) = radio * p / modulo(p);
     
   function nuevoPuntoParaIteracion(p,puntos, radio=100) = 
@@ -160,7 +169,7 @@ done
 
 
  #+caption[Listado]: Bucle hasta no superar una diferencia mínima o un número máximo de iteraciones
- #+begin_src js
+ #+begin_src java
   function iteraCalculoDePuntos( puntos, radio=100, errorMaximo=0.01, contador=0, iteracionesMaximas=1000 ) =
     let( 
       siguientesPuntos = iteracion(puntos,radio), 
@@ -173,7 +182,7 @@ done
 
 
  #+caption[Listado]: Cálculo de los vértices de un poliedro
- #+begin_src js
+ #+begin_src java
   function puntoAleatorio() = rands(-1000,1000,3);
 
   function puntosAleatorios(n) = [for( i=[0:n-1] ) puntoAleatorio()];
@@ -183,63 +192,22 @@ done
 
 ** Cálculo del cubrimiento convexo
 
-** RESTO
-
- #+begin_src kkk
-  
- 
-       
-
-  // CREA UN PUNTO TRIDIMENSIONAL ALEATORIO CON COORDENADAS ENTRE -1000 Y 1000
-
-
- 
-
-
-
-
-  //echo( concat("iteracion:" , iteracion(puntosIniciales)));
-
-
-
-
-  //echo( concat( "itera", iteraCalculoDePuntos(puntosIniciales)));
-
-  //puntos = iteraCalculoDePuntos(puntosIniciales);
-
-  // CALCULA LOS VERTICES DE UN POLIEDRO ELECTROSTÁTICO ITERANDO n PUNTOS ALEATORIOS
-
-  // GENERA LA UNIÓN DE TODOS CON TODOS LOS VÉRTICES DE UN GRUPO DE PUNTOS
-  // NOTA: INCLUYE LOS PALOS INTERNOS QUE QUEREMOS QUITAR
-  module todosLosPalosDePuntos(puntos){
-      for( p1 = puntos, p2 = puntos ){
-          palo(p1,p2,10);
-      }
-  }
-
-  // VER LA WIKIPEDIA
+ #+caption[Listado]: Cálculo del producto escalar y vectorial
+ #+begin_src java
   function productoEscalar(v1,v2) =
     suma( [ 
       for(i=[0:len(v1)-1]) v1[i]*v2[i] 
     ] );
 
-  // VER LA WIKIPEDIA
-  function productoVectorial(v1,v2) = 
-  [
+  function productoVectorial(v1,v2) = [
       v1[1]*v2[2] - v1[2]*v2[1],
       - v1[0]*v2[2] + v1[2]*v2[0],
       v1[0]*v2[1] - v1[1]*v2[0]
   ];
+#+end_src
 
-  //echo( concat( "CROSS1:", productoVectorial([1,-5,1],[10,1,0])));
-  //echo( concat( "CROSS2:",             cross([1,-5,1],[10,1,0])));
-
-    
-  // ECUACION DEL PLANO ax+by+cz+d=0
-  // SI DA 0, ES DEL PLANO
-  // SI DA >0, ES DE UN LADO DEL PLANO
-  // SI DA <0, ES DEL OTRO LADO
-  // SE DEVUELVE [[a,b,c],d] VECTOR NORMAL Y CONSTANTE
+ #+caption[Listado]: Determinación de la ecuación de un plano por tres ypuntos, y su aplicación a un punto
+ #+begin_src java
   function ecuacionDePlanoPorTresPuntos(p1,p2,p3) =
     let(
       puntoEnElPlano = p1,
@@ -250,73 +218,15 @@ done
     )
     [normal,d];
 
-  // ECUACION DEL PLANO, PERO LOS TRES PUNTOS VIENEN EN UNA LISTA  
   function ecuacionDePlanoPorTresPuntosEnLista(lista) =
      ecuacionDePlanoPorTresPuntos(lista[0],lista[1],lista[2]);
 
-
-  // RECIBE EL PLANO [[a,b,c],d] Y SUSTITUYE UN PUNTO
-  // DARÁ CERO SI EL PUNTO ES DEL PLANO
-  // DARA >0 O <0 SI ESTÁ EN UN LADO U OTRO DEL PLANO
   function sustituyeEcuacionPlano(ecuacion,punto) =
       productoEscalar(ecuacion[0],punto) + ecuacion[1];
-    
-    
-  // PARA UNA LISTA DE VALORES, DECIDE SI SON TODOS MAYORES QUE UN UMBRAL    
-  function todosMayoresOIgualesQue(valores,umbral) =
-      let(
-          comprobaciones = [
-              for( v=valores )
-                  v - umbral >= 0 ?
-                  1 :
-                  0
-          ]
-      )
-      suma(comprobaciones) == len(valores);
-            
-            
-    
-  // TODOS LOS TRIPLETES (SIN REPETICION) DE LOS NÚMEROS 0 ... HASTA n-1
-  function todosLosTripletesHasta(n) = [
-        for( i=[0:n-3] , j=[i+1:n-2] , k=[j+1:n-1] ) [i,j,k]
-  ];
-  
-  // LISTA CON LOS TRES PUNTOS TRIDIMENSIONALES DEL TRIÁNGULO DEFINIDO POR
-  // LOS VERTICES INDICADOS EN LOS ÍNDICES    
-  function trianguloConIndicesDeVertices(indices,vertices) =
-    [vertices[indices[0]], vertices[indices[1]], vertices[indices[2]]];
-  
-  // ARISTAS (LISTA DE DOS PUNTOS) QUE HAY EN UN TRIANGULO (O TRIPLETE)    
-  function aristasDeTriangulo(triplete) = [
-        [triplete[0],triplete[1]],
-        [triplete[1],triplete[2]],
-        [triplete[2],triplete[0]]
-  ];    
-  
-  // SI UNA LISTA ES [[a,b],[c,d],[e,f]] la deja en [a,b,c,d,e,f]    
-  // SI UNA LISTA ES [[[a,b],[c,d]],[[e,f],[g,h]]] la deja en [[a,b],[c,d],[e,f],[g,h]]
-  function aplanaUnNivel(lista) = [
-        for( a = lista , b = a ) b
-  ];
-      
-     
-  // DECIDE SI UN VALOR YA ESTA EN UNA LISTA
-  function contenidoEnLista(v,lista,indice=0) =
-    lista[indice] == v ? 
-    true : (
-      indice>=len(lista) ?
-      false :
-      contenidoEnLista(v,lista,indice+1)
-    );
-     
-  // AGREAGA UN VALOR A UNA LISTA
-  function agregarALista(lista,valor) = [
-        for(i=[0:len(lista)])
-            i < len(lista) ? lista[i] : valor
-  ];
-      
-  // QUITA ARISTAS DUPLICADAS
-  // LAS ARISTAS [A,B] Y [B,A] SON LA MISMA      
+#+end_src
+
+ #+caption[Listado]: Cálculo de aristas exteriores
+ #+begin_src java
   function quitarAristasDuplicadas(aristas,ret=[],indice=0) = 
     indice >= len(aristas) ?
     ret : 
@@ -330,9 +240,6 @@ done
         quitarAristasDuplicadas(aristas,agregarALista(ret,a1),indice+1)
     );
       
-  // DEVUELVE UNA LISTA DE ARISTAS EXTERIORES
-  // UNA ARISTA SON DOS ÍNDICES QUE INDICAN LOS PUNTOS DENTRO DE
-  // LA LISTA DE vertices
   function aristasExteriores(vertices) =
       let(
         n = len(vertices),
@@ -344,9 +251,6 @@ done
                   aristasDeTriangulo(indices)
       ]);      
     
-    
-  // DECIDE SI TODOS LOS PUNTOS ESTÁN EN EL MISMO LADO
-  // DEL PLANO QUE DEFINE UN TRIÁNGULO
   function todosLosPuntosAlMismoLado(triangulo,puntos,tolerancia=1) = 
      let(
         ecuacionPlano = ecuacionDePlanoPorTresPuntosEnLista(trianguloConIndicesDeVertices(triangulo,puntos)),
@@ -358,60 +262,76 @@ done
      )
      todosMayoresOIgualesQue(lados,-tolerancia) ||
           todosMayoresOIgualesQue(ladosNegados,-tolerancia);
-        
+
+#+end_src
+
+ #+caption[Listado]: Funciones auxiliares para el cálculo de aristas exteriores
+ #+begin_src java
+  function todosMayoresOIgualesQue(valores,umbral) =
+      let(
+          comprobaciones = [
+              for( v=valores )
+                  v - umbral >= 0 ?
+                  1 :
+                  0
+          ]
+      )
+      suma(comprobaciones) == len(valores);
+            
+            
+    
+  function todosLosTripletesHasta(n) = [
+        for( i=[0:n-3] , j=[i+1:n-2] , k=[j+1:n-1] ) [i,j,k]
+  ];
+  
+  function trianguloConIndicesDeVertices(indices,vertices) =
+    [vertices[indices[0]], vertices[indices[1]], vertices[indices[2]]];
+  
+  function aristasDeTriangulo(triplete) = [
+        [triplete[0],triplete[1]],
+        [triplete[1],triplete[2]],
+        [triplete[2],triplete[0]]
+  ];    
+  
+  // SI UNA LISTA ES [[[a,b],[c,d]],[[e,f],[g,h]]] la deja en [[a,b],[c,d],[e,f],[g,h]]
+  function aplanaUnNivel(lista) = [
+        for( a = lista , b = a ) b
+  ];
+      
+     
+  function contenidoEnLista(v,lista,indice=0) =
+    lista[indice] == v ? 
+    true : (
+      indice>=len(lista) ?
+      false :
+      contenidoEnLista(v,lista,indice+1)
+    );
+     
+  function agregarALista(lista,valor) = [
+        for(i=[0:len(lista)])
+            i < len(lista) ? lista[i] : valor
+  ];
+#+end_src
+
+ #+caption[Listado]: Generación de un poliedro
+ #+begin_src java
   N = 20;      
   vertices = verticesPoliedroElectrostatico(N);
-
-  //tripletes = todosLosTripletesHasta(N);
-  //triplete0 = tripletes[0];      
-  //triangulo0 = trianguloConIndicesDeVertices(triplete0,vertices);
-  //ecuacion0 = ecuacionDePlanoPorTresPuntosEnLista(trianguloConIndicesDeVertices(triplete0,vertices));
-
-  //echo( concat( "tripletes:", tripletes));
-  //echo( concat( "triangulos:", [ for(t=tripletes) trianguloConIndicesDeVertices(t, vertices) ] ) ); 
-    
-  //echo( concat( "vectorial:", productoVectorial(
-  //    triangulo0[1]-triangulo0[0],
-  //    triangulo0[2]-triangulo0[0]
-  //)));
-
-  //echo( concat( "ecuacion 0 0:", ecuacionDePlanoPorTresPuntos(triangulo0[0],triangulo0[1], triangulo0[2])));
-
-  //echo( concat( "ecuacion 0:", ecuacion0));
-
-  //echo( concat( "valores ecuacion", [
-  //    for( v=vertices ) [sustituyeEcuacionPlano(ecuacion0,v)]
-  //]));
-    
-  //echo( concat( "mayores que 1:", todosMayoresOIgualesQue(
-  //    [for( v=vertices ) sustituyeEcuacionPlano(ecuacion0,v)],
-  //    -100
-  //)));
-
-  //echo( concat( "mayores que 2:", todosMayoresOIgualesQue(
-  //    [for( v=vertices ) -sustituyeEcuacionPlano(ecuacion0,v)],
-  //    -100
-  //)));
-
-
-  //echo( concat( "mismo lado:", todosLosPuntosAlMismoLado(triplete0,vertices)));
-
   aristas = aristasExteriores(vertices);
-
-  //echo( concat( "exteriores:" , aristas ) );
-
   aristasSinDuplicados = quitarAristasDuplicadas(aristas);
-  echo( concat( "sin duplicar aristas:" , aristasSinDuplicados ) );
-        
-        
-  //translate([300,300,0]) todosLosPalosDePuntos(vertices);
-    
-    
+
+  module palo(a,b,r){
+      hull(){
+          translate(a) sphere(r);
+          translate(b) sphere(r);
+      }
+  }
+
   module aristasAPalos(aristas,vertices,ancho=10){
       for( i=aristas )
           palo(vertices[i[0]],vertices[i[1]],ancho);
   }    
-    
-  aristasAPalos(aristasSinDuplicados,vertices,5);
 
- #+end_src
+  aristasAPalos(aristasSinDuplicados,vertices,5);
+#+end_src
+
