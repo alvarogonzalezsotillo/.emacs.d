@@ -209,12 +209,13 @@
 ;; ESTO ES PARA EL AUTOCOMPLETE
 (require 'auto-complete-config)
 (ac-config-default)
-(global-auto-complete-mode t)
 (add-to-list 'ac-modes 'sql-mode 'tex-mode)
+
 ;; ESTO ES PARA VER SI AUTOCOMPLETA TEX
 (require 'auto-complete-auctex)
 ;; AUTOCOMPLETE PARA ORG
 (require 'org-ac)
+
 ;; Make config suit for you. About the config item, eval the following sexp.
 ;; (customize-group "org-ac")
 (org-ac/config-default)
@@ -281,6 +282,7 @@
  '(desktop-save t)
  '(desktop-save-mode t)
  '(fill-column 120)
+ '(global-auto-complete-mode t)
  '(line-number-mode nil)
  '(linum-mode 1 t)
  '(neo-hidden-regexp-list (quote ("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" ".git")))

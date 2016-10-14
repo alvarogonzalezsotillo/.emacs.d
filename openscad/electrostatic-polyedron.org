@@ -76,7 +76,7 @@ done
   
 ** Características del lenguaje
 
- El lenguaje de *OpenSCAD* es de tipo funcional, con funciones matemáticas básicas. 
+El lenguaje de *OpenSCAD* es de tipo funcional, con funciones matemáticas básicas. 
  - No hay bucles de tipo /mientras/, y deben implementarse como funciones recurivas.
  - Distingue entre funciones (sin efectos laterales) y módulos (que crean efectivamente los sólidos).
    - Una consecuencia de que las funciones no tengan efectos laterales es la imposibilidad de trazar la ejecución de las mismas, ya que la instrución =log= se considera un efecto lateral.
@@ -85,10 +85,15 @@ done
    - Los objetos pueden ser, entre otros, números y otras listas.
  - Un punto tridimensional se especifica como una lista de tres valores.
  - Ofrece facilidades para /for comprehensions/.
+ 
+
+En la implementación se ha optado por utilizar las mínimas funciones del sistema.
 
 ** Cálculo de la posición final de las cargas
 
- #+caption[Listado]: Distancia entre puntos tridimensionales
+*OpenSCAD* no ofrece facilidades básicas como la distancia entre puntos tridimentsionales. Esto permite incluir esta función simple a modo de ejemplo de sintaxis de su lenguaje
+
+ #+caption[Listado]: Distancia entre puntos tridimensionales (sqrt es una función incluída en OpenSCAD)
  #+begin_src java
   function distancia(a,b) = 
     let(
@@ -99,6 +104,7 @@ done
     sqrt(dx*dx + dy*dy + dz*dz);
  #+end_src
 
+A diferencia de la mayoría de lenguajes, *OpenSCAD* no ofrece bucles de tipo *mientras*. Estas construcciones deben emularse con funciones recursivas, que utilicen a su vez operador condicional ternario. En este ejemplo, se utiliza una función recursiva para recorrer una lista y acumular sus valores. puede verse también el uso de parámetros por defecto.
 
  #+caption[Listado]: Distancia entre puntos tridimensionales
  #+begin_src java
@@ -112,7 +118,7 @@ done
 
 
 
-
+Los bucles =for= siempre forman parte de un /for comprehension/, lo que implica que su resultado no puee ser un valor único, sino una lista con una posición por cada vuelta. Para conseguir acumular la distancia total entre dos listas de puntos es necesario, por tanto, un bucle =for= y un bucle =while= implementado como función recursiva.
 
  #+caption[Listado]: Suma de distancias entre dos listas de puntos
  #+begin_src java
@@ -122,10 +128,9 @@ done
   ];
 
   function errorTotal(puntos1,puntos2) = suma(distancias(puntos1,puntos2));
-
  #+end_src
 
-
+Las fuerzas aplicadas en cada carga se calculan también como un /for comprehension/.
 
  #+caption[Listado]: Cálclo de las fuerzas que actúan sobre una carga
  #+begin_src java
@@ -143,11 +148,7 @@ done
 
 
 
-
-
-
-
-
+Este listado muestra la funcion principal de cálculo de posición de cada carga. La función =nuevoPuntoParaInteracion= determina la nueva posición de un punto, y la función =iteracion= utiliza la anterior para calcular la nueva posición de todos los puntos.
 
  #+caption[Listado]: Cálculo de las nuevas posiciones de las cargas a partir de las actuales
  #+begin_src java
@@ -167,6 +168,7 @@ done
   ];
  #+end_src
 
+La función =iteraCalculoDePuntos= realiza un bucle =while= (nuevamente, en forma de función recursiva) hasta que la diferencia de posición entre un paso y el anterior es menor de un umbral. Por seguridad, se incluye también un límite en el número máximo de iteraciones.
 
  #+caption[Listado]: Bucle hasta no superar una diferencia mínima o un número máximo de iteraciones
  #+begin_src java
@@ -180,6 +182,7 @@ done
           iteraCalculoDePuntos(siguientesPuntos, radio, errorMaximo, contador+1,iteracionesMaximas);
  #+end_src
 
+Tan solo resta comenzar con un número determinado de puntos aleatorios e iterarlos hasta conseguir llegar al equilibrio.
 
  #+caption[Listado]: Cálculo de los vértices de un poliedro
  #+begin_src java
@@ -191,6 +194,8 @@ done
  #+end_src
 
 ** Cálculo del cubrimiento convexo
+
+Comenzamos definiendo primitivas básicas para el trabajo con vectores: producto escalar y vectorial. El producto vectorial ya está implementado en *OpenSCAD* (función =cross=), pero se incluye aquí por completitud del algoritmo.
 
  #+caption[Listado]: Cálculo del producto escalar y vectorial
  #+begin_src java
@@ -205,6 +210,8 @@ done
       v1[0]*v2[1] - v1[1]*v2[0]
   ];
 #+end_src
+
+Utilizando los productos, podemos definir la ecuación del plano que pasa por tres puntos, y una función que determina si un punto pertenece a un plano, o si queda a un lado o a otro del mismo.
 
  #+caption[Listado]: Determinación de la ecuación de un plano por tres ypuntos, y su aplicación a un punto
  #+begin_src java
@@ -224,6 +231,9 @@ done
   function sustituyeEcuacionPlano(ecuacion,punto) =
       productoEscalar(ecuacion[0],punto) + ecuacion[1];
 #+end_src
+
+
+Las siguientes funciones resumen el cálculo de aristas ocultas. Necesitan varias funciones de utilidad definidas posteriormente.
 
  #+caption[Listado]: Cálculo de aristas exteriores
  #+begin_src java
@@ -264,6 +274,8 @@ done
           todosMayoresOIgualesQue(ladosNegados,-tolerancia);
 
 #+end_src
+
+algoalgoalgoalgoalgoalgo  algoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoa lgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgo algoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgo algoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoa lgoalgoalgoalgoalgoalgoalgoalgo algoalgoalgoalgoalgoalgoa lgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgo algoalgoalgoalgoalgo
 
  #+caption[Listado]: Funciones auxiliares para el cálculo de aristas exteriores
  #+begin_src java
@@ -312,6 +324,13 @@ done
             i < len(lista) ? lista[i] : valor
   ];
 #+end_src
+
+*** Renderización del poliedros
+Hasta el momento, sólo se ha realizado el cálculo de los vértices del poliedro, pero *OpenSCAD* no ha renderizado ninguna forma.
+
+Para que *OpenSCAD* genere algún volumen hay que utilizar un =module= predefinido o uno propio construido a base de los ya existentes.
+
+En este caso, cada arista se renderiza como un cilindro rematado por esferas.
 
  #+caption[Listado]: Generación de un poliedro
  #+begin_src java
