@@ -19,6 +19,11 @@ $fa=5;
 // 8 ES  DE PAPA
 N = 24;
 
+
+// INICIALIZA NUMEROS ALEATORIOS
+SEED=0;
+dummy=rands(0,1000,SEED);
+     
 // PINTA UN PALO
 module palo(a,b,r){
      hull(){
@@ -96,7 +101,7 @@ function iteracion(puntos, radio=100) = [
      ];
 
 // ITERA EL CÁLCULO DE LA NUEVA POSICIÓN DE LAS CARGAS HASTA UN ERROR O MÁXIMO DE INTERACIONES
-function iteraCalculoDePuntos( puntos, radio=100, errorMaximo=0.0001, contador=0, iteracionesMaximas=100000 ) =
+function iteraCalculoDePuntos( puntos, radio=100, errorMaximo=0.0001, contador=0, iteracionesMaximas=8000 ) =
      let( 
           siguientesPuntos = iteracion(puntos,radio), 
           error = errorTotal(siguientesPuntos, puntos)
@@ -245,7 +250,7 @@ function aristasExteriores(vertices) =
     
 // DECIDE SI TODOS LOS PUNTOS ESTÁN EN EL MISMO LADO
 // DEL PLANO QUE DEFINE UN TRIÁNGULO
-function todosLosPuntosAlMismoLado(triangulo,puntos,tolerancia=10) = 
+function todosLosPuntosAlMismoLado(triangulo,puntos,tolerancia=1) = 
      let(
           ecuacionPlano = ecuacionDePlanoPorTresPuntosEnLista(trianguloConIndicesDeVertices(triangulo,puntos)),
           lados = [

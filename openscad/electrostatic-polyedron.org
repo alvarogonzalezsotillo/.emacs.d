@@ -7,6 +7,9 @@
 #+latex_header_extra: \lstset{frame=single,columns=fixed,basicstyle=\small\ttfamily,breaklines=true,postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}}}
 #+author: Álvaro González Sotillo
 
+
+
+
 * Resumen
 Un conjunto de cargas eléctricas del mismo signo en un conductor tienden a repelerse, de forma que se sitúan en una configuración de mínima energía. Esta configuración sitúa las cargas en la superficie del conductor.
 
@@ -48,18 +51,21 @@ El algoritmo utilizado para determinar las aristas exteriores del poliedro es el
 #+caption[LIstado]: Generación de las imágenes de ejepmlo
 #+begin_src sh
 #!/bin/sh -x
-SCADFILE=$(cygpath -w /home/alvaro/.emacs.d/openscad/electrostatic-polyedron.scad)
+SCADFILE=./electrostatic-polyedron.scad
 
-function poliedro(){
+poliedro () {
   local N=$1
-  /home/alvaro/openscad -o poliedro-$N.png -D N=$N --autocenter --viewall "$SCADFILE"
+  openscad -o poliedro-$N.png -D N=$N -D '$fn=50' -D '$fa=50' --autocenter --viewall "$SCADFILE"
 }
-for i in $(seq 4 6)
+for i in $(seq 4 24)
 do
-  echo Generando poliedro $i
+  gecho Generando poliedro $i
   poliedro $i
 done
 #+end_src
+
+#+RESULTS:
+
 
 
 
@@ -353,4 +359,7 @@ En este caso, cada arista se renderiza como un cilindro rematado por esferas.
 
   aristasAPalos(aristasSinDuplicados,vertices,5);
 #+end_src
+
+
+
 
