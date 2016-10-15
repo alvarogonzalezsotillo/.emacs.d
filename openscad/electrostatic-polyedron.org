@@ -48,14 +48,14 @@ El algoritmo utilizado para determinar las aristas exteriores del poliedro es el
       
 * Ejemplos de poliedros para $N=4..24$
 
-#+caption[LIstado]: Generación de las imágenes de ejepmlo
+#+caption[LIstado]: Generación de los sólidos de ejemplo
 #+begin_src sh
 #!/bin/sh -x
 SCADFILE=./electrostatic-polyedron.scad
 
 poliedro () {
   local N=$1
-  openscad -o poliedro-$N.png -D N=$N -D '$fn=50' -D '$fa=50' --autocenter --viewall "$SCADFILE"
+  openscad -o poliedro-$N.stl -D N=$N -D '$fn=50' -D '$fa=50' "$SCADFILE"
 }
 for i in $(seq 4 24)
 do
@@ -64,7 +64,38 @@ do
 done
 #+end_src
 
-#+RESULTS:
+
+Los ficheros =stl= generados pueden visualizarse con *OpenSCAD* con un script como el siguiente
+
+#+caption[LIstado]: Generación de las imágenes de ejemplo
+#+begin_src java
+STLFILE="poliedro-10.stl";
+ANGLE=20;
+
+rotate([ANGLE,0,0]){
+     translate([0,0,0]) {
+          import(STLFILE);
+     }
+}
+#+end_src
+
+
+#+caption[LIstado]: Generación de las imágenes de ejemplo
+#+begin_src sh
+#!/bin/sh -x
+SCADFILE=./electrostatic-polyedron.scad
+
+poliedro () {
+  local N=$1
+  openscad -o poliedro-$N.stl -D N=$N -D '$fn=50' -D '$fa=50' "$SCADFILE"
+}
+for i in $(seq 4 24)
+do
+  gecho Generando poliedro $i
+  poliedro $i
+done
+#+end_src
+
 
 
 
