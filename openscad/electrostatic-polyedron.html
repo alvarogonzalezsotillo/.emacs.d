@@ -1,0 +1,872 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2016-10-16 dom 21:40 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="viewport" content="width=device-width, initial-scale=1" />
+<title></title>
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Álvaro González Sotillo" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">1. Resumen</a></li>
+<li><a href="#orgheadline4">2. Cálculo del poliedro</a>
+<ul>
+<li><a href="#orgheadline2">2.1. Determinación de la posición de los vértices</a></li>
+<li><a href="#orgheadline3">2.2. Cubrimiento convexo de los vértices</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline5">3. Ejemplos de poliedros para \(N=4..24\)</a></li>
+<li><a href="#orgheadline10">4. Implementación</a>
+<ul>
+<li><a href="#orgheadline6">4.1. Características del lenguaje</a></li>
+<li><a href="#orgheadline7">4.2. Cálculo de la posición final de las cargas</a></li>
+<li><a href="#orgheadline9">4.3. Cálculo del cubrimiento convexo</a>
+<ul>
+<li><a href="#orgheadline8">4.3.1. Renderización del poliedros</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1"><span class="section-number-2">1</span> Resumen</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Un conjunto de cargas eléctricas del mismo signo en un conductor tienden a repelerse, de forma que se sitúan en una configuración de mínima energía. Esta configuración sitúa las cargas en la superficie del conductor.
+</p>
+
+<p>
+El siguiente programa de <b>OpenSCAD</b> simula el comportamiento de varias cargas encerradas en un conductor esférico. Tras encontrar la configuración de mínima energía, presenta el resultado como las aristas del cubrimiento convexo de las cargas, siendo este siempre un  poliedro convexo.
+</p>
+
+<p>
+Los poliedros generados presentan un alto grado se simetría. La forma final alcanzada parece depender únicamente del número de vértices iniciales, excepto por algunas simetrías especulares.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4"><span class="section-number-2">2</span> Cálculo del poliedro</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-orgheadline2" class="outline-3">
+<h3 id="orgheadline2"><span class="section-number-3">2.1</span> Determinación de la posición de los vértices</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Para determinar la posición final de las cargas dentro de la esfera se realiza una simulación del movimiento de las cargas eléctricas dentro de la esfera, hasta que su posición se estabilice. Para ello se siguen los siguientes pasos:
+</p>
+<ol class="org-ol">
+<li>Se inicializan las \(N\) cargas a posiciones \(c_i\) aleatorias del espacio.</li>
+<li>Por cada carga \(c_i\):
+<ol class="org-ol">
+<li>La fuerza de repulsión con cada una de las otras cargas \(c_j\) se calcula como \[f_{ij} = \frac{(c_i-c_j)}{|(c_i-c_j)|^2}\]</li>
+<li>Se suman dichas fuerzas para encontrar la fuerza total resultante \(f_i\) sobre \(c_i\). \[f_i = \sum_{j \neq i}^{N} f_{ij}\]</li>
+</ol></li>
+<li>Por cada carga \(c_i\):
+<ol class="org-ol">
+<li>Se calcula la nueva posición de la carga \(i\) como \(c'_i = c_i + K \cdot f_i\). La constante \(K\) debería representar factores como el intervalo de tiempo de cada paso de la simulación y las masas de las cargas, aunque en la práctica se ajusta a valores más altos para acelerar el resultado.</li>
+<li>La posición resultante se proyecta sobre una esfera de radio \(r\) centrada en el origen \[c''_i = \frac{c'_i}{|c'_i|}\]</li>
+</ol></li>
+<li>Las nuevas posiciones \(c_i\) son los valores de \(c''_i\)</li>
+<li>Se itera desde el paso 2 hasta alcanzar el criterio de terminación.
+<ol class="org-ol">
+<li>El criterio de terminación del bucle es la estabilidad de las posiciones \(c_i\), comparando un umbral \(\epsilon\) con \[\sum_{i}^{N} (c''_i - c_i)\]</li>
+</ol></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3"><span class="section-number-3">2.2</span> Cubrimiento convexo de los vértices</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Tras a primera parte del cálculo, se obtienen las posiciones \(c_i\) de los vértices del poliedro. Cada triplete de puntos define 
+</p>
+<ul class="org-ul">
+<li>Una cara <i>exterior</i> (o parte de una cara) de este poliedro.</li>
+<li>Un triángulo <i>interior</i> que no forma parte del cubrimiento convexo de los vértices.</li>
+</ul>
+
+<p>
+El algoritmo utilizado para determinar las aristas exteriores del poliedro es el siguiente:
+</p>
+<ol class="org-ol">
+<li>Se parte del conjunto \(T\) de todos los tripletes \[ \{ \{c_i,c_j,c_k\} | 1 \leq i < j < k \leq N \}\]</li>
+<li>Por cada triplete \(\{t_1,t_2,t_3\}\)
+<ol class="org-ol">
+<li>Se calcula la ecuación del plano que contiene sus tres puntos \(ax + by + cy + d = 0\), siendo \(\times\) el producto vectorial y \(\cdot\) el producto escalar. \[(a,b,c) = (t_2-t_1) \times (t_3, t_1)\]  \[d = -(a,b,c)\cdot t_1\]</li>
+<li>Se sustituye cada punto \(c_i\) en la ecuación del plano obtenida. Si el triplete pertenece al cubrimiento convexo, todos los resultados tendrán el mismo signo (o \(0\)).</li>
+<li>Si el triplete pertenece al cubrimiento, sus aristas \(\{t_1,t_2\}\), \(\{t_2,t_3\}\) y \(\{t_3,t_1\}\) se añaden al conjunto \(A\) de aristas exteriores.</li>
+</ol></li>
+</ol>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5"><span class="section-number-2">3</span> Ejemplos de poliedros para \(N=4..24\)</h2>
+<div class="outline-text-2" id="text-3">
+<div class="org-src-container">
+<label class="org-src-name">Generación de los sólidos de ejemplo</label>
+<pre class="src src-sh"><span style="color: #cd853f;">#</span><span style="color: #cd853f;">!/bin/</span><span style="color: #20b2aa; font-weight: bold;">sh</span><span style="color: #cd853f;"> -x</span>
+<span style="color: #9acd32;">SCADFILE</span>=./electrostatic-polyedron.scad
+
+<span style="color: #00ff7f;">poliedro</span> <span style="color: #8c8c8c;">()</span> <span style="color: #8c8c8c;">{</span>
+  <span style="color: #76ee00;">local</span> <span style="color: #9acd32;">N</span>=$<span style="color: #9acd32;">1</span>
+  openscad -o poliedro-$<span style="color: #9acd32;">N</span>.stl -D <span style="color: #9acd32;">N</span>=$<span style="color: #9acd32;">N</span> -D <span style="color: #ffa07a;">'$fn=50'</span> -D <span style="color: #ffa07a;">'$fa=50'</span> <span style="color: #ffa07a;">"$SCADFILE"</span>
+<span style="color: #8c8c8c;">}</span>
+<span style="color: #20b2aa; font-weight: bold;">for</span> i<span style="color: #20b2aa; font-weight: bold;"> in</span> $<span style="color: #8c8c8c;">(</span>seq 4 24<span style="color: #8c8c8c;">)</span>
+<span style="color: #20b2aa; font-weight: bold;">do</span>
+  gecho Generando poliedro $<span style="color: #9acd32;">i</span>
+  poliedro $<span style="color: #9acd32;">i</span>
+<span style="color: #20b2aa; font-weight: bold;">done</span>
+</pre>
+</div>
+
+<p>
+Estos ficheros se han subido a <a href="http://www.sculpteo.com">Sculpteo.com</a>
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Vértices</th>
+<th scope="col" class="org-left">Sculpteo ID</th>
+<th scope="col" class="org-left">Enlace</th>
+<th scope="col" class="org-left">nada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">4</td>
+<td class="org-left">hwBvUUPS</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/hwBvUUPS">http://www.sculpteo.com/embed/design/hwBvUUPS</a></td>
+<td class="org-left"><img src="poliedro-4.png" alt="poliedro-4.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">zywXZ2Vv</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/zywXZ2Vv">http://www.sculpteo.com/embed/design/zywXZ2Vv</a></td>
+<td class="org-left"><img src="poliedro-5.png" alt="poliedro-5.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">6</td>
+<td class="org-left">Hd6M6qdV</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/Hd6M6qdV">http://www.sculpteo.com/embed/design/Hd6M6qdV</a></td>
+<td class="org-left"><img src="poliedro-6.png" alt="poliedro-6.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">7</td>
+<td class="org-left">e3Z7njee</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/e3Z7njee">http://www.sculpteo.com/embed/design/e3Z7njee</a></td>
+<td class="org-left"><img src="poliedro-7.png" alt="poliedro-7.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">8</td>
+<td class="org-left">zF9bWGAC</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/zF9bWGAC">http://www.sculpteo.com/embed/design/zF9bWGAC</a></td>
+<td class="org-left"><img src="poliedro-8.png" alt="poliedro-8.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">9</td>
+<td class="org-left">MTTJEqKN</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/MTTJEqKN">http://www.sculpteo.com/embed/design/MTTJEqKN</a></td>
+<td class="org-left"><img src="poliedro-9.png" alt="poliedro-9.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">XHaVXMzy</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/XHaVXMzy">http://www.sculpteo.com/embed/design/XHaVXMzy</a></td>
+<td class="org-left"><img src="poliedro-10.png" alt="poliedro-10.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">11</td>
+<td class="org-left">cTu8ZKCy</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/cTu8ZKCy">http://www.sculpteo.com/embed/design/cTu8ZKCy</a></td>
+<td class="org-left"><img src="poliedro-11.png" alt="poliedro-11.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">12</td>
+<td class="org-left">XHZQE7ST</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/XHZQE7ST">http://www.sculpteo.com/embed/design/XHZQE7ST</a></td>
+<td class="org-left"><img src="poliedro-12.png" alt="poliedro-12.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">13</td>
+<td class="org-left">A9fQg8jN</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/A9fQg8jN">http://www.sculpteo.com/embed/design/A9fQg8jN</a></td>
+<td class="org-left"><img src="poliedro-13.png" alt="poliedro-13.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">14</td>
+<td class="org-left">BhTtJYyY</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/BhTtJYyY">http://www.sculpteo.com/embed/design/BhTtJYyY</a></td>
+<td class="org-left"><img src="poliedro-14.png" alt="poliedro-14.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-left">kyYvU3Xd</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/kyYvU3Xd">http://www.sculpteo.com/embed/design/kyYvU3Xd</a></td>
+<td class="org-left"><img src="poliedro-15.png" alt="poliedro-15.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">16</td>
+<td class="org-left">HZBAytyz</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/HZBAytyz">http://www.sculpteo.com/embed/design/HZBAytyz</a></td>
+<td class="org-left"><img src="poliedro-16.png" alt="poliedro-16.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">17</td>
+<td class="org-left">BjZoe6GZ</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/BjZoe6GZ">http://www.sculpteo.com/embed/design/BjZoe6GZ</a></td>
+<td class="org-left"><img src="poliedro-17.png" alt="poliedro-17.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">18</td>
+<td class="org-left">dPc6d8nD</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/dPc6d8nD">http://www.sculpteo.com/embed/design/dPc6d8nD</a></td>
+<td class="org-left"><img src="poliedro-18.png" alt="poliedro-18.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">19</td>
+<td class="org-left">PUog4ujR</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/PUog4ujR">http://www.sculpteo.com/embed/design/PUog4ujR</a></td>
+<td class="org-left"><img src="poliedro-19.png" alt="poliedro-19.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">20</td>
+<td class="org-left">Hfhs8x45</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/Hfhs8x45">http://www.sculpteo.com/embed/design/Hfhs8x45</a></td>
+<td class="org-left"><img src="poliedro-20.png" alt="poliedro-20.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">21</td>
+<td class="org-left">SJuWkeMm</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/SJuWkeMm">http://www.sculpteo.com/embed/design/SJuWkeMm</a></td>
+<td class="org-left"><img src="poliedro-21.png" alt="poliedro-21.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">22</td>
+<td class="org-left">ii3Bej6z</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/ii3Bej6z">http://www.sculpteo.com/embed/design/ii3Bej6z</a></td>
+<td class="org-left"><img src="poliedro-22.png" alt="poliedro-22.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">23</td>
+<td class="org-left">KtMCe5s6</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/KtMCe5s6">http://www.sculpteo.com/embed/design/KtMCe5s6</a></td>
+<td class="org-left"><img src="poliedro-23.png" alt="poliedro-23.png" /></td>
+</tr>
+
+<tr>
+<td class="org-right">24</td>
+<td class="org-left">xxAz2juM</td>
+<td class="org-left"><a href="http://www.sculpteo.com/embed/design/xxAz2juM">http://www.sculpteo.com/embed/design/xxAz2juM</a></td>
+<td class="org-left"><img src="poliedro-24.png" alt="poliedro-24.png" /></td>
+</tr>
+</tbody>
+</table>
+
+<p>
+www.sculpteo.com/embed/design/xxAz2juM
+</p>
+
+<p>
+Los ficheros <code>stl</code> generados pueden visualizarse con <b>OpenSCAD</b> con un script como el siguiente
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name">Generación de las imágenes de ejemplo</label>
+<pre class="src src-java">STLFILE=<span style="color: #ffa07a;">"poliedro-10.stl"</span>;
+ANGLE=20;
+
+rotate<span style="color: #8c8c8c;">(</span><span style="color: #93a8c6;">[</span>ANGLE,0,0<span style="color: #93a8c6;">]</span><span style="color: #8c8c8c;">){</span>
+     translate<span style="color: #93a8c6;">(</span><span style="color: #b0b1a3;">[</span>0,0,0<span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">)</span> <span style="color: #93a8c6;">{</span>
+          <span style="color: #20b2aa; font-weight: bold;">import</span><span style="color: #b0b1a3;">(</span><span style="color: #9370db;">STLFILE</span><span style="color: #b0b1a3;">)</span>;
+     <span style="color: #93a8c6;">}</span>
+<span style="color: #8c8c8c;">}</span>
+</pre>
+</div>
+
+
+<div class="org-src-container">
+<label class="org-src-name">Generación de las imágenes de ejemplo</label>
+<pre class="src src-sh"><span style="color: #cd853f;">#</span><span style="color: #cd853f;">!/bin/</span><span style="color: #20b2aa; font-weight: bold;">sh</span><span style="color: #cd853f;"> -x</span>
+<span style="color: #9acd32;">SCADFILE</span>=./electrostatic-polyedron.scad
+
+<span style="color: #00ff7f;">poliedro</span> <span style="color: #8c8c8c;">()</span> <span style="color: #8c8c8c;">{</span>
+  <span style="color: #76ee00;">local</span> <span style="color: #9acd32;">N</span>=$<span style="color: #9acd32;">1</span>
+  openscad -o poliedro-$<span style="color: #9acd32;">N</span>.stl -D <span style="color: #9acd32;">N</span>=$<span style="color: #9acd32;">N</span> -D <span style="color: #ffa07a;">'$fn=50'</span> -D <span style="color: #ffa07a;">'$fa=50'</span> <span style="color: #ffa07a;">"$SCADFILE"</span>
+<span style="color: #8c8c8c;">}</span>
+<span style="color: #20b2aa; font-weight: bold;">for</span> i<span style="color: #20b2aa; font-weight: bold;"> in</span> $<span style="color: #8c8c8c;">(</span>seq 4 24<span style="color: #8c8c8c;">)</span>
+<span style="color: #20b2aa; font-weight: bold;">do</span>
+  gecho Generando poliedro $<span style="color: #9acd32;">i</span>
+  poliedro $<span style="color: #9acd32;">i</span>
+<span style="color: #20b2aa; font-weight: bold;">done</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="outline-container-orgheadline10" class="outline-2">
+<h2 id="orgheadline10"><span class="section-number-2">4</span> Implementación</h2>
+<div class="outline-text-2" id="text-4">
+</div><div id="outline-container-orgheadline6" class="outline-3">
+<h3 id="orgheadline6"><span class="section-number-3">4.1</span> Características del lenguaje</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+El lenguaje de <b>OpenSCAD</b> es de tipo funcional, con funciones matemáticas básicas. 
+</p>
+<ul class="org-ul">
+<li>No hay bucles de tipo <i>mientras</i>, y deben implementarse como funciones recurivas.</li>
+<li>Distingue entre funciones (sin efectos laterales) y módulos (que crean efectivamente los sólidos).
+<ul class="org-ul">
+<li>Una consecuencia de que las funciones no tengan efectos laterales es la imposibilidad de trazar la ejecución de las mismas, ya que la instrución <code>log</code> se considera un efecto lateral.</li>
+</ul></li>
+<li>Las funciones admiten parámetros por defecto.</li>
+<li>Permite la construcción de listas de objetos, similares a <i>arrays</i>.
+<ul class="org-ul">
+<li>Los objetos pueden ser, entre otros, números y otras listas.</li>
+</ul></li>
+<li>Un punto tridimensional se especifica como una lista de tres valores.</li>
+<li>Ofrece facilidades para <i>for comprehensions</i>.</li>
+</ul>
+
+
+<p>
+En la implementación se ha optado por utilizar las mínimas funciones del sistema.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline7" class="outline-3">
+<h3 id="orgheadline7"><span class="section-number-3">4.2</span> Cálculo de la posición final de las cargas</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+<b>OpenSCAD</b> no ofrece facilidades básicas como la distancia entre puntos tridimentsionales. Esto permite incluir esta función simple a modo de ejemplo de sintaxis de su lenguaje
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name">Distancia entre puntos tridimensionales (sqrt es una función incluída en OpenSCAD)</label>
+<pre class="src src-java"><span style="color: #9370db;">function</span> <span style="color: #00ff7f;">distancia</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">a</span>,<span style="color: #9370db;">b</span><span style="color: #8c8c8c;">)</span> = 
+  let<span style="color: #8c8c8c;">(</span>
+    dx = a<span style="color: #93a8c6;">[</span>0<span style="color: #93a8c6;">]</span>-b<span style="color: #93a8c6;">[</span>0<span style="color: #93a8c6;">]</span>,
+    dy = a<span style="color: #93a8c6;">[</span>1<span style="color: #93a8c6;">]</span>-b<span style="color: #93a8c6;">[</span>1<span style="color: #93a8c6;">]</span>,
+    dz = a<span style="color: #93a8c6;">[</span>2<span style="color: #93a8c6;">]</span>-b<span style="color: #93a8c6;">[</span>2<span style="color: #93a8c6;">]</span>
+  <span style="color: #8c8c8c;">)</span>
+  sqrt<span style="color: #8c8c8c;">(</span>dx*dx + dy*dy + dz*dz<span style="color: #8c8c8c;">)</span>;
+</pre>
+</div>
+
+<p>
+A diferencia de la mayoría de lenguajes, <b>OpenSCAD</b> no ofrece bucles de tipo <b>mientras</b>. Estas construcciones deben emularse con funciones recursivas, que utilicen a su vez operador condicional ternario. En este ejemplo, se utiliza una función recursiva para recorrer una lista y acumular sus valores. puede verse también el uso de parámetros por defecto.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name">Distancia entre puntos tridimensionales</label>
+<pre class="src src-java"><span style="color: #9370db;">function</span> <span style="color: #00ff7f;">sumaPuntos</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">lista</span><span style="color: #8c8c8c;">)</span> = suma<span style="color: #8c8c8c;">(</span>lista,<span style="color: #93a8c6;">[</span>0,0,0<span style="color: #93a8c6;">]</span>,0<span style="color: #8c8c8c;">)</span>;
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">suma</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">lista</span>,retorno=0,i=0<span style="color: #8c8c8c;">)</span> = 
+  i&gt;=len<span style="color: #8c8c8c;">(</span>lista<span style="color: #8c8c8c;">)</span> ? 
+  retorno : 
+  suma<span style="color: #8c8c8c;">(</span>lista,lista<span style="color: #93a8c6;">[</span>i<span style="color: #93a8c6;">]</span>+retorno,i+1<span style="color: #8c8c8c;">)</span>;
+</pre>
+</div>
+
+
+
+
+<p>
+Los bucles <code>for</code> siempre forman parte de un <i>for comprehension</i>, lo que implica que su resultado no puee ser un valor único, sino una lista con una posición por cada vuelta. Para conseguir acumular la distancia total entre dos listas de puntos es necesario, por tanto, un bucle <code>for</code> y un bucle <code>while</code> implementado como función recursiva.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name">Suma de distancias entre dos listas de puntos</label>
+<pre class="src src-java"><span style="color: #9370db;">function</span> <span style="color: #00ff7f;">distancias</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">puntos1</span>, <span style="color: #9370db;">puntos2</span> <span style="color: #8c8c8c;">)</span> =    <span style="color: #8c8c8c;">[</span>
+     <span style="color: #20b2aa; font-weight: bold;">for</span><span style="color: #93a8c6;">(</span> i =<span style="color: #b0b1a3;">[</span>0:1:len<span style="color: #97b098;">(</span>puntos1<span style="color: #97b098;">)</span>-1<span style="color: #b0b1a3;">]</span> <span style="color: #93a8c6;">)</span>
+         distancia<span style="color: #93a8c6;">(</span>puntos1<span style="color: #b0b1a3;">[</span>i<span style="color: #b0b1a3;">]</span>,puntos2<span style="color: #b0b1a3;">[</span>i<span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">)</span>
+<span style="color: #8c8c8c;">]</span>;
+
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">errorTotal</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">puntos1</span>,<span style="color: #9370db;">puntos2</span><span style="color: #8c8c8c;">)</span> = suma<span style="color: #8c8c8c;">(</span>distancias<span style="color: #93a8c6;">(</span>puntos1,puntos2<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>;
+</pre>
+</div>
+
+<p>
+Las fuerzas aplicadas en cada carga se calculan también como un <i>for comprehension</i>.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name">Cálclo de las fuerzas que actúan sobre una carga</label>
+<pre class="src src-java"><span style="color: #9370db;">function</span> <span style="color: #00ff7f;">fuerzasParaPunto</span><span style="color: #8c8c8c;">(</span> <span style="color: #9370db;">p</span>, <span style="color: #9370db;">puntos</span> <span style="color: #8c8c8c;">)</span> = <span style="color: #8c8c8c;">[</span>
+ <span style="color: #20b2aa; font-weight: bold;">for</span><span style="color: #93a8c6;">(</span> punto = puntos <span style="color: #93a8c6;">)</span>
+   let<span style="color: #93a8c6;">(</span>
+      d = distancia<span style="color: #b0b1a3;">(</span>p,punto<span style="color: #b0b1a3;">)</span>
+   <span style="color: #93a8c6;">)</span>
+   <span style="color: #20b2aa; font-weight: bold;">if</span><span style="color: #93a8c6;">(</span> punto != p <span style="color: #93a8c6;">)</span>  
+     <span style="color: #93a8c6;">(</span>p - punto<span style="color: #93a8c6;">)</span>/<span style="color: #93a8c6;">(</span>d*d<span style="color: #93a8c6;">)</span>
+<span style="color: #8c8c8c;">]</span>;
+
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">modulo</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">vector</span><span style="color: #8c8c8c;">)</span> = distancia<span style="color: #8c8c8c;">(</span>vector,<span style="color: #93a8c6;">[</span>0,0,0<span style="color: #93a8c6;">]</span><span style="color: #8c8c8c;">)</span>;
+</pre>
+</div>
+
+
+
+<p>
+Este listado muestra la funcion principal de cálculo de posición de cada carga. La función <code>nuevoPuntoParaInteracion</code> determina la nueva posición de un punto, y la función <code>iteracion</code> utiliza la anterior para calcular la nueva posición de todos los puntos.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name">Cálculo de las nuevas posiciones de las cargas a partir de las actuales</label>
+<pre class="src src-java"><span style="color: #9370db;">function</span> <span style="color: #00ff7f;">normaliza</span><span style="color: #8c8c8c;">(</span> <span style="color: #9370db;">p</span>, <span style="color: #9370db;">radio</span> <span style="color: #8c8c8c;">)</span> = radio * p / modulo<span style="color: #8c8c8c;">(</span>p<span style="color: #8c8c8c;">)</span>;
+
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">nuevoPuntoParaIteracion</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">p</span>,<span style="color: #9370db;">puntos</span>, radio=100<span style="color: #8c8c8c;">)</span> = 
+   let<span style="color: #8c8c8c;">(</span>
+      fuerzas = fuerzasParaPunto<span style="color: #93a8c6;">(</span> p, puntos <span style="color: #93a8c6;">)</span>,
+      factorDeAmpliacion = radio*radio,
+      fuerza = sumaPuntos<span style="color: #93a8c6;">(</span>fuerzas<span style="color: #93a8c6;">)</span>*factorDeAmpliacion,
+      nuevoPunto = p + fuerza
+   <span style="color: #8c8c8c;">)</span>
+   normaliza<span style="color: #8c8c8c;">(</span>nuevoPunto,radio<span style="color: #8c8c8c;">)</span>;
+
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">iteracion</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">puntos</span>, radio=100<span style="color: #8c8c8c;">)</span> = <span style="color: #8c8c8c;">[</span>
+   <span style="color: #20b2aa; font-weight: bold;">for</span><span style="color: #93a8c6;">(</span> i = puntos<span style="color: #93a8c6;">)</span> nuevoPuntoParaIteracion<span style="color: #93a8c6;">(</span>i,puntos,radio<span style="color: #93a8c6;">)</span>
+<span style="color: #8c8c8c;">]</span>;
+</pre>
+</div>
+
+<p>
+La función <code>iteraCalculoDePuntos</code> realiza un bucle <code>while</code> (nuevamente, en forma de función recursiva) hasta que la diferencia de posición entre un paso y el anterior es menor de un umbral. Por seguridad, se incluye también un límite en el número máximo de iteraciones.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name">Bucle hasta no superar una diferencia mínima o un número máximo de iteraciones</label>
+<pre class="src src-java"><span style="color: #9370db;">function</span> <span style="color: #00ff7f;">iteraCalculoDePuntos</span><span style="color: #8c8c8c;">(</span> <span style="color: #9370db;">puntos</span>, radio=100, errorMaximo=0.01, contador=0, iteracionesMaximas=1000 <span style="color: #8c8c8c;">)</span> =
+  let<span style="color: #8c8c8c;">(</span> 
+    siguientesPuntos = iteracion<span style="color: #93a8c6;">(</span>puntos,radio<span style="color: #93a8c6;">)</span>, 
+    error = errorTotal<span style="color: #93a8c6;">(</span>siguientesPuntos, puntos<span style="color: #93a8c6;">)</span>
+  <span style="color: #8c8c8c;">)</span>
+  error &lt;= errorMaximo || contador &gt;= iteracionesMaximas ? 
+        siguientesPuntos : 
+        iteraCalculoDePuntos<span style="color: #8c8c8c;">(</span>siguientesPuntos, radio, errorMaximo, contador+1,iteracionesMaximas<span style="color: #8c8c8c;">)</span>;
+</pre>
+</div>
+
+<p>
+Tan solo resta comenzar con un número determinado de puntos aleatorios e iterarlos hasta conseguir llegar al equilibrio.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name">Cálculo de los vértices de un poliedro</label>
+<pre class="src src-java"><span style="color: #9370db;">function</span> <span style="color: #00ff7f;">puntoAleatorio</span><span style="color: #8c8c8c;">()</span> = rands<span style="color: #8c8c8c;">(</span>-1000,1000,3<span style="color: #8c8c8c;">)</span>;
+
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">puntosAleatorios</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">n</span><span style="color: #8c8c8c;">)</span> = <span style="color: #8c8c8c;">[</span><span style="color: #20b2aa; font-weight: bold;">for</span><span style="color: #93a8c6;">(</span> i=<span style="color: #b0b1a3;">[</span>0:n-1<span style="color: #b0b1a3;">]</span> <span style="color: #93a8c6;">)</span> puntoAleatorio<span style="color: #93a8c6;">()</span><span style="color: #8c8c8c;">]</span>;
+
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">verticesPoliedroElectrostatico</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">n</span><span style="color: #8c8c8c;">)</span> = iteraCalculoDePuntos<span style="color: #8c8c8c;">(</span>puntosAleatorios<span style="color: #93a8c6;">(</span>n<span style="color: #93a8c6;">)</span><span style="color: #8c8c8c;">)</span>;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline9" class="outline-3">
+<h3 id="orgheadline9"><span class="section-number-3">4.3</span> Cálculo del cubrimiento convexo</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Comenzamos definiendo primitivas básicas para el trabajo con vectores: producto escalar y vectorial. El producto vectorial ya está implementado en <b>OpenSCAD</b> (función <code>cross</code>), pero se incluye aquí por completitud del algoritmo.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name">Cálculo del producto escalar y vectorial</label>
+<pre class="src src-java"><span style="color: #9370db;">function</span> <span style="color: #00ff7f;">productoEscalar</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">v1</span>,<span style="color: #9370db;">v2</span><span style="color: #8c8c8c;">)</span> =
+  suma<span style="color: #8c8c8c;">(</span> <span style="color: #93a8c6;">[</span> 
+    <span style="color: #20b2aa; font-weight: bold;">for</span><span style="color: #b0b1a3;">(</span>i=<span style="color: #97b098;">[</span>0:len<span style="color: #aebed8;">(</span>v1<span style="color: #aebed8;">)</span>-1<span style="color: #97b098;">]</span><span style="color: #b0b1a3;">)</span> v1<span style="color: #b0b1a3;">[</span>i<span style="color: #b0b1a3;">]</span>*v2<span style="color: #b0b1a3;">[</span>i<span style="color: #b0b1a3;">]</span> 
+  <span style="color: #93a8c6;">]</span> <span style="color: #8c8c8c;">)</span>;
+
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">productoVectorial</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">v1</span>,<span style="color: #9370db;">v2</span><span style="color: #8c8c8c;">)</span> = <span style="color: #8c8c8c;">[</span>
+    v1<span style="color: #93a8c6;">[</span>1<span style="color: #93a8c6;">]</span>*v2<span style="color: #93a8c6;">[</span>2<span style="color: #93a8c6;">]</span> - v1<span style="color: #93a8c6;">[</span>2<span style="color: #93a8c6;">]</span>*v2<span style="color: #93a8c6;">[</span>1<span style="color: #93a8c6;">]</span>,
+    - v1<span style="color: #93a8c6;">[</span>0<span style="color: #93a8c6;">]</span>*v2<span style="color: #93a8c6;">[</span>2<span style="color: #93a8c6;">]</span> + v1<span style="color: #93a8c6;">[</span>2<span style="color: #93a8c6;">]</span>*v2<span style="color: #93a8c6;">[</span>0<span style="color: #93a8c6;">]</span>,
+    v1<span style="color: #93a8c6;">[</span>0<span style="color: #93a8c6;">]</span>*v2<span style="color: #93a8c6;">[</span>1<span style="color: #93a8c6;">]</span> - v1<span style="color: #93a8c6;">[</span>1<span style="color: #93a8c6;">]</span>*v2<span style="color: #93a8c6;">[</span>0<span style="color: #93a8c6;">]</span>
+<span style="color: #8c8c8c;">]</span>;
+</pre>
+</div>
+
+<p>
+Utilizando los productos, podemos definir la ecuación del plano que pasa por tres puntos, y una función que determina si un punto pertenece a un plano, o si queda a un lado o a otro del mismo.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name">Determinación de la ecuación de un plano por tres ypuntos, y su aplicación a un punto</label>
+<pre class="src src-java"><span style="color: #9370db;">function</span> <span style="color: #00ff7f;">ecuacionDePlanoPorTresPuntos</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">p1</span>,<span style="color: #9370db;">p2</span>,<span style="color: #9370db;">p3</span><span style="color: #8c8c8c;">)</span> =
+  let<span style="color: #8c8c8c;">(</span>
+    puntoEnElPlano = p1,
+    vector1 = p2-p1,
+    vector2 = p3-p1,
+    normal = productoVectorial<span style="color: #93a8c6;">(</span>vector1,vector2<span style="color: #93a8c6;">)</span>,
+    d = -productoEscalar<span style="color: #93a8c6;">(</span>puntoEnElPlano,normal<span style="color: #93a8c6;">)</span>
+  <span style="color: #8c8c8c;">)</span>
+  <span style="color: #8c8c8c;">[</span>normal,d<span style="color: #8c8c8c;">]</span>;
+
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">ecuacionDePlanoPorTresPuntosEnLista</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">lista</span><span style="color: #8c8c8c;">)</span> =
+   ecuacionDePlanoPorTresPuntos<span style="color: #8c8c8c;">(</span>lista<span style="color: #93a8c6;">[</span>0<span style="color: #93a8c6;">]</span>,lista<span style="color: #93a8c6;">[</span>1<span style="color: #93a8c6;">]</span>,lista<span style="color: #93a8c6;">[</span>2<span style="color: #93a8c6;">]</span><span style="color: #8c8c8c;">)</span>;
+
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">sustituyeEcuacionPlano</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">ecuacion</span>,<span style="color: #9370db;">punto</span><span style="color: #8c8c8c;">)</span> =
+    productoEscalar<span style="color: #8c8c8c;">(</span>ecuacion<span style="color: #93a8c6;">[</span>0<span style="color: #93a8c6;">]</span>,punto<span style="color: #8c8c8c;">)</span> + ecuacion<span style="color: #8c8c8c;">[</span>1<span style="color: #8c8c8c;">]</span>;
+</pre>
+</div>
+
+
+<p>
+Las siguientes funciones resumen el cálculo de aristas ocultas. Necesitan varias funciones de utilidad definidas posteriormente.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name">Cálculo de aristas exteriores</label>
+<pre class="src src-java"><span style="color: #9370db;">function</span> <span style="color: #00ff7f;">quitarAristasDuplicadas</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">aristas</span>,ret=<span style="color: #93a8c6;">[]</span>,indice=0<span style="color: #8c8c8c;">)</span> = 
+  indice &gt;= len<span style="color: #8c8c8c;">(</span>aristas<span style="color: #8c8c8c;">)</span> ?
+  ret : 
+  <span style="color: #8c8c8c;">(</span>
+      let<span style="color: #93a8c6;">(</span> 
+        a1 = aristas<span style="color: #b0b1a3;">[</span>indice<span style="color: #b0b1a3;">]</span>,
+        a2 = <span style="color: #b0b1a3;">[</span>a1<span style="color: #97b098;">[</span>1<span style="color: #97b098;">]</span>,a1<span style="color: #97b098;">[</span>0<span style="color: #97b098;">]</span><span style="color: #b0b1a3;">]</span>
+      <span style="color: #93a8c6;">)</span>
+      contenidoEnLista<span style="color: #93a8c6;">(</span>a1,ret<span style="color: #93a8c6;">)</span> || contenidoEnLista<span style="color: #93a8c6;">(</span>a2,ret<span style="color: #93a8c6;">)</span> ?
+      quitarAristasDuplicadas<span style="color: #93a8c6;">(</span>aristas,ret,indice+1<span style="color: #93a8c6;">)</span> :
+      quitarAristasDuplicadas<span style="color: #93a8c6;">(</span>aristas,agregarALista<span style="color: #b0b1a3;">(</span>ret,a1<span style="color: #b0b1a3;">)</span>,indice+1<span style="color: #93a8c6;">)</span>
+  <span style="color: #8c8c8c;">)</span>;
+
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">aristasExteriores</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">vertices</span><span style="color: #8c8c8c;">)</span> =
+    let<span style="color: #8c8c8c;">(</span>
+      n = len<span style="color: #93a8c6;">(</span>vertices<span style="color: #93a8c6;">)</span>,
+      indicesTriangulos = todosLosTripletesHasta<span style="color: #93a8c6;">(</span>n<span style="color: #93a8c6;">)</span>
+    <span style="color: #8c8c8c;">)</span>
+    aplanaUnNivel<span style="color: #8c8c8c;">(</span><span style="color: #93a8c6;">[</span>
+        <span style="color: #20b2aa; font-weight: bold;">for</span><span style="color: #b0b1a3;">(</span> indices = indicesTriangulos <span style="color: #b0b1a3;">)</span>
+            <span style="color: #20b2aa; font-weight: bold;">if</span><span style="color: #b0b1a3;">(</span> todosLosPuntosAlMismoLado<span style="color: #97b098;">(</span>indices,vertices<span style="color: #97b098;">)</span> <span style="color: #b0b1a3;">)</span>
+                aristasDeTriangulo<span style="color: #b0b1a3;">(</span>indices<span style="color: #b0b1a3;">)</span>
+    <span style="color: #93a8c6;">]</span><span style="color: #8c8c8c;">)</span>;      
+
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">todosLosPuntosAlMismoLado</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">triangulo</span>,<span style="color: #9370db;">puntos</span>,tolerancia=1<span style="color: #8c8c8c;">)</span> = 
+   let<span style="color: #8c8c8c;">(</span>
+      ecuacionPlano = ecuacionDePlanoPorTresPuntosEnLista<span style="color: #93a8c6;">(</span>trianguloConIndicesDeVertices<span style="color: #b0b1a3;">(</span>triangulo,puntos<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span>,
+      lados = <span style="color: #93a8c6;">[</span>
+        <span style="color: #20b2aa; font-weight: bold;">for</span><span style="color: #b0b1a3;">(</span>punto=puntos<span style="color: #b0b1a3;">)</span>
+            sustituyeEcuacionPlano<span style="color: #b0b1a3;">(</span>ecuacionPlano,punto<span style="color: #b0b1a3;">)</span>
+      <span style="color: #93a8c6;">]</span>,
+      ladosNegados = <span style="color: #93a8c6;">[</span><span style="color: #20b2aa; font-weight: bold;">for</span><span style="color: #b0b1a3;">(</span>lado=lados<span style="color: #b0b1a3;">)</span> -lado<span style="color: #93a8c6;">]</span>
+   <span style="color: #8c8c8c;">)</span>
+   todosMayoresOIgualesQue<span style="color: #8c8c8c;">(</span>lados,-tolerancia<span style="color: #8c8c8c;">)</span> ||
+        todosMayoresOIgualesQue<span style="color: #8c8c8c;">(</span>ladosNegados,-tolerancia<span style="color: #8c8c8c;">)</span>;
+</pre>
+</div>
+
+<p>
+algoalgoalgoalgoalgoalgo  algoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoa lgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgo algoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgo algoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoa lgoalgoalgoalgoalgoalgoalgoalgo algoalgoalgoalgoalgoalgoa lgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgoalgo algoalgoalgoalgoalgo
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name">Funciones auxiliares para el cálculo de aristas exteriores</label>
+<pre class="src src-java"><span style="color: #9370db;">function</span> <span style="color: #00ff7f;">todosMayoresOIgualesQue</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">valores</span>,<span style="color: #9370db;">umbral</span><span style="color: #8c8c8c;">)</span> =
+    let<span style="color: #8c8c8c;">(</span>
+        comprobaciones = <span style="color: #93a8c6;">[</span>
+            <span style="color: #20b2aa; font-weight: bold;">for</span><span style="color: #b0b1a3;">(</span> v=valores <span style="color: #b0b1a3;">)</span>
+                v - umbral &gt;= 0 ?
+                1 :
+                0
+        <span style="color: #93a8c6;">]</span>
+    <span style="color: #8c8c8c;">)</span>
+    suma<span style="color: #8c8c8c;">(</span>comprobaciones<span style="color: #8c8c8c;">)</span> == len<span style="color: #8c8c8c;">(</span>valores<span style="color: #8c8c8c;">)</span>;
+
+
+
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">todosLosTripletesHasta</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">n</span><span style="color: #8c8c8c;">)</span> = <span style="color: #8c8c8c;">[</span>
+      <span style="color: #20b2aa; font-weight: bold;">for</span><span style="color: #93a8c6;">(</span> i=<span style="color: #b0b1a3;">[</span>0:n-3<span style="color: #b0b1a3;">]</span> , j=<span style="color: #b0b1a3;">[</span>i+1:n-2<span style="color: #b0b1a3;">]</span> , k=<span style="color: #b0b1a3;">[</span>j+1:n-1<span style="color: #b0b1a3;">]</span> <span style="color: #93a8c6;">)</span> <span style="color: #93a8c6;">[</span>i,j,k<span style="color: #93a8c6;">]</span>
+<span style="color: #8c8c8c;">]</span>;
+
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">trianguloConIndicesDeVertices</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">indices</span>,<span style="color: #9370db;">vertices</span><span style="color: #8c8c8c;">)</span> =
+  <span style="color: #8c8c8c;">[</span>vertices<span style="color: #93a8c6;">[</span>indices<span style="color: #b0b1a3;">[</span>0<span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">]</span>, vertices<span style="color: #93a8c6;">[</span>indices<span style="color: #b0b1a3;">[</span>1<span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">]</span>, vertices<span style="color: #93a8c6;">[</span>indices<span style="color: #b0b1a3;">[</span>2<span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">]</span><span style="color: #8c8c8c;">]</span>;
+
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">aristasDeTriangulo</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">triplete</span><span style="color: #8c8c8c;">)</span> = <span style="color: #8c8c8c;">[</span>
+      <span style="color: #93a8c6;">[</span>triplete<span style="color: #b0b1a3;">[</span>0<span style="color: #b0b1a3;">]</span>,triplete<span style="color: #b0b1a3;">[</span>1<span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">]</span>,
+      <span style="color: #93a8c6;">[</span>triplete<span style="color: #b0b1a3;">[</span>1<span style="color: #b0b1a3;">]</span>,triplete<span style="color: #b0b1a3;">[</span>2<span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">]</span>,
+      <span style="color: #93a8c6;">[</span>triplete<span style="color: #b0b1a3;">[</span>2<span style="color: #b0b1a3;">]</span>,triplete<span style="color: #b0b1a3;">[</span>0<span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">]</span>
+<span style="color: #8c8c8c;">]</span>;    
+
+<span style="color: #cd853f;">// </span><span style="color: #cd853f;">SI UNA LISTA ES [[[a,b],[c,d]],[[e,f],[g,h]]] la deja en [[a,b],[c,d],[e,f],[g,h]]</span>
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">aplanaUnNivel</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">lista</span><span style="color: #8c8c8c;">)</span> = <span style="color: #8c8c8c;">[</span>
+      <span style="color: #20b2aa; font-weight: bold;">for</span><span style="color: #93a8c6;">(</span> a = lista , b = a <span style="color: #93a8c6;">)</span> b
+<span style="color: #8c8c8c;">]</span>;
+
+
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">contenidoEnLista</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">v</span>,<span style="color: #9370db;">lista</span>,indice=0<span style="color: #8c8c8c;">)</span> =
+  lista<span style="color: #8c8c8c;">[</span>indice<span style="color: #8c8c8c;">]</span> == v ? 
+  <span style="color: #1e90ff;">true</span> : <span style="color: #8c8c8c;">(</span>
+    indice&gt;=len<span style="color: #93a8c6;">(</span>lista<span style="color: #93a8c6;">)</span> ?
+    <span style="color: #1e90ff;">false</span> :
+    contenidoEnLista<span style="color: #93a8c6;">(</span>v,lista,indice+1<span style="color: #93a8c6;">)</span>
+  <span style="color: #8c8c8c;">)</span>;
+
+<span style="color: #9370db;">function</span> <span style="color: #00ff7f;">agregarALista</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">lista</span>,<span style="color: #9370db;">valor</span><span style="color: #8c8c8c;">)</span> = <span style="color: #8c8c8c;">[</span>
+      <span style="color: #20b2aa; font-weight: bold;">for</span><span style="color: #93a8c6;">(</span>i=<span style="color: #b0b1a3;">[</span>0:len<span style="color: #97b098;">(</span>lista<span style="color: #97b098;">)</span><span style="color: #b0b1a3;">]</span><span style="color: #93a8c6;">)</span>
+          i &lt; <span style="color: #9370db;">len</span><span style="color: #93a8c6;">(</span>lista<span style="color: #93a8c6;">)</span> ? lista<span style="color: #93a8c6;">[</span>i<span style="color: #93a8c6;">]</span> : valor
+<span style="color: #8c8c8c;">]</span>;
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgheadline8" class="outline-4">
+<h4 id="orgheadline8"><span class="section-number-4">4.3.1</span> Renderización del poliedros</h4>
+<div class="outline-text-4" id="text-4-3-1">
+<p>
+Hasta el momento, sólo se ha realizado el cálculo de los vértices del poliedro, pero <b>OpenSCAD</b> no ha renderizado ninguna forma.
+</p>
+
+<p>
+Para que <b>OpenSCAD</b> genere algún volumen hay que utilizar un <code>module</code> predefinido o uno propio construido a base de los ya existentes.
+</p>
+
+<p>
+En este caso, cada arista se renderiza como un cilindro rematado por esferas.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name">Generación de un poliedro</label>
+<pre class="src src-java">N = 20;      
+vertices = verticesPoliedroElectrostatico<span style="color: #8c8c8c;">(</span>N<span style="color: #8c8c8c;">)</span>;
+aristas = aristasExteriores<span style="color: #8c8c8c;">(</span>vertices<span style="color: #8c8c8c;">)</span>;
+aristasSinDuplicados = quitarAristasDuplicadas<span style="color: #8c8c8c;">(</span>aristas<span style="color: #8c8c8c;">)</span>;
+
+<span style="color: #9370db;">module</span> <span style="color: #00ff7f;">palo</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">a</span>,<span style="color: #9370db;">b</span>,<span style="color: #9370db;">r</span><span style="color: #8c8c8c;">){</span>
+    <span style="color: #00ff7f;">hull</span><span style="color: #93a8c6;">(){</span>
+        translate<span style="color: #b0b1a3;">(</span>a<span style="color: #b0b1a3;">)</span> sphere<span style="color: #b0b1a3;">(</span>r<span style="color: #b0b1a3;">)</span>;
+        translate<span style="color: #b0b1a3;">(</span>b<span style="color: #b0b1a3;">)</span> sphere<span style="color: #b0b1a3;">(</span>r<span style="color: #b0b1a3;">)</span>;
+    <span style="color: #93a8c6;">}</span>
+<span style="color: #8c8c8c;">}</span>
+
+<span style="color: #9370db;">module</span> <span style="color: #00ff7f;">aristasAPalos</span><span style="color: #8c8c8c;">(</span><span style="color: #9370db;">aristas</span>,<span style="color: #9370db;">vertices</span>,ancho=10<span style="color: #8c8c8c;">){</span>
+    <span style="color: #20b2aa; font-weight: bold;">for</span><span style="color: #93a8c6;">(</span> i=aristas <span style="color: #93a8c6;">)</span>
+        palo<span style="color: #93a8c6;">(</span>vertices<span style="color: #b0b1a3;">[</span>i<span style="color: #97b098;">[</span>0<span style="color: #97b098;">]</span><span style="color: #b0b1a3;">]</span>,vertices<span style="color: #b0b1a3;">[</span>i<span style="color: #97b098;">[</span>1<span style="color: #97b098;">]</span><span style="color: #b0b1a3;">]</span>,ancho<span style="color: #93a8c6;">)</span>;
+<span style="color: #8c8c8c;">}</span>    
+
+aristasAPalos<span style="color: #8c8c8c;">(</span>aristasSinDuplicados,vertices,5<span style="color: #8c8c8c;">)</span>;
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Álvaro González Sotillo</p>
+<p class="date">Created: 2016-10-16 dom 21:40</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

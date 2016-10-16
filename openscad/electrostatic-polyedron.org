@@ -64,6 +64,33 @@ do
 done
 #+end_src
 
+Estos ficheros se han subido a [[http://www.sculpteo.com][Sculpteo.com]]
+| Vértices | Sculpteo ID | Enlace                                        | nada                 |
+|----------+-------------+-----------------------------------------------+----------------------|
+|        4 | hwBvUUPS    | http://www.sculpteo.com/embed/design/hwBvUUPS | [[file:poliedro-4.png]]  |
+|        5 | zywXZ2Vv    | http://www.sculpteo.com/embed/design/zywXZ2Vv | [[file:poliedro-5.png]]  |
+|        6 | Hd6M6qdV    | http://www.sculpteo.com/embed/design/Hd6M6qdV | [[file:poliedro-6.png]]  |
+|        7 | e3Z7njee    | http://www.sculpteo.com/embed/design/e3Z7njee | [[file:poliedro-7.png]]  |
+|        8 | zF9bWGAC    | http://www.sculpteo.com/embed/design/zF9bWGAC | [[file:poliedro-8.png]]  |
+|        9 | MTTJEqKN    | http://www.sculpteo.com/embed/design/MTTJEqKN | [[file:poliedro-9.png]]  |
+|       10 | XHaVXMzy    | http://www.sculpteo.com/embed/design/XHaVXMzy | [[file:poliedro-10.png]] |
+|       11 | cTu8ZKCy    | http://www.sculpteo.com/embed/design/cTu8ZKCy | [[file:poliedro-11.png]] |
+|       12 | XHZQE7ST    | http://www.sculpteo.com/embed/design/XHZQE7ST | [[file:poliedro-12.png]] |
+|       13 | A9fQg8jN    | http://www.sculpteo.com/embed/design/A9fQg8jN | [[file:poliedro-13.png]] |
+|       14 | BhTtJYyY    | http://www.sculpteo.com/embed/design/BhTtJYyY | [[file:poliedro-14.png]] |
+|       15 | kyYvU3Xd    | http://www.sculpteo.com/embed/design/kyYvU3Xd | [[file:poliedro-15.png]] |
+|       16 | HZBAytyz    | http://www.sculpteo.com/embed/design/HZBAytyz | [[file:poliedro-16.png]] |
+|       17 | BjZoe6GZ    | http://www.sculpteo.com/embed/design/BjZoe6GZ | [[file:poliedro-17.png]] |
+|       18 | dPc6d8nD    | http://www.sculpteo.com/embed/design/dPc6d8nD | [[file:poliedro-18.png]] |
+|       19 | PUog4ujR    | http://www.sculpteo.com/embed/design/PUog4ujR | [[file:poliedro-19.png]] |
+|       20 | Hfhs8x45    | http://www.sculpteo.com/embed/design/Hfhs8x45 | [[file:poliedro-20.png]] |
+|       21 | SJuWkeMm    | http://www.sculpteo.com/embed/design/SJuWkeMm | [[file:poliedro-21.png]] |
+|       22 | ii3Bej6z    | http://www.sculpteo.com/embed/design/ii3Bej6z | [[file:poliedro-22.png]] |
+|       23 | KtMCe5s6    | http://www.sculpteo.com/embed/design/KtMCe5s6 | [[file:poliedro-23.png]] |
+|       24 | xxAz2juM    | http://www.sculpteo.com/embed/design/xxAz2juM | [[file:poliedro-24.png]] |
+#+tblfm: $3='(concat "http://www.sculpteo.com/embed/design/" $2);::$4='(concat "[[file:poliedro-" $1 ".png]]")
+
+www.sculpteo.com/embed/design/xxAz2juM
 
 Los ficheros =stl= generados pueden visualizarse con *OpenSCAD* con un script como el siguiente
 
