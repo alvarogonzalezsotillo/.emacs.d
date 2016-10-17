@@ -275,38 +275,16 @@
  '(ansi-color-names-vector
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#ad7fa8" "#8cc4ff" "#eeeeec"])
  '(chess-default-display (quote (chess-images chess-ics1 chess-plain)))
- '(custom-enabled-themes (quote (tsdh-dark)))
+ '(custom-enabled-themes (quote (alvaro-emacs-theme)))
  '(custom-safe-themes
    (quote
-    ("c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "36d92f830c21797ce34896a4cf074ce25dbe0dabe77603876d1b42316530c99d" "b04425cc726711a6c91e8ebc20cf5a3927160681941e06bc7900a5a5bfe1a77f" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
+    ("c8bb12b86341bfdc154664bf93fc0753ba2ea91c85b9f678e664288c1dd74d05" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "36d92f830c21797ce34896a4cf074ce25dbe0dabe77603876d1b42316530c99d" "b04425cc726711a6c91e8ebc20cf5a3927160681941e06bc7900a5a5bfe1a77f" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
  '(desktop-save t)
  '(desktop-save-mode t)
  '(fill-column 120)
  '(global-auto-complete-mode t)
  '(line-number-mode nil)
  '(linum-mode 1 t)
- '(neo-hidden-regexp-list (quote ("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" ".git")))
- '(neo-smart-open t)
- '(neo-theme (quote nerd))
- '(org-babel-load-languages (quote ((emacs-lisp . t) (shell . t))))
- '(org-html-mathjax-options
-   (quote
-    ((path "//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML")
-     (scale "100")
-     (align "center")
-     (font "TeX")
-     (linebreaks "false")
-     (autonumber "AMS")
-     (indent "0em")
-     (multlinewidth "85%")
-     (tagindent ".8em")
-     (tagside "right"))))
- '(org-latex-image-default-width "1cm")
- '(org-latex-listings t)
- '(package-selected-packages
-   (quote
-    (markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors image+ htmlize helm-projectile guide-key-tip github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap)))
- '(send-mail-function (quote sendmail-send-it))
  '(sml/mode-width
    (if
        (eq
