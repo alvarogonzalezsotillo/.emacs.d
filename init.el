@@ -285,6 +285,10 @@
  '(global-auto-complete-mode t)
  '(line-number-mode nil)
  '(linum-mode 1 t)
+ '(org-format-latex-options
+   (quote
+    (:foreground default :background "White" :scale 1.0 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
+                 ("begin" "$1" "$" "$$" "\\(" "\\["))))
  '(sml/mode-width
    (if
        (eq
