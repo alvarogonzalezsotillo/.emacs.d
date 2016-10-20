@@ -269,6 +269,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(LaTeX-command-style
+   (quote
+    (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
  '(TeX-source-correlate-mode t)
  '(TeX-source-correlate-start-server t)
  '(ac-ignore-case nil)
