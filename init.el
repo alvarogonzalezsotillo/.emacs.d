@@ -19,6 +19,17 @@
 
   (package-install-selected-packages))
 
+;; AUTO MODE, PARA QUE SE ABRAN COMO TEXTO LOS SVG
+(add-to-list 'auto-mode-alist '("\\.svg$" . text-mode))
+
+;; PREVIEW DE TIKZ
+;; https://www.gnu.org/software/auctex/manual/preview-latex.html
+(eval-after-load "preview"
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t)
+  )
+(eval-after-load "preview"
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t)
+  )
 
 
 
@@ -281,7 +292,8 @@
  '(custom-enabled-themes (quote (alvaro-emacs-theme)))
  '(custom-safe-themes
    (quote
-    ("c8bb12b86341bfdc154664bf93fc0753ba2ea91c85b9f678e664288c1dd74d05" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "36d92f830c21797ce34896a4cf074ce25dbe0dabe77603876d1b42316530c99d" "b04425cc726711a6c91e8ebc20cf5a3927160681941e06bc7900a5a5bfe1a77f" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
+    ("12cd2ff2db62c2fe561fa6148e5438c6e0eebb9daa7b46c69931ffacfee1521d" "3a0083b2db70cff2c828d59c37973384a9d2f07b3911e8292c19b3c701552804" "c8bb12b86341bfdc154664bf93fc0753ba2ea91c85b9f678e664288c1dd74d05" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "36d92f830c21797ce34896a4cf074ce25dbe0dabe77603876d1b42316530c99d" "b04425cc726711a6c91e8ebc20cf5a3927160681941e06bc7900a5a5bfe1a77f" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
+ '(delete-selection-mode t)
  '(desktop-save t)
  '(desktop-save-mode t)
  '(fill-column 120)
@@ -292,6 +304,15 @@
    (quote
     (:foreground default :background "White" :scale 1.0 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
                  ("begin" "$1" "$" "$$" "\\(" "\\["))))
+ '(org-latex-default-table-environment "longtable")
+ '(org-latex-images-centered nil)
+ '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex")
+ '(preview-default-preamble
+   (quote
+    ("\\RequirePackage["
+     ("," . preview-default-option-list)
+     "]{preview}[2004/11/05]" "\\PreviewEnvironment{tikzpicture}" "\\PreviewEnvironment{tabular}")))
+ '(preview-image-type (quote dvipng))
  '(sml/mode-width
    (if
        (eq
@@ -372,7 +393,8 @@
  '(org-block ((t (:inherit shadow :inverse-video t :family "courier"))))
  '(org-level-1 ((t (:inherit outline-1 :box (:line-width 2 :color "grey75" :style released-button) :height 2.0))))
  '(org-level-2 ((t (:inherit outline-2 :box nil :height 1.5))))
- '(org-meta-line ((t (:inherit font-lock-comment-face :height 0.4)))))
+ '(org-meta-line ((t (:inherit font-lock-comment-face :height 0.4))))
+ '(preview-reference-face ((t (:background "magenta")))))
 (put 'LaTeX-narrow-to-environment 'disabled nil)
 (put 'TeX-narrow-to-group 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
