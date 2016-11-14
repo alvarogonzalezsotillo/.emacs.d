@@ -217,6 +217,9 @@
 ;; ANCHURA DE PAGINAS DEL MAN
 (setenv "MANWIDTH" "80")
 
+;; FICHEROS STY LOCALES PARA EL LIBRO DE SMR
+(setenv "TEXINPUTS" ".:./sty:")
+
 ;; ESTO ES PARA EL AUTOCOMPLETE
 (require 'auto-complete-config)
 (ac-config-default)
@@ -283,6 +286,7 @@
  '(LaTeX-command-style
    (quote
     (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
+ '(LaTeX-verbatim-environments (quote ("verbatim" "verbatim*" "PantallazoTexto")))
  '(TeX-source-correlate-mode t)
  '(TeX-source-correlate-start-server t)
  '(ac-ignore-case nil)
@@ -300,6 +304,7 @@
  '(global-auto-complete-mode t)
  '(line-number-mode nil)
  '(linum-mode 1 t)
+ '(mc/always-run-for-all t)
  '(org-format-latex-options
    (quote
     (:foreground default :background "White" :scale 1.0 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
