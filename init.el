@@ -209,7 +209,8 @@
 
 ;; EXPAND REGION
 (require 'expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
+(global-set-key (kbd "C-e") 'er/expand-region)
+(global-set-key (kbd "C-S-e") 'er/contract-region)
 
 ;; QUITAR LA TOOLBAR
 (tool-bar-mode -1)
