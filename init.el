@@ -286,12 +286,12 @@
     (define-key map (kbd "C-S-e") 'er/contract-region)
     (define-key map (kbd "C-z") 'undo )
     map)
-  "mis-teclas-minor-mode keymap.")
+  "mis-teclas-minor-mode keymap")
 
 (define-minor-mode mis-teclas-minor-mode
   "A minor mode so that my key settings override annoying major modes."
   :init-value t
-  :lighter " mist-teclas")
+  :lighter "mis-teclas")
 
 (mis-teclas-minor-mode 1)
 
