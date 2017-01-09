@@ -299,7 +299,7 @@
 (define-minor-mode mis-teclas-minor-mode
   "A minor mode so that my key settings override annoying major modes."
   :init-value t
-  :lighter " mis-teclas")
+  :lighter "mis-teclas")
 
 (mis-teclas-minor-mode 1)
 
