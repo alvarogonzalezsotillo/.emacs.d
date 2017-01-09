@@ -9,7 +9,7 @@
 
   (interactive) 
   ;; LISTA DE PAQUETES INSTALADOS (C-h v package-selected-packages)
-  (setq package-selected-packages '(scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors image+ htmlize helm-projectile guide-key-tip github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap))
+  (setq package-selected-packages '(org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors image+ htmlize helm-projectile guide-key-tip github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap))
   
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
   ;; (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t )
@@ -34,6 +34,13 @@
 
 
 ;; EXPERIMENTOS
+(defun url-decode-region (start end)
+  "Replace a region with the same contents, only URL decoded."
+  (interactive "r")
+  (let ((text (url-unhex-string (buffer-substring start end))))
+    (delete-region start end)
+    (insert text)))
+
 (defun horario()
   (interactive)
   (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/ags.iesavellaneda%40gmail.com/private-8d8f10c04ef7daee164d8d8a8f4707d5/basic.ics"))
@@ -285,13 +292,14 @@
     (define-key map (kbd "C-e") 'er/expand-region)
     (define-key map (kbd "C-S-e") 'er/contract-region)
     (define-key map (kbd "C-z") 'undo )
+    (define-key map (kbd "C-x C-d") 'dired)
     map)
-  "mis-teclas-minor-mode keymap.")
+  "mis-teclas-minor-mode keymap")
 
 (define-minor-mode mis-teclas-minor-mode
   "A minor mode so that my key settings override annoying major modes."
   :init-value t
-  :lighter " mist-teclas")
+  :lighter " mis-teclas")
 
 (mis-teclas-minor-mode 1)
 
