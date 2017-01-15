@@ -75,6 +75,12 @@
   (insert (concat "[[file:" filename "]]"))
   (org-display-inline-images))
 
+;; SELECCION TRAS COPIAR
+(defadvice kill-ring-save (after keep-transient-mark-active ())
+  "Override the deactivation of the mark."
+  (setq deactivate-mark nil))
+(ad-activate 'kill-ring-save)
+
 ;; VISIBLE BOOKMARKS
 (require 'bm)
 (global-set-key (kbd "<C-f2>") 'bm-toggle)
@@ -341,8 +347,8 @@
  '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors image+ htmlize helm-projectile guide-key-tip github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap)))
- '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex")
+    (dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors image+ htmlize helm-projectile guide-key-tip github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap)))
+ '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex" t)
  '(preview-default-preamble
    (quote
     ("\\RequirePackage["
