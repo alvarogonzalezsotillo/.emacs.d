@@ -1,4 +1,12 @@
 #+org_title: Instalación de emacs / git / Latex en entorno cygwin
+#+hash: iM0Gj3KpXcSXNzwZJW-VWA
+
+* Elementary
+Arrancar emacs
+#+begin_src bash
+XLIB_SKIP_ARGB_VISUALS=1 emacs
+#+end_src
+
 
 * Instalación de *Cygwin*
 1. Descargar el fichero [[https://www.cygwin.com/setup-x86_64.exe]]

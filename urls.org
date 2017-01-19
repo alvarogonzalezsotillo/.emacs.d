@@ -1,0 +1,566 @@
+
+Notas de Cristina
+https://docs.google.com/spreadsheets/d/1L3-6OWDbEb4ytrZUZPata_ggLEq4QhQwULCXvOAg_7A/edit#gid=0
+
+Hojas de seguimiento SMR dual
+https://docs.google.com/spreadsheets/d/1yUZxuiX8uYvJJfPZf0bypDmd6_BIcWAunZ0yyEQq_1A/edit?ts=58543cc6#gid=596515985
+
+* Porcentajes
+| Módulo | Exámenes | Trabajos | Actitud | Notas                       | Calculadora |
+|--------+----------+----------+---------+-----------------------------+-------------|
+| ASGBD  |       90 |       10 |         | En la programación 90-10-0  |     65-30-5 |
+| SIAD   |       65 |       30 |       5 |                             |     65-30-5 |
+| BD     |       65 |       30 |       5 |                             |     65-30-5 |
+| SI     |       60 |       30 |      10 | En la programación 60-30-10 |    60-30-10 |
+| TICO   |       20 |       65 |      15 | Programación de Raquel      |    60-30-10 |
+
+
+
+* Concurso traslados
+- Solicitudes
+  - 10583 : con peticiones del 2015
+    - [[file:concurso-traslados/noviembre/solicitud-10583-oficial.pdf]]
+
+
+* Calendarios
+
+| id Calendarios |                                                      | iframe moodle                                                                                                                                                                                                                                                                                                    | pre-iframe                                                                                                             | post-iframe                                                                                                                            |
+|----------------+------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------|
+| tico1b         | pukh1nmkejjvu42fm3nkh5486g@group.calendar.google.com | <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=2&amp;hl=es&amp;bgcolor=%23FFFFFF&amp;src=pukh1nmkejjvu42fm3nkh5486g@group.calendar.google.com&amp;color=%23B1440E&amp;ctz=Europe%2FMadrid" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe> | <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=2&amp;hl=es&amp;bgcolor=%23FFFFFF&amp;src= | &amp;color=%23B1440E&amp;ctz=Europe%2FMadrid" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe> |
+| tico1a         | f69efvlsk3uf2okks75mgjc51c@group.calendar.google.com | <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=2&amp;hl=es&amp;bgcolor=%23FFFFFF&amp;src=f69efvlsk3uf2okks75mgjc51c@group.calendar.google.com&amp;color=%23B1440E&amp;ctz=Europe%2FMadrid" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe> |                                                                                                                        |                                                                                                                                        |
+| asgbd          | v7pgjs05nmecf0bkc3c5djjqi0@group.calendar.google.com | <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=2&amp;hl=es&amp;bgcolor=%23FFFFFF&amp;src=v7pgjs05nmecf0bkc3c5djjqi0@group.calendar.google.com&amp;color=%23B1440E&amp;ctz=Europe%2FMadrid" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe> |                                                                                                                        |                                                                                                                                        |
+| si             | 27j4ic6ld71j4ich9janr786h0@group.calendar.google.com | <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=2&amp;hl=es&amp;bgcolor=%23FFFFFF&amp;src=27j4ic6ld71j4ich9janr786h0@group.calendar.google.com&amp;color=%23B1440E&amp;ctz=Europe%2FMadrid" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe> |                                                                                                                        |                                                                                                                                        |
+| siad           | 3bc7ajdqvkmdqjkh4pmmgofa4s@group.calendar.google.com | <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=2&amp;hl=es&amp;bgcolor=%23FFFFFF&amp;src=3bc7ajdqvkmdqjkh4pmmgofa4s@group.calendar.google.com&amp;color=%23B1440E&amp;ctz=Europe%2FMadrid" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe> |                                                                                                                        |                                                                                                                                        |
+| bd             | 52m9ussnu3ue4tn0n19d2ovc7k@group.calendar.google.com | <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=2&amp;hl=es&amp;bgcolor=%23FFFFFF&amp;src=52m9ussnu3ue4tn0n19d2ovc7k@group.calendar.google.com&amp;color=%23B1440E&amp;ctz=Europe%2FMadrid" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe> |                                                                                                                        |                                                                                                                                        |
+#+TBLFM: $3='(concat @2$4 $2 @2$5)
+
+** Iframes para el moodle
+
+<iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=2&amp;hl=es&amp;bgcolor=%23FFFFFF&amp;src=f69efvlsk3uf2okks75mgjc51c%40group.calendar.google.com&amp;color=%23B1440E&amp;ctz=Europe%2FMadrid" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+
+* Moodle
+   | Curso                     | url                                                              |
+   |---------------------------+------------------------------------------------------------------|
+   | Rosa chacel               | http://aulavirtual2.educa.madrid.org/course/category.php?id=2724 |
+   | tico                      | http://aulavirtual2.educa.madrid.org/course/view.php?id=22210    |
+   | seguridad informática smr | http://aulavirtual2.educa.madrid.org/course/view.php?id=19438    |
+   | ASGBD                     | http://aulavirtual2.educa.madrid.org/course/view.php?id=16620    |
+   | BD                        | http://aulavirtual2.educa.madrid.org/course/view.php?id=22208    |
+   | SIAD                      | http://aulavirtual2.educa.madrid.org/course/view.php?id=13015    |
+   | Departamento              | http://aulavirtual2.educa.madrid.org/course/view.php?id=12364    |
+
+
+
+
+
+* Repositorios
+|       | gh-pages                                                                       | github                                                                                            | bitbucket                                                                                        |
+|-------+--------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------|
+| tico1 | https://alvarogonzalezsotillo.github.io/tico1-bach1/apuntes                    | https://alvarogonzalezsotillo@github.com/alvarogonzalezsotillo/tico1-bach1.git                    | https://alvarogonzalezsotillo@bitbucket.org/alvarogonzalezsotillo/bach1-tico1.git                |
+| asgbd | https://alvarogonzalezsotillo.github.io/sistemas-gestores-bbdd-asir2/apuntes   | https://alvarogonzalezsotillo@github.com/alvarogonzalezsotillo/sistemas-gestores-bbdd-asir2.git   | https://alvarogonzalezsotillo@bitbucket.org/alvarogonzalezsotillo/asir2-sistemasgestoresbbdd.git |
+| si    | https://alvarogonzalezsotillo.github.io/seguridad-informatica-smr2dual/apuntes | https://alvarogonzalezsotillo@github.com/alvarogonzalezsotillo/seguridad-informatica-smr2dual.git | https://alvarogonzalezsotillo@bitbucket.org/alvarogonzalezsotillo/smrex-seguridadinformatica.git |
+| siad  | https://alvarogonzalezsotillo.github.io/seguridad-informatica-asir2/apuntes    | https://alvarogonzalezsotillo@github.com/alvarogonzalezsotillo/seguridad-informatica-asir2.git    | https://alvarogonzalezsotillo@bitbucket.org/alvarogonzalezsotillo/asir2-seguridadinformatica.git |
+| bd    | https://alvarogonzalezsotillo.github.io/basesdedatos-dam1/apuntes              | https://alvarogonzalezsotillo@github.com/alvarogonzalezsotillo/basesdedatos-dam1.git              | https://alvarogonzalezsotillo@bitbucket.org/alvarogonzalezsotillo/dam1-basesdedatos.git          |
+
+
+
+
+* Otras
+** TICO I
+
+- [[http://foro.adre-es.org/index.php?topic=70.0]]
+- Contenidos y estándares de aprendizaje evaluables: http://iesleonfelipe.centros.educa.jcyl.es/sitio/index.cgi?wid_item=171&wid_seccion=22
+
+
+*** Contenidos BOCAM
+Bloque 1. La sociedad de la información y el ordenador 
+Historia de la informática. 
+La globalización de la información.  
+Nuevos sectores laborales.  
+La Sociedad de la Información 
+La fractura digital. 
+La globalización del conocimiento. 
+La Sociedad del Conocimiento.
+
+Bloque 2. Arquitectura de ordenadores 
+Ordenadores personales, sistemas departamentales y grandes ordenadores. 
+Estructura de un ordenador. 
+Elementos funcionales y subsistemas. 
+Subsistemas integrantes de equipos informáticos. 
+Alimentación. 
+Sistemas de protección ante fallos. 
+Placas base: procesadores y memorias. 
+Dispositivos de almacenamiento masivo. 
+Periféricos de entrada y salida. 
+Secuencia de arranque de un equipo.  
+Sistemas operativos. Funciones del sistema operativo. 
+Libres y propietarios. 
+Estructura. 
+Procedimientos.
+
+Bloque 3. Software para sistemas informáticos 
+Software de utilidad. 
+Software libre y propietario. 
+Tipos de aplicaciones. Instalación y prueba de aplicaciones. 
+Requerimiento de las aplicaciones. 
+Ofimática y documentación electrónica. 
+Imagen digital. 
+Vídeo y sonido digitales. 
+Software de comunicación.
+
+Bloque 4. Redes de ordenadores 
+Redes de área local.  
+Topología de red.  
+Cableados. 
+Redes inalámbricas. 
+Redes de área metropolitana. 
+Redes de área extensa. 
+El modelo OSI de la ISO.  
+Niveles del modelo. 
+Comunicación entre niveles. 
+Elementos de conexión a redes.
+
+Bloque 5. Programación 
+Elementos de programación. 
+Conceptos básicos. 
+Ingeniería de Software.  
+Lenguajes de Programación.  
+Evolución de la Programación 
+Elementos de la programación. 
+Valores y Tipos. Representación de Valores Constantes. Tipos. 
+Expresiones Aritméticas.  
+Operaciones de Escritura Simple. Estructura de un Programa.  
+Constantes y variables. 
+Metodología de desarrollo de programas. 
+Resolución de problemas mediante programación. 
+Descomposición de problemas mayores en otros más pequeños. 
+Estructuras básicas de la programación. 
+Programación estructurada.  
+Expresiones Condicionales. 
+Selección y bucles de programación 
+Seguimiento y verificación de programas.
+
+*** Criterios de evaluación y Estándares de aprendizaje evaluables (BOE)
+
+24. Tecnologías de la Información y la Comunicación. 
+En la actualidad vivimos una revolución permanente fácilmente observable: manejamos información y aparatos tecnológicos que hace unos pocos años no éramos capaces de imaginar. La forma en la que vivimos y trabajamos ha cambiado profundamente y han surgido un conjunto de nuevas capacidades y habilidades necesarias para desarrollarse e integrarse en la vida adulta, en una sociedad hiperconectada y en un constante y creciente cambio. Los alumnos y alumnas deben estar preparados para adaptarse a un nuevo mapa de sociedad en transformación. La formación en competencias es un imperativo curricular que en el caso de la competencia digital ha tenido hasta ahora una especificación poco desarrollada y diversa en sus descriptores al no existir un marco de referencia común. Desarrollar la competencia digital en el sistema educativo requiere una correcta integración del uso de las TIC en las aulas y que los docentes tengan la formación necesaria en esa competencia. Es probablemente este último factor el más importante para el desarrollo de una cultura digital en el aula y la sintonía del sistema educativo con la nueva “sociedad red”. En este sentido, la Unión europea lleva varios años trabajando en el DIGCOMP: Marco para el desarrollo y comprensión de la competencia digital en Europa. La materia Tecnologías de la Información y la Comunicación (TIC) prepara al alumnado para desenvolverse en un marco adaptativo; más allá de una simple alfabetización digital centrada en el manejo de herramientas que quedarán obsoletas en un corto plazo de tiempo, es necesario dotar de los conocimientos, destrezas y aptitudes para facilitar un aprendizaje permanente a lo largo de la vida, de forma que el alumnado pueda adaptarse con versatilidad a las demandas que surjan en el campo de las TIC. Día a día aparecen nuevos dispositivos electrónicos que crean, almacenan, procesan y transmiten información en tiempo real y permiten al usuario estar conectado y controlar en modo remoto diversos dispositivos en el hogar o el trabajo, creando un escenario muy diferente al de tiempos pasados. Es imprescindible educar en el uso de herramientas que faciliten la interacción de los jóvenes con su entorno, así como en los límites éticos y legales que implica su uso. Por otro lado, el alumnado ha de ser capaz de integrar y vincular estos aprendizajes con otros del resto de materias, dando coherencia y potenciando el dominio de los mismos. 
+En 4º de ESO se debe proveer al alumno con las habilidades necesarias para adaptarse a los cambios propios de las TIC, a fin de que el alumno adquiera la soltura necesaria con los medios informáticos actuales para incorporarse con plenas competencias a la vida activa o para continuar estudios.
+En Bachillerato, la materia debe proponer la consolidación de una serie de aspectos tecnológicos indispensables tanto para la incorporación a la vida profesional como para proseguir estudios superiores.
+
+
+Criterios de evaluación y Estándares de aprendizaje evaluables:
+
+
+Bloque 1. La sociedad de la información y el ordenador 
+1. Analizar y valorar las influencias de las tecnologías de la información y la comunicación en la transformación de la sociedad actual, tanto en los ámbitos de la adquisición del conocimiento como en los de la producción. 
+
+1.1. Describe las diferencias entre lo que se considera sociedad de la información y sociedad del conocimiento. 
+1.2. Explica que nuevos sectores económicos han aparecido como consecuencia de la generalización de las tecnologías de la información y la comunicación. 
+
+
+Bloque 2. Arquitectura de ordenadores 
+1. Configurar ordenadores y equipos informáticos identificando los subsistemas que los componen, describiendo sus características y relacionando cada elemento con las prestaciones del conjunto.
+2. Instalar y utilizar software de propósito general y de aplicación evaluando sus características y entornos de aplicación.
+
+1.1. Describe las características de los subsistemas que componen un ordenador identificando sus principales parámetros de funcionamiento. 
+1.2. Realiza esquemas de interconexión de los bloques funcionales de un ordenador describiendo la contribución de cada uno de ellos al funcionamiento integral del sistema. 
+1.3. Describe dispositivos de almacenamiento masivo utilizados en sistemas de ordenadores reconociendo su importancia en la custodia de la información. 
+1.4. Describe los tipos de memoria utilizados en ordenadores analizando los parámetros que las definen y su aportación al rendimiento del conjunto. 
+2.1. Elabora un diagrama de la estructura de un sistema operativo relacionando cada una de las partes las funciones que realiza. 
+2.2. Instala sistemas operativos y programas de aplicación para la resolución de problemas en ordenadores personales siguiendo instrucciones del fabricante. 
+
+
+Bloque 3. Software para sistemas informáticos 
+1. Utilizar aplicaciones informáticas de escritorio o web, como instrumentos de resolución de problemas específicos.
+
+1.1. Diseña bases de datos sencillas y /o extrae información, realizando consultas, formularios e informes. 
+1.2. Elabora informes de texto que integren texto e imágenes aplicando las posibilidades de las aplicaciones y teniendo en cuenta el destinatario. 
+1.3. Elabora presentaciones que integren texto, imágenes y elementos multimedia, adecuando el mensaje al público objetivo al que está destinado. 
+1.4. Resuelve problemas que requieran la utilización de hojas de cálculo generando resultados textuales, numéricos y gráficos. 
+1.5. Diseña elementos gráficos en 2D y 3D para comunicar ideas. 
+1.6. Realiza pequeñas películas integrando sonido, vídeo e imágenes, utilizando programas de edición de archivos multimedia. 
+
+
+Bloque 4. Redes de ordenadores 
+1. Analizar las principales topologías utilizadas en el diseño de redes de ordenadores relacionándolas con el área de aplicación y con las tecnologías empleadas. 
+2. Analizar la función de los equipos de conexión que permiten realizar configuraciones de redes y su interconexión con redes de área extensa. 
+3. Describir los niveles del modelo OSI, relacionándolos con sus funciones en una red informática. 
+
+1.1. Dibuja esquemas de configuración de pequeñas redes locales seleccionando las tecnologías en función del espacio físico disponible. 
+1.2. Realiza un análisis comparativo entre diferentes tipos de cableados utilizados en redes de datos. 
+1.3. Realiza un análisis comparativo entre tecnología cableada e inalámbrica indicando posibles ventajas e inconvenientes. 
+2.1. Explica la funcionalidad de los diferentes elementos que permiten configurar redes de datos indicando sus ventajas e inconvenientes principales. 
+3.1. Elabora un esquema de cómo se realiza la comunicación entre los niveles OSI de dos equipos remotos. 
+
+
+Bloque 5. Programación 
+1. Aplicar algoritmos a la resolución de los problemas más frecuentes que se presentan al trabajar con estructuras de datos. 
+2. Analizar y resolver problemas de tratamiento de información dividiéndolos en sub-problemas y definiendo algoritmos que los resuelven. 
+3. Analizar la estructura de programas informáticos, identificando y relacionando los elementos propios del lenguaje de programación utilizado. 
+4. Conocer y comprender la sintaxis y la semántica de las construcciones básicas de un lenguaje de programación. 
+5. Realizar pequeños programas de aplicación en un lenguaje de programación determinado aplicándolos a la solución de problemas reales. 
+
+1.1. Desarrolla algoritmos que permitan resolver problemas aritméticos sencillos elaborando sus diagramas de flujo correspondientes. 
+2.1. Escribe programas que incluyan bucles de programación para solucionar problemas que implique la división del conjunto en parte más pequeñas. 
+3.1. Obtiene el resultado de seguir un pequeño programa escrito en un código determinado, partiendo de determinadas condiciones. 
+4.1. Define qué se entiende por sintaxis de un lenguaje de programación proponiendo ejemplos concretos de un lenguaje determinado. 
+5.1. Realiza programas de aplicación sencillos en un lenguaje determinado que solucionen problemas de la vida real.
+
+- Índice Bruño
+  - [[file:data/0b/2dde72-d577-461e-a02f-f05a3ddd5a9c/indice-libro-bruño-1.png]]
+  - [[file:data/0b/2dde72-d577-461e-a02f-f05a3ddd5a9c/indice-libro-bruño-2.png]]
+
+- Capítulo gratis Bruño
+   - [[https://marsupial.blinklearning.com/coursePlayer/librodigital_html.php?idclase=15936659&idcurso=393209#]]
+
+
+*** Bruño
+- Tema 4: https://marsupial.blinklearning.com/coursePlayer/librodigital_html.php?idclase=15936759&idcurso=393209
+** ASGBD
+1. Instalación y configuración de MySQL
+1.1. El SGBD MySQL
+1.1.1. Funciones de MySQL
+1.1.2. Arquitectura de MySQL
+1.2. Instalación desde el gestor de paquetes yum
+1.2.1. Comprobar la instalación correcta a través de yum
+1.3. Instalación compilando el código fuente 
+1.4. Instalación de una versión 5.1 de MySQL a través del código fuente
+1.4.1. Arranque del servidor MySQL 
+1.4.2. Configuración del autoarranque del servidor MySQL
+1.4.3. Incorporación de las herramientas clientes al PATH 
+1.4.4. Configuración del lenguaje de los mensajes SGBD
+1.5. Instalación de una versión 5.6 de MySQL desde código fuente 
+1.6. Configuración de la seguridad post-instalación 
+1.7. Ficheros Log en MySQL
+1.7.1. El log de errores
+1.7.2. El log general de consultas
+1.7.3. El registro de consultas lentas 
+1.7.4. El log binario
+1.8. Instalación de phpMyAdmin 
+1.9. Prácticas
+2. Acceso a la información en MySQL
+2.1. El acceso a la información 
+2.2. Creación de usuarios
+2.2.1. Los nombres de cuenta
+2.2.2. Borrado de usuarios 
+2.2.3. Modificación de usuarios
+2.3. Los privilegios
+2.3.1. El sistema de privilegios de MySQL 
+2.3.2. Gestión de permisos con phpMyAdmin
+2.3.3. Uso de conexiones cifradas mediante SSL
+2.4. El catálogo de metadatos de MySQL 
+2.5. Las vistas 
+2.6. Prácticas
+3. Automatización de tareas en MySQL. Scripts de administración
+3.1. Los scripts o guiones 
+3.2. Script SQL en MySQL
+3.2.1. Ejecución de scripts SQL en MySQL
+3.3. Scripts de Sistema Operativo para el DBA de MySQL 
+3.4. Server Side Scripting. Otro tipo de scripts
+3.5. Herramientas gráficas para scripts. MySQL Workbench
+3.5.1. Creación automática de scripts SQL con MySQL Workbench
+3.5.2. Creación automática de scripts de servidor Python con MySQLWorkbench
+3.6. Métodos de ejecución de scripts
+3.6.1. Elección del método de ejecución adecuado
+3.7. Scripts para el DBA
+3.7.1. Los scripts y las notificaciones a través del correo electrónico
+3.7.2. Scripts para backups 
+3.7.3. Scripts de mantenimiento 
+3.7.4. Scripts para Logs
+3.8. Prácticas
+4. Tuning de MySQL
+4.1. Introducción al tuning de bases de datos
+4.1.1. ¿Cómo se optimiza MySQL Server?
+4.2. Elementos susceptibles de ser optimizados
+4.2.1. El motor de almacenamiento 
+4.2.2. El software 
+4.2.3. La caché y la tasa de aciertos
+4.2.4. Los buffers 
+4.2.5. La red 
+4.2.6. Plantillas de parámetros preconfiguradas
+4.3. El planificador. Análisis de consultas
+4.3.1. Las consultas lentas. SLOW QUERY LOG
+4.4. Los índices
+4.4.1. El script mysqlisxchk 
+4.4.2. El comando ANALYZE TABLE
+4.5. La fragmentación de la tablas
+4.5.1. El comando OPTIMIZE TABLE
+4.6. El script mysqltuner 
+4.7. Consejos para optimizar 
+4.8. Prácticas
+5. Bases de datos Distribuidas y Replicadas con MySQL
+5.1. SGBD distribuidos
+5.1.1. Componentes de una BBDD distribuida
+5.2. Creación de bases de datos distribuidas: MySQL Cluster 
+5.3. Instalación de un cluster MySQL 
+5.4. Mantenimiento y gestión de un cluster MySQL
+5.4.1. Control de un nodo de gestión 
+5.4.2. Parada y arranque de un nodo 
+5.4.3. Control de un nodo SQL 
+5.4.4. Control de un nodo de datos
+5.5. La replicación de los datos 
+5.6. Configuración de la replicación en MySQL 
+5.7. Herramientas de gestión: MySQL Monitor
+5.7.1. Descarga de MySQL Monitor Service Manager y sus agentes 
+5.7.2. Instalación y configuración del Service Manager 
+5.7.3. Puesta en marcha del Service Manager 
+5.7.4. Instalación y configuración de los agentes
+5.8. Prácticas
+6. Instalación y configuración de Oracle
+6.1. Funciones de Oracle
+6.2. Instalación y configuración de Oracle
+6.2.1. Prerrequisitos de la instalación de Oracle 
+6.2.2. El asistente para la instalación de Oracle 
+6.2.3. La postinstalación
+6.3. Puesta en marcha: Un poco de arquitectura
+6.3.1. Estructura de una instancia en Oracle 
+6.3.2. Configuración manual de la instancia 
+6.3.3. Creación de la base de datos 
+6.3.4. Estados de una instancia 
+6.3.5. Ficheros que componen la base de datos
+6.4. Configuración de la red: El listener
+6.4.1. El fichero tnsnames
+6.5. Apagado de una base de datos 
+6.6. Configuración automática de la instancia a través del asistente DBCA 
+6.7. Prácticas
+7. Estructura de la información y acceso en Oracle
+7.1. Los métodos de autentificación en Oracle 
+7.2. La gestión de los usuarios en Oracle
+7.2.1. El sistema de privilegios de Oracle 
+7.2.2. El fichero de passwords orapwd
+7.3. Los roles 
+7.4. Los perfiles 
+7.5. Gestión del espacio de almacenamiento
+7.6. Sentencias SQL para la gestión de almacenamiento
+7.7. El catálogo de metadatos
+7.7.1. Las vistas estáticas 
+7.7.2. Las vistas dinámicas
+7.8. Oracle Enterprise Manager Database Control
+7.8.1. El servicio dbconsole
+7.9. Prácticas
+8. Automatización de tareas y creación de scripts en Oracle
+8.1. Herramientas para creación de scripts
+8.1.1. Herramientas de texto
+8.2. Planificación de tareas de administración con scripts 
+8.3. Scripts en BASH para Oracle
+8.3.1. Script para inicio y parada automática de Oracle 
+8.3.2. Arranque de más de una instancia 
+8.3.3. Ejemplo de script avanzado
+8.4. Scripts para backups
+8.4.1. Ejemplo de script para backup físico en frío 
+8.4.2. Scripts para backups lógicos. El datapump
+8.5. El Recovery Manager (rman)
+8.5.1. Funcionamiento de rman 
+8.5.2. Instalación del catálogo de recuperación de rman 
+8.5.3. Scripts con RMAN. Backups y Restores 
+8.5.4. Script para backup completo con rman
+8.5.5. Consulta de los backups disponibles 
+8.5.6. Script con RMAN para recuperación
+8.6. Eventos de sistema 
+8.7. Excepciones servererror
+8.8. Prácticas
+9. Tuning en Oracle
+9.1. Herramientas de monitorización de Oracle
+9.1.1. Consolas gráficas: Enterprise Manager, Grid Control, Toad
+9.1.2. Vistas dinámicas
+9.1.3. dbms_monitor 
+9.1.4. La traza 10046: alter session, oradebug, sql_trace 
+9.1.5. Informes AWR
+9.2. Elementos y parámetros susceptibles de ser monitorizados
+9.2.1. Caso práctico 1 
+9.2.2. Caso práctico 2
+9.3. Optimización en Oracle
+9.3.1. Instancia 
+9.3.2. Recursos 
+9.3.3. Estadísticas 
+9.3.4. Particionamiento y paralelización 
+9.3.5. Consultas
+9.4. Herramientas y sentencias para la gestión de índices 
+9.5. Herramientas para la creación de alertas de rendimiento
+9.6. Prácticas
+10.Oracle y las BBDD distribuidas
+10.1. Bases de datos e instancias distribuidas en Oracle 
+10.2. Técnicas de fragmentación 
+10.3. Consultas distribuidas
+10.3.1. DB Links
+10.3.2. Ejecución de consultas distribuidas
+10.4. Transacciones distribuidas
+10.4.1. TWO-PHASE COMMIT 
+10.4.2. Ejemplo de transacción distribuida
+10.5. Optimización de consultas sobre bases de datos distribuidas
+10.5.1. Optimización mediante consultas derivadas 
+10.5.2. Optimización mediante hints
+10.6. Prácticas
+
+** SIAD
+CAPÍTULO 1. LA SEGURIDAD INFORMÁTICA
+1.1. Visión global de la seguridad informática
+1.2. Seguridad física y lógica
+1.3. Copias de seguridad
+1.4. Seguridad física eléctrica: el SAI
+1.5. Seguridad en los medios de almacenamiento online DAS, NAS, SAN
+1.6. Criptografía
+COMPRUEBA TUS APRENDIZAJE
+
+CAPÍTULO 2. GESTIÓN ACTIVA DE LA SEGURIDAD
+2.1. La seguridad en los sistemas
+2.2. La defensa en profundidad en sistemas personales
+2.3. Seguridad en la red corporativa
+2.4. Seguridad y monitorización
+COMPRUEBA TUS APRENDIZAJE
+
+CAPÍTULO 3. IMPLANTACIÓN DE LA SEGURIDAD PERIMETRAL
+3.1. Elementos básicos en la seguridad perimettral
+3.2. El cortafuegos
+3.3. Arquitecturas físicas para la red perimetral
+3.4. Dispositivos adicionales de seguridad en la red 
+COMPRUEBA TU APRENDIZAJE
+
+CAPÍTULO 4. INSTALACIÓN Y CONFIGURACIÓN DE CORTAFUEGOS
+4.1. Tipos de cortafuegos 
+4.2. Dispositivos UTM
+4.3. Instalación del cortafuegos
+4.4. Iptables y Netfilter
+COMPRUEBA TU APRENDIZAJE
+
+CAPÍTULO 5. INSTALACIÓN Y CONFIGURACIÓN DE SERVIDORES PROXY
+5.1. Caracterización del servidor proxy
+5.2. Integración del proxy con otras aplicaciones
+5.3. Instalación y configuración de Squid
+5.4. Métodos de autenticación en un proxy
+5.5. Herramientas y gestión de logs
+COMPRUEBA TU APRENDIZAJE
+
+CAPÍTULO 6. ACCESO REMOTO CON VPN
+6.1. Caracterización de una VPN
+6.2. Protocolos y técnicas específicas de VPN
+Caso práctico: encapsulamiento en una VPN
+6.3. Autenticación de usuarios y sistemas
+6.4. Control de acceso por puertos
+6.5. VPN en Microsoft Forefront TMG
+COMPRUEBA TU APRENDIZAJE
+
+CAPÍTULO 7. ALTA DISPONIBILIDAD
+7.1. Caracterización de la alta desponibilidad
+7.2. Sistemas tolerantes a fallos
+7.3. Sistemas en cluster
+7.4. Virtualización
+7.5. Pruebas de carga
+COMPRUEBA TU APRENDIZAJE
+
+ANEXO. LEGISLACIÓN SOBRE PROTECCIÓN DE DATOS Y COMERCIO ELECTRÓNICO
+
+
+
+** Curso tablets
+FORMACIÓN del PROFESORADO
+
+Dirección General de Innovación, Becas y Ayudas a la Educación
+
+ 
+PREINSCRIPCIÓN EN ACTIVIDADES FORMATIVAS
+
+Centro de Formación:	CRIF LAS ACACIAS
+Departamento/Asesoría:	Formación Profesional
+Título de la actividad:	111 - ELE09CM16. CONFIGURACIÓN Y REPARACIÓN DE SMARTPHONES Y TABLETS. EDICIÓN VESPERTINA
+ 
+Nº solicitud:	29
+Clave de seguridad:	LT9RLX29BJ
+Fecha y hora:	22/09/2016 a las 17:28:26
+NIF/NIE:	52975994W
+Apellidos:	GONZÁLEZ SOTILLO
+Nombre:	ÁLVARO
+Consejería de Educación, Juventud y Deporte :: Comunidad de Madrid
+
+El hecho de estar preinscrito en una actividad no garantiza la admisión en ella. En el momento adecuado se publicará la lista de admitidos y, en su caso, de reservas para la realización de la misma. Puede consultar esta información en la propia ficha de la actividad.
+(Imprima o guarde esta hoja, o bien anote los datos, le servirá como resguardo) Creación del resguardo en PDF
+
+
+
+
+** Enlaces de si
+https://alvarogonzalezsotillo.github.io/seguridad-informatica-smr2dual/apuntes/1/SI-T-01%20Introducci%C3%B3n%20a%20la%20seguridad%20inform%C3%A1tica.docx
+https://alvarogonzalezsotillo.github.io/seguridad-informatica-smr2dual/apuntes/1/SI-T-01 Introducción a la seguridad informática.docx
+https://alvarogonzalezsotillo.github.io/seguridad-informatica-smr2dual/apuntes/1/SI-T-01-Plantilla para análisis de riesgos .docx
+https://alvarogonzalezsotillo.github.io/seguridad-informatica-smr2dual/apuntes/2/SI-T-02 Seguridad física en equipos y servidores.docx
+https://alvarogonzalezsotillo.github.io/seguridad-informatica-smr2dual/apuntes/2/SI-T-02-Publicidad de datacenter.docx
+https://alvarogonzalezsotillo.github.io/seguridad-informatica-smr2dual/apuntes/2/recuperado-SI-T-02 Seguridad física en equipos y servidores.docx
+https://alvarogonzalezsotillo.github.io/seguridad-informatica-smr2dual/apuntes/3/SI-T-03Dispositivosdealmacenamientoycopiasdeseguridad.docx
+https://alvarogonzalezsotillo.github.io/seguridad-informatica-smr2dual/apuntes/4/SI-T-04- Fraudes intrusión y malware.docx
+https://alvarogonzalezsotillo.github.io/seguridad-informatica-smr2dual/apuntes/5/SI-T-05-Privacidadconfidencialidad.docx
+https://alvarogonzalezsotillo.github.io/seguridad-informatica-smr2dual/apuntes/6/SI-T-06-Seguridadenelsistema.docx
+https://alvarogonzalezsotillo.github.io/seguridad-informatica-smr2dual/apuntes/7/SI-T-07-Redes Seguras.docx
+
+** DUAL
+- http://www.madrid.org/cs/Satellite?c=CM_InfPractica_FA&cid=1354405156048&idConsejeria=1109266187254&idListConsj=1109265444710&idOrganismo=1142359902140&language=es&pagename=ComunidadMadrid%2FEstructura&pv=1142556538349&sm=1109170600517
+- http://www.feccoo-madrid.org/comunes/recursos/15708/doc208463_Instrucciones_evaluacion_FP_Dual.pdf
+- http://ies.claradelrey.madrid.educa.madrid.org/portal/attachments/article/630/Instruc_eval_FPDual_201416.pdf
+
+
+
+* TICO
+
+** Distribución alumnos TICO
+https://docs.google.com/spreadsheets/d/1bLahPfXmeL7CLF3qKzXdR1ywvClX55cwv5I2PL2SGkc/edit?userstoinvite=cmorenoruiz@educa.madrid.org&ts=57ffbed7&actionButton=1#gid=962014074
+
+** cosas de tico que me dijo Cristina
+Te djunto las notas:
+
+el grupo J y V en pdf, por asegurarme que no hay errores de conversión de formatos entre Drive y Excel
+y las de ambos TICO en Excel.
+Los comentarios al pie del pdf se refieren a los trabajos de Scratch.
+
+El trabajo de Hardware no lo hemos comentado en clase, es lo que podríais hacer mañana.
+La tabla de J y V está compartida para que puedas comentar, la de L y X también.
+
+Varias cosas sobre el grupo de los jueves:
+
+Javier salió a exponer con sus compañeros pero no habló. Tiene un 0 en la expo e hizo un mal examen. Tampoco se esforzó en conseguir entrar en su cuenta de gmail y hacer las prácticas en casa. El caso es que es encantador y tiene buenas ideas para el grupo, no he conseguido saber lo que le pasa. Giacomo es el que arrastra a Fernando y a Javier, pero hay que tirar de todos para que no se despisten.
+Ach, Valeria y Daiana forman un grupo extraño, se llevan bien, hacen buenos trabajos, pero no colaboran, se reparten las tareas, así que Daiana hizo la presentación en Prezi, Valeria el trabajo y Ach la exposición, que la hizo muy bien. Hablaron conmigo después de la exposición y me juraron que en las siguientes expondrían todos. ¡Compruébalo!
+Los que programan bien son Ricardo y Alejandro. Su proyecto de Scratch.
+Carolina, Eva y Julia tienden a despistarse.
+Grupos que trabajan bien:
+María, Andrea y Sánchez
+Alex y Víctor
+Grupos flojetes:
+Berni y Bohorquez
+Iván y Miguel Ángel (muy callados, al fondo a la izquierda). Iván no vino a la exposición, que te lo confirme por si me he equivocado al trascribir mis notas de la exposición, además ha suspendido el examen.
+Como seguro que encuentran errores en las notas, dímelo y lo cambio.
+
+Fernando y su grupo no han hecho el presupuesto de HW y han tenido dos semanas entre el puente y estos días.
+Iván no expuso y no ha intentado exponer posteriormente. Si no te asegura que expuso, que fue su compañero el que se saltó la exposición y que yo me he equivocado, cosa que puede pasarme, así se queda también.
+Otro detalle sobre TICO: hubo grupos que no propusieron tres preguntas sobre su tema y lo tuve que hacer yo días antes del examen. Quería quietarles nota por ell, pero lo olvidé, así que ya no tiene solución.
+
+** notas 1ª evaluación
+No tengo nota de TICO1-B1AB1B LUNES MIERCOLES (MÚSICA)
+- CASTILLO MEDRANO, ESTEFANIA DEL
+- RODRÍGUEZ ANDREO, OLGA NATALIA
+- RODRÍGUEZ CHASCO, ANGEL
+- VALBUENA RAMIREZ, JESUS EDUARDO
+
+No tento nota de TICO1-B1BB1A JUEVES VIERNES (TECNOLOGÍA)
+- GOMEZ GUALACATA, JAIRO DANILO
+- MONJA JIMÉNEZ, ULISES ELADIO
+
+Suspensos por poco:
+- FRESNILLO CARABIAS, IVAN
+- ROMERO SIMBAÑA, FERNANDO
+
+Bien imaginado:
+
+del Castillo, Valbuena, Gómez Gualacata y Monja, aparecen en la lista, siempre les pongo falta (por ser menores y no tener información) pero creo que Estefanía no viene al Instituto y los demás tienen otras optativas.
+Los Rodríguez son los que están en el centro de menores.
+Sobre los suspensos. Si pueden hacer media con las otras evaluaciones, no tengo ninguna duda, el examen era fácil, ellos habían puesto las preguntas, podían haber sacado más nota. Si aprobaran se harían más vagos todavía. Además:
+
+
+* ASIR seguridad
+** cosas de asir SIAD que dio Cristina
+En el pie he puesto el peso de cada tarea.
+Mantengo la misma proporción 65/30/5 que perjudica a los vagos de Alberto, Carlos y Javier, a los que he visto trabajar en lase y no me han entregado sus resultados.
+
+Por los pelos se quedan:
+
+Sebastián, al que subiría sin problemas al 5.
+Nathalia, a la que he pedido la última práctica (copias de seguridad)
+He revisado lo de Sebastián y no encuentro errores en las respuestas de mi hoja de cálculo, parece estar bien.
+
