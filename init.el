@@ -231,9 +231,6 @@
 ;; ANCHURA DE PAGINAS DEL MAN
 (setenv "MANWIDTH" "80")
 
-;; FICHEROS STY LOCALES PARA EL LIBRO DE SMR
-(setenv "TEXINPUTS" ".:./sty:")
-
 ;; ESTO ES PARA EL AUTOCOMPLETE
 (require 'auto-complete-config)
 (ac-config-default)
@@ -299,6 +296,7 @@
     (define-key map (kbd "C-S-e") 'er/contract-region)
     (define-key map (kbd "C-z") 'undo )
     (define-key map (kbd "C-x C-d") 'dired)
+    (define-key map (kbd "C-x C-b") 'ibuffer)
     map)
   "mis-teclas-minor-mode keymap")
 
@@ -337,6 +335,7 @@
  '(line-number-mode nil)
  '(linum-mode 1 t)
  '(mc/always-run-for-all t)
+ '(org-ac/ac-trigger-command-keys (quote ("\\" "SPC" ":" "[" "+")))
  '(org-format-latex-options
    (quote
     (:foreground default :background "White" :scale 1.0 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
@@ -348,7 +347,7 @@
  '(package-selected-packages
    (quote
     (dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors image+ htmlize helm-projectile guide-key-tip github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap)))
- '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex" t)
+ '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex")
  '(preview-default-preamble
    (quote
     ("\\RequirePackage["
