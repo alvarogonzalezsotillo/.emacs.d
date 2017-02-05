@@ -316,10 +316,13 @@
  '(LaTeX-command-style
    (quote
     (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
- '(LaTeX-verbatim-environments (quote ("verbatim" "verbatim*" "PantallazoTexto")))
+ '(LaTeX-verbatim-environments
+   (quote
+    ("verbatim" "verbatim*" "listadotxt" "PantallazoTexto")))
  '(TeX-source-correlate-mode t)
  '(TeX-source-correlate-start-server t)
  '(ac-ignore-case nil)
+ '(ac-trigger-key "S-<spc>")
  '(ansi-color-names-vector
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#ad7fa8" "#8cc4ff" "#eeeeec"])
  '(chess-default-display (quote (chess-images chess-ics1 chess-plain)))
@@ -342,11 +345,11 @@
                  ("begin" "$1" "$" "$$" "\\(" "\\["))))
  '(org-latex-default-table-environment "longtable")
  '(org-latex-images-centered nil)
- '(org-src-block-faces (quote (("shell" default) ("js" default))))
+ '(org-src-block-faces (quote (("sql" default) ("shell" default) ("js" default))))
  '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors image+ htmlize helm-projectile guide-key-tip github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap)))
+    (dumb-jump dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors image+ htmlize helm-projectile guide-key-tip github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap)))
  '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex")
  '(preview-default-preamble
    (quote
