@@ -297,6 +297,7 @@
     (define-key map (kbd "C-z") 'undo )
     (define-key map (kbd "C-x C-d") 'dired)
     (define-key map (kbd "C-x C-b") 'ibuffer)
+    (define-key map (kbd "C-f") 'swiper)
     map)
   "mis-teclas-minor-mode keymap")
 
