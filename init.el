@@ -432,6 +432,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "black" :foreground "white smoke" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "SWAP" :family "Perfect DOS VGA 437 Win"))))
  '(font-lock-comment-face ((t (:foreground "peru"))))
  '(neo-dir-link-face ((t (:height 0.8))))
  '(neo-file-link-face ((t (:foreground "White" :height 0.8))))
