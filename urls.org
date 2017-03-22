@@ -1,3 +1,26 @@
+* Tareas que hacer
+** Examenes
+*** Finales
+**** DONE SIAD
+**** DONE SI
+**** DONE BD
+**** DONE ASGBD
+**** TODO TICO
+*** Parciales
+**** DONE SIAD
+**** DONE SI
+**** DONE BD
+**** DONE ASGBD
+**** TODO TICO
+** Prácticas
+**** TODO SIAD
+**** TODO SI
+**** TODO BD
+**** DONE ASGBD
+**** TODO TICO
+
+
+
 
 Notas de Cristina
 https://docs.google.com/spreadsheets/d/1L3-6OWDbEb4ytrZUZPata_ggLEq4QhQwULCXvOAg_7A/edit#gid=0
@@ -5,6 +28,7 @@ https://docs.google.com/spreadsheets/d/1L3-6OWDbEb4ytrZUZPata_ggLEq4QhQwULCXvOAg
 Hojas de seguimiento SMR dual
 https://docs.google.com/spreadsheets/d/1yUZxuiX8uYvJJfPZf0bypDmd6_BIcWAunZ0yyEQq_1A/edit?ts=58543cc6#gid=596515985
 https://docs.google.com/spreadsheets/d/1ot79RUs-P1GMhn0U3Dn8Few47om8Bmni_jG4XdqOwpM/edit?ts=5885cebf#gid=0
+https://docs.google.com/spreadsheets/u/0/d/1VQMRzn8gbEmMQo21wnii4KA0vZ2C2d0yyDtwvkusoto/edit?usp=sharing_eip&ts=58c1188a
 
 * Porcentajes
 | Módulo | Exámenes | Trabajos | Actitud | Notas                       | Calculadora |
@@ -51,7 +75,7 @@ https://docs.google.com/spreadsheets/d/1ot79RUs-P1GMhn0U3Dn8Few47om8Bmni_jG4XdqO
    | Departamento              | http://aulavirtual2.educa.madrid.org/course/view.php?id=12364    |
 
 rudryBFsZQQZpXis
-ddd272803fa019cdebd044cfa96f1b95e06eb91e
+
 
 
 * Repositorios
