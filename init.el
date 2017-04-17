@@ -9,7 +9,7 @@
 
   (interactive) 
   ;; LISTA DE PAQUETES INSTALADOS (C-h v package-selected-packages)
-  (setq package-selected-packages '(org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors image+ htmlize helm-projectile guide-key-tip github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap))
+  (setq package-selected-packages '(highlight-indent-guides which-key dumb-jump dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors image+ htmlize helm-projectile github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap))
   
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
   ;; (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t )
@@ -30,6 +30,7 @@
 (eval-after-load "preview"
   '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t)
   )
+
 
 
 
@@ -74,6 +75,11 @@
   ;;(call-process "c:\\Programme\\IrfanView\\i_view32.exe" nil nil nil (concat "/clippaste /convert=" filename))
   (insert (concat "[[file:" filename "]]"))
   (org-display-inline-images))
+
+;; RESALTAR LA INDENTACION
+(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+(setq highlight-indent-guides-method 'character)
+
 
 ;; SELECCION TRAS COPIAR
 (defadvice kill-ring-save (after keep-transient-mark-active ())
@@ -149,12 +155,12 @@
 (global-set-key (kbd "C-x o") 'switch-window)
 
 ;; GUIA DE TECLAS, TODAS LAS TECLAS
-(require 'guide-key)
-(guide-key-mode 1) ; Enable guide-key-mode
-(setq guide-key/guide-key-sequence t)
+;(require 'guide-key)
+;(guide-key-mode 1) ; Enable guide-key-mode
+;(setq guide-key/guide-key-sequence t)
 ;(require 'guide-key-tip)
 ;(setq guide-key-tip/enabled t)
-
+(which-key-mode t)
 
 ;; NO PREGUNTAR CUANDO SE CIERRA EL BUFFER
 (setq kill-this-buffer-enabled-p t)
@@ -350,8 +356,8 @@
  '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (dumb-jump dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors image+ htmlize helm-projectile guide-key-tip github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap)))
- '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex")
+    (highlight-indent-guides which-key dumb-jump dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors image+ htmlize helm-projectile github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap)))
+ '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex" t)
  '(preview-default-preamble
    (quote
     ("\\RequirePackage["
@@ -452,3 +458,4 @@
 
 
 
+(put 'upcase-region 'disabled nil)
