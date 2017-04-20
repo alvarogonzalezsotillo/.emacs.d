@@ -80,6 +80,8 @@
 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 (setq highlight-indent-guides-method 'character)
 
+;; RESALTAR LA LÍNEA ACTUAL
+(global-hl-line-mode)
 
 ;; SELECCION TRAS COPIAR
 (defadvice kill-ring-save (after keep-transient-mark-active ())
