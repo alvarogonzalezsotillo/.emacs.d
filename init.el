@@ -236,19 +236,32 @@
 ;; ANCHURA DE PAGINAS DEL MAN
 (setenv "MANWIDTH" "80")
 
+;; COMPANY
+(add-hook 'after-init-hook 'global-company-mode)
+(company-auctex-init)
+(add-to-list 'company-backends 'company-c-headers)
+(add-to-list 'company-backends 'company-emoji)
+(add-to-list 'company-backends 'company-web-html)
+(add-to-list 'company-backends 'company-web-jade)
+(add-to-list 'company-backends 'company-web-slim)
+(global-set-key (kbd "C-.") 'company-complete)
+(company-quickhelp-mode 1)
+(defun my-org-mode-hook-for-company ()
+  (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t))
+(add-hook 'org-mode-hook #'my-org-mode-hook-for-company)
+
+
 ;; ESTO ES PARA EL AUTOCOMPLETE
-(require 'auto-complete-config)
-(ac-config-default)
-(add-to-list 'ac-modes 'sql-mode 'tex-mode)
-
+;(require 'auto-complete-config)
+;(ac-config-default)
+;(add-to-list 'ac-modes 'sql-mode 'tex-mode)
 ;; ESTO ES PARA VER SI AUTOCOMPLETA TEX
-(require 'auto-complete-auctex)
+;(require 'auto-complete-auctex)
 ;; AUTOCOMPLETE PARA ORG
-(require 'org-ac)
-
+;(require 'org-ac)
 ;; Make config suit for you. About the config item, eval the following sexp.
 ;; (customize-group "org-ac")
-(org-ac/config-default)
+;(org-ac/config-default)
 
 ;; MOSTRAR LOS PARENTESIS ASOCIADOS
 (show-paren-mode)
@@ -332,6 +345,14 @@
  '(ansi-color-names-vector
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#ad7fa8" "#8cc4ff" "#eeeeec"])
  '(chess-default-display (quote (chess-images chess-ics1 chess-plain)))
+ '(company-backends
+   (quote
+    (company-web-slim company-web-jade company-web-html company-emoji company-c-headers
+                      (company-auctex-macros company-auctex-symbols company-auctex-environments)
+                      company-auctex-bibs company-auctex-labels company-bbdb company-nxml company-css company-eclim company-semantic company-clang company-xcode company-cmake company-capf company-files
+                      (company-dabbrev-code company-gtags company-etags company-keywords)
+                      company-oddmuse company-dabbrev)))
+ '(company-show-numbers t)
  '(custom-enabled-themes (quote (alvaro-emacs-theme)))
  '(custom-safe-themes
    (quote
@@ -340,12 +361,11 @@
  '(desktop-save t)
  '(desktop-save-mode t)
  '(fill-column 120)
- '(global-auto-complete-mode t)
+ '(global-company-mode t)
  '(global-hl-line-mode t)
  '(line-number-mode nil)
  '(linum-mode 1 t)
  '(mc/always-run-for-all t)
- '(org-ac/ac-trigger-command-keys (quote ("\\" "SPC" ":" "[" "+")))
  '(org-format-latex-options
    (quote
     (:foreground default :background "White" :scale 1.0 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
@@ -356,8 +376,8 @@
  '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (highlight-indent-guides which-key dumb-jump dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors image+ htmlize helm-projectile github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap)))
- '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex" t)
+    (company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company plsql highlight-indent-guides which-key dumb-jump dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode chess calfw browse-at-remote auto-highlight-symbol alert adaptive-wrap)))
+ '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex")
  '(preview-default-preamble
    (quote
     ("\\RequirePackage["
