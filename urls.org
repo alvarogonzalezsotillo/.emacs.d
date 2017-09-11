@@ -7,6 +7,12 @@
 150428
 
 
+162172 la chunga en el registro con javascript:presentarTelematica();
+162326 después de autofirma
+162468 al reiniciar
+163309 con firefox  de Referencia 	09/585699.9/17
+
+
 
 * Tareas que hacer
 ** Examenes
@@ -74,15 +80,15 @@ https://docs.google.com/spreadsheets/u/0/d/1VQMRzn8gbEmMQo21wnii4KA0vZ2C2d0yyDtw
 <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=2&amp;hl=es&amp;bgcolor=%23FFFFFF&amp;src=f69efvlsk3uf2okks75mgjc51c%40group.calendar.google.com&amp;color=%23B1440E&amp;ctz=Europe%2FMadrid" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
 
 * Moodle
-   | Curso                     | url                                                              |
-   |---------------------------+------------------------------------------------------------------|
-   | Rosa chacel               | http://aulavirtual2.educa.madrid.org/course/category.php?id=2724 |
-   | tico                      | http://aulavirtual2.educa.madrid.org/course/view.php?id=22210    |
-   | seguridad informática smr | http://aulavirtual2.educa.madrid.org/course/view.php?id=19438    |
-   | ASGBD                     | http://aulavirtual2.educa.madrid.org/course/view.php?id=16620    |
-   | BD                        | http://aulavirtual2.educa.madrid.org/course/view.php?id=22208    |
-   | SIAD                      | http://aulavirtual2.educa.madrid.org/course/view.php?id=13015    |
-   | Departamento              | http://aulavirtual2.educa.madrid.org/course/view.php?id=12364    |
+   | Curso                     | url                                                              | directorio                                  |
+   |---------------------------+------------------------------------------------------------------+---------------------------------------------|
+   | Rosa chacel               | http://aulavirtual2.educa.madrid.org/course/category.php?id=2724 | [[file:~/clase/]]                               |
+   | tico                      | http://aulavirtual2.educa.madrid.org/course/view.php?id=22210    | [[file:~/clase/tico1-bach1]]                    |
+   | seguridad informática smr | http://aulavirtual2.educa.madrid.org/course/view.php?id=19438    | [[file:~/clase/seguridad-informatica-smr2dual]] |
+   | ASGBD                     | http://aulavirtual2.educa.madrid.org/course/view.php?id=16620    |                                             |
+   | BD                        | http://aulavirtual2.educa.madrid.org/course/view.php?id=22208    | [[file:~/clase/basesdedatos-dam1]]              |
+   | SIAD                      | http://aulavirtual2.educa.madrid.org/course/view.php?id=13015    |                                             |
+   | Departamento              | http://aulavirtual2.educa.madrid.org/course/view.php?id=12364    |                                             |
 
 rudryBFsZQQZpXis
 

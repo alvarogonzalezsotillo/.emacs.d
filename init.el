@@ -152,7 +152,6 @@
 
 ;; CALENDARIOS
 (require 'calfw)
-(require 'calfw-ical)
 
 
 
@@ -198,8 +197,6 @@
 (require 'smartparens-config)
 (smartparens-global-mode 1)
 
-;; RAINBOW DELIMITERS
-(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
 ;;^L BONITOS
 (require 'page-break-lines)
@@ -221,14 +218,10 @@
 
 ;; SCROLL SUAVE
 (setq redisplay-dont-pause t
-      scroll-margin 1
+      scroll-margin 3
       scroll-step 1
       scroll-conservatively 10000
       scroll-preserve-screen-position 1)
-
-;; HABILITAR EL MODO IDO, AHORA USO HELM
-;;(require 'ido)
-;;(ido-mode t)
 
 ;; HELM
 (require 'helm)
@@ -271,17 +264,6 @@
 
 
 
-;; ESTO ES PARA EL AUTOCOMPLETE
-;(require 'auto-complete-config)
-;(ac-config-default)
-;(add-to-list 'ac-modes 'sql-mode 'tex-mode)
-;; ESTO ES PARA VER SI AUTOCOMPLETA TEX
-;(require 'auto-complete-auctex)
-;; AUTOCOMPLETE PARA ORG
-;(require 'org-ac)
-;; Make config suit for you. About the config item, eval the following sexp.
-;; (customize-group "org-ac")
-;(org-ac/config-default)
 
 ;; MOSTRAR LOS PARENTESIS ASOCIADOS
 (show-paren-mode)
@@ -297,7 +279,7 @@
 (setq TeX-PDF-mode t)
 
 ;; NUMEROS DE LINEA
-;;(global-linum-mode t)
+(global-linum-mode t)
 ;;(global-linum-mode nil)
 
 ;; QUITAR PANTALLA DE INICIO Y MENU
@@ -383,13 +365,14 @@
  '(fill-column 120)
  '(global-company-mode t)
  '(global-hl-line-mode t)
+ '(hl-line-overlay-priority -100050)
  '(line-number-mode nil)
  '(linum-mode 1 t)
  '(mc/always-run-for-all t)
  '(neo-autorefresh nil)
  '(org-format-latex-options
    (quote
-    (:foreground default :background "White" :scale 1.0 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
+    (:foreground default :background default :scale 2.0 :html-foreground "Black" :html-background "Transparent" :html-scale 2.0 :matchers
                  ("begin" "$1" "$" "$$" "\\(" "\\["))))
  '(org-html-table-caption-above nil)
  '(org-latex-default-table-environment "longtable")
@@ -398,7 +381,8 @@
  '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dumb-jump dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode chess calfw browse-at-remote auto-highlight-symbol alert adaptive-wrap)))
+    (transmission hl-line+ treemacs paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dumb-jump dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode chess calfw browse-at-remote auto-highlight-symbol alert adaptive-wrap)))
+ '(paradox-github-token t)
  '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex")
  '(preview-default-preamble
    (quote
@@ -474,7 +458,14 @@
                    (quote powerline-active1))))
      (:propertize " " face powerline-active1))))
  '(sml/pre-modes-separator (propertize " " (quote face) (quote sml/modes)))
- '(tramp-copy-size-limit nil))
+ '(smooth-scroll-margin 5)
+ '(smooth-scroll-mode t)
+ '(smooth-scroll/vscroll-step-size 10)
+ '(smooth-scrolling-mode t)
+ '(tramp-copy-size-limit nil)
+ '(transmission-host "192.168.1.100")
+ '(transmission-rpc-auth (quote (:username "transmission" :password "tiratio0")))
+ '(treemacs-header-function (quote treemacs--create-header-projectile)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -483,7 +474,7 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :background "black" :foreground "white smoke" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "SWAP"))))
  '(font-lock-comment-face ((t (:foreground "peru"))))
- '(hl-line ((t (:background "gray10"))))
+ '(hl-line ((t (:background "gray30"))))
  '(neo-dir-link-face ((t (:height 0.8))))
  '(neo-file-link-face ((t (:foreground "White" :height 0.8))))
  '(org-block ((t (:inherit shadow :background "gray10"))))
