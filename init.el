@@ -9,7 +9,7 @@
 
   (interactive) 
   ;; LISTA DE PAQUETES INSTALADOS (C-h v package-selected-packages)
-  (setq package-selected-packages '(highlight-indent-guides which-key dumb-jump dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors image+ htmlize helm-projectile github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap))
+  (setq package-selected-packages '(org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dumb-jump dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode chess calfw browse-at-remote auto-highlight-symbol alert adaptive-wrap))
   
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
   ;; (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t )
@@ -76,24 +76,6 @@
   (insert (concat "[[file:" filename "]]"))
   (org-display-inline-images))
 
-;; ORG-WEBPAGE
-(require 'org-webpage)
-(setq owp/always-use-relative-url t)
-(setq owp/last-web-server-docroot "/home/alvaro/.emacs.d/owp-temp.d/alvarogonzalezsotillo.github.io/export")
-(setq owp/last-web-server-port 12345)
-(owp/add-project-config
- '("alvarogonzalezsotillo.github.io"
-   :repository-directory "/home/alvaro/github/alvarogonzalezsotillo.github.io"
-   :remote (git "https://github.com/alvarogonzalezsotillo/alvarogonzalezsotillo.github.io.git" "master")
-   ;; you can use `rclone` with `:remote (rclone "remote-name" "/remote/path/location")` instead.
-   :site-domain "https://alvarogonzalezsotillo.github.io/"
-   :site-main-title "Álvaro González Sotillo"
-   :site-sub-title ""
-   :force-absolute-url nil
-   :theme-root-directory "/home/alvaro/github/alvarogonzalezsotillo.github.io/themes"
-   :theme (alvaro)
-   ;; :source-browse-url ("Github" "https://github.com/alvarogonzalezsotillo/alvarogonzalezsotillo.github.io"
-   ))
 
 ;; RESALTAR LA INDENTACION
 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
