@@ -377,6 +377,7 @@
  '(org-html-table-caption-above nil)
  '(org-latex-default-table-environment "longtable")
  '(org-latex-images-centered nil)
+ '(org-list-allow-alphabetical t)
  '(org-src-block-faces (quote (("sql" default) ("shell" default) ("js" default))))
  '(org-support-shift-select t)
  '(package-selected-packages
