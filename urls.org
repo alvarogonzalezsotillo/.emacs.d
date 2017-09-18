@@ -44,6 +44,12 @@
 
 
 * Repositorios
+
+https://alvarogonzalezsotillo@github.com/alvarogonzalezsotillo/apuntes-clase.git
+https://alvarogonzalezsotillo@bitbucket.org/alvarogonzalezsotillo/apuntes-clase.git
+https://alvarogonzalezsotillo.github.io/apuntes-clase
+
+** 2015-2016
 |       | gh-pages                                                                       | github                                                                                            | bitbucket                                                                                        |
 |-------+--------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------|
 | tico1 | https://alvarogonzalezsotillo.github.io/tico1-bach1/apuntes                    | https://alvarogonzalezsotillo@github.com/alvarogonzalezsotillo/tico1-bach1.git                    | https://alvarogonzalezsotillo@bitbucket.org/alvarogonzalezsotillo/bach1-tico1.git                |
