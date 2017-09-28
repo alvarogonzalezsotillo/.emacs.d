@@ -19,13 +19,14 @@
 
 * Moodle
 
-   | Curso      | url                                                                                     | directorio    |
-   |------------+-----------------------------------------------------------------------------------------+---------------|
-   | Avellaneda | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/                       | [[file:~/clase/]] |
-   | ASGBD      | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=65  |               |
-   | SI         | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=191 |               |
-   | PAR        | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=72  |               |
-   | GBD        | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=189 |               |
+   | Curso        | url                                                                                     | directorio    |
+   |--------------+-----------------------------------------------------------------------------------------+---------------|
+   | Avellaneda   | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/                       | [[file:~/clase/]] |
+   | Departamento | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=56  |               |
+   | ASGBD        | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=65  |               |
+   | SI           | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=191 |               |
+   | PAR          | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=72  |               |
+   | GBD          | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=189 |               |
 
 
 
