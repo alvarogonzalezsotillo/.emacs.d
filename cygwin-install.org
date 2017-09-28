@@ -32,34 +32,6 @@ git config --global core.askpass /usr/libexec/git-core/git-gui--askpass
 apt-cyg install emacs-w32
 #+end_src
 
-Para instalar una lista de paquetes *Emacs* puede usarse la siguiente función =elisp=
-#+BEGIN_SRC elisp
-;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
-(defun reinstalar-paquetes-en-emacs-nuevo() 
-
-  (interactive) 
-  ;; LISTA DE PAQUETES INSTALADOS (C-h v package-selected-packages)
-  (setq package-selected-packages '(org-attach-screenshot bm
-  yafolding web-mode transpose-frame tablist switch-window
-  swiper sr-speedbar smartparens scala-outline-popup
-  request-deferred rectangle-utils rainbow-delimiters
-  php-mode page-break-lines ox-reveal org-present org-ac
-  neotree multiple-cursors magit image+ htmlize
-  helm-projectile guide-key-tip github-browse-file
-  git-timemachine git-link flycheck find-file-in-project
-  expand-region epresent ensime discover diffview
-  crappy-jsp-mode company-auctex chess calfw
-  browse-at-remote auto-highlight-symbol
-  auto-complete-auctex alert adaptive-wrap))
-  
-  (add-to-list 
-     'package-archives '("melpa" . "http://melpa.org/packages/") t)
-
-  (package-refresh-contents)
-  (package-initialize)  
-
-  (package-install-selected-packages))
-#+END_SRC
 
 
 ** *Latex*
@@ -91,7 +63,6 @@ mktexlsr
 
 
 
-* Instalación en Fedora
 
 
 * Latex
