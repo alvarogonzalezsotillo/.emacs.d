@@ -8,67 +8,75 @@ XLIB_SKIP_ARGB_VISUALS=1 emacs
 #+end_src
 
 
+
+* Ubuntu
+1. Instalación de *Emacs* 25 y *git*
+  #+begin_src bash
+  sudo add-apt-repository ppa:kelleyk/emacs
+  sudo apt-get update
+  sudo apt-get install emacs25 git
+  #+end_src
+2. Instalación de *Latex*
+  #+begin_src bash 
+  sudo apt-get install texlive-collection-binextra \
+  texlive-latex-recommended \
+  texlive-extra-utils \
+  texlive-collection-langspanish \
+  texlive-collection-latex \
+  texlive-collection-latexextra \
+  #+end_src
+
+
+
+
+
 * Instalación de *Cygwin*
 1. Descargar el fichero [[https://www.cygwin.com/setup-x86_64.exe]]
 2. Realizar una instalación básica, añadiendo el paquete =wget=
 3. Instalar =apt-cyg=
-#+begin_src bash
-wget rawgit.com/transcode-open/apt-cyg/master/apt-cyg > apt-cyg
-install apt-cyg /bin
-#+end_src
-
-* Instalación de paquetes de *Cygwin*
-** *git*
-#+begin_src bash
-apt-cyg install git
-
-# Solución al problema de petición de contraseña con magit (requiere XOrg)
-apt-cyg install git git-gui xorg
-git config --global core.askpass /usr/libexec/git-core/git-gui--askpass
-#+end_src
-
-** *Emacs*
-#+begin_src bash
-apt-cyg install emacs-w32
-#+end_src
-
-
-
-** *Latex*
-#+begin_src bash
-apt-cyg install texlive \ 
-texlive-collection-basic \ 
-texlive-collection-binextra \ 
-texlive-collection-fontsextra \ 
-texlive-collection-fontsrecommended \ 
-texlive-collection-fontutils \ 
-texlive-collection-formatsextra \ 
-texlive-collection-genericextra \ 
-texlive-collection-genericrecommended \ 
-texlive-collection-langenglish \ 
-texlive-collection-langeuropean \ 
-texlive-collection-langspanish \ 
-texlive-collection-latex \ 
-texlive-collection-latexextra \ 
-texlive-collection-latexrecommended \ 
-texlive-collection-pictures \ 
-texlive-collection-plainextra \ 
-texlive-collection-pstricks
-
-texconfig rehash
-mktexlsr
-#+end_src
-
- 
+  #+begin_src bash  
+  wget rawgit.com/transcode-open/apt-cyg/master/apt-cyg > apt-cyg
+  install apt-cyg /bin
+  #+end_src
+4. Instalar *git*
+  #+begin_src bash
+  apt-cyg install git
+  
+  # Solución al problema de petición de contraseña con magit (requiere XOrg)
+  apt-cyg install git git-gui xorg
+  git config --global core.askpass /usr/libexec/git-core/git-gui--askpass
+  #+end_src
+5. Instalar *Emacs*
+  #+begin_src bash 
+  apt-cyg install emacs-w32
+  #+end_src
+6. Instalar *Latex*
+  #+begin_src bash
+  apt-cyg install texlive \ 
+  texlive-collection-basic \ 
+  texlive-collection-binextra \ 
+  texlive-collection-fontsextra \ 
+  texlive-collection-fontsrecommended \ 
+  texlive-collection-fontutils \ 
+  texlive-collection-formatsextra \ 
+  texlive-collection-genericextra \ 
+  texlive-collection-genericrecommended \ 
+  texlive-collection-langenglish \ 
+  texlive-collection-langeuropean \ 
+  texlive-collection-langspanish \ 
+  texlive-collection-latex \ 
+  texlive-collection-latexextra \ 
+  texlive-collection-latexrecommended \ 
+  texlive-collection-pictures \ 
+  texlive-collection-plainextra \ 
+  texlive-collection-pstricks
+  
+  texconfig rehash
+  mktexlsr
+  #+end_src
+  
+   
+  
+  
 
 
-
-
-
-* Latex
-#+begin_src bash
-texlive-collection-binextra
-texlive-collection-langspanish
-texlive-collection-latex
-texlive-collection-latexextra
-#+end_src
