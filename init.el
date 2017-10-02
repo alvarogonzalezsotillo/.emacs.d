@@ -231,6 +231,7 @@
 (setenv "MANWIDTH" "80")
 
 ;; COMPANY
+(require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 (company-auctex-init)
 (add-to-list 'company-backends 'company-c-headers)
@@ -447,7 +448,7 @@
  '(smooth-scrolling-mode t)
  '(tramp-copy-size-limit nil)
  '(transmission-host "192.168.1.100")
- '(transmission-rpc-auth (quote (:username "transmission" :password "tiratio0")))
+ '(transmission-rpc-auth (quote (:username "transmission" :password "")))
  '(treemacs-header-function (quote treemacs--create-header-projectile)))
 
 (custom-set-faces
