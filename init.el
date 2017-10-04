@@ -441,7 +441,7 @@
  '(smooth-scrolling-mode t)
  '(tramp-copy-size-limit nil)
  '(transmission-host "192.168.1.100")
- '(transmission-rpc-auth (quote (:username "transmission" :password "tiratio0")))
+ '(transmission-rpc-auth (quote (:username "transmission" :password "")))
  '(treemacs-header-function (quote treemacs--create-header-projectile)))
 
 (custom-set-faces
