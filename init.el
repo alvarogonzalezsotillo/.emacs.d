@@ -25,13 +25,22 @@
 ;; PREVIEW DE TIKZ
 ;; https://www.gnu.org/software/auctex/manual/preview-latex.html
 (eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t)
-  )
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t) )
 (eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t)
-  )
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
 
-
+;; REVEAL Y PDF A LA VEZ
+(defun reveal-y-pdf ()
+  "Crea transparencias de reveal y hace el pdf a la vez."
+  (interactive)
+  (org-reveal-export-to-html)
+  (org-latex-export-to-pdf)
+  (let* (
+        (filename (buffer-file-name))
+        (tex-filename (concat (file-name-sans-extension filename) ".tex")) )
+    (message "Borrando fichero: %s" tex-filename)
+    (delete-file tex-filename) )
+ )
 
 
 ;; EXPERIMENTOS
@@ -294,6 +303,7 @@
     (define-key map (kbd "C-x C-d") 'dired)
     (define-key map (kbd "C-x C-b") 'ibuffer)
     (define-key map (kbd "C-f") 'swiper)
+    (define-key map (kbd "C-<f5>") 'reveal-y-pdf)
     map)
   "mis-teclas-minor-mode keymap")
 
@@ -350,6 +360,7 @@
    (quote
     (:foreground default :background default :scale 2.0 :html-foreground "Black" :html-background "Transparent" :html-scale 2.0 :matchers
                  ("begin" "$1" "$" "$$" "\\(" "\\["))))
+ '(org-html-link-org-files-as-html nil)
  '(org-html-table-caption-above nil)
  '(org-latex-default-table-environment "longtable")
  '(org-latex-images-centered nil)
@@ -358,9 +369,9 @@
  '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (web-beautify gitignore-mode treemacs-evil use-package treemacs-projectile company-restclient ob-restclient restclient-helm restclient transmission hl-line+ treemacs paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dumb-jump dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode chess calfw browse-at-remote auto-highlight-symbol alert adaptive-wrap)))
+    (calfw-ical web-beautify gitignore-mode treemacs-evil use-package treemacs-projectile company-restclient ob-restclient restclient-helm restclient transmission hl-line+ treemacs paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dumb-jump dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode chess calfw browse-at-remote auto-highlight-symbol alert adaptive-wrap)))
  '(paradox-github-token t)
- '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex" t)
+ '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex")
  '(preview-default-preamble
    (quote
     ("\\RequirePackage["
