@@ -9,7 +9,7 @@
 
   (interactive) 
   ;; LISTA DE PAQUETES INSTALADOS (C-h v package-selected-packages)
-  (setq package-selected-packages '(org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dumb-jump dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode chess calfw browse-at-remote auto-highlight-symbol alert adaptive-wrap))
+  (setq package-selected-packages '(company-restclient ob-restclient restclient-helm restclient transmission hl-line+ treemacs paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dumb-jump dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode chess calfw browse-at-remote auto-highlight-symbol alert adaptive-wrap))
   
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
   ;; (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t )
@@ -25,13 +25,22 @@
 ;; PREVIEW DE TIKZ
 ;; https://www.gnu.org/software/auctex/manual/preview-latex.html
 (eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t)
-  )
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t) )
 (eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t)
-  )
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
 
-
+;; REVEAL Y PDF A LA VEZ
+(defun reveal-y-pdf ()
+  "Crea transparencias de reveal y hace el pdf a la vez."
+  (interactive)
+  (org-reveal-export-to-html)
+  (org-latex-export-to-pdf)
+  (let* (
+        (filename (buffer-file-name))
+        (tex-filename (concat (file-name-sans-extension filename) ".tex")) )
+    (message "Borrando fichero: %s" tex-filename)
+    (delete-file tex-filename) )
+ )
 
 
 ;; EXPERIMENTOS
@@ -154,11 +163,6 @@
 (global-set-key (kbd "C-x o") 'switch-window)
 
 ;; GUIA DE TECLAS, TODAS LAS TECLAS
-;(require 'guide-key)
-;(guide-key-mode 1) ; Enable guide-key-mode
-;(setq guide-key/guide-key-sequence t)
-;(require 'guide-key-tip)
-;(setq guide-key-tip/enabled t)
 (which-key-mode t)
 
 ;; NO PREGUNTAR CUANDO SE CIERRA EL BUFFER
@@ -221,8 +225,6 @@
 
 ;; EXPAND REGION
 (require 'expand-region)
-(global-set-key (kbd "C-e") 'er/expand-region)
-(global-set-key (kbd "C-S-e") 'er/contract-region)
 
 ;; QUITAR LA TOOLBAR
 (tool-bar-mode -1)
@@ -231,6 +233,7 @@
 (setenv "MANWIDTH" "80")
 
 ;; COMPANY
+(require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 (company-auctex-init)
 (add-to-list 'company-backends 'company-c-headers)
@@ -262,7 +265,7 @@
 
 ;; NUMEROS DE LINEA
 (global-linum-mode t)
-;;(global-linum-mode nil)
+
 
 ;; QUITAR PANTALLA DE INICIO Y MENU
 (setq inhibit-startup-message t)
@@ -300,6 +303,7 @@
     (define-key map (kbd "C-x C-d") 'dired)
     (define-key map (kbd "C-x C-b") 'ibuffer)
     (define-key map (kbd "C-f") 'swiper)
+    (define-key map (kbd "C-<f5>") 'reveal-y-pdf)
     map)
   "mis-teclas-minor-mode keymap")
 
@@ -356,15 +360,19 @@
    (quote
     (:foreground default :background default :scale 2.0 :html-foreground "Black" :html-background "Transparent" :html-scale 2.0 :matchers
                  ("begin" "$1" "$" "$$" "\\(" "\\["))))
+ '(org-html-link-org-files-as-html nil)
  '(org-html-table-caption-above nil)
  '(org-latex-default-table-environment "longtable")
  '(org-latex-images-centered nil)
+ '(org-latex-inline-image-rules
+   (quote
+    (("file" . "\\(?:eps\\|jp\\(?:e?g\\)\\|p\\(?:df\\|gf\\|ng\\|s\\)\\|svg\\|tikz\\|gif\\)"))))
  '(org-list-allow-alphabetical t)
  '(org-src-block-faces (quote (("sql" default) ("shell" default) ("js" default))))
  '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (transmission hl-line+ treemacs paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dumb-jump dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode chess calfw browse-at-remote auto-highlight-symbol alert adaptive-wrap)))
+    (calfw-ical web-beautify gitignore-mode treemacs-evil use-package treemacs-projectile company-restclient ob-restclient restclient-helm restclient transmission hl-line+ treemacs paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dumb-jump dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode chess calfw browse-at-remote auto-highlight-symbol alert adaptive-wrap)))
  '(paradox-github-token t)
  '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex")
  '(preview-default-preamble
@@ -447,7 +455,7 @@
  '(smooth-scrolling-mode t)
  '(tramp-copy-size-limit nil)
  '(transmission-host "192.168.1.100")
- '(transmission-rpc-auth (quote (:username "transmission" :password "tiratio0")))
+ '(transmission-rpc-auth (quote (:username "transmission" :password "")))
  '(treemacs-header-function (quote treemacs--create-header-projectile)))
 
 (custom-set-faces
