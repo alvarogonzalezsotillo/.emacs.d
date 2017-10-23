@@ -21,6 +21,14 @@
 * Canal youtube
 https://www.youtube.com/channel/UCPzPGxvUOAaoXCPctmHJm8Q
 
+** key-mon
+
+#+begin_src sh
+key-mon --larger --backgroundless --visible_click &
+#+end_src
+
+#+RESULTS:
+
 * Moodle
 
    | Curso        | url                                                                                     | directorio    |
