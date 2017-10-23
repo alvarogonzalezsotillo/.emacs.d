@@ -40,7 +40,7 @@ key-mon --larger --backgroundless --visible_click &
    | PAR          | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=72  |               |
    | GBD          | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=189 |               |
 
-
+Entrega de programaciones: https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/mod/assign/view.php?id=8393&action=view
 
 ** 2015-2016
    | Curso                     | url                                                              | directorio                                  |
