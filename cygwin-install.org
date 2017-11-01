@@ -18,12 +18,11 @@ XLIB_SKIP_ARGB_VISUALS=1 emacs
   #+end_src
 2. Instalación de *Latex*
   #+begin_src bash 
-  sudo apt-get install texlive-collection-binextra \
-  texlive-latex-recommended \
-  texlive-extra-utils \
-  texlive-collection-langspanish \
-  texlive-collection-latex \
-  texlive-collection-latexextra \
+  sudo apt-get install texlive\
+  texlive-latex-extra\
+  texlive-lang-spanish\
+  texlive-extra-utils\
+  texlive-generic-extra
   #+end_src
 
 
