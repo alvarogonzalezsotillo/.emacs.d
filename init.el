@@ -77,11 +77,8 @@
                   "_"
                   (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
   ;; Linux: ImageMagick:
-  (setq save-image-process (concat "-c \"xclip -selection clipboard -t image/png -o >  '" filename "' \"") )
-  (message save-image-process)
-  (call-process "/bin/sh" nil nil nil save-image-process)
-  ;; Windows: Irfanview
-  ;;(call-process "c:\\Programme\\IrfanView\\i_view32.exe" nil nil nil (concat "/clippaste /convert=" filename))
+  ;(call-process "/bin/bash" nil (list filename "kk") nil "-c" "xclip -selection clipboard -t image/png -o")
+  (call-process "xclip" nil (list :file filename) nil "-selection"  "clipboard" "-t" "image/png" "-o")
   (insert (concat "[[file:" filename "]]"))
   (org-display-inline-images))
 
