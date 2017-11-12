@@ -9,7 +9,7 @@
 
   (interactive) 
   ;; LISTA DE PAQUETES INSTALADOS (C-h v package-selected-packages)
-  (setq package-selected-packages '(lorem-ipsum calfw-ical web-beautify gitignore-mode treemacs-evil use-package treemacs-projectile company-restclient ob-restclient restclient-helm restclient transmission hl-line+ paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper smartparens scala-outline-popup request-deferred rectangle-utils php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile git-timemachine flycheck expand-region ensime diffview crappy-jsp-mode chess calfw auto-highlight-symbol alert adaptive-wrap))
+  (setq package-selected-packages '(dumb-jump lorem-ipsum calfw-ical web-beautify gitignore-mode treemacs-evil use-package treemacs-projectile company-restclient ob-restclient restclient-helm restclient transmission hl-line+ paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper smartparens scala-outline-popup request-deferred rectangle-utils php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile git-timemachine flycheck expand-region ensime diffview crappy-jsp-mode chess calfw auto-highlight-symbol alert adaptive-wrap))
   
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
   ;; (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t )
@@ -220,6 +220,7 @@
 (setq projectile-completion-system 'helm)
 (helm-projectile-on)
 
+
 ;; EXPAND REGION
 (require 'expand-region)
 
@@ -301,6 +302,8 @@
     (define-key map (kbd "C-x C-b") 'ibuffer)
     (define-key map (kbd "C-f") 'swiper)
     (define-key map (kbd "C-<f5>") 'reveal-y-pdf)
+    (define-key map (kbd "M-I") 'helm-imenu)
+
     map)
   "mis-teclas-minor-mode keymap")
 
@@ -348,6 +351,9 @@
  '(fill-column 120)
  '(global-company-mode t)
  '(global-hl-line-mode t)
+ '(grep-find-ignored-files
+   (quote
+    (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.dfsl" "*.pfsl" "*.d64fsl" "*.p64fsl" "*.lx64fsl" "*.lx32fsl" "*.dx64fsl" "*.dx32fsl" "*.fx64fsl" "*.fx32fsl" "*.sx64fsl" "*.sx32fsl" "*.wx64fsl" "*.wx32fsl" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.zip")))
  '(hl-line-overlay-priority -100050)
  '(line-number-mode nil)
  '(linum-mode 1 t)
@@ -369,7 +375,7 @@
  '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (lorem-ipsum calfw-ical web-beautify gitignore-mode treemacs-evil use-package treemacs-projectile company-restclient ob-restclient restclient-helm restclient transmission hl-line+ paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper smartparens scala-outline-popup request-deferred rectangle-utils php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile git-timemachine flycheck expand-region ensime diffview crappy-jsp-mode chess calfw auto-highlight-symbol alert adaptive-wrap)))
+    (dumb-jump lorem-ipsum calfw-ical web-beautify gitignore-mode treemacs-evil use-package treemacs-projectile company-restclient ob-restclient restclient-helm restclient transmission hl-line+ paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper smartparens scala-outline-popup request-deferred rectangle-utils php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile git-timemachine flycheck expand-region ensime diffview crappy-jsp-mode chess calfw auto-highlight-symbol alert adaptive-wrap)))
  '(paradox-github-token t)
  '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex")
  '(preview-default-preamble
