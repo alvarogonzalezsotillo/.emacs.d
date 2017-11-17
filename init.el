@@ -4,6 +4,53 @@
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)  
 
+
+
+(defun org-reveal-src-block (src-block contents info)
+  "Transcode a SRC-BLOCK element from Org to Reveal.
+CONTENTS holds the contents of the item.  INFO is a plist holding
+contextual information."
+  (if (org-export-read-attribute :attr_html src-block :textarea)
+      (org-html--textarea-block src-block)
+    (let* ((use-highlight (org-reveal--using-highlight.js info))
+           (lang (org-element-property :language src-block))
+           (caption (org-export-get-caption src-block))
+           (not-escaped-code (if (not use-highlight)
+                     (org-html-format-code src-block info)
+                   (cl-letf (((symbol-function 'org-html-htmlize-region-for-paste)
+                              #'buffer-substring))
+                     (org-html-format-code src-block info))))
+           (frag (org-export-read-attribute :attr_reveal src-block :frag))
+	   (code-attribs (or (org-export-read-attribute
+			 :attr_reveal src-block :code_attribs) ""))
+           (label (let ((lbl (org-element-property :name src-block)))
+                    (if (not lbl) ""
+                      (format " id=\"%s\"" lbl))))
+           (code (replace-regexp-in-string "<" "&lt;" not-escaped-code))
+           )
+      (message not-escaped-code)
+      (message code)
+      (if (not lang)
+          (format "<pre %s%s>\n%s</pre>"
+                  (or (frag-class frag info) " class=\"example\"")
+                  label
+                  code)
+        (format
+         "<div class=\"org-src-container\">\n%s%s\n</div>"
+         (if (not caption) ""
+           (format "<label class=\"org-src-name\">%s</label>"
+                   (org-export-data caption info)))
+         (if use-highlight
+             (format "\n<pre%s%s><code class=\"%s\" %s>%s</code></pre>"
+                     (or (frag-class frag info) "")
+                     label lang code-attribs code)
+           (format "\n<pre %s%s>%s</pre>"
+                   (or (frag-class frag info)
+                       (format " class=\"src src-%s\"" lang))
+                   label code)))))))
+
+
+
 ;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
 (defun reinstalar-paquetes-en-emacs-nuevo() 
 
@@ -33,7 +80,16 @@
 (defun reveal-y-pdf ()
   "Crea transparencias de reveal y hace el pdf a la vez."
   (interactive)
+  (org-html-export-to-html)
+  (let* (
+        (filename (buffer-file-name))
+        (html-filename (concat (file-name-sans-extension filename) ".html"))
+        (html-wp-filename (concat (file-name-sans-extension filename) ".wp.html")) )
+    (message "renombrando fichero: %s -> %s" html-filename html-wp-filename)
+    (rename-file html-filename html-wp-filename t) )
+  
   (org-reveal-export-to-html)
+
   (org-latex-export-to-pdf)
   (let* (
         (filename (buffer-file-name))
@@ -375,7 +431,7 @@
  '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (helm-ag dumb-jump lorem-ipsum calfw-ical web-beautify gitignore-mode use-package company-restclient ob-restclient restclient-helm restclient transmission hl-line+ paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper smartparens scala-outline-popup request-deferred rectangle-utils php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile git-timemachine flycheck expand-region ensime diffview crappy-jsp-mode chess calfw auto-highlight-symbol alert adaptive-wrap)))
+    (latex-preview-pane helm-ag dumb-jump lorem-ipsum calfw-ical web-beautify gitignore-mode use-package company-restclient ob-restclient restclient-helm restclient transmission hl-line+ paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper smartparens scala-outline-popup request-deferred rectangle-utils php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile git-timemachine flycheck expand-region ensime diffview crappy-jsp-mode chess calfw auto-highlight-symbol alert adaptive-wrap)))
  '(paradox-github-token t)
  '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex")
  '(preview-default-preamble
