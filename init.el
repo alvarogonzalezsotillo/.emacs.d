@@ -6,48 +6,7 @@
 
 
 
-(defun org-reveal-src-block (src-block contents info)
-  "Transcode a SRC-BLOCK element from Org to Reveal.
-CONTENTS holds the contents of the item.  INFO is a plist holding
-contextual information."
-  (if (org-export-read-attribute :attr_html src-block :textarea)
-      (org-html--textarea-block src-block)
-    (let* ((use-highlight (org-reveal--using-highlight.js info))
-           (lang (org-element-property :language src-block))
-           (caption (org-export-get-caption src-block))
-           (not-escaped-code (if (not use-highlight)
-                     (org-html-format-code src-block info)
-                   (cl-letf (((symbol-function 'org-html-htmlize-region-for-paste)
-                              #'buffer-substring))
-                     (org-html-format-code src-block info))))
-           (frag (org-export-read-attribute :attr_reveal src-block :frag))
-	   (code-attribs (or (org-export-read-attribute
-			 :attr_reveal src-block :code_attribs) ""))
-           (label (let ((lbl (org-element-property :name src-block)))
-                    (if (not lbl) ""
-                      (format " id=\"%s\"" lbl))))
-           (code (replace-regexp-in-string "<" "&lt;" not-escaped-code))
-           )
-      (message not-escaped-code)
-      (message code)
-      (if (not lang)
-          (format "<pre %s%s>\n%s</pre>"
-                  (or (frag-class frag info) " class=\"example\"")
-                  label
-                  code)
-        (format
-         "<div class=\"org-src-container\">\n%s%s\n</div>"
-         (if (not caption) ""
-           (format "<label class=\"org-src-name\">%s</label>"
-                   (org-export-data caption info)))
-         (if use-highlight
-             (format "\n<pre%s%s><code class=\"%s\" %s>%s</code></pre>"
-                     (or (frag-class frag info) "")
-                     label lang code-attribs code)
-           (format "\n<pre %s%s>%s</pre>"
-                   (or (frag-class frag info)
-                       (format " class=\"src src-%s\"" lang))
-                   label code)))))))
+
 
 
 
@@ -141,7 +100,7 @@ contextual information."
 
 ;; RESALTAR LA INDENTACION
 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-(setq highlight-indent-guides-method 'character)
+(setq highlight-indent-guides-method 'column)
 
 ;; SELECCION TRAS COPIAR
 (defadvice kill-ring-save (after keep-transient-mark-active ())
@@ -369,6 +328,51 @@ contextual information."
   :lighter "mis-teclas")
 
 (mis-teclas-minor-mode 1)
+
+
+;; PARCHES
+(defun org-reveal-src-block (src-block contents info)
+  "Transcode a SRC-BLOCK element from Org to Reveal.
+CONTENTS holds the contents of the item.  INFO is a plist holding
+contextual information."
+  (if (org-export-read-attribute :attr_html src-block :textarea)
+      (org-html--textarea-block src-block)
+    (let* ((use-highlight (org-reveal--using-highlight.js info))
+           (lang (org-element-property :language src-block))
+           (caption (org-export-get-caption src-block))
+           (not-escaped-code (if (not use-highlight)
+                     (org-html-format-code src-block info)
+                   (cl-letf (((symbol-function 'org-html-htmlize-region-for-paste)
+                              #'buffer-substring))
+                     (org-html-format-code src-block info))))
+           (code ( org-html-encode-plain-text not-escaped-code))
+
+           (frag (org-export-read-attribute :attr_reveal src-block :frag))
+	   (code-attribs (or (org-export-read-attribute
+			 :attr_reveal src-block :code_attribs) ""))
+           (label (let ((lbl (org-element-property :name src-block)))
+                    (if (not lbl) ""
+                      (format " id=\"%s\"" lbl)))))
+      (message not-escaped-code)
+      (message code)
+      (if (not lang)
+          (format "<pre %s%s>\n%s</pre>"
+                  (or (frag-class frag info) " class=\"example\"")
+                  label
+                  code)
+        (format
+         "<div class=\"org-src-container\">\n%s%s\n</div>"
+         (if (not caption) ""
+           (format "<label class=\"org-src-name\">%s</label>"
+                   (org-export-data caption info)))
+         (if use-highlight
+             (format "\n<pre%s%s><code class=\"%s\" %s>%s</code></pre>"
+                     (or (frag-class frag info) "")
+                     label lang code-attribs code)
+           (format "\n<pre %s%s>%s</pre>"
+                   (or (frag-class frag info)
+                       (format " class=\"src src-%s\"" lang))
+                   label code)))))))
 
 
 (custom-set-variables
