@@ -116,8 +116,8 @@
 
 ;; MAGIT STATUS
 (global-set-key (kbd "<f9>") 'magit-status)
-(setenv "GIT_TRACE" "1")
-(setenv "GIT_CURL_VERBOSE" "1")
+(setenv "GIT_TRACE" "3")
+(setenv "GIT_CURL_VERBOSE" "3")
 
 ;; DIRECTORIOS DE BACKUP
 (setq backup-directory-alist `(("." . "~/.saves")))
