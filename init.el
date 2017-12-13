@@ -383,21 +383,6 @@ contextual information."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-  '(TeX-source-correlate-start-server t)
- '(ac-ignore-case nil)
- '(ansi-color-names-vector ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#ad7fa8" "#8cc4ff" "#eeeeec"])
- '(desktop-save t)
- '(fill-column 120)
- '(linum-mode 1)
- '(neo-hidden-regexp-list (quote ("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" ".git")))
- '(neo-smart-open t)
- '(neo-theme (quote nerd))
- '(org-babel-load-languages (quote ((emacs-lisp . t) (shell . t))))
- '(org-html-mathjax-options (quote ((path "//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML") (scale "100") (align "center") (font "TeX") (linebreaks "false") (autonumber "AMS") (indent "0em") (multlinewidth "85%") (tagindent ".8em") (tagside "right"))))
- '(org-latex-image-default-width "1cm")
- '(org-latex-listings t)
- '(package-selected-packages (quote (markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper sr-speedbar smartparens scala-outline-popup request-deferred rectangle-utils rainbow-delimiters php-mode page-break-lines ox-reveal org-present org-ac neotree multiple-cursors image+ htmlize helm-projectile guide-key-tip github-browse-file git-timemachine git-link flycheck find-file-in-project expand-region epresent ensime discover diffview crappy-jsp-mode company-auctex chess calfw browse-at-remote auto-highlight-symbol auto-complete-auctex alert adaptive-wrap)))
- '(send-mail-function (quote sendmail-send-it))
  '(LaTeX-command-style
    (quote
     (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
@@ -436,23 +421,40 @@ contextual information."
  '(linum-mode 1 t)
  '(mc/always-run-for-all t)
  '(neo-autorefresh nil)
+ '(neo-hidden-regexp-list (quote ("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" ".git")))
+ '(neo-smart-open t)
+ '(neo-theme (quote nerd))
+ '(org-babel-load-languages (quote ((emacs-lisp . t) (shell . t))))
  '(org-format-latex-options
    (quote
     (:foreground default :background default :scale 2.0 :html-foreground "Black" :html-background "Transparent" :html-scale 2.0 :matchers
                  ("begin" "$1" "$" "$$" "\\(" "\\["))))
  '(org-html-link-org-files-as-html nil)
+ '(org-html-mathjax-options
+   (quote
+    ((path "//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML")
+     (scale "100")
+     (align "center")
+     (font "TeX")
+     (linebreaks "false")
+     (autonumber "AMS")
+     (indent "0em")
+     (multlinewidth "85%")
+     (tagindent ".8em")
+     (tagside "right"))))
  '(org-html-table-caption-above nil)
  '(org-latex-default-table-environment "longtable")
  '(org-latex-image-default-width "0.6\\textwidth")
  '(org-latex-inline-image-rules
    (quote
     (("file" . "\\(?:eps\\|jp\\(?:e?g\\)\\|p\\(?:df\\|gf\\|ng\\|s\\)\\|svg\\|tikz\\|gif\\)"))))
+ '(org-latex-listings t)
  '(org-list-allow-alphabetical t)
  '(org-src-block-faces (quote (("sql" default) ("shell" default) ("js" default))))
  '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (latex-preview-pane markdown-preview-mode helm-ag dumb-jump lorem-ipsum calfw-ical web-beautify gitignore-mode use-package company-restclient ob-restclient restclient-helm restclient transmission hl-line+ paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper smartparens scala-outline-popup request-deferred rectangle-utils php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile git-timemachine flycheck expand-region ensime diffview crappy-jsp-mode chess calfw auto-highlight-symbol alert adaptive-wrap)))
+    (helm-google latex-preview-pane markdown-preview-mode helm-ag dumb-jump lorem-ipsum calfw-ical web-beautify gitignore-mode use-package company-restclient ob-restclient restclient-helm restclient transmission hl-line+ paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper smartparens scala-outline-popup request-deferred rectangle-utils php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile git-timemachine flycheck expand-region ensime diffview crappy-jsp-mode chess calfw auto-highlight-symbol alert adaptive-wrap)))
  '(paradox-github-token t)
  '(preview-default-preamble
    (quote
@@ -460,6 +462,7 @@ contextual information."
      ("," . preview-default-option-list)
      "]{preview}[2004/11/05]" "\\PreviewEnvironment{tikzpicture}" "\\PreviewEnvironment{tabular}")))
  '(preview-image-type (quote dvipng))
+ '(send-mail-function (quote sendmail-send-it))
  '(sml/mode-width
    (if
        (eq
@@ -542,13 +545,6 @@ contextual information."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-  '(font-lock-comment-face ((t (:foreground "peru"))))
- '(neo-dir-link-face ((t (:height 0.8))))
- '(neo-file-link-face ((t (:foreground "White" :height 0.8))))
- '(org-block ((t (:inherit shadow :inverse-video t :family "courier"))))
- '(org-level-1 ((t (:inherit outline-1 :box (:line-width 2 :color "grey75" :style released-button) :height 2.0))))
- '(org-level-2 ((t (:inherit outline-2 :box nil :height 1.5))))
- '(org-meta-line ((t (:inherit font-lock-comment-face :height 0.4))))
  '(default ((t (:inherit nil :stipple nil :background "black" :foreground "white smoke" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "unknown" :family "Ubuntu Mono"))))
  '(font-lock-comment-face ((t (:foreground "peru"))))
  '(hl-line ((t (:background "gray30"))))
