@@ -4,12 +4,6 @@
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)  
 
-
-
-
-
-
-
 ;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
 (defun reinstalar-paquetes-en-emacs-nuevo() 
 
@@ -134,6 +128,10 @@
 ;; NO CORTAR LAS LÍNEAS
 (toggle-truncate-lines -1)
 
+
+;; TRAMP
+; Si no, helm-ff--get-host-from-tramp-invalid-fname: Symbol’s value as variable is void: tramp-methods
+(require 'tramp)
 
 ;; PARA PRESENTACIONES DEL ORG-MODE
 (defun bonito-para-proyector()
@@ -334,6 +332,8 @@
 
 
 ;; PARCHES
+(defvar gift-mode-map (make-sparse-keymap))
+
 (defun org-reveal-src-block (src-block contents info)
   "Transcode a SRC-BLOCK element from Org to Reveal.
 CONTENTS holds the contents of the item.  INFO is a plist holding
