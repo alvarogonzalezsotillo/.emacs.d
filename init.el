@@ -412,6 +412,8 @@ contextual information."
  '(line-number-mode nil)
  '(mc/always-run-for-all t)
  '(neo-autorefresh nil)
+ '(neo-smart-open t)
+ '(neo-theme (quote nerd))
  '(org-format-latex-options
    (quote
     (:foreground default :background default :scale 2.0 :html-foreground "Black" :html-background "Transparent" :html-scale 2.0 :matchers
