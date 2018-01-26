@@ -334,6 +334,19 @@
 ;; PARCHES
 (defvar gift-mode-map (make-sparse-keymap))
 
+(setq mi-org-html-protect-char-alist
+  '(("&" . "&amp;")
+    ("<" . "&lt;")
+    (">" . "&gt;")
+    ("\\%" . "&#37;")))
+
+(defun mi-org-html-encode-plain-text (text)
+  "Convert plain text characters from TEXT to HTML equivalent.
+Possible conversions are set in `org-html-protect-char-alist'."
+  (dolist (pair org-html-protect-char-alist text)
+    (setq text (replace-regexp-in-string (car pair) (cdr pair) text t t))))
+
+
 (defun org-reveal-src-block (src-block contents info)
   "Transcode a SRC-BLOCK element from Org to Reveal.
 CONTENTS holds the contents of the item.  INFO is a plist holding
@@ -348,7 +361,7 @@ contextual information."
                    (cl-letf (((symbol-function 'org-html-htmlize-region-for-paste)
                               #'buffer-substring))
                      (org-html-format-code src-block info))))
-           (code ( org-html-encode-plain-text not-escaped-code))
+           (code (mi-org-html-encode-plain-text not-escaped-code))
 
            (frag (org-export-read-attribute :attr_reveal src-block :frag))
 	   (code-attribs (or (org-export-read-attribute
@@ -356,8 +369,6 @@ contextual information."
            (label (let ((lbl (org-element-property :name src-block)))
                     (if (not lbl) ""
                       (format " id=\"%s\"" lbl)))))
-      (message not-escaped-code)
-      (message code)
       (if (not lang)
           (format "<pre %s%s>\n%s</pre>"
                   (or (frag-class frag info) " class=\"example\"")
