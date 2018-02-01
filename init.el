@@ -55,7 +55,13 @@
   (org-latex-export-to-pdf)
   (let* (
         (filename (buffer-file-name))
-        (tex-filename (concat (file-name-sans-extension filename) ".tex")) )
+        (tex-filename (concat (file-name-sans-extension filename) ".tex"))
+        (html-filename (concat (file-name-sans-extension filename) ".html"))
+        (html-reveal-filename (concat (file-name-sans-extension filename) ".reveal.html")) )
+
+    (message "renombrando fichero: %s -> %s" html-filename html-reveal-filename)
+    (rename-file html-filename html-reveal-filename t)
+    
     (message "Borrando fichero: %s" tex-filename)
     (delete-file tex-filename) )
  )
