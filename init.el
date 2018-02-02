@@ -27,10 +27,10 @@
   image+ htmlize helm-projectile org-attach-screenshot bm
   yafolding web-mode transpose-frame org-page company-web
   company-shell company-quickhelp rectangle-utils php-mode
-  page-break-lines ox-reveal restclient transmission hl-line+
+  page-break-lines restclient transmission hl-line+
   paradox gift-mode plsql tablist switch-window swiper
   smartparens request-deferred use-package company-restclient
-  ob-restclient restclient-helm ))
+  ob-restclient restclient-helm ox-reveal ))
 (defvar packages-refreshed? nil)
 (defun reinstalar-paquetes-en-emacs-nuevo()
   (interactive)
