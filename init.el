@@ -38,7 +38,7 @@
 (eval-after-load "preview"
   '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
 
-;; REVEAL Y PDF A LA VEZ
+;; REVEAL, HTML Y PDF A LA VEZ
 (defun reveal-y-pdf ()
   "Crea transparencias de reveal y hace el pdf a la vez."
   (interactive)
@@ -47,8 +47,8 @@
          (filename (buffer-file-name))
          (html-filename (concat (file-name-sans-extension filename) ".html"))
          (html-wp-filename (concat (file-name-sans-extension filename) ".wp.html")) )
-    (message "renombrando fichero: %s -> %s" html-filename html-wp-filename)
-    (rename-file html-filename html-wp-filename t) )
+    (message "Copiando fichero: %s -> %s" html-filename html-wp-filename)
+    (copy-file html-filename html-wp-filename t) )
   
   (org-reveal-export-to-html)
   (let* (
