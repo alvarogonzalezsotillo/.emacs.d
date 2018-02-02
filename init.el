@@ -12,10 +12,12 @@
 ;; PAQUETES
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (package-initialize)
 
 ;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
-(defvar my/install-packages '(color-identifiers-mode adaptive-wrap company-emoji
+(defvar my/install-packages '( adaptive-wrap company-emoji
   company-c-headers company company-auctex crappy-jsp-mode chess
   calfw auto-highlight-symbol alert dumb-jump lorem-ipsum
   calfw-ical web-beautify gitignore-mode git-gutter howdoi
@@ -27,10 +29,10 @@
   image+ htmlize helm-projectile org-attach-screenshot bm
   yafolding web-mode transpose-frame org-page company-web
   company-shell company-quickhelp rectangle-utils php-mode
-  page-break-lines restclient transmission hl-line+
-  paradox gift-mode plsql tablist switch-window swiper
+  page-break-lines restclient transmission
+  paradox gift-mode tablist switch-window swiper
   smartparens request-deferred use-package company-restclient
-  ob-restclient restclient-helm ox-reveal ))
+  ob-restclient restclient-helm ox-reveal))
 (defvar packages-refreshed? nil)
 (defun reinstalar-paquetes-en-emacs-nuevo()
   (interactive)
@@ -41,9 +43,8 @@
       (unless packages-refreshed?
         (package-refresh-contents)
         (setq packages-refreshed? t))
-      (package-install (symbol-name pack)))))
+      (package-install pack))))
 (reinstalar-paquetes-en-emacs-nuevo)
-(require 'use-package)
 
 ;; https://writequit.org/org/settings.html#sec-1-33
 ;; No perder el portapapeles del sistema
