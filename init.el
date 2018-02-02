@@ -1,23 +1,50 @@
+;;; Package --- Mi init.el
+;;
+;;; Commentary:
+;;
+;;; Code:
 
-;; ESTO ES PARA LOS PAQUETES
+
+;; POR SI FALLA ALGO DURANTE LA CARGA
+(setq debug-on-error t)
+(setq debug-on-quit t)
+
+;; PAQUETES
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(package-initialize)  
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(package-initialize)
 
 ;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
-(defun reinstalar-paquetes-en-emacs-nuevo() 
-
-  (interactive) 
-  ;; LISTA DE PAQUETES INSTALADOS (C-h v package-selected-packages)
-  (setq package-selected-packages '(git-gutter howdoi kodi-remote helm-google latex-preview-pane markdown-preview-mode helm-ag dumb-jump lorem-ipsum calfw-ical web-beautify gitignore-mode use-package company-restclient ob-restclient restclient-helm restclient transmission hl-line+ paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper smartparens scala-outline-popup request-deferred rectangle-utils php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile git-timemachine flycheck expand-region ensime diffview crappy-jsp-mode chess calfw auto-highlight-symbol alert adaptive-wrap))
-  
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-  ;; (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t )
-
-  (package-refresh-contents)
-  (package-initialize)  
-
-  (package-install-selected-packages))
+(defvar my/install-packages '( adaptive-wrap company-emoji
+  company-c-headers company company-auctex crappy-jsp-mode chess
+  calfw auto-highlight-symbol alert dumb-jump lorem-ipsum
+  calfw-ical web-beautify gitignore-mode git-gutter howdoi
+  kodi-remote git-timemachine flycheck expand-region ensime
+  diffview helm-company highlight-indent-guides which-key
+  dired-narrow org helm-google latex-preview-pane
+  markdown-preview-mode helm-ag markdown-mode magit
+  popup-complete scad-preview scad-mode neotree multiple-cursors
+  image+ htmlize helm-projectile org-attach-screenshot bm
+  yafolding web-mode transpose-frame org-page company-web
+  company-shell company-quickhelp rectangle-utils php-mode
+  page-break-lines restclient transmission
+  paradox gift-mode tablist switch-window swiper
+  smartparens request-deferred use-package company-restclient
+  ob-restclient restclient-helm ox-reveal))
+(defvar packages-refreshed? nil)
+(defun reinstalar-paquetes-en-emacs-nuevo()
+  (interactive)
+  (dolist (pack my/install-packages)
+    (message (concat "Refrescando:" (symbol-name pack )))
+    (unless (package-installed-p pack)
+      (message (concat "Necesita reinstalar:" (symbol-name pack )))
+      (unless packages-refreshed?
+        (package-refresh-contents)
+        (setq packages-refreshed? t))
+      (package-install pack))))
+(reinstalar-paquetes-en-emacs-nuevo)
 
 ;; https://writequit.org/org/settings.html#sec-1-33
 ;; No perder el portapapeles del sistema
@@ -144,7 +171,6 @@
 ;; NO CORTAR LAS LÍNEAS
 (toggle-truncate-lines -1)
 
-
 ;; TRAMP
 ; Si no, helm-ff--get-host-from-tramp-invalid-fname: Symbol’s value as variable is void: tramp-methods
 (require 'tramp)
@@ -156,19 +182,6 @@
   (adaptive-wrap-prefix-mode 1)
   (toggle-word-wrap 1)
   (org-display-inline-images))
-
-(add-hook 'org-present-mode-hook
-          (lambda ()
-            (bonito-para-proyector)
-            (org-present-big)
-            (setq mode-line-format nil)
-            (linum-mode -1)))
-            
-(add-hook 'epresent-start-presentation-hook
-          (lambda()
-            (bonito-para-proyector)
-            (setq mode-line-format nil)
-            (linum-mode -1)))
 
 ;; CALENDARIOS
 (require 'calfw)
@@ -276,8 +289,6 @@
 (defun my-org-mode-hook-for-company ()
   (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t))
 (add-hook 'org-mode-hook #'my-org-mode-hook-for-company)
-
-
 
 
 ;; MOSTRAR LOS PARENTESIS ASOCIADOS
@@ -405,6 +416,11 @@ contextual information."
                    label code)))))))
 
 
+;; DESACTIVAR EL DEBUG, LO QUE QUEDA YA ES DE CUSTOMIZE
+(setq debug-on-error nil)
+(setq debug-on-quit nil)
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -417,7 +433,11 @@ contextual information."
    (quote
     ("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql")))
  '(TeX-source-correlate-mode t)
+ '(TeX-source-correlate-start-server t)
+ '(ac-ignore-case nil)
  '(ac-trigger-key "S-<spc>")
+ '(ansi-color-names-vector
+   ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#ad7fa8" "#8cc4ff" "#eeeeec"])
  '(chess-default-display (quote (chess-images chess-ics1 chess-plain)))
  '(company-backends
    (quote
@@ -427,29 +447,47 @@ contextual information."
                       (company-dabbrev-code company-gtags company-etags company-keywords)
                       company-oddmuse company-dabbrev)))
  '(company-show-numbers t)
+ '(custom-safe-themes
+   (quote
+    ("fb2f0a401501100076f32b6e4ca8cdc9c7d943a7099f2085323ffa1a460819f6" "12cd2ff2db62c2fe561fa6148e5438c6e0eebb9daa7b46c69931ffacfee1521d" "3a0083b2db70cff2c828d59c37973384a9d2f07b3911e8292c19b3c701552804" "c8bb12b86341bfdc154664bf93fc0753ba2ea91c85b9f678e664288c1dd74d05" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "36d92f830c21797ce34896a4cf074ce25dbe0dabe77603876d1b42316530c99d" "b04425cc726711a6c91e8ebc20cf5a3927160681941e06bc7900a5a5bfe1a77f" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
  '(delete-selection-mode t)
+ '(desktop-save t)
  '(desktop-save-mode t)
- '(git-gutter:update-interval 10)
+ '(fill-column 120)
  '(global-company-mode t)
  '(global-hl-line-mode t)
  '(grep-find-ignored-files
    (quote
     (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.dfsl" "*.pfsl" "*.d64fsl" "*.p64fsl" "*.lx64fsl" "*.lx32fsl" "*.dx64fsl" "*.dx32fsl" "*.fx64fsl" "*.fx32fsl" "*.sx64fsl" "*.sx32fsl" "*.wx64fsl" "*.wx32fsl" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "*.pdf" "*.zip")))
- '(highlight-indent-guides-method (quote column))
  '(hl-line-overlay-priority -100050)
  '(line-number-mode nil)
+ '(linum-mode 1 t)
  '(mc/always-run-for-all t)
  '(neo-autorefresh nil)
+ '(neo-hidden-regexp-list (quote ("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" ".git")))
  '(neo-smart-open t)
  '(neo-theme (quote nerd))
+ '(org-babel-load-languages (quote ((emacs-lisp . t) (shell . t))))
  '(org-format-latex-options
    (quote
     (:foreground default :background default :scale 2.0 :html-foreground "Black" :html-background "Transparent" :html-scale 2.0 :matchers
                  ("begin" "$1" "$" "$$" "\\(" "\\["))))
  '(org-html-link-org-files-as-html nil)
+ '(org-html-mathjax-options
+   (quote
+    ((path "//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML")
+     (scale "100")
+     (align "center")
+     (font "TeX")
+     (linebreaks "false")
+     (autonumber "AMS")
+     (indent "0em")
+     (multlinewidth "85%")
+     (tagindent ".8em")
+     (tagside "right"))))
  '(org-html-table-caption-above nil)
  '(org-latex-default-table-environment "longtable")
- '(org-latex-images-centered nil)
+ '(org-latex-image-default-width "0.6\\textwidth")
  '(org-latex-inline-image-rules
    (quote
     (("file" . "\\(?:eps\\|jp\\(?:e?g\\)\\|p\\(?:df\\|gf\\|ng\\|s\\)\\|svg\\|tikz\\|gif\\)"))))
@@ -459,15 +497,16 @@ contextual information."
  '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (git-gutter howdoi kodi-remote helm-google latex-preview-pane markdown-preview-mode helm-ag dumb-jump lorem-ipsum calfw-ical web-beautify gitignore-mode use-package company-restclient ob-restclient restclient-helm restclient transmission hl-line+ paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper smartparens scala-outline-popup request-deferred rectangle-utils php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile git-timemachine flycheck expand-region ensime diffview crappy-jsp-mode chess calfw auto-highlight-symbol alert adaptive-wrap)))
+    (fill-column-indicator color-identifiers-mode "helm-man" "scala-outline-popup" "org-webpage" git-gutter howdoi kodi-remote helm-google latex-preview-pane markdown-preview-mode helm-ag dumb-jump lorem-ipsum calfw-ical web-beautify gitignore-mode use-package company-restclient ob-restclient restclient-helm restclient transmission hl-line+ paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper smartparens scala-outline-popup request-deferred rectangle-utils php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile git-timemachine flycheck expand-region ensime diffview crappy-jsp-mode chess calfw auto-highlight-symbol alert adaptive-wrap)))
  '(paradox-github-token t)
- '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex" t)
+ '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex")
  '(preview-default-preamble
    (quote
     ("\\RequirePackage["
      ("," . preview-default-option-list)
      "]{preview}[2004/11/05]" "\\PreviewEnvironment{tikzpicture}" "\\PreviewEnvironment{tabular}")))
  '(preview-image-type (quote dvipng))
+ '(send-mail-function (quote sendmail-send-it))
  '(sml/mode-width
    (if
        (eq
@@ -552,8 +591,6 @@ contextual information."
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :background "black" :foreground "white smoke" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "unknown" :family "Ubuntu Mono"))))
  '(font-lock-comment-face ((t (:foreground "peru"))))
- '(highlight-indent-guides-even-face ((t (:background "dim gray"))))
- '(highlight-indent-guides-odd-face ((t (:background "dim gray"))))
  '(hl-line ((t (:background "gray30"))))
  '(magit-branch-local ((t (:background "dark red" :foreground "LightSkyBlue1"))))
  '(magit-branch-remote ((t (:background "dark magenta" :foreground "DarkSeaGreen2"))))
