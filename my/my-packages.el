@@ -15,7 +15,7 @@
   kodi-remote git-timemachine flycheck expand-region ensime
   diffview helm-company highlight-indent-guides which-key
   dired-narrow org helm-google latex-preview-pane
-  markdown-preview-mode helm-ag markdown-mode magit
+  markdown-preview-mode helm-gitignore helm-ag markdown-mode magit
   popup-complete scad-preview scad-mode neotree multiple-cursors
   image+ htmlize helm-projectile org-attach-screenshot bm
   yafolding web-mode transpose-frame org-page company-web
