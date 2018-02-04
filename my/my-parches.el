@@ -6,7 +6,6 @@
 
 (provide 'my-parches)
 
-(defvar gift-mode-map (make-sparse-keymap))
 
 (setq mi-org-html-protect-char-alist
   '(("&" . "&amp;")

@@ -20,7 +20,12 @@
 
 (require 'my-packages)
 (reinstalar-paquetes-en-emacs-nuevo)
+
+(defvar gift-mode-map (make-sparse-keymap))
+
 (requerir-paquetes)
+
+
 
 (add-hook 'prog-mode-hook
           (lambda () (yafolding-mode)))
