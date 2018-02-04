@@ -1,9 +1,11 @@
-;;; Package --- reinstalar-paquetes
+;;; Package --- my-packages
 ;;
 ;;; Commentary:
 ;;
 ;;; Code:
 
+
+(provide 'my-packages)
 
 ;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
 (defvar my/install-packages '( adaptive-wrap company-emoji
@@ -39,4 +41,4 @@
 
 (provide 'reinstalar-paquetes)
 
-;;; reinstalar-paquetes.el ends here
+;;; my-packages ends here
