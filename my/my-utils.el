@@ -6,6 +6,26 @@
 
 (provide 'my-utils)
 
+
+
+;; CONECTAR A TRANSMISSION
+(defun conectar-a-transmission ()
+  (interactive)
+
+   (setq transmission-host "192.168.1.100")
+
+  (setq transmission-host (read-string "Transmission host: " "192.168.1.100" ))
+  (setq transmission-user (read-string "Transmission user: " "transmission"))
+  (setq transmission-pass (read-passwd "Transmission password:"))
+
+  (message "Conectando a %s:%s@%s" transmission-user  transmission-pass transmission-host)
+  
+  (setq transmission-rpc-auth (quote (:username transmission-user :password transmission-pass)))
+
+  (transmission))
+
+
+
 ;; REVEAL, HTML Y PDF A LA VEZ
 (defun reveal-y-pdf ()
   "Crea transparencias de reveal y hace el pdf a la vez."
