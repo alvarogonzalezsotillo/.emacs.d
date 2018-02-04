@@ -8,7 +8,7 @@
 (provide 'my-packages)
 
 ;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
-(defvar my/install-packages '( adaptive-wrap company-emoji
+(defvar my/install-packages '(ag adaptive-wrap company-emoji
   company-c-headers company company-auctex crappy-jsp-mode chess
   calfw auto-highlight-symbol alert dumb-jump lorem-ipsum
   calfw-ical web-beautify gitignore-mode git-gutter howdoi
