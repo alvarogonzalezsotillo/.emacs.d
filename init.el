@@ -20,61 +20,19 @@
 
 (require 'my-packages)
 (reinstalar-paquetes-en-emacs-nuevo)
+(requerir-paquetes)
 
-(require 'transmission)
-
-(require 'my-utils)
-
-(require 'bm)
-
-(require 'magit)
-
-(require 'tramp)
-
-(require 'calfw)
-
-(require 'transpose-frame)
-
-(require 'ox-reveal)
-
-(require 'switch-window)
-
-(require 'which-key)
-
-(require 'multiple-cursors)
-
-(require 'smartparens-config)
-
-(require 'page-break-lines)
-(require 'auto-highlight-symbol)
-
-         
-(require 'yafolding)
 (add-hook 'prog-mode-hook
           (lambda () (yafolding-mode)))
 
-(require 'helm)
-
-(require 'projectile)
 (setq projectile-completion-system 'helm)
 
 
-(require 'expand-region)
-
-
 (require 'my-company)
-
-
-(require 'neotree)
-
-
-(require 'yasnippet)
-
-
-
 (require 'my-parches)
 (require 'my-settings)
 (require 'my-shortcuts)
+(require 'my-utils)
 
 
 ;; DESACTIVAR EL DEBUG, LO QUE QUEDA YA ES DE CUSTOMIZE

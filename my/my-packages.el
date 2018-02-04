@@ -39,6 +39,13 @@
       (package-install pack))))
 
 
+(defun requerir-paquetes ()
+  (dolist (pack my/install-packages)
+    (message (concat "Requires:" (symbol-name pack )))
+    (require pack)))
+  
+
+
 (provide 'reinstalar-paquetes)
 
 ;;; my-packages ends here
