@@ -9,6 +9,8 @@
 (setq debug-on-error t)
 (setq debug-on-quit t)
 
+(add-to-list 'load-path "~/.emacs.d/my/")
+
 ;; PAQUETES
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
@@ -16,404 +18,63 @@
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (package-initialize)
 
-;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
-(defvar my/install-packages '( adaptive-wrap company-emoji
-  company-c-headers company company-auctex crappy-jsp-mode chess
-  calfw auto-highlight-symbol alert dumb-jump lorem-ipsum
-  calfw-ical web-beautify gitignore-mode git-gutter howdoi
-  kodi-remote git-timemachine flycheck expand-region ensime
-  diffview helm-company highlight-indent-guides which-key
-  dired-narrow org helm-google latex-preview-pane
-  markdown-preview-mode helm-ag markdown-mode magit
-  popup-complete scad-preview scad-mode neotree multiple-cursors
-  image+ htmlize helm-projectile org-attach-screenshot bm
-  yafolding web-mode transpose-frame org-page company-web
-  company-shell company-quickhelp rectangle-utils php-mode
-  page-break-lines restclient transmission
-  paradox gift-mode tablist switch-window swiper
-  smartparens request-deferred use-package company-restclient
-  ob-restclient restclient-helm ox-reveal))
-(defvar packages-refreshed? nil)
-(defun reinstalar-paquetes-en-emacs-nuevo()
-  (interactive)
-  (dolist (pack my/install-packages)
-    (message (concat "Refrescando:" (symbol-name pack )))
-    (unless (package-installed-p pack)
-      (message (concat "Necesita reinstalar:" (symbol-name pack )))
-      (unless packages-refreshed?
-        (package-refresh-contents)
-        (setq packages-refreshed? t))
-      (package-install pack))))
+(require 'reinstalar-paquetes)
 (reinstalar-paquetes-en-emacs-nuevo)
 
-;; https://writequit.org/org/settings.html#sec-1-33
-;; No perder el portapapeles del sistema
-(setq save-interprogram-paste-before-kill t)
+(require 'transmission)
 
-;; GIT-GUTTER
-(require 'git-gutter)
-(global-git-gutter-mode +1)
-(git-gutter:linum-setup)
+(require 'my-utils)
 
-;; AUTO MODE, PARA QUE SE ABRAN COMO TEXTO LOS SVG
-(add-to-list 'auto-mode-alist '("\\.svg$" . text-mode))
-
-;; PREVIEW DE TIKZ
-;; https://www.gnu.org/software/auctex/manual/preview-latex.html
-(eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t) )
-(eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
-
-;; REVEAL, HTML Y PDF A LA VEZ
-(defun reveal-y-pdf ()
-  "Crea transparencias de reveal y hace el pdf a la vez."
-  (interactive)
-  (org-html-export-to-html)
-  (let* (
-         (filename (buffer-file-name))
-         (html-filename (concat (file-name-sans-extension filename) ".html"))
-         (html-wp-filename (concat (file-name-sans-extension filename) ".wp.html")) )
-    (message "Copiando fichero: %s -> %s" html-filename html-wp-filename)
-    (copy-file html-filename html-wp-filename t) )
-  
-  (org-reveal-export-to-html)
-  (let* (
-         (filename (buffer-file-name))
-         (html-filename (concat (file-name-sans-extension filename) ".html"))
-         (html-reveal-filename (concat (file-name-sans-extension filename) ".reveal.html")) )
-    (message "renombrando fichero: %s -> %s" html-filename html-reveal-filename)
-    (rename-file html-filename html-reveal-filename t))
-
-  (org-latex-export-to-pdf)
-  (let* (
-         (filename (buffer-file-name))
-         (tex-filename (concat (file-name-sans-extension filename) ".tex")))
-
-    
-    (message "Borrando fichero: %s" tex-filename)
-    (delete-file tex-filename) ) )
-
-
-;; EXPERIMENTOS
-(defun url-decode-region (start end)
-  "Replace a region with the same contents, only URL decoded."
-  (interactive "r")
-  (let ((text (url-unhex-string (buffer-substring start end))))
-    (delete-region start end)
-    (insert text)))
-
-(defun horario()
-  (interactive)
-  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/ags.iesavellaneda%40gmail.com/private-8d8f10c04ef7daee164d8d8a8f4707d5/basic.ics"))
-
-(defun quitar-proxy()
-  (interactive)
-  (setq url-proxy-services '()))
-
-(defun proxy-educamadrid()
-  (interactive)
-  (setq url-proxy-services
-        '(("no_proxy" . "^\\(localhost\\|10\\.*|192\\.*\\)")
-          ("http" . "213.0.88.85:8080")
-          ("https" . "213.0.88.85:8080"))))
-
-(defun org-insert-clipboard-image()
-  "Save the image in the clipboard  into a time stamped unique-named file in the same directory as the org-buffer and insert a link to this file."
-  (interactive)
-  ; (setq tilde-buffer-filename (replace-regexp-in-string "/" "\\" (buffer-file-name) t t))
-  (setq filename
-        (concat
-         (make-temp-name
-          (concat buffer-file-name
-                  "_"
-                  (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
-  ;; Linux: ImageMagick:
-  ;(call-process "/bin/bash" nil (list filename "kk") nil "-c" "xclip -selection clipboard -t image/png -o")
-  (call-process "xclip" nil (list :file filename) nil "-selection"  "clipboard" "-t" "image/png" "-o")
-  (insert (concat "[[file:" filename "]]"))
-  (org-display-inline-images))
-
-
-;; RESALTAR LA INDENTACION
-(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-(setq highlight-indent-guides-method 'column)
-
-;; SELECCION TRAS COPIAR
-(defadvice kill-ring-save (after keep-transient-mark-active ())
-  "Override the deactivation of the mark."
-  (setq deactivate-mark nil))
-(ad-activate 'kill-ring-save)
-
-;; VISIBLE BOOKMARKS
 (require 'bm)
-(global-set-key (kbd "<C-f2>") 'bm-toggle)
-(global-set-key (kbd "<f2>")   'bm-next)
-(global-set-key (kbd "<S-f2>") 'bm-previous)
 
-;; MAGIT STATUS
-(global-set-key (kbd "<f9>") 'magit-status)
-;(setenv "GIT_TRACE" "1")
-;(setenv "GIT_CURL_VERBOSE" "1")
-;(setenv "GIT_TRACE_PACKET" "1")
+(require 'magit)
 
-;; DIRECTORIOS DE BACKUP
-(setq backup-directory-alist `(("." . "~/.saves")))
-(setq backup-by-copying t)
-(setq delete-old-versions t
-      kept-new-versions 6
-      kept-old-versions 2
-      version-control t)
-
-;; WINNER MODE
-(winner-mode 1)
-
-;; NO CORTAR LAS LÍNEAS
-(toggle-truncate-lines -1)
-
-;; TRAMP
-; Si no, helm-ff--get-host-from-tramp-invalid-fname: Symbol’s value as variable is void: tramp-methods
 (require 'tramp)
 
-;; PARA PRESENTACIONES DEL ORG-MODE
-(defun bonito-para-proyector()
-  (interactive)
-  (toggle-truncate-lines -1)
-  (adaptive-wrap-prefix-mode 1)
-  (toggle-word-wrap 1)
-  (org-display-inline-images))
-
-;; CALENDARIOS
 (require 'calfw)
 
-
-
-;; TRANSPOSE FRAME
 (require 'transpose-frame)
-(global-set-key (kbd "<f5>") 'transpose-frame)
 
-
-;; VALIDACIONES
-(add-hook 'after-init-hook #'global-flycheck-mode)
-
-;; EXPORTAR A REVEAL.JS
 (require 'ox-reveal)
 
-
-;; CAMBIAR DE FORMA VISUAL A UNA VENTANA
 (require 'switch-window)
-(global-set-key (kbd "C-x o") 'switch-window)
 
-;; GUIA DE TECLAS, TODAS LAS TECLAS
-(which-key-mode t)
+(require 'which-key)
 
-;; NO PREGUNTAR CUANDO SE CIERRA EL BUFFER
-(setq kill-this-buffer-enabled-p t)
-(global-set-key (kbd "C-x k") 'kill-this-buffer)
-
-;; MULTIPLE CURSORS
 (require 'multiple-cursors)
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
-(global-set-key (kbd "C-S-c C-S-v") 'mc/mark-all-like-this)
 
-;; HABILITAR EL MODO ELECTRICO, CERRANDO AUTOMATICAMENTE DELIMITADORES.
-;; AHORA USO SMARTPARENTS
-;; (electric-pair-mode 1)
 (require 'smartparens-config)
-(smartparens-global-mode 1)
 
-
-;;^L BONITOS
 (require 'page-break-lines)
-(global-page-break-lines-mode)
-
-;; RESALTAR EL SIMBOLO ACTUAL
 (require 'auto-highlight-symbol)
-(global-auto-highlight-symbol-mode t)
 
          
-;; YAFOLDING
 (require 'yafolding)
-(define-globalized-minor-mode my-global-yafolding-mode yafolding-mode
-  (lambda () (yafolding-mode 1)))
-(my-global-yafolding-mode 1)
+(add-hook 'prog-mode-hook
+          (lambda () (yafolding-mode)))
 
-;; TRANSIENT MARK MODE, PARA C-X TAB
-(transient-mark-mode 1)
-
-;; SCROLL SUAVE
-(setq redisplay-dont-pause t
-      scroll-margin 3
-      scroll-step 1
-      scroll-conservatively 10000
-      scroll-preserve-screen-position 1)
-
-;; HELM
 (require 'helm)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "<f6>") 'helm-mini)
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(helm-mode 1)
 
-;; PROJECTILE
 (require 'projectile)
-(projectile-global-mode)
 (setq projectile-completion-system 'helm)
-(helm-projectile-on)
 
 
-;; EXPAND REGION
 (require 'expand-region)
 
-;; QUITAR LA TOOLBAR
-(tool-bar-mode -1)
 
-;; ANCHURA DE PAGINAS DEL MAN
-(setenv "MANWIDTH" "80")
-
-;; COMPANY
-(require 'company)
-(add-hook 'after-init-hook 'global-company-mode)
-(company-auctex-init)
-(add-to-list 'company-backends 'company-c-headers)
-(add-to-list 'company-backends 'company-emoji)
-(add-to-list 'company-backends 'company-web-html)
-(add-to-list 'company-backends 'company-web-jade)
-(add-to-list 'company-backends 'company-web-slim)
-(global-set-key (kbd "C-.") 'company-complete)
-(company-quickhelp-mode 1)
-(defun my-org-mode-hook-for-company ()
-  (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t))
-(add-hook 'org-mode-hook #'my-org-mode-hook-for-company)
+(require 'my-company)
 
 
-;; MOSTRAR LOS PARENTESIS ASOCIADOS
-(show-paren-mode)
-
-;; INDENTACIONES
-(setq-default indent-tabs-mode nil)
-(setq tab-width 2)
-
-;; PARA FUNCIONAR CON AUCTEX
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq TeX-save-query nil)
-(setq TeX-PDF-mode t)
-
-;; NUMEROS DE LINEA
-(global-linum-mode t)
-
-
-;; QUITAR PANTALLA DE INICIO Y MENU
-(setq inhibit-startup-message t)
-(menu-bar-mode -1)
-
-;; MODO SERVIDOR
-(server-force-delete)
-(server-start)
-
-;; F8 PARA NEOTREE
 (require 'neotree)
-(global-set-key [f8] 'neotree-toggle)
 
-;; imagex PARA HACER ZOOM EN IMÁGENES
-(imagex-global-sticky-mode)
-(imagex-auto-adjust-mode)
 
-;; YASNIPPET
 (require 'yasnippet)
-(yas-global-mode 1)
-;; Remove Yasnippet's default tab key binding
-(define-key yas-minor-mode-map (kbd "<tab>") nil)
-(define-key yas-minor-mode-map (kbd "TAB") nil)
-;; Alternatively use Control-c + tab
-(define-key yas-minor-mode-map (kbd "\C-c TAB") 'yas-expand)
 
 
-;; MIS TECLAS
-(defvar mis-teclas-minor-mode-map
-  (let ((map (make-sparse-keymap)))
-    ;(define-key map (kbd "C-i") 'some-function)
-    (define-key map (kbd "C-e") 'er/expand-region)
-    (define-key map (kbd "C-S-e") 'er/contract-region)
-    (define-key map (kbd "C-z") 'undo )
-    (define-key map (kbd "C-x C-d") 'dired)
-    (define-key map (kbd "C-x C-b") 'ibuffer)
-    (define-key map (kbd "C-f") 'swiper)
-    (define-key map (kbd "C-<f5>") 'reveal-y-pdf)
-    (define-key map (kbd "M-I") 'helm-imenu)
 
-    map)
-  "mis-teclas-minor-mode keymap")
-
-(define-minor-mode mis-teclas-minor-mode
-  "A minor mode so that my key settings override annoying major modes."
-  :init-value t
-  :lighter "mis-teclas")
-
-(mis-teclas-minor-mode 1)
-
-
-;; PARCHES
-(defvar gift-mode-map (make-sparse-keymap))
-
-(setq mi-org-html-protect-char-alist
-  '(("&" . "&amp;")
-    ("<" . "&lt;")
-    (">" . "&gt;")
-    ("\\%" . "&#37;")))
-
-(defun mi-org-html-encode-plain-text (text)
-  "Convert plain text characters from TEXT to HTML equivalent.
-Possible conversions are set in `org-html-protect-char-alist'."
-  (dolist (pair org-html-protect-char-alist text)
-    (setq text (replace-regexp-in-string (car pair) (cdr pair) text t t))))
-
-
-(defun org-reveal-src-block (src-block contents info)
-  "Transcode a SRC-BLOCK element from Org to Reveal.
-CONTENTS holds the contents of the item.  INFO is a plist holding
-contextual information."
-  (if (org-export-read-attribute :attr_html src-block :textarea)
-      (org-html--textarea-block src-block)
-    (let* ((use-highlight (org-reveal--using-highlight.js info))
-           (lang (org-element-property :language src-block))
-           (caption (org-export-get-caption src-block))
-           (not-escaped-code (if (not use-highlight)
-                     (org-html-format-code src-block info)
-                   (cl-letf (((symbol-function 'org-html-htmlize-region-for-paste)
-                              #'buffer-substring))
-                     (org-html-format-code src-block info))))
-           (code (mi-org-html-encode-plain-text not-escaped-code))
-
-           (frag (org-export-read-attribute :attr_reveal src-block :frag))
-	   (code-attribs (or (org-export-read-attribute
-			 :attr_reveal src-block :code_attribs) ""))
-           (label (let ((lbl (org-element-property :name src-block)))
-                    (if (not lbl) ""
-                      (format " id=\"%s\"" lbl)))))
-      (if (not lang)
-          (format "<pre %s%s>\n%s</pre>"
-                  (or (frag-class frag info) " class=\"example\"")
-                  label
-                  code)
-        (format
-         "<div class=\"org-src-container\">\n%s%s\n</div>"
-         (if (not caption) ""
-           (format "<label class=\"org-src-name\">%s</label>"
-                   (org-export-data caption info)))
-         (if use-highlight
-             (format "\n<pre%s%s><code class=\"%s\" %s>%s</code></pre>"
-                     (or (frag-class frag info) "")
-                     label lang code-attribs code)
-           (format "\n<pre %s%s>%s</pre>"
-                   (or (frag-class frag info)
-                       (format " class=\"src src-%s\"" lang))
-                   label code)))))))
+(require 'my-parches)
+(require 'my-settings)
+(require 'my-shortcuts)
 
 
 ;; DESACTIVAR EL DEBUG, LO QUE QUEDA YA ES DE CUSTOMIZE
@@ -497,7 +158,7 @@ contextual information."
  '(org-support-shift-select t)
  '(package-selected-packages
    (quote
-    (fill-column-indicator color-identifiers-mode "helm-man" "scala-outline-popup" "org-webpage" git-gutter howdoi kodi-remote helm-google latex-preview-pane markdown-preview-mode helm-ag dumb-jump lorem-ipsum calfw-ical web-beautify gitignore-mode use-package company-restclient ob-restclient restclient-helm restclient transmission hl-line+ paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper smartparens scala-outline-popup request-deferred rectangle-utils php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile git-timemachine flycheck expand-region ensime diffview crappy-jsp-mode chess calfw auto-highlight-symbol alert adaptive-wrap)))
+    (fill-column-indicator color-identifiers-mode  git-gutter howdoi kodi-remote helm-google latex-preview-pane markdown-preview-mode helm-ag dumb-jump lorem-ipsum calfw-ical web-beautify gitignore-mode use-package company-restclient ob-restclient restclient-helm restclient transmission hl-line+ paradox gift-mode org-webpage plsql org-page company-web company-shell company-quickhelp company-emoji company-c-headers company company-auctex helm-company highlight-indent-guides which-key dired-narrow org markdown-mode magit popup-complete scad-preview scad-mode org-attach-screenshot bm yafolding web-mode transpose-frame tablist switch-window swiper smartparens scala-outline-popup request-deferred rectangle-utils php-mode page-break-lines ox-reveal org-present neotree multiple-cursors image+ htmlize helm-projectile git-timemachine flycheck expand-region ensime diffview crappy-jsp-mode chess calfw auto-highlight-symbol alert adaptive-wrap)))
  '(paradox-github-token t)
  '(preview-TeX-style-dir "/home/alvaro/.emacs.d/elpa/auctex-11.89.6/latex")
  '(preview-default-preamble
@@ -575,14 +236,9 @@ contextual information."
                    (quote powerline-active1))))
      (:propertize " " face powerline-active1))))
  '(sml/pre-modes-separator (propertize " " (quote face) (quote sml/modes)))
- '(smooth-scroll-margin 5)
- '(smooth-scroll-mode t)
- '(smooth-scroll/vscroll-step-size 10)
- '(smooth-scrolling-mode t)
  '(tramp-copy-size-limit nil)
  '(transmission-host "192.168.1.100")
- '(transmission-rpc-auth (quote (:username "transmission" :password "")))
- '(treemacs-header-function (quote treemacs--create-header-projectile)))
+ '(transmission-rpc-auth (quote (:username "transmission" :password ""))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
