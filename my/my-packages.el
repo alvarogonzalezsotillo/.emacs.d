@@ -8,22 +8,81 @@
 (provide 'my-packages)
 
 ;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
-(defvar my/install-packages '(ag adaptive-wrap company-emoji
-  company-c-headers company company-auctex crappy-jsp-mode chess
-  calfw auto-highlight-symbol alert dumb-jump lorem-ipsum
-  calfw-ical web-beautify gitignore-mode git-gutter howdoi
-  kodi-remote git-timemachine flycheck expand-region ensime
-  diffview helm-company highlight-indent-guides which-key
-  dired-narrow org helm-google latex-preview-pane
-  markdown-preview-mode helm-gitignore helm-ag markdown-mode magit
-  popup-complete scad-preview scad-mode neotree multiple-cursors
-  image+ htmlize helm-projectile org-attach-screenshot bm
-  yafolding web-mode transpose-frame org-page company-web
-  company-shell company-quickhelp rectangle-utils php-mode
-  page-break-lines restclient transmission
-  paradox gift-mode tablist switch-window swiper
-  smartparens request-deferred use-package company-restclient
-  ob-restclient restclient-helm ox-reveal))
+(defvar my/install-packages
+  '(
+    2048-game
+    adaptive-wrap
+    ag
+    alert
+    auto-highlight-symbol
+    bm
+    calfw
+    calfw-ical
+    chess
+    company
+    company-auctex
+    company-c-headers
+    company-emoji
+    company-quickhelp
+    company-restclient
+    company-shell
+    company-web
+    crappy-jsp-mode
+    diffview
+    dired-narrow
+    dumb-jump
+    ensime
+    expand-region
+    flycheck
+    gift-mode
+    git-gutter
+    git-timemachine
+    gitignore-mode
+    helm-ag
+    helm-company
+    helm-gitignore
+    helm-google
+    helm-projectile
+    highlight-indent-guides
+    howdoi
+    htmlize
+    image+
+    kodi-remote
+    latex-preview-pane
+    lorem-ipsum
+    magit
+    markdown-mode
+    markdown-preview-mode
+    multiple-cursors
+    neotree
+    ob-restclient
+    org
+    org-attach-screenshot
+    org-page
+    ox-reveal
+    page-break-lines
+    paradox
+    php-mode
+    popup-complete
+    rectangle-utils
+    request-deferred
+    restclient
+    restclient-helm
+    scad-mode
+    scad-preview
+    skewer-mode
+    smartparens
+    swiper
+    switch-window
+    tablist
+    transmission
+    transpose-frame
+    use-package
+    web-beautify
+    web-mode
+    which-key
+    yafolding
+    ))
 
 (defvar packages-refreshed? nil)
 
@@ -40,6 +99,7 @@
 
 
 (defun requerir-paquetes ()
+  "Requiere los paquetes para no tener variables indefinidas."
   (dolist (pack my/install-packages)
     (message (concat "Requires:" (symbol-name pack )))
     (require pack)))
