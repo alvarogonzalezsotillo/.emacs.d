@@ -16,11 +16,11 @@
 
   (setq transmission-host (read-string "Transmission host: " "192.168.1.100" ))
   (setq transmission-user (read-string "Transmission user: " "transmission"))
-  (setq transmission-pass (read-passwd "Transmission password:"))
+  (setq transmission-pass (read-passwd "Transmission password: "))
 
   (message "Conectando a %s:%s@%s" transmission-user  transmission-pass transmission-host)
   
-  (setq transmission-rpc-auth (quote (:username transmission-user :password transmission-pass)))
+  (setq transmission-rpc-auth (list ':username transmission-user ':password transmission-pass))
 
   (transmission))
 
