@@ -95,6 +95,15 @@
   (insert (concat "[[file:" filename "]]"))
   (org-display-inline-images))
 
+(defun tema-oscuro()
+  (interactive)
+  (load-theme 'sanityinc-tomorrow-bright)
+  (load-theme 'alvaro))
+
+(defun tema-claro()
+  (interactive)
+  (disable-theme 'sanityinc-tomorrow-bright)
+  (disable-theme 'alvaro))
 
 
 

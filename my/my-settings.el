@@ -31,6 +31,7 @@
 
 ;; NO CORTAR LAS LÍNEAS
 (toggle-truncate-lines -1)
+(adaptive-wrap-prefix-mode 1)
 
 ;; RESALTAR LA INDENTACION
 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
@@ -41,10 +42,6 @@
   "Override the deactivation of the mark."
   (setq deactivate-mark nil))
 (ad-activate 'kill-ring-save)
-
-;; WINNER MODE
-(require 'winner)
-(winner-mode 1)
 
 
 ;; DIRECTORIOS DE BACKUP
@@ -117,6 +114,11 @@
 ;; imagex PARA HACER ZOOM EN IMÁGENES
 (imagex-global-sticky-mode)
 (imagex-auto-adjust-mode)
+
+
+(adaptive-wrap-prefix-mode 1)
+
+
 
 
 

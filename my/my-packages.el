@@ -15,6 +15,7 @@
 ;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
 (defvar my/install-packages
   '(
+    color-theme-sanityinc-tomorrow
     2048-game
     adaptive-wrap
     ag
@@ -108,9 +109,12 @@
   (dolist (pack my/install-packages)
     (message (concat "Requires:" (symbol-name pack )))
     (require pack)))
-  
 
 
-(provide 'reinstalar-paquetes)
+(reinstalar-paquetes-en-emacs-nuevo)
+(requerir-paquetes)
+
+
+
 
 ;;; my-packages ends here
