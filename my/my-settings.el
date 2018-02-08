@@ -26,8 +26,8 @@
 (eval-after-load "preview"
   '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
 
-
-
+;; SIN RUIDO
+(setq visible-bell 1)
 
 ;; RESALTAR LA INDENTACION
 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
