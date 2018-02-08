@@ -29,13 +29,9 @@
 
 
 
-;; NO CORTAR LAS LÍNEAS
-(toggle-truncate-lines -1)
-(adaptive-wrap-prefix-mode 1)
-
 ;; RESALTAR LA INDENTACION
 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-(setq highlight-indent-guides-method 'column)
+(setq highlight-indent-guides-method 'fill)
 
 ;; SELECCION TRAS COPIAR
 (defadvice kill-ring-save (after keep-transient-mark-active ())
@@ -53,13 +49,23 @@
       version-control t)
 
 
-;; PARA PRESENTACIONES DEL ORG-MODE
+;; VISUALIZACIÓN AGRADABLE
 (defun bonito-para-proyector()
   (interactive)
   (toggle-truncate-lines -1)
   (adaptive-wrap-prefix-mode 1)
   (toggle-word-wrap 1)
   (org-display-inline-images))
+
+(defun bonito-para-codigo()
+  (interactive)
+  (toggle-truncate-lines -1)
+  (adaptive-wrap-prefix-mode 1)
+  (toggle-word-wrap 1))
+
+(add-hook 'prog-mode-hook 'bonito-para-codigo)
+(add-hook 'text-mode-hook 'bonito-para-codigo)
+
 
 ;; VALIDACIONES
 (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -115,8 +121,6 @@
 (imagex-global-sticky-mode)
 (imagex-auto-adjust-mode)
 
-
-(adaptive-wrap-prefix-mode 1)
 
 
 

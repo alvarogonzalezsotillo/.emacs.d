@@ -97,13 +97,16 @@
 
 (defun tema-oscuro()
   (interactive)
+  (disable-theme 'sanityinc-tomorrow-day)
   (load-theme 'sanityinc-tomorrow-bright)
   (load-theme 'alvaro))
 
 (defun tema-claro()
   (interactive)
+  (disable-theme 'alvaro)
   (disable-theme 'sanityinc-tomorrow-bright)
-  (disable-theme 'alvaro))
+  (load-theme 'sanityinc-tomorrow-day))
+  
 
 
 
