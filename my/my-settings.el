@@ -121,6 +121,11 @@
 (imagex-global-sticky-mode)
 (imagex-auto-adjust-mode)
 
+;; ORG MODE, PARA EL electric-pair-mode
+(modify-syntax-entry ?~ "(~" org-mode-syntax-table)
+(modify-syntax-entry ?= "(=" org-mode-syntax-table)
+(modify-syntax-entry ?* "(*" org-mode-syntax-table)
+(modify-syntax-entry ?/ "(/" org-mode-syntax-table)
 
 
 

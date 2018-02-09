@@ -97,7 +97,7 @@
 
 (defun tema-oscuro()
   (interactive)
-  (disable-theme 'sanityinc-tomorrow-day)
+  (disable-theme 'tsdh-light)
   (load-theme 'sanityinc-tomorrow-bright)
   (load-theme 'alvaro))
 
@@ -105,7 +105,7 @@
   (interactive)
   (disable-theme 'alvaro)
   (disable-theme 'sanityinc-tomorrow-bright)
-  (load-theme 'sanityinc-tomorrow-day))
+  (load-theme 'tsdh-light))
   
 
 
