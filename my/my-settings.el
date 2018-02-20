@@ -6,6 +6,18 @@
 
 (provide 'my-settings)
 
+
+;; HELM
+(require 'helm)
+(require 'helm-config)
+(setq helm-split-window-inside-p t)
+(setq helm-display-header-line nil)
+(setq helm-autoresize-max-height 30)
+(setq helm-autoresize-min-height 30)
+(helm-autoresize-mode 1)
+
+
+
 ;; https://writequit.org/org/settings.html#sec-1-33
 ;; No perder el portapapeles del sistema
 (setq save-interprogram-paste-before-kill t)
@@ -127,8 +139,8 @@
 (imagex-auto-adjust-mode)
 
 
-
 ;; ORG MODE, PARA EL electric-pair-mode
+(require 'org)
 (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
 (modify-syntax-entry ?= "(=" org-mode-syntax-table)
 (modify-syntax-entry ?* "(*" org-mode-syntax-table)

@@ -26,6 +26,7 @@
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "<f6>") 'helm-mini)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(global-set-key (kbd "C-x r b") 'helm-filtered-bookmarks)
 
 (global-set-key (kbd "<f8>") 'neotree-toggle)
 
