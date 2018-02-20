@@ -78,7 +78,7 @@
     scad-preview
     skewer-mode
     smartparens
-    swiper
+    swiper-helm
     switch-window
     tablist
     transmission

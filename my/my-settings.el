@@ -10,6 +10,9 @@
 ;; No perder el portapapeles del sistema
 (setq save-interprogram-paste-before-kill t)
 
+;; RECARGAR FICHEROS AUTOMATICAMENTE
+(global-auto-revert-mode 1)
+
 ;; AUTO MODE, PARA QUE SE ABRAN COMO TEXTO LOS SVG
 (add-to-list 'auto-mode-alist '("\\.svg$" . text-mode))
 
