@@ -59,12 +59,14 @@
 
 (defun bonito-para-codigo()
   (interactive)
+  (electric-pair-mode)
   (toggle-truncate-lines -1)
   (adaptive-wrap-prefix-mode 1)
   (toggle-word-wrap 1))
 
 (add-hook 'prog-mode-hook 'bonito-para-codigo)
 (add-hook 'text-mode-hook 'bonito-para-codigo)
+(add-hook 'org-mode-hook 'bonito-para-codigo)
 
 
 ;; VALIDACIONES
@@ -120,6 +122,8 @@
 ;; imagex PARA HACER ZOOM EN IMÁGENES
 (imagex-global-sticky-mode)
 (imagex-auto-adjust-mode)
+
+
 
 ;; ORG MODE, PARA EL electric-pair-mode
 (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
