@@ -31,7 +31,7 @@
 (require 'my-modes)
 (require 'my-utils)
 
-
+(tema-oscuro)
 
 
 ;; DESACTIVAR EL DEBUG, LO QUE QUEDA YA ES DE CUSTOMIZE
@@ -96,8 +96,7 @@
      ("#F309DF" . 85)
      ("#3C3D37" . 100))))
  '(hl-line-overlay-priority -100050)
- '(line-number-mode nil)
- '(linum-mode 1 t)
+ '(line-number-mode t)
  '(magit-diff-use-overlays nil)
  '(mc/always-run-for-all t)
  '(neo-autorefresh nil)

@@ -30,7 +30,6 @@
 
 ;; GIT GUTTER
 (global-git-gutter-mode +1)
-(git-gutter:linum-setup)
 
 
 ;; PREVIEW DE TIKZ
@@ -67,29 +66,30 @@
 ;; VISUALIZACIÓN AGRADABLE
 (defun bonito-para-proyector()
   (interactive)
-  (toggle-truncate-lines -1)
-  (adaptive-wrap-prefix-mode 1)
-  (toggle-word-wrap 1)
+  (bonito-para-codigo)
   (org-display-inline-images))
 
 (defun bonito-para-codigo()
   (interactive)
-  (electric-pair-mode)
+  (electric-pair-mode 1)
   (toggle-truncate-lines -1)
   (adaptive-wrap-prefix-mode 1)
   (toggle-word-wrap 1))
 
 (add-hook 'prog-mode-hook 'bonito-para-codigo)
-(add-hook 'text-mode-hook 'bonito-para-codigo)
+(add-hook 'text-mode-hook 'bonito-para-proyector)
 (add-hook 'org-mode-hook 'bonito-para-codigo)
+(add-hook 'tex-mode-hook 'bonito-para-codigo)
 
 
 ;; VALIDACIONES
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;; NO PREGUNTAR CUANDO SE CIERRA EL BUFFER
-(setq kill-this-buffer-enabled-p t)
-(global-set-key (kbd "C-x k") 'kill-this-buffer)
+(defun kill-this-buffer-dont-ask ()
+  (interactive)
+  (kill-buffer (current-buffer)))
+(global-set-key (kbd "C-x k") 'kill-this-buffer-dont-ask)
 
 
 ;; TRANSIENT MARK MODE, PARA C-X TAB
@@ -120,8 +120,6 @@
 (setq TeX-save-query nil)
 (setq TeX-PDF-mode t)
 
-;; NUMEROS DE LINEA
-(global-linum-mode t)
 
 ;; MOSTRAR LOS PARENTESIS ASOCIADOS
 (show-paren-mode)

@@ -36,6 +36,7 @@
 
 (global-set-key (kbd "C-.") 'company-complete)
 
+(global-set-key (kbd "C-S-l") 'toggle-truncate-lines)
 
 ;; Remove Yasnippet's default tab key binding
 (require 'yasnippet)
