@@ -44,6 +44,7 @@
     git-gutter
     git-timemachine
     gitignore-mode
+    graphviz-dot-mode
     helm-ag
     helm-company
     helm-gitignore
