@@ -98,14 +98,14 @@
 (defun tema-oscuro()
   (interactive)
   (disable-theme 'tsdh-light)
-  (load-theme 'sanityinc-tomorrow-bright)
-  (load-theme 'alvaro))
+  (load-theme 'sanityinc-tomorrow-bright t t)
+  (load-theme 'alvaro t t))
 
 (defun tema-claro()
   (interactive)
   (disable-theme 'alvaro)
   (disable-theme 'sanityinc-tomorrow-bright)
-  (load-theme 'tsdh-light))
+  (load-theme 'tsdh-light t t))
   
 
 
