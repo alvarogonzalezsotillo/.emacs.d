@@ -151,11 +151,12 @@
                " "
                mode-line-modified
                " %[" mode-line-buffer-identification " %] "
-               " [%m] "
-               " %n "
-               " [" mode-line-coding-system-map "] "
-               " [" mode-line-misc-info "] "
-               " Lin:%l/%i Col:%c %IB"
+               " | %m "
+               " | %n "
+               " |" mode-line-coding-system-map 
+               " |" mode-line-misc-info
+               
+               " | Lin:%l/%i Col:%c %IB"
                mode-line-end-spaces
                ) )
 
