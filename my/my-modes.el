@@ -19,6 +19,7 @@
 
 (winner-mode 1)
 
+(require 'tramp) ;; Symbol’s value as variable is void: tramp-methods
 (helm-mode 1)
 (helm-projectile-on)
 (yas-global-mode 1)
