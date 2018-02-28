@@ -67,12 +67,14 @@
 (defun bonito-para-proyector()
   (interactive)
   (bonito-para-codigo)
+  (toggle-truncate-lines 1)
   (toggle-word-wrap 1)
   (org-display-inline-images))
 
 (defun bonito-para-codigo()
   (interactive)
   (electric-pair-mode 1)
+  (toggle-truncate-lines -1)
   (adaptive-wrap-prefix-mode 1))
 
 (add-hook 'prog-mode-hook 'bonito-para-codigo)
