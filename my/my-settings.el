@@ -24,6 +24,8 @@
 
 ;; RECARGAR FICHEROS AUTOMATICAMENTE
 (global-auto-revert-mode 1)
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil)
 
 ;; AUTO MODE, PARA QUE SE ABRAN COMO TEXTO LOS SVG
 (add-to-list 'auto-mode-alist '("\\.svg$" . text-mode))
@@ -177,10 +179,10 @@
                " %[" mode-line-buffer-identification " %] "
                " | %m "
                " | %n "
-               " |" mode-line-coding-system-map 
+               " |" mode-line-coding-system-map
                " |" mode-line-misc-info
-               
-               " | Lin:%l/%i Col:%c %IB"
+               " | %IB %Z"
+               " | %l:%c "
                mode-line-end-spaces
                ) )
 
