@@ -32,6 +32,18 @@
 (global-git-gutter-mode +1)
 
 
+
+;; LATEX
+(require 'tex)
+(require 'latex)
+(setq LaTeX-verbatim-environments
+      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql"))
+(setq TeX-source-correlate-mode t)
+(setq TeX-source-correlate-start-server t)
+(setq LaTeX-command-style
+      '("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))
+
+
 ;; PREVIEW DE TIKZ
 ;; https://www.gnu.org/software/auctex/manual/preview-latex.html
 (require 'preview)
@@ -39,6 +51,18 @@
   '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t) )
 (eval-after-load "preview"
   '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
+
+;; BORRAR LA SELECCION AL ESCRIBIR
+(delete-selection-mode 1)
+
+;; GRABAR EL ESCRITORIO
+(require 'desktop)
+(setq desktop-save t)
+(desktop-save-mode)
+
+
+;; RESALTAR LINEA ACTUAL
+(global-hl-line-mode t)
 
 ;; SIN RUIDO
 (setq visible-bell 1)
