@@ -28,7 +28,6 @@
 (require 'my-parches)
 (require 'my-settings)
 (require 'my-shortcuts)
-(require 'my-modes)
 (require 'my-utils)
 
 (tema-oscuro)

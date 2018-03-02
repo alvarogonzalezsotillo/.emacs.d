@@ -6,17 +6,41 @@
 
 (provide 'my-settings)
 
+;; AYUDA DE TECLAS
+(which-key-mode t)
+
+;; PARENTESIS AUTOCERRABLES
+(smartparens-global-mode 1)
+
+;; MOSTRAR ^L BONITOS
+(global-page-break-lines-mode)
+
+;; RESALTAR SIMBOLO ACTUAL
+(global-auto-highlight-symbol-mode t)
+
+;; PROJECTILE
+(require 'projectile)
+(projectile-mode 1)
+
+;; RECORDAR DISPOSICION DE VENTANAS
+(winner-mode 1)
+
+;; YASNIPPET
+(yas-global-mode 1)
+
 
 ;; HELM
 (require 'helm)
 (require 'helm-config)
+(require 'tramp) ;; Symbol’s value as variable is void: tramp-methods
 (setq helm-split-window-inside-p t)
 (setq helm-display-header-line nil)
 (setq helm-autoresize-max-height 30)
 (setq helm-autoresize-min-height 30)
+(setq projectile-completion-system 'helm)
 (helm-autoresize-mode 1)
-
-
+(helm-mode 1)
+(helm-projectile-on)
 
 ;; https://writequit.org/org/settings.html#sec-1-33
 ;; No perder el portapapeles del sistema
@@ -101,6 +125,7 @@
   (interactive)
   (electric-pair-mode 1)
   (toggle-truncate-lines -1)
+  (yafolding-mode 1)
   (adaptive-wrap-prefix-mode 1))
 
 (add-hook 'prog-mode-hook 'bonito-para-codigo)
