@@ -196,12 +196,15 @@
 (modify-syntax-entry ?* "(*" org-mode-syntax-table)
 (modify-syntax-entry ?/ "(/" org-mode-syntax-table)
 
+
+
 ;; MODELINE
 (setq-default mode-line-format
               (list
                " "
                mode-line-modified
                " %[" mode-line-buffer-identification " %] "
+               " | " '(vc-mode vc-mode)
                " | %m "
                " | %n "
                " |" mode-line-coding-system-map
@@ -210,6 +213,11 @@
                " | %l:%c "
                mode-line-end-spaces
                ) )
+
+;; PARA EL MINIMAP
+(require 'sublimity)
+(require 'sublimity-map)
+(sublimity-map-set-delay nil)
 
 
 

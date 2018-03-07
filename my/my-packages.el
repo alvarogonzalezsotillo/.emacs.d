@@ -79,6 +79,7 @@
     scad-preview
     skewer-mode
     smartparens
+    sublimity
     swiper-helm
     switch-window
     tablist
