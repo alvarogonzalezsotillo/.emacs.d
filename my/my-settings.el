@@ -67,7 +67,8 @@
 (setq TeX-source-correlate-mode t)
 (setq TeX-source-correlate-start-server t)
 (setq LaTeX-command-style
-      '("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))
+   (quote (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
+
 
 
 ;; PREVIEW DE TIKZ

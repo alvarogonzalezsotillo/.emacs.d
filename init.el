@@ -21,9 +21,9 @@
 (require 'package)
 
 (require 'my-packages)
-(require 'my-company)
 (require 'my-parches)
 (require 'my-settings)
+(require 'my-company)
 (require 'my-shortcuts)
 (require 'my-utils)
 
