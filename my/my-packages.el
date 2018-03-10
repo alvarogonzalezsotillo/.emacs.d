@@ -71,6 +71,7 @@
     paradox
     php-mode
     popup-complete
+    popwin
     rectangle-utils
     request-deferred
     restclient

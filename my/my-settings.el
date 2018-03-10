@@ -153,6 +153,8 @@
       scroll-conservatively 10000
       scroll-preserve-screen-position 1)
 
+;; POPWIN
+(popwin-mode 1)
 
 ;; QUITAR LA TOOLBAR
 (tool-bar-mode -1)
@@ -217,8 +219,11 @@
 ;; PARA EL MINIMAP
 (require 'sublimity)
 (require 'sublimity-map)
+(require 'sublimity-attractive)
 (sublimity-map-set-delay nil)
 
 
+;; RATON EN MODO TEXTO
+(xterm-mouse-mode)
 
 ;;; my-settings.el ends here

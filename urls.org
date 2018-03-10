@@ -1,3 +1,36 @@
+#+STARTUP: showeverything
+	
+
+* Moodle
+
+** 2017-2018
+   | Curso        | url                                                                                     | directorio    |
+   |--------------+-----------------------------------------------------------------------------------------+---------------|
+   | Avellaneda   | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/                       | [[file:~/clase/]] |
+   | Departamento | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=56  |               |
+   | ASGBD        | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=65  |               |
+   | SI           | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=191 |               |
+   | PAR          | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=72  |               |
+   | GBD          | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=189 |               |
+   | FCT          | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=190 |               |
+ 
+
+Entrega de programaciones: https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/mod/assign/view.php?id=8393&action=view
+
+** 2015-2016
+   | Curso                     | url                                                              | directorio                                  |
+   |---------------------------+------------------------------------------------------------------+---------------------------------------------|
+   | Rosa chacel               | http://aulavirtual2.educa.madrid.org/course/category.php?id=2724 | [[file:~/clase/]]                               |
+   | tico                      | http://aulavirtual2.educa.madrid.org/course/view.php?id=22210    | [[file:~/clase/tico1-bach1]]                    |
+   | seguridad informática smr | http://aulavirtual2.educa.madrid.org/course/view.php?id=19438    | [[file:~/clase/seguridad-informatica-smr2dual]] |
+   | ASGBD                     | http://aulavirtual2.educa.madrid.org/course/view.php?id=16620    |                                             |
+   | BD                        | http://aulavirtual2.educa.madrid.org/course/view.php?id=22208    | [[file:~/clase/basesdedatos-dam1]]              |
+   | SIAD                      | http://aulavirtual2.educa.madrid.org/course/view.php?id=13015    |                                             |
+   | Departamento              | http://aulavirtual2.educa.madrid.org/course/view.php?id=12364    |                                             |
+
+
+
+
 
 * Calendarios
 
@@ -31,36 +64,6 @@ key-mon --larger --backgroundless --visible_click &
 #+end_src
 
 #+RESULTS:
-
-* Moodle
-
-** 2017-2018
-   | Curso        | url                                                                                     | directorio    |
-   |--------------+-----------------------------------------------------------------------------------------+---------------|
-   | Avellaneda   | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/                       | [[file:~/clase/]] |
-   | Departamento | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=56  |               |
-   | ASGBD        | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=65  |               |
-   | SI           | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=191 |               |
-   | PAR          | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=72  |               |
-   | GBD          | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=189 |               |
-   | FCT          | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=190 |               |
- 
-
-Entrega de programaciones: https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/mod/assign/view.php?id=8393&action=view
-
-** 2015-2016
-   | Curso                     | url                                                              | directorio                                  |
-   |---------------------------+------------------------------------------------------------------+---------------------------------------------|
-   | Rosa chacel               | http://aulavirtual2.educa.madrid.org/course/category.php?id=2724 | [[file:~/clase/]]                               |
-   | tico                      | http://aulavirtual2.educa.madrid.org/course/view.php?id=22210    | [[file:~/clase/tico1-bach1]]                    |
-   | seguridad informática smr | http://aulavirtual2.educa.madrid.org/course/view.php?id=19438    | [[file:~/clase/seguridad-informatica-smr2dual]] |
-   | ASGBD                     | http://aulavirtual2.educa.madrid.org/course/view.php?id=16620    |                                             |
-   | BD                        | http://aulavirtual2.educa.madrid.org/course/view.php?id=22208    | [[file:~/clase/basesdedatos-dam1]]              |
-   | SIAD                      | http://aulavirtual2.educa.madrid.org/course/view.php?id=13015    |                                             |
-   | Departamento              | http://aulavirtual2.educa.madrid.org/course/view.php?id=12364    |                                             |
-
-
-
 * FCT
 iesavellaneda.fct.asir@gmail.com
 
