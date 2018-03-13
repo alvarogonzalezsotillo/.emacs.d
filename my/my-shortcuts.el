@@ -38,6 +38,8 @@
 
 (global-set-key (kbd "C-S-l") 'toggle-truncate-lines)
 
+(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+
 ;; Remove Yasnippet's default tab key binding
 (require 'yasnippet)
 (define-key yas-minor-mode-map (kbd "<tab>") nil)
