@@ -22,6 +22,8 @@
 (global-set-key (kbd "C-S-c C-S-v") 'mc/mark-all-like-this)
 
 (global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x M-x") 'execute-extended-command)
+
 (global-set-key (kbd "<menu>") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "<f6>") 'helm-mini)
@@ -38,7 +40,8 @@
 
 (global-set-key (kbd "C-S-l") 'toggle-truncate-lines)
 
-(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+(define-key global-map [escape] 'keyboard-escape-quit)
+;; (define-key key-translation-map (kbd "ESC") (kbd "C-g")) // PROBLEMAS CON EL TERMINAL
 
 ;; Remove Yasnippet's default tab key binding
 (require 'yasnippet)

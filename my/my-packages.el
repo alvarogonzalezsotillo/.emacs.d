@@ -15,7 +15,6 @@
 ;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
 (defvar my/install-packages
   '(
-    color-theme-sanityinc-tomorrow
     2048-game
     adaptive-wrap
     ag
@@ -25,6 +24,7 @@
     calfw
     calfw-ical
     chess
+    color-theme-sanityinc-tomorrow
     company
     company-auctex
     company-c-headers
