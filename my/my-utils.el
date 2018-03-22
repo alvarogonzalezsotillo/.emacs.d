@@ -120,4 +120,35 @@
                  (eq 'dired-mode (buffer-local-value 'major-mode  x))))
           (buffer-list)))))
 
+(defun org-code-block-from-region (beg end &optional results-switches inline)
+  "Copiado de org-babel-examplify-region"
+  (interactive "*r")
+  (let ((maybe-cap
+	 (lambda (str)
+	   (if org-babel-uppercase-example-markers (upcase str) str))))
+    (if inline
+	(save-excursion
+	  (goto-char beg)
+	  (insert (format org-babel-inline-result-wrap
+			  (delete-and-extract-region beg end))))
+      (let ((size (count-lines beg end)))
+	(save-excursion
+	  (cond ((= size 0))	      ; do nothing for an empty result
+		((< size org-babel-min-lines-for-block-output)
+		 (goto-char beg)
+		 (dotimes (_ size)
+		   (beginning-of-line 1) (insert ": ") (forward-line 1)))
+		(t
+		 (goto-char beg)
+		 (insert (if results-switches
+			     (format "%s%s\n"
+				     (funcall maybe-cap "#+begin_src")
+				     results-switches)
+			   (funcall maybe-cap "#+begin_src\n")))
+		 (let ((p (point)))
+		   (if (markerp end) (goto-char end) (forward-char (- end beg)))
+		   (org-escape-code-in-region p (point)))
+		 (insert (funcall maybe-cap "#+end_src\n")))))))))
+
+
 ;;; my-utils.el ends here
