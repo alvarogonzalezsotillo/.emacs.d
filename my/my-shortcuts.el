@@ -40,6 +40,13 @@
 
 (global-set-key (kbd "C-S-l") 'toggle-truncate-lines)
 
+(global-set-key (kbd "M-s-<up>") 'enlarge-window)
+(global-set-key (kbd "M-s-<down>") 'shrink-window)
+
+(global-set-key (kbd "M-s-<left>") 'enlarge-window-horizontally)
+(global-set-key (kbd "M-s-<right>") 'shrink-window-horizontally)
+
+
 (define-key global-map [escape] 'keyboard-escape-quit)
 ;; (define-key key-translation-map (kbd "ESC") (kbd "C-g")) // PROBLEMAS CON EL TERMINAL
 
