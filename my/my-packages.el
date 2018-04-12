@@ -37,7 +37,6 @@
     diffview
     dired-narrow
     dumb-jump
-    ensime
     expand-region
     flycheck
     gift-mode
@@ -61,6 +60,7 @@
     markdown-mode
     markdown-preview-mode
     multiple-cursors
+    nlinum
     neotree
     ob-restclient
     org

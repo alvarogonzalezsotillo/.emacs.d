@@ -10,18 +10,18 @@
 
 (require 'company)
 
+
+
+(defvar my-company-backends
+      '(company-files
+        company-keywords
+        company-capf
+        company-dabbrev
+        company-emoji
+        company-yasnippet))
+
 ;; set default `company-backends'
-(setq company-backends
-      '((
-         company-files
-         company-keywords
-         company-capf
-         company-dabbrev
-         company-emoji
-         company-yasnippet
-         )))
-
-
+(add-to-list 'company-backends my-company-backends)
 (company-auctex-init)
 
 (add-hook 'after-init-hook 'global-company-mode)

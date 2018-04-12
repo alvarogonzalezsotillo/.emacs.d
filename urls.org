@@ -59,14 +59,14 @@ https://www.youtube.com/channel/UCPzPGxvUOAaoXCPctmHJm8Q
 
 ** key-mon
 
-#+begin_src sh
-key-mon --larger --backgroundless --visible_click &
+#+begin_src bash
+byzanz-record -v -e 'key-mon --larger --backgroundless --visible_click' --delay=10 screencast.gif
 #+end_src
 
 #+RESULTS:
 * FCT
 iesavellaneda.fct.asir@gmail.com
-
+s
 * Repositorios
 
 https://alvarogonzalezsotillo@github.com/alvarogonzalezsotillo/apuntes-clase.git
