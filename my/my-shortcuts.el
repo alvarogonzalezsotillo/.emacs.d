@@ -40,11 +40,11 @@
 
 (global-set-key (kbd "C-S-l") 'toggle-truncate-lines)
 
-(global-set-key (kbd "M-s-<up>") 'enlarge-window)
-(global-set-key (kbd "M-s-<down>") 'shrink-window)
+(global-set-key (kbd "M-S-<up>") 'enlarge-window)
+(global-set-key (kbd "M-S-<down>") 'shrink-window)
 
-(global-set-key (kbd "M-s-<left>") 'enlarge-window-horizontally)
-(global-set-key (kbd "M-s-<right>") 'shrink-window-horizontally)
+(global-set-key (kbd "M-S-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "M-S-<right>") 'enlarge-window-horizontally)
 
 
 (define-key global-map [escape] 'keyboard-escape-quit)
