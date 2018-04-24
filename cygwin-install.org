@@ -94,13 +94,13 @@ XLIB_SKIP_ARGB_VISUALS=1 emacs
     - Crear grupo discos
     - Montar en fstab con grupo discos
     - Añadir usuarios a grupo discos
+- Instalar Openssh-server
 - Instalar Git  
 - Emacs
   - Añadir ppa
   - instalar emacs
   - Bajar repositorio .emacs.d
   - Arrancar emacs y reinstalar paquetes
-- Openssh-server
 - Transmission
   - Instalar transmission
   - Crear directorio transmission
@@ -110,6 +110,9 @@ XLIB_SKIP_ARGB_VISUALS=1 emacs
     - umask 
     - Añadir usuarios a grupo debian-transmission
     - Escuchar en 0.0.0.0, quitar whitelist
+- Kodi
+  - Instalar kodi
+  - Añadir directorio de transmission
 - Profesor
   - Bajar repositorio apuntes-clase
   - Instalar 
@@ -124,6 +127,7 @@ XLIB_SKIP_ARGB_VISUALS=1 emacs
   - IP fija
   - ARP fijo en router
   - Abrir puertos
+  - Wake on lan
 - Owncloud
   - instalar apache, php y mysql
   - Crear usuario y base de datos
