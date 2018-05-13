@@ -57,6 +57,7 @@
     kodi-remote
     latex-preview-pane
     lorem-ipsum
+    ;lsp-css
     lsp-mode
     lsp-javascript-typescript
     magit
