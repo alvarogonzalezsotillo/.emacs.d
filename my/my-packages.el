@@ -91,6 +91,7 @@
     transmission
     transpose-frame
     use-package
+    volatile-highlights
     web-beautify
     web-mode
     which-key
