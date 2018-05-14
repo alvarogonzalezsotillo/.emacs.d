@@ -29,6 +29,7 @@
     company-auctex
     company-c-headers
     company-emoji
+    company-lsp
     company-quickhelp
     company-restclient
     company-shell
@@ -56,8 +57,9 @@
     kodi-remote
     latex-preview-pane
     lorem-ipsum
-    lsp-javascript-typescript
+    ;lsp-css
     lsp-mode
+    lsp-javascript-typescript
     magit
     markdown-mode
     markdown-preview-mode
@@ -89,6 +91,7 @@
     transmission
     transpose-frame
     use-package
+    volatile-highlights
     web-beautify
     web-mode
     which-key
