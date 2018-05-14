@@ -14,7 +14,9 @@
 
 (defvar my-company-backends
   '(
-     (company-files
+    (
+      company-lsp
+      company-files
       company-dabbrev-code
       company-capf
       company-keywords

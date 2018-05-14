@@ -6,6 +6,10 @@
 
 (provide 'my-settings)
 
+
+;; CAMBIOS
+(volatile-highlights-mode t)
+
 ;; AYUDA DE TECLAS
 (which-key-mode t)
 

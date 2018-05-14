@@ -7,6 +7,13 @@
 (provide 'my-parches)
 
 
+;; ADITIONAL DUMBJUMB RULES
+(add-to-list 'dumb-jump-find-rules
+  '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "sql"
+           :regex ": \\bJJJ\\j"))
+
+
+;; ESCAPE HTML IN REVEAL
 (setq mi-org-html-protect-char-alist
   '(("&" . "&amp;")
     ("<" . "&lt;")
