@@ -35,7 +35,7 @@ contextual information."
                               #'buffer-substring))
                      (org-html-format-code src-block info))))
            (code (mi-org-html-encode-plain-text not-escaped-code))
-           (code  not-escaped-code)
+           ;(code  not-escaped-code)
            
            (frag (org-export-read-attribute :attr_reveal src-block :frag))
 	   (code-attribs (or (org-export-read-attribute

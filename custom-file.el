@@ -88,7 +88,8 @@
      "]{preview}[2004/11/05]" "\\PreviewEnvironment{tikzpicture}" "\\PreviewEnvironment{tabular}")))
  '(preview-image-type (quote dvipng))
  '(send-mail-function (quote sendmail-send-it))
- '(tramp-copy-size-limit nil)
+ '(tramp-copy-size-limit 1)
+ '(tramp-verbose 6)
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
    (quote
