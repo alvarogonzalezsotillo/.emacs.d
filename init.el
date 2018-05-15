@@ -27,6 +27,9 @@
 (require 'my-company)
 (require 'my-shortcuts)
 (require 'my-utils)
+(require 'my-lsp)
+
+
 
 
 ;; DESACTIVAR EL DEBUG, LO QUE QUEDA YA ES DE CUSTOMIZE

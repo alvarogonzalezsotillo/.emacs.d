@@ -94,6 +94,8 @@
     volatile-highlights
     web-beautify
     web-mode
+    wgrep
+    wgrep-helm
     which-key
     yafolding
     ))
