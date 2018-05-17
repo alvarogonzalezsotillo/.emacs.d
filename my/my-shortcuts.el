@@ -74,9 +74,10 @@
     map)
   "mis-teclas-minor-mode keymap")
 
-
+;; helm con tabulador
 (with-eval-after-load 'helm
-  (define-key helm-map (kbd "C-<tab>") 'helm-next-line)
+  (define-key helm-map (kbd "C-<tab>") 'helm-follow-action-forward)
+  (define-key helm-map (kbd "C-<iso-lefttab>") 'helm-follow-action-backward)
 )
 
 
