@@ -79,3 +79,58 @@ XLIB_SKIP_ARGB_VISUALS=1 emacs
   
 
 
+
+* pc nuevo
+
+- Poner ubuntu
+  - Reducir partición windows
+  - Instalar ubuntu
+    - Bajar ubuntu
+    - Poner ubuntu en pincho 
+    - instalar
+  - Usuario familia con autologin
+  - Crear partición datos compartidos con Windows
+    - Crear partición
+    - Crear grupo discos
+    - Montar en fstab con grupo discos
+    - Añadir usuarios a grupo discos
+- Instalar Openssh-server
+- Instalar Git  
+- Emacs
+  - Añadir ppa
+  - instalar emacs
+  - Bajar repositorio .emacs.d
+  - Arrancar emacs y reinstalar paquetes
+- Transmission
+  - Instalar transmission
+  - Crear directorio transmission
+  - Configuración
+    - Contraseña
+    - Directorio por defecto
+    - umask 
+    - Añadir usuarios a grupo debian-transmission
+    - Escuchar en 0.0.0.0, quitar whitelist
+- Kodi
+  - Instalar kodi
+  - Añadir directorio de transmission
+- Profesor
+  - Bajar repositorio apuntes-clase
+  - Instalar 
+    - Latex
+    - Inkscape
+    - vsgraph
+- Email
+  - Instalar exim4
+  - Instalar mutt
+  - Configurar smarthost
+- Servidor internet
+  - IP fija
+  - ARP fijo en router
+  - Abrir puertos
+  - Wake on lan
+- Owncloud
+  - instalar apache, php y mysql
+  - Crear usuario y base de datos
+  - instalar owncloud-files
+  - crear owncloud.conf y habilitar sitio  
+  - montar directorio local de fotos

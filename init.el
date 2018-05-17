@@ -23,9 +23,13 @@
 (require 'my-packages)
 (require 'my-parches)
 (require 'my-settings)
+(require 'my-lsp)
 (require 'my-company)
 (require 'my-shortcuts)
 (require 'my-utils)
+(require 'my-lsp)
+
+
 
 
 ;; DESACTIVAR EL DEBUG, LO QUE QUEDA YA ES DE CUSTOMIZE
@@ -34,6 +38,8 @@
 
 ;; TEMA
 (tema-oscuro)
+
+
 
 ;; CARGAR customize
 (setq custom-file "~/.emacs.d/custom-file.el")

@@ -14,7 +14,9 @@
 
 (defvar my-company-backends
   '(
-     (company-files
+    (
+      company-lsp
+      company-files
       company-dabbrev-code
       company-capf
       company-keywords
@@ -25,7 +27,6 @@
 
 ;; set default `company-backends'
 (setq company-backends my-company-backends)
-(add-to-list 'company-backends my-company-backends)
 (company-auctex-init)
 
 (add-hook 'after-init-hook 'global-company-mode)

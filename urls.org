@@ -63,6 +63,11 @@ https://www.youtube.com/channel/UCPzPGxvUOAaoXCPctmHJm8Q
 byzanz-record -v -e 'key-mon --larger --backgroundless --visible_click' --delay=10 screencast.gif
 #+end_src
 
+** screenkey
+#+begin_src bash
+byzanz-record -v -e 'screenkey --no-detach' --delay=10 screencast.gif
+#+end_src
+
 #+RESULTS:
 * FCT
 iesavellaneda.fct.asir@gmail.com
