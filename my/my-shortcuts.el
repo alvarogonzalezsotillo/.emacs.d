@@ -68,8 +68,9 @@
     (define-key map (kbd "C-x b") 'ibuffer)
     (define-key map (kbd "C-f") 'swiper-helm)
     (define-key map (kbd "C-<f5>") 'reveal-y-pdf)
-    (global-set-key (kbd "C-<tab>") 'helm-mini)
+    (define-key map (kbd "C-<tab>") 'helm-mini)
     (define-key map (kbd "M-I") 'helm-imenu)
+    (define-key map (kbd "<f7>") 'imenu-list-smart-toggle)
 
     map)
   "mis-teclas-minor-mode keymap")

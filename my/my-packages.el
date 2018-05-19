@@ -56,6 +56,7 @@
     howdoi
     htmlize
     image+
+    imenu-list
     kodi-remote
     latex-preview-pane
     lorem-ipsum
@@ -125,7 +126,7 @@
 
 (reinstalar-paquetes-en-emacs-nuevo)
 (requerir-paquetes)
-
+(require 'ob-scala)
 
 
 
