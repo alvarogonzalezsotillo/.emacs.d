@@ -40,11 +40,6 @@
 
 (global-set-key (kbd "C-S-l") 'toggle-truncate-lines)
 
-(global-set-key (kbd "M-S-<up>") 'enlarge-window)
-(global-set-key (kbd "M-S-<down>") 'shrink-window)
-
-(global-set-key (kbd "M-S-<left>") 'shrink-window-horizontally)
-(global-set-key (kbd "M-S-<right>") 'enlarge-window-horizontally)
 
 
 (define-key global-map [escape] 'keyboard-escape-quit)
@@ -72,6 +67,12 @@
     (define-key map (kbd "M-I") 'helm-imenu)
     (define-key map (kbd "<f7>") 'imenu-list-smart-toggle)
 
+    (define-key map (kbd "M-S-<up>") 'enlarge-window)
+    (define-key map (kbd "M-S-<down>") 'shrink-window)
+    (define-key map (kbd "M-S-<left>") 'shrink-window-horizontally)
+    (define-key map (kbd "M-S-<right>") 'enlarge-window-horizontally)
+
+    
     map)
   "mis-teclas-minor-mode keymap")
 

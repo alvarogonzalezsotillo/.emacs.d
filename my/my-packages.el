@@ -56,6 +56,7 @@
     howdoi
     htmlize
     image+
+    imenu-anywhere
     imenu-list
     kodi-remote
     latex-preview-pane
