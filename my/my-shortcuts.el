@@ -63,8 +63,8 @@
     (define-key map (kbd "C-x b") 'ibuffer)
     (define-key map (kbd "C-f") 'swiper-helm)
     (define-key map (kbd "C-<f5>") 'reveal-y-pdf)
-    (define-key map (kbd "C-<tab>") 'helm-mini)
-    (define-key map (kbd "M-I") 'helm-imenu)
+    (define-key map (kbd "<backtab>") 'psw-switch-buffer)
+    (define-key map (kbd "M-I") 'popup-imenu)
     (define-key map (kbd "<f7>") 'imenu-list-smart-toggle)
 
     (define-key map (kbd "M-S-<up>") 'enlarge-window)
@@ -76,11 +76,6 @@
     map)
   "mis-teclas-minor-mode keymap")
 
-
-(with-eval-after-load 'helm
-  (define-key helm-map (kbd "C-<tab>") 'helm-follow-action-forward)
-  (define-key helm-map (kbd "C-<iso-lefttab>") 'helm-follow-action-backward)
-)
 
 
 (define-minor-mode mis-teclas-minor-mode

@@ -78,7 +78,9 @@
     page-break-lines
     paradox
     php-mode
+    popup-imenu
     popup-complete
+    popup-switcher
     popwin
     rectangle-utils
     request-deferred
