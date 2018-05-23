@@ -12,13 +12,11 @@
 (defun conectar-a-transmission ()
   (interactive)
 
-   (setq transmission-host "192.168.1.100")
-
-  (setq transmission-host (read-string "Transmission host: " "192.168.1.100" ))
+  (setq transmission-host (read-string "Transmission host: " "192.168.1.254" ))
   (setq transmission-user (read-string "Transmission user: " "transmission"))
   (setq transmission-pass (read-passwd "Transmission password: "))
 
-  (message "Conectando a %s:%s@%s" transmission-user  transmission-pass transmission-host)
+  (message "Conectando a %s@%s" transmission-user transmission-host)
   
   (setq transmission-rpc-auth (list ':username transmission-user ':password transmission-pass))
 
