@@ -85,6 +85,7 @@
     restclient-helm
     scad-mode
     scad-preview
+    scala-mode
     skewer-mode
     smartparens
     sublimity
