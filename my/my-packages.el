@@ -7,6 +7,8 @@
 
 (provide 'my-packages)
 
+(setq package-check-signature nil)
+
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
@@ -54,6 +56,7 @@
     howdoi
     htmlize
     image+
+    imenu-list
     kodi-remote
     latex-preview-pane
     lorem-ipsum
@@ -123,7 +126,7 @@
 
 (reinstalar-paquetes-en-emacs-nuevo)
 (requerir-paquetes)
-
+(require 'ob-scala)
 
 
 

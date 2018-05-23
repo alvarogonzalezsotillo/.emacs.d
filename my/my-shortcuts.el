@@ -54,7 +54,7 @@
 (require 'yasnippet)
 (define-key yas-minor-mode-map (kbd "<tab>") nil)
 (define-key yas-minor-mode-map (kbd "TAB") nil)
-(define-key yas-minor-mode-map (kbd "\C-c TAB") 'yas-expand)
+(define-key yas-minor-mode-map (kbd "C-c TAB") 'yas-expand)
 
 ;; MIS TECLAS
 (defvar mis-teclas-minor-mode-map
@@ -68,10 +68,19 @@
     (define-key map (kbd "C-x b") 'ibuffer)
     (define-key map (kbd "C-f") 'swiper-helm)
     (define-key map (kbd "C-<f5>") 'reveal-y-pdf)
+    (define-key map (kbd "C-<tab>") 'helm-mini)
     (define-key map (kbd "M-I") 'helm-imenu)
+    (define-key map (kbd "<f7>") 'imenu-list-smart-toggle)
 
     map)
   "mis-teclas-minor-mode keymap")
+
+
+(with-eval-after-load 'helm
+  (define-key helm-map (kbd "C-<tab>") 'helm-follow-action-forward)
+  (define-key helm-map (kbd "C-<iso-lefttab>") 'helm-follow-action-backward)
+)
+
 
 (define-minor-mode mis-teclas-minor-mode
   "A minor mode so that my key settings override annoying major modes."
