@@ -9,7 +9,7 @@
 
 ;; REABRIR COMO ROOT
 (defun abrir-como-root ()
-  "Find file as root"/
+  "Abre el fichero actual como root, incluso si se usa tramp."
   (interactive)
   (let*
     ((sudo (/= (call-process "sudo" nil nil "-n true") 0))
