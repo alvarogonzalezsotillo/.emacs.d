@@ -6,7 +6,6 @@
 
 (provide 'my-settings)
 
-
 ;; CAMBIOS
 (volatile-highlights-mode t)
 
@@ -20,7 +19,9 @@
 (global-page-break-lines-mode)
 
 ;; RESALTAR SIMBOLO ACTUAL
+(require 'auto-highlight-symbol)
 (global-auto-highlight-symbol-mode t)
+(setq ahs-default-range 'ahs-range-whole-buffer)
 
 ;; PROJECTILE
 (require 'projectile)
@@ -45,6 +46,10 @@
 (helm-autoresize-mode 1)
 (helm-mode 1)
 (helm-projectile-on)
+
+;; TRAMP SIEMPRE COPIA A PARTIR DE 1 BYTE
+(setq tramp-copy-size-limit 1)
+
 
 ;; https://writequit.org/org/settings.html#sec-1-33
 ;; No perder el portapapeles del sistema

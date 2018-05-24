@@ -9,7 +9,7 @@
 
 ;; REABRIR COMO ROOT
 (defun abrir-como-root ()
-  "Find file as root"/
+  "Find file as root"
   (interactive)
   (let*
     ((sudo (/= (call-process "sudo" nil nil "-n true") 0))
