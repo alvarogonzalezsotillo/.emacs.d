@@ -58,6 +58,7 @@
     image+
     imenu-anywhere
     imenu-list
+    intellij-theme
     kodi-remote
     latex-preview-pane
     lorem-ipsum

@@ -77,7 +77,6 @@
   "mis-teclas-minor-mode keymap")
 
 
-
 (define-minor-mode mis-teclas-minor-mode
   "A minor mode so that my key settings override annoying major modes."
   :init-value t

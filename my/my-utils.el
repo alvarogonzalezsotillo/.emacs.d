@@ -6,10 +6,45 @@
 
 (provide 'my-utils)
 
+;; ABRIR EN PROGRAMA EXTERO http://pages.sachachua.com/.emacs.d/Sacha.html
+(defun abrir-programa-externo (arg)
+  "Open visited file in default external program.
+
+With a prefix ARG always prompt for command to use."
+  (interactive "P")
+  (when buffer-file-name
+    (shell-command (concat
+                    (cond
+                     ((and (not arg) (eq system-type 'darwin)) "open")
+                     ((and (not arg) (member system-type '(gnu gnu/linux gnu/kfreebsd))) "xdg-open")
+                     (t (read-shell-command "Open current file with: ")))
+                    " "
+                    (shell-quote-argument buffer-file-name)))))
+
+;; NOMBRE DE FICHERO ACTUAL AL PORTAPAPELES http://pages.sachachua.com/.emacs.d/Sacha.html
+(defun copiar-nombre-fichero-actual ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
+
+;; UN SERVIDOR HTTP
+(defun servidor-httpd-aqui (directory port)
+  "Abre un servidor http en un directorio."
+  (interactive (list (read-directory-name "Root directory: " default-directory nil t)
+                     (read-number "Port: " 8017)))
+  (setq httpd-root directory)
+  (setq httpd-port port)
+  (httpd-start)
+  (browse-url (concat "http://localhost:" (number-to-string port) "/")))
 
 ;; REABRIR COMO ROOT
 (defun abrir-como-root ()
-  "Abre el fichero actual como root, incluso si se usa tramp."
+  "Reabre el fichero actual como root, incluso via tramp."
   (interactive)
   (let*
     ((sudo (/= (call-process "sudo" nil nil "-n true") 0))
@@ -134,7 +169,7 @@
 
 (defun tema-oscuro()
   (interactive)
-  (disable-theme 'tsdh-light)
+  (disable-theme 'intellij)
   (load-theme 'sanityinc-tomorrow-bright t)
   (load-theme 'alvaro t))
 
@@ -142,7 +177,7 @@
   (interactive)
   (disable-theme 'alvaro)
   (disable-theme 'sanityinc-tomorrow-bright)
-  (load-theme 'tsdh-light t))
+  (load-theme 'intellij t))
   
 
 (defun kill-other-buffers ()
