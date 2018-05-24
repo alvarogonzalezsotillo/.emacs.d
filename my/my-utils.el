@@ -134,7 +134,7 @@
 
 (defun tema-oscuro()
   (interactive)
-  (disable-theme 'tsdh-light)
+  (disable-theme 'intellij)
   (load-theme 'sanityinc-tomorrow-bright t)
   (load-theme 'alvaro t))
 
@@ -142,7 +142,7 @@
   (interactive)
   (disable-theme 'alvaro)
   (disable-theme 'sanityinc-tomorrow-bright)
-  (load-theme 'tsdh-light t))
+  (load-theme 'intellij t))
   
 
 (defun kill-other-buffers ()
