@@ -13,13 +13,16 @@
 With a prefix ARG always prompt for command to use."
   (interactive "P")
   (when buffer-file-name
-    (shell-command (concat
-                    (cond
-                     ((and (not arg) (eq system-type 'darwin)) "open")
-                     ((and (not arg) (member system-type '(gnu gnu/linux gnu/kfreebsd))) "xdg-open")
-                     (t (read-shell-command "Open current file with: ")))
-                    " "
-                    (shell-quote-argument buffer-file-name)))))
+    (async-shell-command (concat
+                          "setsid -w "
+                          (cond
+                           ((and (not arg) (eq system-type 'darwin)) "open")
+                           ((and (not arg) (member system-type '(gnu gnu/linux gnu/kfreebsd))) "xdg-open")
+                           (t (read-shell-command "Open current file with: ")))
+                          " "
+                          (shell-quote-argument buffer-file-name)))
+    (run-at-time "2" nil
+                 (lambda() (delete-other-windows)))))
 
 ;; NOMBRE DE FICHERO ACTUAL AL PORTAPAPELES http://pages.sachachua.com/.emacs.d/Sacha.html
 (defun copiar-nombre-fichero-actual ()
