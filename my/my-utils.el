@@ -7,18 +7,55 @@
 (provide 'my-utils)
 
 
+;; REABRIR COMO ROOT
+(defun abrir-como-root ()
+  "Find file as root"/
+  (interactive)
+  (let*
+    ((sudo (/= (call-process "sudo" nil nil "-n true") 0))
+      (file-name
+        (if (tramp-tramp-file-p buffer-file-name)
+          (with-parsed-tramp-file-name buffer-file-name parsed
+            (tramp-make-tramp-file-name
+              (if sudo "sudo" "su")
+              "root"
+              parsed-host
+              parsed-localname
+              (let ((tramp-postfix-host-format "|")
+                     (tramp-prefix-format))
+                (tramp-make-tramp-file-name
+                  parsed-method
+                  parsed-user
+                  parsed-host
+                  ""
+                  parsed-hop))))
+          (concat (if sudo
+                    "/sudo::"
+                    "/su::")
+            buffer-file-name))))
+    (find-alternate-file file-name)))
+
+;; EN .zshrc PARA QUE FUNCIONE tramp
+;; if [[ "$TERM" == "dumb" ]]
+;; then
+;;   unsetopt zle
+;;   unsetopt prompt_cr
+;;   unsetopt prompt_subst
+;;   unfunction precmd
+;;   unfunction preexec
+;;   PS1='$ '
+;; fi
+
 
 ;; CONECTAR A TRANSMISSION
 (defun conectar-a-transmission ()
   (interactive)
 
-   (setq transmission-host "192.168.1.100")
-
-  (setq transmission-host (read-string "Transmission host: " "192.168.1.100" ))
+  (setq transmission-host (read-string "Transmission host: " "192.168.1.254" ))
   (setq transmission-user (read-string "Transmission user: " "transmission"))
   (setq transmission-pass (read-passwd "Transmission password: "))
 
-  (message "Conectando a %s:%s@%s" transmission-user  transmission-pass transmission-host)
+  (message "Conectando a %s@%s" transmission-user transmission-host)
   
   (setq transmission-rpc-auth (list ':username transmission-user ':password transmission-pass))
 

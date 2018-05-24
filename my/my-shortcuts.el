@@ -40,11 +40,6 @@
 
 (global-set-key (kbd "C-S-l") 'toggle-truncate-lines)
 
-(global-set-key (kbd "M-S-<up>") 'enlarge-window)
-(global-set-key (kbd "M-S-<down>") 'shrink-window)
-
-(global-set-key (kbd "M-S-<left>") 'shrink-window-horizontally)
-(global-set-key (kbd "M-S-<right>") 'enlarge-window-horizontally)
 
 
 (define-key global-map [escape] 'keyboard-escape-quit)
@@ -68,17 +63,18 @@
     (define-key map (kbd "C-x b") 'ibuffer)
     (define-key map (kbd "C-f") 'swiper-helm)
     (define-key map (kbd "C-<f5>") 'reveal-y-pdf)
-    (global-set-key (kbd "C-<tab>") 'helm-mini)
-    (define-key map (kbd "M-I") 'helm-imenu)
+    (define-key map (kbd "<backtab>") 'psw-switch-buffer)
+    (define-key map (kbd "M-I") 'popup-imenu)
+    (define-key map (kbd "<f7>") 'imenu-list-smart-toggle)
 
+    (define-key map (kbd "M-S-<up>") 'enlarge-window)
+    (define-key map (kbd "M-S-<down>") 'shrink-window)
+    (define-key map (kbd "M-S-<left>") 'shrink-window-horizontally)
+    (define-key map (kbd "M-S-<right>") 'enlarge-window-horizontally)
+
+    
     map)
   "mis-teclas-minor-mode keymap")
-
-;; helm con tabulador
-(with-eval-after-load 'helm
-  (define-key helm-map (kbd "C-<tab>") 'helm-follow-action-forward)
-  (define-key helm-map (kbd "C-<iso-lefttab>") 'helm-follow-action-backward)
-)
 
 
 (define-minor-mode mis-teclas-minor-mode
