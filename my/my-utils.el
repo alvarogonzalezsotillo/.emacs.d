@@ -22,7 +22,7 @@ With a prefix ARG always prompt for command to use."
                           " "
                           (shell-quote-argument buffer-file-name)))
     (run-at-time "2" nil
-                 (lambda() (delete-other-windows)))))
+                 (lambda() (winner-undo)))))
 
 ;; NOMBRE DE FICHERO ACTUAL AL PORTAPAPELES http://pages.sachachua.com/.emacs.d/Sacha.html
 (defun copiar-nombre-fichero-actual ()
