@@ -56,7 +56,9 @@
     howdoi
     htmlize
     image+
+    imenu-anywhere
     imenu-list
+    intellij-theme
     kodi-remote
     latex-preview-pane
     lorem-ipsum
@@ -77,7 +79,9 @@
     page-break-lines
     paradox
     php-mode
+    popup-imenu
     popup-complete
+    popup-switcher
     popwin
     rectangle-utils
     request-deferred
@@ -85,6 +89,7 @@
     restclient-helm
     scad-mode
     scad-preview
+    scala-mode
     skewer-mode
     smartparens
     sublimity
