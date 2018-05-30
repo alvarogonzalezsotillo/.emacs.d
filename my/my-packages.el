@@ -65,6 +65,7 @@
     ;lsp-css
     lsp-mode
     lsp-javascript-typescript
+    lsp-ui
     magit
     markdown-mode
     markdown-preview-mode

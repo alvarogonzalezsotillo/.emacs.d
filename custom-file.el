@@ -19,6 +19,25 @@
    (quote
     ("8a7da2a2959207dbeb974196e9e6d78a6f45996d1f5534c310fe60b7c8680c85" "f3eb3e0e5fe336c2c4044bef9d79e57a6618fc2d00790fd8b5149fe97e64160a" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "d9a6956fc8b56fdf3cacdb818482b7b7692366f12576801319eabd4a79414729" "e95c1353f3825d5086aa9d9c773492171aa29f79b1ad1d5904be7081be1e6fbe" "fb2f0a401501100076f32b6e4ca8cdc9c7d943a7099f2085323ffa1a460819f6" "12cd2ff2db62c2fe561fa6148e5438c6e0eebb9daa7b46c69931ffacfee1521d" "3a0083b2db70cff2c828d59c37973384a9d2f07b3911e8292c19b3c701552804" "c8bb12b86341bfdc154664bf93fc0753ba2ea91c85b9f678e664288c1dd74d05" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "36d92f830c21797ce34896a4cf074ce25dbe0dabe77603876d1b42316530c99d" "b04425cc726711a6c91e8ebc20cf5a3927160681941e06bc7900a5a5bfe1a77f" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
  '(electric-pair-mode t)
+ '(ensime-sem-high-faces
+   (quote
+    ((var :foreground "#000000" :underline
+          (:style wave :color "yellow"))
+     (val :foreground "#000000")
+     (varField :foreground "#600e7a" :slant italic)
+     (valField :foreground "#600e7a" :slant italic)
+     (functionCall :foreground "#000000" :slant italic)
+     (implicitConversion :underline
+                         (:color "#c0c0c0"))
+     (implicitParams :underline
+                     (:color "#c0c0c0"))
+     (operator :foreground "#000080")
+     (param :foreground "#000000")
+     (class :foreground "#20999d")
+     (trait :foreground "#20999d" :slant italic)
+     (object :foreground "#5974ab" :slant italic)
+     (package :foreground "#000000")
+     (deprecated :strike-through "#000000"))))
  '(fci-rule-color "#424242")
  '(fill-column 120)
  '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))

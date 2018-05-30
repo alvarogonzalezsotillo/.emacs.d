@@ -7,7 +7,7 @@
 (provide 'my-settings)
 
 ;; CAMBIOS
-(volatile-highlights-mode t)
+(volatile-highlights-mode nil)
 
 ;; AYUDA DE TECLAS
 (which-key-mode t)
