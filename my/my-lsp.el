@@ -63,12 +63,12 @@
                           dir)))
 
 (lsp-define-stdio-client
- lsp-html-script
+ lsp-html
  "HTML"
  lsp-html--get-root
  '("html-languageserver" "--stdio"))
 
-(add-hook 'web-mode-hook #'lsp-html-script-enable)
+(add-hook 'web-mode-hook #'lsp-html-enable)
 
 
 ;;; my-lsp ends here

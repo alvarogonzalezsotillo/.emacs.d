@@ -104,7 +104,6 @@
 (setq visible-bell 1)
 
 ;; RESALTAR LA INDENTACION
-(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 (setq highlight-indent-guides-method 'fill)
 
 ;; SELECCION TRAS COPIAR
@@ -128,6 +127,7 @@
   (interactive)
   (bonito-para-codigo)
   (toggle-truncate-lines 1)
+  (display-line-numbers-mode 0)
   (org-display-inline-images))
 
 (defun bonito-para-codigo()
@@ -135,6 +135,8 @@
   (electric-pair-mode 1)
   (toggle-truncate-lines -1)
   (toggle-word-wrap 1)
+  (display-line-numbers-mode 1)
+  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
   (auto-highlight-symbol-mode 1)
   (yafolding-mode 1)
   (adaptive-wrap-prefix-mode 1))

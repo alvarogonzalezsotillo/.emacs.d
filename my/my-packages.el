@@ -70,7 +70,6 @@
     markdown-mode
     markdown-preview-mode
     multiple-cursors
-    nlinum
     neotree
     ob-restclient
     org
