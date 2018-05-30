@@ -98,6 +98,8 @@
 
 
 ;; RESALTAR LINEA ACTUAL
+
+;; RESALTAR LINEA ACTUAL
 (global-hl-line-mode t)
 
 ;; SIN RUIDO
@@ -156,10 +158,9 @@
 
 
 ;; TRANSIENT MARK MODE, PARA C-X TAB
-(transient-mark-mode 1)
 
 ;; SCROLL SUAVE
-(setq scroll-margin 3
+(setq scroll-margin 0
       scroll-step 1
       scroll-conservatively 10000
       scroll-preserve-screen-position 1)
