@@ -45,8 +45,8 @@ With a prefix ARG always prompt for command to use."
   (httpd-start)
   (browse-url (concat "http://localhost:" (number-to-string port) "/")))
 
-;; REABRIR COMO ROOT
-(defun abrir-como-root ()
+;; REABRIR COMO ROOT emacs25
+(defun abrir-como-root-emacs25 ()
   "Reabre el fichero actual como root, incluso via tramp."
   (interactive)
   (let*
@@ -71,6 +71,39 @@ With a prefix ARG always prompt for command to use."
                     "/sudo::"
                     "/su::")
             buffer-file-name))))
+    (find-alternate-file file-name)))
+
+
+;; REABRIR COMO ROOT
+(defun abrir-como-root ()
+  "Reabre el fichero actual como root, incluso via tramp."
+  (interactive)
+  (let*
+      ((sudo (/= (call-process "sudo" nil nil "-n true") 0))
+       (file-name
+        (if (tramp-tramp-file-p buffer-file-name)
+            (with-parsed-tramp-file-name buffer-file-name parsed
+              (tramp-make-tramp-file-name
+               (if sudo "sudo" "su")
+               "root"
+               nil ; domain
+               parsed-host
+               nil ; port
+               parsed-localname
+               (let ((tramp-postfix-host-format "|")
+                     (tramp-prefix-format))
+                 (tramp-make-tramp-file-name
+                  parsed-method
+                  parsed-user
+                  nil ; domain
+                  parsed-host
+                  nil ; PORT
+                  parsed-hop))))
+          
+          (concat (if sudo
+                      "/sudo::"
+                    "/su::")
+                  buffer-file-name))))
     (find-alternate-file file-name)))
 
 ;; EN .zshrc PARA QUE FUNCIONE tramp
