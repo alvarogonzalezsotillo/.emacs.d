@@ -36,6 +36,7 @@
 (setq debug-on-quit nil)
 
 ;; TEMA
+(tema-claro)
 (tema-oscuro)
 
 

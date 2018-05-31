@@ -14,6 +14,17 @@
 (add-hook 'lsp-mode-hook 'lsp-ui-mode)
 
 
+
+;; Make a directory for global installations:
+;; 1. mkdir ~/.npm-global
+;; Configure npm to use the new directory path:
+;; 2.npm config set prefix '~/.npm-global'
+;; Open or create a ~/.profile file and add this line:
+;; 3.export PATH=~/.npm-global/bin:$PATH
+;; Back on the command line, update your system variables:
+;; 4.source ~/.profile
+
+
 ;; https://github.com/emacs-lsp/lsp-javascript
 ;; npm i -g javascript-typescript-langserver
 (require 'lsp-javascript-typescript)
@@ -44,6 +55,7 @@
 
 ;; BASH
 ;; https://github.com/mads-hartmann/bash-language-server
+;; npm i -g --unsafe-perm bash-language-server
 (defconst lsp-shell--get-root
   (lsp-make-traverser #'(lambda (dir)
                           dir)))

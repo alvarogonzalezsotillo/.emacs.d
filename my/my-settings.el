@@ -6,6 +6,10 @@
 
 (provide 'my-settings)
 
+
+;; PAGEUP Y PAGEDOWN CAMBIAN EL CURSOR HASTA EL FINAL
+(setq scroll-error-top-bottom t)
+
 ;; CAMBIOS
 (volatile-highlights-mode nil)
 
@@ -98,6 +102,8 @@
 
 
 ;; RESALTAR LINEA ACTUAL
+
+;; RESALTAR LINEA ACTUAL
 (global-hl-line-mode t)
 
 ;; SIN RUIDO
@@ -126,24 +132,25 @@
 (defun bonito-para-proyector()
   (interactive)
   (bonito-para-codigo)
-  (toggle-truncate-lines 1)
+  (toggle-truncate-lines -1)
+  (highlight-indent-guides-mode 0)
   (display-line-numbers-mode 0)
   (org-display-inline-images))
 
 (defun bonito-para-codigo()
   (interactive)
   (electric-pair-mode 1)
-  (toggle-truncate-lines -1)
+  (toggle-truncate-lines 1)
   (toggle-word-wrap 1)
   (display-line-numbers-mode 1)
-  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+  (highlight-indent-guides-mode 1)
   (auto-highlight-symbol-mode 1)
   (yafolding-mode 1)
   (adaptive-wrap-prefix-mode 1))
 
 (add-hook 'prog-mode-hook 'bonito-para-codigo)
 (add-hook 'text-mode-hook 'bonito-para-proyector)
-(add-hook 'org-mode-hook 'bonito-para-codigo)
+(add-hook 'org-mode-hook 'bonito-para-proyector)
 (add-hook 'tex-mode-hook 'bonito-para-codigo)
 
 
@@ -158,10 +165,9 @@
 
 
 ;; TRANSIENT MARK MODE, PARA C-X TAB
-(transient-mark-mode 1)
 
 ;; SCROLL SUAVE
-(setq scroll-margin 3
+(setq scroll-margin 0
       scroll-step 1
       scroll-conservatively 10000
       scroll-preserve-screen-position 1)
