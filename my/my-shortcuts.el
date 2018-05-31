@@ -7,38 +7,6 @@
 (provide 'my-shortcuts)
 
 
-(global-set-key (kbd "<f5>") 'transpose-frame)
-
-(global-set-key (kbd "<f9>") 'magit-status)
-
-(global-set-key (kbd "<C-f2>") 'bm-toggle)
-(global-set-key (kbd "<f2>")   'bm-next)
-(global-set-key (kbd "<S-f2>") 'bm-previous)
-
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
-(global-set-key (kbd "C-S-c C-S-v") 'mc/mark-all-like-this)
-
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x M-x") 'execute-extended-command)
-
-(global-set-key (kbd "<menu>") 'helm-M-x)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "<f6>") 'helm-mini)
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
-(global-set-key (kbd "C-x r b") 'helm-filtered-bookmarks)
-
-(global-set-key (kbd "<f8>") 'neotree-toggle)
-
-(global-set-key (kbd "C-x o") 'switch-window)
-
-(global-set-key (kbd "C-o") 'dumb-jump-go)
-
-(global-set-key (kbd "C-.") 'company-complete)
-
-(global-set-key (kbd "C-S-l") 'toggle-truncate-lines)
 
 
 
@@ -59,6 +27,7 @@
     (define-key map (kbd "C-S-e") 'er/contract-region)
     (define-key map (kbd "C-z") 'undo )
     (define-key map (kbd "C-x C-d") 'dired)
+    (define-key map (kbd "C-x d") 'dired-other-frame)
     (define-key map (kbd "C-x C-b") 'ibuffer)
     (define-key map (kbd "C-x b") 'ibuffer)
     (define-key map (kbd "C-f") 'swiper-helm)
@@ -71,6 +40,39 @@
     (define-key map (kbd "M-S-<down>") 'shrink-window)
     (define-key map (kbd "M-S-<left>") 'shrink-window-horizontally)
     (define-key map (kbd "M-S-<right>") 'enlarge-window-horizontally)
+
+    (define-key map (kbd "<f5>") 'transpose-frame)
+
+    (define-key map (kbd "<f9>") 'magit-status)
+
+    (define-key map (kbd "<C-f2>") 'bm-toggle)
+    (define-key map (kbd "<f2>")   'bm-next)
+    (define-key map (kbd "<S-f2>") 'bm-previous)
+
+    (define-key map (kbd "C-S-c C-S-c") 'mc/edit-lines)
+    (define-key map (kbd "C->") 'mc/mark-next-like-this)
+    (define-key map (kbd "C-<") 'mc/mark-previous-like-this)
+    (define-key map (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+    (define-key map (kbd "C-S-c C-S-v") 'mc/mark-all-like-this)
+
+    (define-key map (kbd "M-x") 'helm-M-x)
+    (define-key map (kbd "C-x M-x") 'execute-extended-command)
+
+    (define-key map (kbd "<menu>") 'helm-M-x)
+    (define-key map (kbd "C-x C-f") 'helm-find-files)
+    (define-key map (kbd "<f6>") 'helm-mini)
+    (define-key map (kbd "M-y") 'helm-show-kill-ring)
+    (define-key map (kbd "C-x r b") 'helm-filtered-bookmarks)
+
+    (define-key map (kbd "<f8>") 'neotree-toggle)
+
+    (define-key map (kbd "C-x o") 'switch-window)
+
+    (define-key map (kbd "C-o") 'dumb-jump-go)
+
+    (define-key map (kbd "C-.") 'company-complete)
+
+    (define-key map (kbd "C-S-l") 'toggle-truncate-lines)
 
     
     map)
