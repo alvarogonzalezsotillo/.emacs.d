@@ -28,10 +28,6 @@
 ;; https://github.com/emacs-lsp/lsp-javascript
 ;; npm i -g javascript-typescript-langserver
 (require 'lsp-javascript-typescript)
-(add-hook 'js-mode-hook #'lsp-javascript-typescript-enable)
-(add-hook 'typescript-mode-hook #'lsp-javascript-typescript-enable) ;; for typescript support
-(add-hook 'js3-mode-hook #'lsp-javascript-typescript-enable) ;; for js3-mode support
-(add-hook 'rjsx-mode #'lsp-javascript-typescript-enable) ;; for rjsx-mode support
 
 
 
@@ -48,11 +44,6 @@
  lsp-css--get-root
  '("css-languageserver" "--stdio"))
 
-(add-hook 'css-mode-hook #'lsp-css-enable)
-(add-hook 'less-mode-hook #'lsp-css-enable)
-(add-hook 'sass-mode-hook #'lsp-css-enable)
-(add-hook 'scss-mode-hook #'lsp-css-enable)
-
 ;; BASH
 ;; https://github.com/mads-hartmann/bash-language-server
 ;; npm i -g --unsafe-perm bash-language-server
@@ -66,7 +57,6 @@
  lsp-shell--get-root
  '("bash-language-server" "start"))
 
-(add-hook 'sh-mode-hook #'lsp-shell-script-enable)
 
 ;; HTML
 ;; sudo npm i -g --unsafe-perm vscode-html-languageserver-bin
@@ -80,7 +70,21 @@
  lsp-html--get-root
  '("html-languageserver" "--stdio"))
 
-(add-hook 'web-mode-hook #'lsp-html-enable)
+
+;; HOOKS
+(defun installar-hooks-de-lsp ()
+  "Instala los hooks de lsp.  No los activo porque no funcionan sin instalar los servidores."
+  (add-hook 'web-mode-hook #'lsp-html-enable)
+  (add-hook 'sh-mode-hook #'lsp-shell-script-enable)
+  (add-hook 'css-mode-hook #'lsp-css-enable)
+  (add-hook 'less-mode-hook #'lsp-css-enable)
+  (add-hook 'sass-mode-hook #'lsp-css-enable)
+  (add-hook 'scss-mode-hook #'lsp-css-enable)
+  (add-hook 'js-mode-hook #'lsp-javascript-typescript-enable)
+  (add-hook 'typescript-mode-hook #'lsp-javascript-typescript-enable)
+  (add-hook 'js3-mode-hook #'lsp-javascript-typescript-enable)
+  (add-hook 'rjsx-mode #'lsp-javascript-typescript-enable))
+
 
 
 ;;; my-lsp ends here
