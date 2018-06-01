@@ -83,6 +83,7 @@
     popup-complete
     popup-switcher
     popwin
+    prettier-js
     rectangle-utils
     request-deferred
     restclient
