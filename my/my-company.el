@@ -15,15 +15,23 @@
 (defvar my-company-backends
   '(
     (
-      company-lsp
-      company-files
-      company-dabbrev-code
-      company-capf
-      company-keywords
-      company-yasnippet
-      company-emoji
+     company-files
+     company-dabbrev-code
+     company-capf
+     company-keywords
+     company-lsp
+     company-yasnippet
+     company-emoji
      )
-   ))
+    )
+
+(defvar my-company-backends-orgmode
+  '(
+    company-files
+    company-dabbrev
+    company-yasnippet
+    company-emoji
+    ))
 
 ;; set default `company-backends'
 (setq company-backends my-company-backends)
@@ -51,5 +59,10 @@
                                         ;(defun my-org-mode-hook-for-company ()
                                         ;  (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t))
                                         ;(add-hook 'org-mode-hook #'my-org-mode-hook-for-company)
+
+(defun my-company-backends-org-mode-function ()
+  (set (make-local-variable 'company-backends) my-company-backends-org-mode))
+
+(add-hook 'org-mode-hook #'my-company-backends-org-mode-function)
 
 ;;; my-company.el ends here

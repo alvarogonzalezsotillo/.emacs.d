@@ -6,6 +6,11 @@
 
 (provide 'my-utils)
 
+;; PROBLEMAS CON TRAMP
+(require 'tramp)
+(setq tramp-debug-buffer t)
+(setq tramp-verbose 10)
+
 ;; ABRIR EN PROGRAMA EXTERO http://pages.sachachua.com/.emacs.d/Sacha.html
 (defun abrir-programa-externo (arg)
   "Open visited file in default external program.

@@ -147,6 +147,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(imenu-list-entry-face ((t (:height 0.9))))
- '(tabbar-default ((t (:background "gray50" :foreground "grey75"))))
- '(tabbar-selected ((t (:inherit tabbar-default :foreground "white" :box (:line-width 1 :color "white" :style pressed-button))))))
+ '(imenu-list-entry-face ((t (:height 0.9)))))
