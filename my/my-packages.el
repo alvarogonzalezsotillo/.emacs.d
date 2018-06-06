@@ -31,6 +31,7 @@
     company-auctex
     company-c-headers
     company-emoji
+    company-flx-mode
     company-lsp
     company-quickhelp
     company-restclient

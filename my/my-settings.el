@@ -51,6 +51,7 @@
 (helm-mode 1)
 (helm-projectile-on)
 (helm-flx-mode +1)
+(setq helm-echo-input-in-header-line t)
 
 ;; TRAMP SIEMPRE COPIA A PARTIR DE 1 BYTE
 (setq tramp-copy-size-limit 1)

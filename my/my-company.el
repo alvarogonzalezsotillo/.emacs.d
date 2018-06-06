@@ -9,10 +9,11 @@
 
 
 (require 'company)
+(company-flx-mode +1)
 
 
 
-(defvar my-company-backends
+(defvar my-company-backends-prog-mode
   '(
     (
      company-files
@@ -23,15 +24,18 @@
      company-yasnippet
      company-emoji
      )
-    )
+    ))
 
-(defvar my-company-backends-orgmode
+
+(defvar my-company-backends-org-mode
   '(
     company-files
     company-dabbrev
     company-yasnippet
     company-emoji
     ))
+
+(defvar my-company-backends my-company-backends-org-mode)
 
 ;; set default `company-backends'
 (setq company-backends my-company-backends)
@@ -64,5 +68,10 @@
   (set (make-local-variable 'company-backends) my-company-backends-org-mode))
 
 (add-hook 'org-mode-hook #'my-company-backends-org-mode-function)
+
+(defun my-company-backends-prog-mode-function ()
+  (set (make-local-variable 'company-backends) my-company-backends-prog-mode))
+
+(add-hook 'prog-mode-hook #'my-company-backends-prog-mode-function)
 
 ;;; my-company.el ends here
