@@ -49,6 +49,7 @@
     graphviz-dot-mode
     helm-ag
     helm-company
+    helm-flx
     helm-gitignore
     helm-google
     helm-projectile
