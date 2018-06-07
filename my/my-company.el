@@ -9,21 +9,33 @@
 
 
 (require 'company)
+(company-flx-mode +1)
 
 
 
-(defvar my-company-backends
+(defvar my-company-backends-prog-mode
   '(
     (
-      company-lsp
-      company-files
-      company-dabbrev-code
-      company-capf
-      company-keywords
-      company-yasnippet
-      company-emoji
+     company-files
+     company-dabbrev-code
+     company-capf
+     company-keywords
+     company-lsp
+     company-yasnippet
+     company-emoji
      )
-   ))
+    ))
+
+
+(defvar my-company-backends-org-mode
+  '(
+    company-files
+    company-dabbrev
+    company-yasnippet
+    company-emoji
+    ))
+
+(defvar my-company-backends my-company-backends-org-mode)
 
 ;; set default `company-backends'
 (setq company-backends my-company-backends)
@@ -51,5 +63,15 @@
                                         ;(defun my-org-mode-hook-for-company ()
                                         ;  (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t))
                                         ;(add-hook 'org-mode-hook #'my-org-mode-hook-for-company)
+
+(defun my-company-backends-org-mode-function ()
+  (set (make-local-variable 'company-backends) my-company-backends-org-mode))
+
+(add-hook 'org-mode-hook #'my-company-backends-org-mode-function)
+
+(defun my-company-backends-prog-mode-function ()
+  (set (make-local-variable 'company-backends) my-company-backends-prog-mode))
+
+(add-hook 'prog-mode-hook #'my-company-backends-prog-mode-function)
 
 ;;; my-company.el ends here

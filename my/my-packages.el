@@ -31,6 +31,7 @@
     company-auctex
     company-c-headers
     company-emoji
+    company-flx
     company-lsp
     company-quickhelp
     company-restclient
@@ -49,6 +50,7 @@
     graphviz-dot-mode
     helm-ag
     helm-company
+    helm-flx
     helm-gitignore
     helm-google
     helm-projectile
@@ -65,11 +67,11 @@
     ;lsp-css
     lsp-mode
     lsp-javascript-typescript
+    lsp-ui
     magit
     markdown-mode
     markdown-preview-mode
     multiple-cursors
-    nlinum
     neotree
     ob-restclient
     org
@@ -83,6 +85,7 @@
     popup-complete
     popup-switcher
     popwin
+    prettier-js
     rectangle-utils
     request-deferred
     restclient

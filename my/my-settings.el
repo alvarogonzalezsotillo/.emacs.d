@@ -6,8 +6,12 @@
 
 (provide 'my-settings)
 
+
+;; PAGEUP Y PAGEDOWN CAMBIAN EL CURSOR HASTA EL FINAL
+(setq scroll-error-top-bottom t)
+
 ;; CAMBIOS
-(volatile-highlights-mode t)
+(volatile-highlights-mode nil)
 
 ;; AYUDA DE TECLAS
 (which-key-mode t)
@@ -46,6 +50,8 @@
 (helm-autoresize-mode 1)
 (helm-mode 1)
 (helm-projectile-on)
+(helm-flx-mode +1)
+(setq helm-echo-input-in-header-line t)
 
 ;; TRAMP SIEMPRE COPIA A PARTIR DE 1 BYTE
 (setq tramp-copy-size-limit 1)
@@ -98,13 +104,14 @@
 
 
 ;; RESALTAR LINEA ACTUAL
+
+;; RESALTAR LINEA ACTUAL
 (global-hl-line-mode t)
 
 ;; SIN RUIDO
 (setq visible-bell 1)
 
 ;; RESALTAR LA INDENTACION
-(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 (setq highlight-indent-guides-method 'fill)
 
 ;; SELECCION TRAS COPIAR
@@ -127,21 +134,26 @@
 (defun bonito-para-proyector()
   (interactive)
   (bonito-para-codigo)
-  (toggle-truncate-lines 1)
+  (toggle-truncate-lines -1)
+  (highlight-indent-guides-mode 0)
+  (if (>= emacs-major-version 26)
+      (display-line-numbers-mode 0))
   (org-display-inline-images))
 
 (defun bonito-para-codigo()
   (interactive)
   (electric-pair-mode 1)
-  (toggle-truncate-lines -1)
+  (toggle-truncate-lines 1)
   (toggle-word-wrap 1)
+  (if (>= emacs-major-version 26)
+      (display-line-numbers-mode 1))
   (auto-highlight-symbol-mode 1)
   (yafolding-mode 1)
   (adaptive-wrap-prefix-mode 1))
 
 (add-hook 'prog-mode-hook 'bonito-para-codigo)
 (add-hook 'text-mode-hook 'bonito-para-proyector)
-(add-hook 'org-mode-hook 'bonito-para-codigo)
+(add-hook 'org-mode-hook 'bonito-para-proyector)
 (add-hook 'tex-mode-hook 'bonito-para-codigo)
 
 
@@ -156,10 +168,9 @@
 
 
 ;; TRANSIENT MARK MODE, PARA C-X TAB
-(transient-mark-mode 1)
 
 ;; SCROLL SUAVE
-(setq scroll-margin 3
+(setq scroll-margin 0
       scroll-step 1
       scroll-conservatively 10000
       scroll-preserve-screen-position 1)
