@@ -30,6 +30,7 @@
 (defvar my-company-backends-org-mode
   '(
     company-files
+    company-dabbrev-code
     company-dabbrev
     company-yasnippet
     company-emoji
