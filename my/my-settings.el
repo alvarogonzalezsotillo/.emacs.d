@@ -53,6 +53,13 @@
 (helm-flx-mode +1)
 (setq helm-echo-input-in-header-line t)
 
+;; HELM EN SU PROPIA CHILD FRAME
+(setq helm-display-function 'helm-display-buffer-in-own-frame
+      helm-display-buffer-reuse-frame t
+      helm-display-buffer-width 120
+      helm-use-undecorated-frame-option t)
+
+
 ;; TRAMP SIEMPRE COPIA A PARTIR DE 1 BYTE
 (setq tramp-copy-size-limit 1)
 
