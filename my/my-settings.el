@@ -117,6 +117,7 @@
 
 ;; SIN RUIDO
 (setq visible-bell 1)
+(setq ring-bell-function 'ignore)
 
 ;; RESALTAR LA INDENTACION
 (setq highlight-indent-guides-method 'fill)
