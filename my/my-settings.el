@@ -59,6 +59,11 @@
       helm-display-buffer-width 120
       helm-use-undecorated-frame-option t)
 
+;; SWIPER COMO EL RESTO DE HELM
+(require 'swiper-helm)
+(setq swiper-helm-display-function helm-display-function)
+
+
 
 ;; TRAMP SIEMPRE COPIA A PARTIR DE 1 BYTE
 (setq tramp-copy-size-limit 1)
