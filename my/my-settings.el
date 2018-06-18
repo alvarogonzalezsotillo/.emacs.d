@@ -7,6 +7,12 @@
 (provide 'my-settings)
 
 
+;; MULTIPLE CURSORS
+(setq mc/always-run-for-all t)
+
+;; SELECCIONAR EN ORG
+(setq org-support-shift-select t)
+
 ;; PAGEUP Y PAGEDOWN CAMBIAN EL CURSOR HASTA EL FINAL
 (setq scroll-error-top-bottom t)
 
