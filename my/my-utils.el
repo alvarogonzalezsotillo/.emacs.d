@@ -6,6 +6,23 @@
 
 (provide 'my-utils)
 
+;; RECTANGULOS CON RATON
+;; https://emacs.stackexchange.com/questions/7244/enable-emacs-column-selection-using-mouse
+(defun mouse-start-rectangle (start-event)
+  (interactive "e")
+  (deactivate-mark)
+  (mouse-set-point start-event)
+  (rectangle-mark-mode +1)
+  (let ((drag-event))
+    (track-mouse
+      (while (progn
+               (setq drag-event (read-event))
+               (mouse-movement-p drag-event))
+        (mouse-set-point drag-event)))))
+
+(global-set-key (kbd "S-<down-mouse-1>") #'mouse-start-rectangle)
+
+
 ;; PROBLEMAS CON TRAMP
 (require 'tramp)
 (setq tramp-debug-buffer t)

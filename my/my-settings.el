@@ -6,6 +6,9 @@
 
 (provide 'my-settings)
 
+;; LISTADOS DE LATEX
+(require 'ox-latex)
+(setq org-latex-listings t)
 
 ;; MULTIPLE CURSORS
 (setq mc/always-run-for-all t)
