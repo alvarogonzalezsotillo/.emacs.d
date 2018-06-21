@@ -19,10 +19,14 @@
   (define-key minibuffer-local-isearch-map (kbd "<left>") 'isearch-reverse-exit-minibuffer)
   (define-key minibuffer-local-isearch-map (kbd "<right>") 'isearch-forward-exit-minibuffer))
 
-
 ;; ESCAPE ESCAPA MÁS 
-(define-key global-map [escape] 'keyboard-escape-quit)
-;; (define-key key-translation-map (kbd "ESC") (kbd "C-g")) // PROBLEMAS CON EL TERMINAL
+(defun super-escape()
+  (interactive)
+  (keyboard-escape-quit)
+  (keyboard-quit)
+  (setq quit-flag t))
+(define-key global-map [escape] 'super-escape)
+
 
 ;; Remove Yasnippet's default tab key binding
 (require 'yasnippet)
