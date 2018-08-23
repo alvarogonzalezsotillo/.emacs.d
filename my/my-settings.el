@@ -6,6 +6,18 @@
 
 (provide 'my-settings)
 
+;; ENABLE ADVANCED OPTIONS
+(put 'narrow-to-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+
+;; DOCVIEW
+(require 'doc-view)
+(setq doc-view-continuous t)
+(setq doc-view-image-width 1600)
+(setq doc-view-resolution 400)
+
+
 ;; LISTADOS DE LATEX
 (require 'ox-latex)
 (setq org-latex-listings t)

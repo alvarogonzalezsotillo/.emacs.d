@@ -11,6 +11,9 @@
 (add-to-list 'dumb-jump-find-rules
   '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "sql"
            :regex ": \\bJJJ\\j"))
+(add-to-list 'dumb-jump-find-rules
+  '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "org"
+           :regex ": \\bJJJ\\j"))
 
 
 ;; ESCAPE HTML IN REVEAL
