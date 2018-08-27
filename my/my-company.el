@@ -75,4 +75,8 @@
 
 (add-hook 'prog-mode-hook #'my-company-backends-prog-mode-function)
 
+
+(define-key company-active-map [escape] 'company-abort)
+
+
 ;;; my-company.el ends here
