@@ -30,7 +30,6 @@ Utilizo tres repositorios de paquetes:
 
 Guardo los paquetes que necesito en una variable, y se reinstalan si no están ya instalados.
 
-Por último, el paquete =ob-scala= es un paquete local bajado de [[https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el][https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el]].
 
 #+begin_src emacs-lisp
 (setq package-check-signature nil)
@@ -162,6 +161,12 @@ Por último, el paquete =ob-scala= es un paquete local bajado de [[https://githu
 (reinstalar-paquetes-en-emacs-nuevo)
 (requerir-paquetes)
 
+
+#+end_src
+
+Por último, el paquete =ob-scala= es un paquete local bajado de [[https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el][https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el]].
+
+#+begin_src emacs-lisp
 (require 'ob-scala)
 #+end_src
 
@@ -266,7 +271,7 @@ Para visualizar documentos desde Emacs, aumento su resolución y anchura.
 #+end_src
 
 ** =org-mode=
-
+   
 *** Listados /Latex/
 Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 #+begin_src emacs-lisp
@@ -286,6 +291,14 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 
 ** Latex
 
+#+begin_src emacs-lisp
+;; PARA FUNCIONAR CON AUCTEX
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq TeX-save-query nil)
+(setq TeX-PDF-mode t)
+#+end_src
+
 - Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
 #+begin_src emacs-lisp
 
@@ -300,9 +313,12 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 #+end_src
 
 
-- Modifico el comando Latex para incluir =-shell-escape=
+- Modifico el comando Latex para incluir =-shell-escape=, de forma que Latex pueda arrancar programas de ayuda (por ejemplo, *Inkscape* para convertir SVG a PDF)
+
+#+begin_src emacs-lisp
 (setq LaTeX-command-style
    (quote (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
+#+end_src
 
 
 - Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en el buffer de Emacs ([[https://www.gnu.org/software/auctex/manual/preview-latex.html][https://www.gnu.org/software/auctex/manual/preview-latex.html]])
@@ -445,16 +461,25 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
 #+end_src
 
 * COSAS QUE AUN FALTAN POR MIGRAR
+- Marcar la línea actual. Está deshabilitado porque no funciona bien con /overlays/
 #+begin_src emacs-lisp
-;; RESALTAR LINEA ACTUAL
-(global-hl-line-mode t)
+(global-hl-line-mode -1)
+#+end_src
 
-;; SIN RUIDO
+
+- Desactivar la campana (/bell/)
+
+#+begin_src emacs-lisp
 (setq visible-bell 1)
 (setq ring-bell-function 'ignore)
+#+end_src
 
+#+begin_src emacs-lisp
 ;; RESALTAR LA INDENTACION
 (setq highlight-indent-guides-method 'fill)
+
+#+end_src
+#+begin_src emacs-lisp
 
 ;; SELECCION TRAS COPIAR
 (defadvice kill-ring-save (after keep-transient-mark-active ())
@@ -462,6 +487,8 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
   (setq deactivate-mark nil))
 (ad-activate 'kill-ring-save)
 
+#+end_src
+#+begin_src emacs-lisp
 
 ;; DIRECTORIOS DE BACKUP
 (setq backup-directory-alist `(("." . "~/.saves")))
@@ -471,6 +498,8 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
       kept-old-versions 2
       version-control t)
 
+#+end_src
+#+begin_src emacs-lisp
 
 ;; VISUALIZACIÓN AGRADABLE
 (defun bonito-para-proyector()
@@ -486,6 +515,7 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
   (interactive)
   (electric-pair-mode 1)
   (toggle-truncate-lines 1)
+  (highlight-indent-guides-mode 1)
   (toggle-word-wrap 1)
   (if (>= emacs-major-version 26)
       (display-line-numbers-mode 1))
@@ -498,9 +528,14 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
 (add-hook 'org-mode-hook 'bonito-para-proyector)
 (add-hook 'tex-mode-hook 'bonito-para-codigo)
 
+#+end_src
+#+begin_src emacs-lisp
 
 ;; VALIDACIONES
 (add-hook 'after-init-hook #'global-flycheck-mode)
+
+#+end_src
+#+begin_src emacs-lisp
 
 ;; NO PREGUNTAR CUANDO SE CIERRA EL BUFFER
 (defun kill-this-buffer-dont-ask ()
@@ -508,8 +543,8 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
   (kill-buffer (current-buffer)))
 (global-set-key (kbd "C-x k") 'kill-this-buffer-dont-ask)
 
-
-;; TRANSIENT MARK MODE, PARA C-X TAB
+#+end_src
+#+begin_src emacs-lisp
 
 ;; SCROLL SUAVE
 (setq scroll-margin 0
@@ -517,43 +552,65 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
       scroll-conservatively 10000
       scroll-preserve-screen-position 1)
 
+#+end_src
+#+begin_src emacs-lisp
+
 ;; POPWIN
 (popwin-mode 1)
+#+end_src
 
-;; QUITAR LA TOOLBAR
-(tool-bar-mode -1)
-
-;; ANCHURA DE PAGINAS DEL MAN
-(setenv "MANWIDTH" "80")
-
-;; INDENTACIONES
-(setq-default indent-tabs-mode nil)
-(setq tab-width 2)
-
-;; PARA FUNCIONAR CON AUCTEX
-(require 'tex)
-(require 'tex-buf)
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq TeX-save-query nil)
-(setq TeX-PDF-mode t)
-
-
-;; MOSTRAR LOS PARENTESIS ASOCIADOS
-(show-paren-mode)
+#+begin_src emacs-lisp
 
 ;; QUITAR PANTALLA DE INICIO Y MENU
 (setq inhibit-startup-message t)
 (menu-bar-mode -1)
 
+;; QUITAR LA TOOLBAR
+(tool-bar-mode -1)
+
+#+end_src
+
+#+begin_src emacs-lisp
+
+;; ANCHURA DE PAGINAS DEL MAN
+(setenv "MANWIDTH" "80")
+
+#+end_src
+
+#+begin_src emacs-lisp
+
+;; INDENTACIONES
+(setq-default indent-tabs-mode nil)
+(setq tab-width 2)
+
+
+#+end_src
+
+#+begin_src emacs-lisp
+
+;; MOSTRAR LOS PARENTESIS ASOCIADOS
+(show-paren-mode)
+
+#+end_src
+
+#+begin_src emacs-lisp
+
+
 ;; MODO SERVIDOR
 (server-force-delete)
 (server-start)
+
+#+end_src
+
+#+begin_src emacs-lisp
 
 ;; imagex PARA HACER ZOOM EN IMÁGENES
 (imagex-global-sticky-mode)
 (imagex-auto-adjust-mode)
 
+#+end_src
+
+#+begin_src emacs-lisp
 
 ;; ORG MODE, PARA EL electric-pair-mode
 (require 'org)
@@ -562,6 +619,9 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
 (modify-syntax-entry ?* "(*" org-mode-syntax-table)
 (modify-syntax-entry ?/ "(/" org-mode-syntax-table)
 
+#+end_src
+
+#+begin_src emacs-lisp
 
 
 ;; MODELINE
@@ -580,6 +640,10 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
                mode-line-end-spaces
                ) )
 
+#+end_src
+
+#+begin_src emacs-lisp
+
 ;; PARA EL MINIMAP
 (require 'sublimity)
 (require 'sublimity-map)
@@ -587,9 +651,14 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
 (sublimity-map-set-delay nil)
 
 
+#+end_src
+
+#+begin_src emacs-lisp
+
 ;; RATON EN MODO TEXTO
 (xterm-mouse-mode)
 #+end_src
+
 
 * TECLAS
 #+begin_src emacs-lisp
@@ -938,10 +1007,6 @@ With a prefix ARG always prompt for command to use."
       (let ((size (count-lines beg end)))
 	(save-excursion
 	  (cond ((= size 0))	      ; do nothing for an empty result
-		((< size org-babel-min-lines-for-block-output)
-		 (goto-char beg)
-		 (dotimes (_ size)
-		   (beginning-of-line 1) (insert ": ") (forward-line 1)))
 		(t
 		 (goto-char beg)
 		 (insert (if results-switches
@@ -954,6 +1019,9 @@ With a prefix ARG always prompt for command to use."
 		   (org-escape-code-in-region p (point)))
 		 (insert (funcall maybe-cap "#+end_src\n")))))))))
 #+end_src
+
+#+RESULTS:
+: org-code-block-from-region
 
 
 * Temas
@@ -1011,13 +1079,15 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
 
 
 (defvar my-company-backends-org-mode
-  '(
+'(
+  (
     company-files
     company-dabbrev-code
     company-dabbrev
     company-yasnippet
     company-emoji
     ))
+)
 
 (defvar my-company-backends my-company-backends-org-mode)
 
@@ -1061,10 +1131,10 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
 
 
 (define-key company-active-map [escape] 'company-abort)
-
 (global-company-mode)
 
 #+end_src
+
 
 
 
