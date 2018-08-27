@@ -22,6 +22,7 @@
     ag
     alert
     auto-highlight-symbol
+    bind-key
     bm
     calfw
     calfw-ical

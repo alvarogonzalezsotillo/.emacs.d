@@ -1,0 +1,989 @@
+#+TITLE: Configuración Emacs de Álvaro González
+#+OPTIONS: toc:4 h:4
+
+* Cómo funciona este fichero
+
+La configuración de Emacs se realiza con código elisp. Al contrario que otros editores, que están pensados para ser usados sin demasiada customización, los usuarios de Emacs solemos cambiarlo de forma bastante /extrema/ (¡por eso nos gusta!).
+
+El problema es que, como con cualquier otro programa que se va modificando durante años, acabas olvidando el por qué de ciertas líneas de código, o dónde se realiza alguna coniguración. Para evitar remediarlo, se puede utilizar org-mode para crear al mismo tiempo la documentación y el código de la configuración (como en literate programming).
+
+Esta es mi configuración de Emacs, basada en la de [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua]].
+
+** =init.el=
+Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplemente inicializa el sistema de paquetes y carga el paquete =org=, que es el que permite a Emacs manejar este tipo de ficheros. Después, carga este fichero interpretando los bloques de código.
+
+#+begin_src lisp  :tangle no
+(package-initialize t)
+(require 'org)
+(require 'ob-tangle)
+(org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
+#+end_src
+
+
+
+* Paquetes
+
+Utilizo tres repositorios de paquetes:
+- melpa: el más habitual
+- gnu: me hizo falta para algo que no recuerdo (!)
+- org: las versiones nuevas de org-mode se publican antes en este repositorio
+
+Guardo los paquetes que necesito en una variable, y se reinstalan si no están ya instalados.
+
+Por último, el paquete =ob-scala= es un paquete local bajado de [[https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el][https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el]].
+
+#+begin_src emacs-lisp
+(setq package-check-signature nil)
+
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(package-initialize)
+
+;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
+(defvar my/install-packages
+  '(
+    2048-game
+    adaptive-wrap
+    ag
+    alert
+    auto-highlight-symbol
+    bind-key
+    bm
+    calfw
+    calfw-ical
+    chess
+    color-theme-sanityinc-tomorrow
+    company
+    company-auctex
+    company-c-headers
+    company-emoji
+    company-flx
+    company-lsp
+    company-quickhelp
+    company-restclient
+    company-shell
+    company-web
+    crappy-jsp-mode
+    diffview
+    dired-narrow
+    dumb-jump
+    expand-region
+    flycheck
+    gift-mode
+    git-gutter
+    git-timemachine
+    gitignore-mode
+    graphviz-dot-mode
+    helm-ag
+    helm-company
+    helm-flx
+    helm-gitignore
+    helm-google
+    helm-projectile
+    highlight-indent-guides
+    howdoi
+    htmlize
+    image+
+    imenu-anywhere
+    imenu-list
+    intellij-theme
+    kodi-remote
+    latex-preview-pane
+    lorem-ipsum
+    ;lsp-css
+    lsp-mode
+    lsp-javascript-typescript
+    lsp-ui
+    magit
+    markdown-mode
+    markdown-preview-mode
+    multiple-cursors
+    neotree
+    ob-restclient
+    org
+    org-attach-screenshot
+    org-page
+    ox-reveal
+    page-break-lines
+    paradox
+    php-mode
+    popup-imenu
+    popup-complete
+    popup-switcher
+    popwin
+    prettier-js
+    rectangle-utils
+    request-deferred
+    restclient
+    restclient-helm
+    scad-mode
+    scad-preview
+    scala-mode
+    skewer-mode
+    smartparens
+    sublimity
+    swiper-helm
+    switch-window
+    tablist
+    transmission
+    transpose-frame
+    use-package
+    volatile-highlights
+    web-beautify
+    web-mode
+    wgrep
+    wgrep-helm
+    which-key
+    yafolding
+    ))
+
+(defvar packages-refreshed? nil)
+
+(defun reinstalar-paquetes-en-emacs-nuevo()
+  (interactive)
+  (dolist (pack my/install-packages)
+    (message (concat "Refrescando:" (symbol-name pack )))
+    (unless (package-installed-p pack)
+      (message (concat "Necesita reinstalar:" (symbol-name pack )))
+      (unless packages-refreshed?
+        (package-refresh-contents)
+        (setq packages-refreshed? t))
+      (package-install pack))))
+
+
+(defun requerir-paquetes ()
+  "Requiere los paquetes para no tener variables indefinidas."
+  (dolist (pack my/install-packages)
+    (message (concat "Requires:" (symbol-name pack )))
+    (require pack)))
+
+
+(reinstalar-paquetes-en-emacs-nuevo)
+(requerir-paquetes)
+
+(require 'ob-scala)
+#+end_src
+
+* Parches sobre los paquetes
+En este momento los paquetes ya están cargados, pero necesito modificar el comportamiento de algunos de ellos de formas que no están soportadas en su configuración
+
+** =dumb-jump=
+Añado las siguientes reglas para hacer búsquedas simples con =dumb-jump= en ficheros =sql= y =org=.
+#+begin_src emacs-lisp
+;; ADITIONAL DUMBJUMB RULES
+(add-to-list 'dumb-jump-find-rules
+  '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "sql"
+           :regex ": \\bJJJ\\j"))
+(add-to-list 'dumb-jump-find-rules
+  '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "org"
+           :regex ": \\bJJJ\\j"))
+#+end_src
+
+** =ox-reveal=
+Cuando exporto un fichero =org= a =reveal.js= tengo problemas en la forma en que se escapan los caracteres =>= y =<= de los bloques de código. Con esta redefinición de la función =org-reveal-src-block= queda solucionado
+
+#+begin_src emacs-lisp
+;; ESCAPE HTML IN REVEAL
+(setq mi-org-html-protect-char-alist
+  '(("&" . "&amp;")
+    ("<" . "&lt;")
+    (">" . "&gt;")
+    ("\\%" . "&#37;")))
+
+(defun mi-org-html-encode-plain-text (text)
+  "Convert plain text characters from TEXT to HTML equivalent.
+Possible conversions are set in `org-html-protect-char-alist'."
+  (dolist (pair org-html-protect-char-alist text)
+    (setq text (replace-regexp-in-string (car pair) (cdr pair) text t t))))
+
+
+(defun org-reveal-src-block (src-block contents info)
+  "Transcode a SRC-BLOCK element from Org to Reveal.
+CONTENTS holds the contents of the item.  INFO is a plist holding
+contextual information."
+  (if (org-export-read-attribute :attr_html src-block :textarea)
+      (org-html--textarea-block src-block)
+    (let* ((use-highlight (org-reveal--using-highlight.js info))
+           (lang (org-element-property :language src-block))
+           (caption (org-export-get-caption src-block))
+           (not-escaped-code (if (not use-highlight)
+                     (org-html-format-code src-block info)
+                   (cl-letf (((symbol-function 'org-html-htmlize-region-for-paste)
+                              #'buffer-substring))
+                     (org-html-format-code src-block info))))
+           (code (mi-org-html-encode-plain-text not-escaped-code))
+           ;(code  not-escaped-code)
+           
+           (frag (org-export-read-attribute :attr_reveal src-block :frag))
+	   (code-attribs (or (org-export-read-attribute
+			 :attr_reveal src-block :code_attribs) ""))
+           (label (let ((lbl (org-element-property :name src-block)))
+                    (if (not lbl) ""
+                      (format " id=\"%s\"" lbl)))))
+      (if (not lang)
+          (format "<pre %s%s>\n%s</pre>"
+                  (or (frag-class frag info) " class=\"example\"")
+                  label
+                  code)
+        (format
+         "<div class=\"org-src-container\">\n%s%s\n</div>"
+         (if (not caption) ""
+           (format "<label class=\"org-src-name\">%s</label>"
+                   (org-export-data caption info)))
+         (if use-highlight
+             (format "\n<pre%s%s><code class=\"%s\" %s>%s</code></pre>"
+                     (or (frag-class frag info) "")
+                     label lang code-attribs code)
+           (format "\n<pre %s%s>%s</pre>"
+                   (or (frag-class frag info)
+                       (format " class=\"src src-%s\"" lang))
+                   label code)))))))
+#+end_src
+
+
+
+
+
+
+* Mi configuración
+
+** Opciones avanzadas
+Hay opciones útiles que prefiero que estén activadas por defecto.
+#+begin_src emacs-lisp
+(put 'narrow-to-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+#+end_src
+
+** =doc-view=
+Para visualizar documentos desde Emacs, aumento su resolución y anchura.
+#+begin_src emacs-lisp
+(require 'doc-view)
+(setq doc-view-continuous t)
+(setq doc-view-image-width 1600)
+(setq doc-view-resolution 400)
+#+end_src
+
+** =org-mode=
+
+*** Listados /Latex/
+Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
+#+begin_src emacs-lisp
+(setq org-latex-listings t)
+#+end_src
+
+*** Selección con mayúsculas 
+#+begin_src emacs-lisp
+(setq org-support-shift-select t)
+#+end_src
+
+*** Scroll con teclas de avance de página hasta el extremo del fichero
+#+begin_src emacs-lisp
+(setq scroll-error-top-bottom t)
+#+end_src
+
+
+** Latex
+
+- Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
+#+begin_src emacs-lisp
+
+(setq LaTeX-verbatim-environments
+      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql"))
+#+end_src
+
+- En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
+#+begin_src emacs-lisp
+(setq TeX-source-correlate-mode t)
+(setq TeX-source-correlate-start-server t)
+#+end_src
+
+
+- Modifico el comando Latex para incluir =-shell-escape=
+(setq LaTeX-command-style
+   (quote (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
+
+
+- Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en el buffer de Emacs ([[https://www.gnu.org/software/auctex/manual/preview-latex.html][https://www.gnu.org/software/auctex/manual/preview-latex.html]])
+
+#+begin_src emacs-lisp
+(eval-after-load "preview"
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t) )
+(eval-after-load "preview"
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
+#+end_src
+
+
+* /Minor modes/
+
+- Ayuda de teclas
+#+begin_src emacs-lisp
+(which-key-mode t)
+#+end_src
+
+
+- Paréntesis autocerrables
+#+begin_src emacs-lisp
+(smartparens-global-mode 1)
+#+end_src
+
+- Mostrar ^L (saltos de página) como una línea horizontal
+#+begin_src emacs-lisp
+(global-page-break-lines-mode)
+#+end_src
+
+- Resaltar el símbolo bajo el cursor de forma dinámica
+#+begin_src emacs-lisp
+(require 'auto-highlight-symbol)
+(global-auto-highlight-symbol-mode t)
+(setq ahs-default-range 'ahs-range-whole-buffer)
+#+end_src
+
+- Retroceder en la historia de disposición de ventanas y búferes
+#+begin_src emacs-lisp
+(winner-mode 1)
+#+end_src
+
+- Plantillas para introducción rápida de partes del texto
+#+begin_src emacs-lisp
+(yas-global-mode 1)
+#+end_src
+
+- Indicación de líneas cambiadas respecto a la última versión Git.
+#+begin_src emacs-lisp
+(global-git-gutter-mode +1)
+#+end_src
+
+- Al comenzar a escribir con una selección, se borra lo seleccionado
+#+begin_src emacs-lisp
+(delete-selection-mode 1)
+#+end_src
+
+- Grabar la disposición de bufers y ventanas para la siguiente sesión
+#+begin_src emacs-lisp
+(setq desktop-save t)
+(desktop-save-mode)
+#+end_src
+
+
+** =helm=
+=helm= es un sistema para seleccionar una opción entre varias posibilidades, que se puede usar para casi todo
+- Buscar un comando
+- Cambiar de buffer
+- Navegar por la historia del portapapeles
+- Visualizar las ocurrencias de un patrón en un buffer
+- ... y más
+
+#+begin_src emacs-lisp
+
+;; HELM
+(require 'tramp) ;; PARA EVITAR EL ERROR Symbol’s value as variable is void: tramp-methods
+(setq helm-split-window-inside-p t)
+(setq helm-display-header-line nil)
+(setq helm-autoresize-max-height 30)
+(setq helm-autoresize-min-height 30)
+(setq projectile-completion-system 'helm)
+(helm-autoresize-mode 1)
+(helm-mode 1)
+(helm-projectile-on)
+(helm-flx-mode +1)
+#+end_src
+
+
+=helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original
+#+begin_src emacs-lisp
+(setq helm-echo-input-in-header-line t)
+(setq helm-display-function 'helm-display-buffer-in-own-frame
+      helm-display-buffer-reuse-frame t
+      helm-display-buffer-width 120
+      helm-use-undecorated-frame-option t)
+#+end_src
+
+=swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Lo siguiente es para hacer que también aparezca en una /child frame/.
+
+#+begin_src emacs-lisp
+(setq swiper-helm-display-function helm-display-function)
+#+end_src
+
+
+** =projectile=
+=projectile= necesita conocer su tecla de prefijo (utilizo la tradicional).
+#+begin_src emacs-lisp
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(projectile-mode 1)
+#+end_src
+
+
+** =multiple-cursors=
+#+begin_src emacs-lisp
+(setq mc/always-run-for-all t)
+#+end_src
+
+** =tramp=
+=tramp= intenta optimizar las conexiones, enviando en línea los ficheros pequeños. Esto me da problemas en algunos sistemas, así que indico que los ficheros se copien a partir de 1 byte de tamaño:
+#+begin_src emacs-lisp
+(setq tramp-copy-size-limit 1)
+#+end_src
+
+
+** Historia del portapapeles
+Una de las ventajas de Emacs es su /kill ring/, donde se guarda la historia del portapapeles. Con esta opción, añado a esta historia el portapapeles del sistema. Descubierto en [[https://writequit.org/org/settings.html#sec-1-33][https://writequit.org/org/settings.html#sec-1-33]]
+#+begin_src emacs-lisp
+(setq save-interprogram-paste-before-kill t)
+#+end_src
+
+
+
+** Recarga de ficheros modificados
+Encuentro más conveniente que los ficheros se recarguen si un programa externo los modifica, sin preguntas.
+
+#+begin_src emacs-lisp
+(global-auto-revert-mode 1)
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil)
+#+end_src
+
+* COSAS QUE AUN FALTAN POR MIGRAR
+#+begin_src emacs-lisp
+;; RESALTAR LINEA ACTUAL
+(global-hl-line-mode t)
+
+;; SIN RUIDO
+(setq visible-bell 1)
+(setq ring-bell-function 'ignore)
+
+;; RESALTAR LA INDENTACION
+(setq highlight-indent-guides-method 'fill)
+
+;; SELECCION TRAS COPIAR
+(defadvice kill-ring-save (after keep-transient-mark-active ())
+  "Override the deactivation of the mark."
+  (setq deactivate-mark nil))
+(ad-activate 'kill-ring-save)
+
+
+;; DIRECTORIOS DE BACKUP
+(setq backup-directory-alist `(("." . "~/.saves")))
+(setq backup-by-copying t)
+(setq delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)
+
+
+;; VISUALIZACIÓN AGRADABLE
+(defun bonito-para-proyector()
+  (interactive)
+  (bonito-para-codigo)
+  (toggle-truncate-lines -1)
+  (highlight-indent-guides-mode 0)
+  (if (>= emacs-major-version 26)
+      (display-line-numbers-mode 0))
+  (org-display-inline-images))
+
+(defun bonito-para-codigo()
+  (interactive)
+  (electric-pair-mode 1)
+  (toggle-truncate-lines 1)
+  (toggle-word-wrap 1)
+  (if (>= emacs-major-version 26)
+      (display-line-numbers-mode 1))
+  (auto-highlight-symbol-mode 1)
+  (yafolding-mode 1)
+  (adaptive-wrap-prefix-mode 1))
+
+(add-hook 'prog-mode-hook 'bonito-para-codigo)
+(add-hook 'text-mode-hook 'bonito-para-proyector)
+(add-hook 'org-mode-hook 'bonito-para-proyector)
+(add-hook 'tex-mode-hook 'bonito-para-codigo)
+
+
+;; VALIDACIONES
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+;; NO PREGUNTAR CUANDO SE CIERRA EL BUFFER
+(defun kill-this-buffer-dont-ask ()
+  (interactive)
+  (kill-buffer (current-buffer)))
+(global-set-key (kbd "C-x k") 'kill-this-buffer-dont-ask)
+
+
+;; TRANSIENT MARK MODE, PARA C-X TAB
+
+;; SCROLL SUAVE
+(setq scroll-margin 0
+      scroll-step 1
+      scroll-conservatively 10000
+      scroll-preserve-screen-position 1)
+
+;; POPWIN
+(popwin-mode 1)
+
+;; QUITAR LA TOOLBAR
+(tool-bar-mode -1)
+
+;; ANCHURA DE PAGINAS DEL MAN
+(setenv "MANWIDTH" "80")
+
+;; INDENTACIONES
+(setq-default indent-tabs-mode nil)
+(setq tab-width 2)
+
+;; PARA FUNCIONAR CON AUCTEX
+(require 'tex)
+(require 'tex-buf)
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq TeX-save-query nil)
+(setq TeX-PDF-mode t)
+
+
+;; MOSTRAR LOS PARENTESIS ASOCIADOS
+(show-paren-mode)
+
+;; QUITAR PANTALLA DE INICIO Y MENU
+(setq inhibit-startup-message t)
+(menu-bar-mode -1)
+
+;; MODO SERVIDOR
+(server-force-delete)
+(server-start)
+
+;; imagex PARA HACER ZOOM EN IMÁGENES
+(imagex-global-sticky-mode)
+(imagex-auto-adjust-mode)
+
+
+;; ORG MODE, PARA EL electric-pair-mode
+(require 'org)
+(modify-syntax-entry ?~ "(~" org-mode-syntax-table)
+(modify-syntax-entry ?= "(=" org-mode-syntax-table)
+(modify-syntax-entry ?* "(*" org-mode-syntax-table)
+(modify-syntax-entry ?/ "(/" org-mode-syntax-table)
+
+
+
+;; MODELINE
+(setq-default mode-line-format
+              (list
+               " "
+               mode-line-modified
+               " %[" mode-line-buffer-identification " %] "
+               " | " '(vc-mode vc-mode)
+               " | %m "
+               " | %n "
+               " |" mode-line-coding-system-map
+               " |" mode-line-misc-info
+               " | %IB %Z"
+               " | %l:%c "
+               mode-line-end-spaces
+               ) )
+
+;; PARA EL MINIMAP
+(require 'sublimity)
+(require 'sublimity-map)
+(require 'sublimity-attractive)
+(sublimity-map-set-delay nil)
+
+
+;; RATON EN MODO TEXTO
+(xterm-mouse-mode)
+#+end_src
+
+* TECLAS
+#+begin_src emacs-lisp
+;; TECLAS PARA ISEARCH
+(progn
+  ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
+  (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
+  (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
+
+  (define-key isearch-mode-map (kbd "<left>") 'isearch-repeat-backward)
+  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward)
+
+  (define-key minibuffer-local-isearch-map (kbd "<left>") 'isearch-reverse-exit-minibuffer)
+  (define-key minibuffer-local-isearch-map (kbd "<right>") 'isearch-forward-exit-minibuffer))
+
+
+;; ESCAPE ESCAPA MÁS 
+(define-key global-map [escape] 'keyboard-escape-quit)
+;; (define-key key-translation-map (kbd "ESC") (kbd "C-g")) // PROBLEMAS CON EL TERMINAL
+
+;; Remove Yasnippet's default tab key binding
+(require 'yasnippet)
+(define-key yas-minor-mode-map (kbd "<tab>") nil)
+(define-key yas-minor-mode-map (kbd "TAB") nil)
+(define-key yas-minor-mode-map (kbd "C-c TAB") 'yas-expand)
+
+;; MIS TECLAS
+(defvar mis-teclas-minor-mode-map
+  (let ((map (make-sparse-keymap)))
+    ;(define-key map (kbd "C-i") 'some-function)
+    (define-key map (kbd "C-e") 'er/expand-region)
+    (define-key map (kbd "C-S-e") 'er/contract-region)
+    (define-key map (kbd "C-z") 'undo )
+    (define-key map (kbd "C-x C-d") 'dired)
+    (define-key map (kbd "C-x d") 'dired-other-frame)
+    (define-key map (kbd "C-x C-b") 'ibuffer)
+    (define-key map (kbd "C-x b") 'ibuffer)
+    (define-key map (kbd "C-f") 'swiper-helm)
+    (define-key map (kbd "C-<f5>") 'reveal-y-pdf)
+    (define-key map (kbd "<backtab>") 'psw-switch-buffer)
+    (define-key map (kbd "M-I") 'popup-imenu)
+    (define-key map (kbd "<f7>") 'imenu-list-smart-toggle)
+
+    (define-key map (kbd "M-S-<up>") 'enlarge-window)
+    (define-key map (kbd "M-S-<down>") 'shrink-window)
+    (define-key map (kbd "M-S-<left>") 'shrink-window-horizontally)
+    (define-key map (kbd "M-S-<right>") 'enlarge-window-horizontally)
+
+    (define-key map (kbd "<f5>") 'transpose-frame)
+
+    (define-key map (kbd "<f9>") 'magit-status)
+
+    (define-key map (kbd "<C-f2>") 'bm-toggle)
+    (define-key map (kbd "<f2>")   'bm-next)
+    (define-key map (kbd "<S-f2>") 'bm-previous)
+
+    (define-key map (kbd "C-S-c C-S-c") 'mc/edit-lines)
+    (define-key map (kbd "C->") 'mc/mark-next-like-this)
+    (define-key map (kbd "C-<") 'mc/mark-previous-like-this)
+    (define-key map (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+    (define-key map (kbd "C-S-c C-S-v") 'mc/mark-all-like-this)
+
+    (define-key map (kbd "M-x") 'helm-M-x)
+    (define-key map (kbd "C-x M-x") 'execute-extended-command)
+
+    (define-key map (kbd "<menu>") 'helm-M-x)
+    (define-key map (kbd "C-x C-f") 'helm-find-files)
+    (define-key map (kbd "<f6>") 'helm-mini)
+    (define-key map (kbd "M-y") 'helm-show-kill-ring)
+    (define-key map (kbd "C-x r b") 'helm-filtered-bookmarks)
+
+    (define-key map (kbd "<f8>") 'neotree-toggle)
+
+    (define-key map (kbd "C-x o") 'switch-window)
+
+    (define-key map (kbd "C-o") 'dumb-jump-go)
+
+    (define-key map (kbd "C-.") 'company-complete)
+
+    (define-key map (kbd "C-S-l") 'toggle-truncate-lines)
+
+    
+    map)
+  "mis-teclas-minor-mode keymap")
+
+
+(define-minor-mode mis-teclas-minor-mode
+  "A minor mode so that my key settings override annoying major modes."
+  :init-value t
+  :lighter "mis-teclas")
+
+(mis-teclas-minor-mode 1)
+
+#+end_src
+
+* UTILS
+
+
+
+
+#+begin_src emacs-lisp
+;; RECTANGULOS CON RATON
+;; https://emacs.stackexchange.com/questions/7244/enable-emacs-column-selection-using-mouse
+(defun mouse-start-rectangle (start-event)
+  (interactive "e")
+  (deactivate-mark)
+  (mouse-set-point start-event)
+  (rectangle-mark-mode +1)
+  (let ((drag-event))
+    (track-mouse
+      (while (progn
+               (setq drag-event (read-event))
+               (mouse-movement-p drag-event))
+        (mouse-set-point drag-event)))))
+
+(global-set-key (kbd "S-<down-mouse-1>") #'mouse-start-rectangle)
+
+
+;; PROBLEMAS CON TRAMP
+(require 'tramp)
+(setq tramp-debug-buffer t)
+(setq tramp-verbose 10)
+
+;; ABRIR EN PROGRAMA EXTERO http://pages.sachachua.com/.emacs.d/Sacha.html
+(defun abrir-programa-externo (arg)
+  "Open visited file in default external program.
+
+With a prefix ARG always prompt for command to use."
+  (interactive "P")
+  (when buffer-file-name
+    (async-shell-command (concat
+                          "setsid -w "
+                          (cond
+                           ((and (not arg) (eq system-type 'darwin)) "open")
+                           ((and (not arg) (member system-type '(gnu gnu/linux gnu/kfreebsd))) "xdg-open")
+                           (t (read-shell-command "Open current file with: ")))
+                          " "
+                          (shell-quote-argument buffer-file-name)))
+    (run-at-time "2" nil
+                 (lambda() (winner-undo)))))
+
+;; NOMBRE DE FICHERO ACTUAL AL PORTAPAPELES http://pages.sachachua.com/.emacs.d/Sacha.html
+(defun copiar-nombre-fichero-actual ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
+
+;; UN SERVIDOR HTTP
+(defun servidor-httpd-aqui (directory port)
+  "Abre un servidor http en un directorio."
+  (interactive (list (read-directory-name "Root directory: " default-directory nil t)
+                     (read-number "Port: " 8017)))
+  (setq httpd-root directory)
+  (setq httpd-port port)
+  (httpd-start)
+  (browse-url (concat "http://localhost:" (number-to-string port) "/")))
+
+;; REABRIR COMO ROOT emacs25
+(defun abrir-como-root-emacs25 ()
+  "Reabre el fichero actual como root, incluso via tramp."
+  (interactive)
+  (let*
+    ((sudo (/= (call-process "sudo" nil nil "-n true") 0))
+      (file-name
+        (if (tramp-tramp-file-p buffer-file-name)
+          (with-parsed-tramp-file-name buffer-file-name parsed
+            (tramp-make-tramp-file-name
+              (if sudo "sudo" "su")
+              "root"
+              parsed-host
+              parsed-localname
+              (let ((tramp-postfix-host-format "|")
+                     (tramp-prefix-format))
+                (tramp-make-tramp-file-name
+                  parsed-method
+                  parsed-user
+                  parsed-host
+                  ""
+                  parsed-hop))))
+          (concat (if sudo
+                    "/sudo::"
+                    "/su::")
+            buffer-file-name))))
+    (find-alternate-file file-name)))
+
+
+;; REABRIR COMO ROOT
+(defun abrir-como-root ()
+  "Reabre el fichero actual como root, incluso via tramp."
+  (interactive)
+  (let*
+      ((sudo (/= (call-process "sudo" nil nil "-n true") 0))
+       (file-name
+        (if (tramp-tramp-file-p buffer-file-name)
+            (with-parsed-tramp-file-name buffer-file-name parsed
+              (tramp-make-tramp-file-name
+               (if sudo "sudo" "su")
+               "root"
+               nil ; domain
+               parsed-host
+               nil ; port
+               parsed-localname
+               (let ((tramp-postfix-host-format "|")
+                     (tramp-prefix-format))
+                 (tramp-make-tramp-file-name
+                  parsed-method
+                  parsed-user
+                  nil ; domain
+                  parsed-host
+                  nil ; PORT
+                  parsed-hop))))
+          
+          (concat (if sudo
+                      "/sudo::"
+                    "/su::")
+                  buffer-file-name))))
+    (find-alternate-file file-name)))
+
+;; EN .zshrc PARA QUE FUNCIONE tramp
+;; if [[ "$TERM" == "dumb" ]]
+;; then
+;;   unsetopt zle
+;;   unsetopt prompt_cr
+;;   unsetopt prompt_subst
+;;   unfunction precmd
+;;   unfunction preexec
+;;   PS1='$ '
+;; fi
+
+
+;; CONECTAR A TRANSMISSION
+(defun conectar-a-transmission ()
+  (interactive)
+
+  (setq transmission-host (read-string "Transmission host: " "192.168.1.254" ))
+  (setq transmission-user (read-string "Transmission user: " "transmission"))
+  (setq transmission-pass (read-passwd "Transmission password: "))
+
+  (message "Conectando a %s@%s" transmission-user transmission-host)
+  
+  (setq transmission-rpc-auth (list ':username transmission-user ':password transmission-pass))
+
+  (transmission))
+
+
+
+;; REVEAL, HTML Y PDF A LA VEZ
+(defun reveal-y-pdf ()
+  "Crea transparencias de reveal y hace el pdf a la vez."
+  (interactive)
+  (org-html-export-to-html)
+  (let* (
+         (filename (buffer-file-name))
+         (html-filename (concat (file-name-sans-extension filename) ".html"))
+         (html-wp-filename (concat (file-name-sans-extension filename) ".wp.html")) )
+    (message "Copiando fichero: %s -> %s" html-filename html-wp-filename)
+    (copy-file html-filename html-wp-filename t) )
+  
+  (org-reveal-export-to-html)
+  (let* (
+         (filename (buffer-file-name))
+         (html-filename (concat (file-name-sans-extension filename) ".html"))
+         (html-reveal-filename (concat (file-name-sans-extension filename) ".reveal.html")) )
+    (message "renombrando fichero: %s -> %s" html-filename html-reveal-filename)
+    (rename-file html-filename html-reveal-filename t))
+
+  (org-latex-export-to-pdf)
+  (let* (
+         (filename (buffer-file-name))
+         (tex-filename (concat (file-name-sans-extension filename) ".tex")))
+
+    
+    (message "Borrando fichero: %s" tex-filename)
+    (delete-file tex-filename) ) )
+
+
+;; EXPERIMENTOS
+(defun url-decode-region (start end)
+  "Replace a region with the same contents, only URL decoded."
+  (interactive "r")
+  (let ((text (url-unhex-string (buffer-substring start end))))
+    (delete-region start end)
+    (insert text)))
+
+(defun horario()
+  (interactive)
+  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/ags.iesavellaneda%40gmail.com/private-8d8f10c04ef7daee164d8d8a8f4707d5/basic.ics"))
+
+(defun quitar-proxy()
+  (interactive)
+  (setq url-proxy-services '()))
+
+(defun proxy-educamadrid()
+  (interactive)
+  (setq url-proxy-services
+        '(("no_proxy" . "^\\(localhost\\|10\\.*|192\\.*\\)")
+          ("http" . "213.0.88.85:8080")
+          ("https" . "213.0.88.85:8080"))))
+
+(defun org-insert-clipboard-image()
+  "Save the image in the clipboard  into a time stamped unique-named file in the same directory as the org-buffer and insert a link to this file."
+  (interactive)
+  ; (setq tilde-buffer-filename (replace-regexp-in-string "/" "\\" (buffer-file-name) t t))
+  (setq filename
+        (concat
+         (make-temp-name
+          (concat buffer-file-name
+                  "_"
+                  (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
+  ;; Linux: ImageMagick:
+  ;(call-process "/bin/bash" nil (list filename "kk") nil "-c" "xclip -selection clipboard -t image/png -o")
+  (call-process "xclip" nil (list :file filename) nil "-selection"  "clipboard" "-t" "image/png" "-o")
+  (insert (concat "[[file:" filename "]]"))
+  (org-display-inline-images))
+
+  
+
+(defun kill-other-buffers ()
+  "Kill all otherbuffers."
+  (interactive)
+  (mapc
+   'kill-buffer
+   (delq (current-buffer)
+         (remove-if-not
+          '(lambda (x)
+             (or (buffer-file-name x)
+                 (eq 'dired-mode (buffer-local-value 'major-mode  x))))
+          (buffer-list)))))
+
+(defun org-code-block-from-region (beg end &optional results-switches inline)
+  "Copiado de org-babel-examplify-region"
+  (interactive "*r")
+  (let ((maybe-cap
+	 (lambda (str)
+	   (if org-babel-uppercase-example-markers (upcase str) str))))
+    (if inline
+	(save-excursion
+	  (goto-char beg)
+	  (insert (format org-babel-inline-result-wrap
+			  (delete-and-extract-region beg end))))
+      (let ((size (count-lines beg end)))
+	(save-excursion
+	  (cond ((= size 0))	      ; do nothing for an empty result
+		((< size org-babel-min-lines-for-block-output)
+		 (goto-char beg)
+		 (dotimes (_ size)
+		   (beginning-of-line 1) (insert ": ") (forward-line 1)))
+		(t
+		 (goto-char beg)
+		 (insert (if results-switches
+			     (format "%s%s\n"
+				     (funcall maybe-cap "#+begin_src")
+				     results-switches)
+			   (funcall maybe-cap "#+begin_src\n")))
+		 (let ((p (point)))
+		   (if (markerp end) (goto-char end) (forward-char (- end beg)))
+		   (org-escape-code-in-region p (point)))
+		 (insert (funcall maybe-cap "#+end_src\n")))))))))
+#+end_src
+
+
+* Temas
+Tengo dos temas, claro y oscuro. Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna cusomización
+
+
+
+
+#+begin_src emacs-lisp
+(defun tema-oscuro()
+  (interactive)
+  (disable-theme 'intellij)
+  (load-theme 'sanityinc-tomorrow-bright t)
+  (load-theme 'alvaro t))
+
+(defun tema-claro()
+  (interactive)
+  (disable-theme 'alvaro)
+  (disable-theme 'sanityinc-tomorrow-bright)
+  (load-theme 'intellij t))
+
+(tema-claro)
+(tema-oscuro)
+#+end_src
+
+
+
+* /Customize/
+El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
+#+begin_src emacs-lisp
+(setq custom-file "~/.emacs.d/custom-file.el")
+(load custom-file)
+#+end_src
