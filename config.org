@@ -112,6 +112,7 @@ Guardo los paquetes que necesito en una variable, y se reinstalan si no están y
     popup-switcher
     popwin
     prettier-js
+    quickrun
     rectangle-utils
     request-deferred
     restclient
@@ -542,8 +543,11 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
   (interactive)
   (kill-buffer (current-buffer)))
 (global-set-key (kbd "C-x k") 'kill-this-buffer-dont-ask)
+(global-set-key (kbd "C-x k") 'kill-buffer-and-window)
 
 #+end_src
+
+
 #+begin_src emacs-lisp
 
 ;; SCROLL SUAVE
@@ -1049,91 +1053,90 @@ Tengo dos temas, claro y oscuro. Pongo uno detrás de otro para "limpiar" lo que
 
 
 
-* /Customize/
-El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
-#+begin_src emacs-lisp
-(setq custom-file "~/.emacs.d/custom-file.el")
-(load custom-file)
-#+end_src
-
 
 * =company=
 #+begin_src emacs-lisp
-(require 'company)
-(company-flx-mode +1)
+  (require 'company)
+  (company-flx-mode +1)
 
 
 
-(defvar my-company-backends-prog-mode
+  (defvar my-company-backends-prog-mode
+    '(
+      (
+       company-web-html
+       company-files
+       company-dabbrev-code
+       company-capf
+       company-keywords
+       company-lsp
+       company-yasnippet
+       company-emoji
+       )
+      ))
+
+
+  (defvar my-company-backends-org-mode
   '(
     (
-     company-files
-     company-dabbrev-code
-     company-capf
-     company-keywords
-     company-lsp
-     company-yasnippet
-     company-emoji
-     )
-    ))
+      company-files
+      company-dabbrev-code
+      company-dabbrev
+      company-yasnippet
+      company-emoji
+      ))
+  )
+
+  (defvar my-company-backends my-company-backends-org-mode)
+
+  ;; set default `company-backends'
+  (setq company-backends my-company-backends)
+  (company-auctex-init)
+
+  (add-hook 'after-init-hook 'global-company-mode)
+                                          ;(add-to-list 'company-backends 'company-c-headers)
+                                          ;(add-to-list 'company-backends 'company-web-html)
+                                          ;(add-to-list 'company-backends 'company-web-jade)
+                                          ;(add-to-list 'company-backends 'company-web-slim)
+                                          ;(add-to-list 'company-backends 'company-bbdb)
+                                          ;(add-to-list 'company-backends 'company-nxml)
+                                          ;(add-to-list 'company-backends 'company-css)
+                                          ;(add-to-list 'company-backends 'company-eclim)
+                                          ;(add-to-list 'company-backends 'company-semantic)
+                                          ;(add-to-list 'company-backends 'company-clang)
+                                          ;(add-to-list 'company-backends 'company-xcode)
+                                          ;(add-to-list 'company-backends 'company-cmake )
+                                          ;(add-to-list 'company-backends 'company-dabbrev-code)
+                                          ;(add-to-list 'company-backends 'company-gtags)
+                                          ;(add-to-list 'company-backends 'company-etags)
+                                          ;(add-to-list 'company-backends 'company-oddmuse)
+
+  (company-quickhelp-mode 1)
+                                          ;(defun my-org-mode-hook-for-company ()
+                                          ;  (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t))
+                                          ;(add-hook 'org-mode-hook #'my-org-mode-hook-for-company)
+
+  (defun my-company-backends-org-mode-function ()
+    (interactive)
+    (set (make-local-variable 'company-backends) my-company-backends-org-mode))
+
+  (add-hook 'org-mode-hook #'my-company-backends-org-mode-function)
+
+  (defun my-company-backends-prog-mode-function ()
+    (interactive)
+    (set (make-local-variable 'company-backends) my-company-backends-prog-mode))
 
 
-(defvar my-company-backends-org-mode
-'(
-  (
-    company-files
-    company-dabbrev-code
-    company-dabbrev
-    company-yasnippet
-    company-emoji
-    ))
-)
-
-(defvar my-company-backends my-company-backends-org-mode)
-
-;; set default `company-backends'
-(setq company-backends my-company-backends)
-(company-auctex-init)
-
-(add-hook 'after-init-hook 'global-company-mode)
-                                        ;(add-to-list 'company-backends 'company-c-headers)
-                                        ;(add-to-list 'company-backends 'company-web-html)
-                                        ;(add-to-list 'company-backends 'company-web-jade)
-                                        ;(add-to-list 'company-backends 'company-web-slim)
-                                        ;(add-to-list 'company-backends 'company-bbdb)
-                                        ;(add-to-list 'company-backends 'company-nxml)
-                                        ;(add-to-list 'company-backends 'company-css)
-                                        ;(add-to-list 'company-backends 'company-eclim)
-                                        ;(add-to-list 'company-backends 'company-semantic)
-                                        ;(add-to-list 'company-backends 'company-clang)
-                                        ;(add-to-list 'company-backends 'company-xcode)
-                                        ;(add-to-list 'company-backends 'company-cmake )
-                                        ;(add-to-list 'company-backends 'company-dabbrev-code)
-                                        ;(add-to-list 'company-backends 'company-gtags)
-                                        ;(add-to-list 'company-backends 'company-etags)
-                                        ;(add-to-list 'company-backends 'company-oddmuse)
-
-(company-quickhelp-mode 1)
-                                        ;(defun my-org-mode-hook-for-company ()
-                                        ;  (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t))
-                                        ;(add-hook 'org-mode-hook #'my-org-mode-hook-for-company)
-
-(defun my-company-backends-org-mode-function ()
-  (set (make-local-variable 'company-backends) my-company-backends-org-mode))
-
-(add-hook 'org-mode-hook #'my-company-backends-org-mode-function)
-
-(defun my-company-backends-prog-mode-function ()
-  (set (make-local-variable 'company-backends) my-company-backends-prog-mode))
-
-(add-hook 'prog-mode-hook #'my-company-backends-prog-mode-function)
+  (add-hook 'prog-mode-hook #'my-company-backends-prog-mode-function)
 
 
-
-(define-key company-active-map [escape] 'company-abort)
-(global-company-mode)
+  (define-key company-active-map [escape] 'company-abort)
+  (global-company-mode)
 
 #+end_src
+
+#+RESULTS:
+: t
 
 
 
@@ -1150,3 +1153,12 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
   (setq quit-flag t))
 (define-key global-map [escape] 'super-escape)
 #+end_src
+
+
+* /Customize/
+El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
+#+begin_src emacs-lisp
+(setq custom-file "~/.emacs.d/custom-file.el")
+(load custom-file)
+#+end_src
+
