@@ -134,6 +134,7 @@ Guardo los paquetes que necesito en una variable, y se reinstalan si no están y
       transmission
       transpose-frame
       use-package
+      vim-empty-lines-mode
       volatile-highlights
       web-beautify
       web-mode
@@ -344,6 +345,12 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 
 
 * /Minor modes/
+
+- Mostrar líneas vacías al final del buffer, como =vim=
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook 'vim-empty-lines-mode)
+(add-hook 'org-mode-hook 'vim-empty-lines-mode)
+#+end_src
 
 - Ayuda de teclas
 #+begin_src emacs-lisp
