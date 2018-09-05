@@ -32,136 +32,140 @@ Guardo los paquetes que necesito en una variable, y se reinstalan si no están y
 
 
 #+begin_src emacs-lisp
-(setq package-check-signature nil)
+  (setq package-check-signature nil)
 
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-(package-initialize)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+  (package-initialize)
 
-;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
-(defvar my/install-packages
-  '(
-    2048-game
-    adaptive-wrap
-    ag
-    alert
-    auto-highlight-symbol
-    bind-key
-    bm
-    calfw
-    calfw-ical
-    chess
-    color-theme-sanityinc-tomorrow
-    company
-    company-auctex
-    company-c-headers
-    company-emoji
-    company-flx
-    company-lsp
-    company-quickhelp
-    company-restclient
-    company-shell
-    company-web
-    crappy-jsp-mode
-    diffview
-    dired-narrow
-    dumb-jump
-    ensime
-    expand-region
-    flycheck
-    gift-mode
-    git-gutter
-    git-timemachine
-    gitignore-mode
-    graphviz-dot-mode
-    helm-ag
-    helm-company
-    helm-flx
-    helm-gitignore
-    helm-google
-    helm-projectile
-    highlight-indent-guides
-    howdoi
-    htmlize
-    image+
-    imenu-anywhere
-    imenu-list
-    intellij-theme
-    kodi-remote
-    latex-preview-pane
-    lorem-ipsum
-    ;lsp-css
-    lsp-mode
-    lsp-javascript-typescript
-    lsp-ui
-    magit
-    markdown-mode
-    markdown-preview-mode
-    multiple-cursors
-    neotree
-    ob-restclient
-    org
-    org-attach-screenshot
-    org-page
-    ox-reveal
-    page-break-lines
-    paradox
-    php-mode
-    popup-imenu
-    popup-complete
-    popup-switcher
-    popwin
-    prettier-js
-    quickrun
-    rectangle-utils
-    request-deferred
-    restclient
-    restclient-helm
-    scad-mode
-    scad-preview
-    scala-mode
-    skewer-mode
-    smartparens
-    sublimity
-    swiper-helm
-    switch-window
-    tablist
-    transmission
-    transpose-frame
-    use-package
-    volatile-highlights
-    web-beautify
-    web-mode
-    wgrep
-    wgrep-helm
-    which-key
-    yafolding
-    ))
+  ;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
+  (defvar my/install-packages
+    '(
+      2048-game
+      adaptive-wrap
+      ag
+      alert
+      auto-highlight-symbol
+      bind-key
+      bm
+      calfw
+      calfw-ical
+      chess
+      color-theme-sanityinc-tomorrow
+      company
+      company-auctex
+      company-c-headers
+      company-emoji
+      company-flx
+      company-lsp
+      company-quickhelp
+      company-restclient
+      company-shell
+      company-web
+      crappy-jsp-mode
+      diffview
+      dired-narrow
+      dumb-jump
+      ensime
+      expand-region
+      flycheck
+      gift-mode
+      git-gutter
+      git-timemachine
+      gitignore-mode
+      graphviz-dot-mode
+      helm-ag
+      helm-company
+      helm-flx
+      helm-gitignore
+      helm-google
+      helm-projectile
+      highlight-indent-guides
+      howdoi
+      htmlize
+      ibuffer-projectile
+      ibuffer-sidebar
+      image+
+      imenu-anywhere
+      imenu-list
+      intellij-theme
+      kodi-remote
+      latex-preview-pane
+      lorem-ipsum
+      ;lsp-css
+      lsp-mode
+      lsp-javascript-typescript
+      lsp-ui
+      magit
+      markdown-mode
+      markdown-preview-mode
+      multiple-cursors
+      neotree
+      ob-restclient
+      org
+      org-attach-screenshot
+      org-page
+      ox-reveal
+      page-break-lines
+      paradox
+      php-mode
+      popup-imenu
+      popup-complete
+      popup-switcher
+      popwin
+      prettier-js
+      quickrun
+      rectangle-utils
+      request-deferred
+      restclient
+      restclient-helm
+      scad-mode
+      scad-preview
+      scala-mode
+      skewer-mode
+      smartparens
+      sublimity
+      swiper-helm
+      switch-window
+      swoop
+      helm-swoop
+      tablist
+      transmission
+      transpose-frame
+      use-package
+      volatile-highlights
+      web-beautify
+      web-mode
+      wgrep
+      wgrep-helm
+      which-key
+      yafolding
+      ))
 
-(defvar packages-refreshed? nil)
+  (defvar packages-refreshed? nil)
 
-(defun reinstalar-paquetes-en-emacs-nuevo()
-  (interactive)
-  (dolist (pack my/install-packages)
-    (message (concat "Refrescando:" (symbol-name pack )))
-    (unless (package-installed-p pack)
-      (message (concat "Necesita reinstalar:" (symbol-name pack )))
-      (unless packages-refreshed?
-        (package-refresh-contents)
-        (setq packages-refreshed? t))
-      (package-install pack))))
-
-
-(defun requerir-paquetes ()
-  "Requiere los paquetes para no tener variables indefinidas."
-  (dolist (pack my/install-packages)
-    (message (concat "Requires:" (symbol-name pack )))
-    (require pack)))
+  (defun reinstalar-paquetes-en-emacs-nuevo()
+    (interactive)
+    (dolist (pack my/install-packages)
+      (message (concat "Refrescando:" (symbol-name pack )))
+      (unless (package-installed-p pack)
+        (message (concat "Necesita reinstalar:" (symbol-name pack )))
+        (unless packages-refreshed?
+          (package-refresh-contents)
+          (setq packages-refreshed? t))
+        (package-install pack))))
 
 
-(reinstalar-paquetes-en-emacs-nuevo)
-(requerir-paquetes)
+  (defun requerir-paquetes ()
+    "Requiere los paquetes para no tener variables indefinidas."
+    (dolist (pack my/install-packages)
+      (message (concat "Requires:" (symbol-name pack )))
+      (require pack)))
+
+
+  (reinstalar-paquetes-en-emacs-nuevo)
+  (requerir-paquetes)
 
 
 #+end_src
@@ -254,6 +258,12 @@ contextual information."
 
 
 * Mi configuración
+
+** Lenguajes =org-babel=
+Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
+#+begin_src emacs-lisp
+(setq org-babel-load-languages '((shell . t) (emacs-lisp . t) (dot . t)))
+#+end_src
 
 ** Opciones avanzadas
 Hay opciones útiles que prefiero que estén activadas por defecto.
@@ -418,10 +428,11 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
       helm-use-undecorated-frame-option t)
 #+end_src
 
-=swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Lo siguiente es para hacer que también aparezca en una /child frame/.
+=swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Ahora estoy valorando si me quedo con =swiper= o =swop=. Lo siguiente es para hacer que también aparezca en una /child frame/.
 
 #+begin_src emacs-lisp
-(setq swiper-helm-display-function helm-display-function)
+  (setq swiper-helm-display-function helm-display-function)
+  (setq helm-swoop-split-window-function helm-display-function)
 #+end_src
 
 
@@ -667,101 +678,112 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
 
 * TECLAS
 #+begin_src emacs-lisp
-;; TECLAS PARA ISEARCH
-(progn
-  ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
-  (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
-  (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
+  ;; TECLAS PARA ISEARCH
+  (progn
+    ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
+    (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
+    (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
 
-  (define-key isearch-mode-map (kbd "<left>") 'isearch-repeat-backward)
-  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward)
+    (define-key isearch-mode-map (kbd "<left>") 'isearch-repeat-backward)
+    (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward)
 
-  (define-key minibuffer-local-isearch-map (kbd "<left>") 'isearch-reverse-exit-minibuffer)
-  (define-key minibuffer-local-isearch-map (kbd "<right>") 'isearch-forward-exit-minibuffer))
-
-
-;; ESCAPE ESCAPA MÁS 
-(define-key global-map [escape] 'keyboard-escape-quit)
-;; (define-key key-translation-map (kbd "ESC") (kbd "C-g")) // PROBLEMAS CON EL TERMINAL
-
-;; Remove Yasnippet's default tab key binding
-(require 'yasnippet)
-(define-key yas-minor-mode-map (kbd "<tab>") nil)
-(define-key yas-minor-mode-map (kbd "TAB") nil)
-(define-key yas-minor-mode-map (kbd "C-c TAB") 'yas-expand)
-
-;; MIS TECLAS
-(defvar mis-teclas-minor-mode-map
-  (let ((map (make-sparse-keymap)))
-    ;(define-key map (kbd "C-i") 'some-function)
-    (define-key map (kbd "C-e") 'er/expand-region)
-    (define-key map (kbd "C-S-e") 'er/contract-region)
-    (define-key map (kbd "C-z") 'undo )
-    (define-key map (kbd "C-x C-d") 'dired)
-    (define-key map (kbd "C-x d") 'dired-other-frame)
-    (define-key map (kbd "C-x C-b") 'ibuffer)
-    (define-key map (kbd "C-x b") 'ibuffer)
-    (define-key map (kbd "C-f") 'swiper-helm)
-    (define-key map (kbd "C-<f5>") 'reveal-y-pdf)
-    (define-key map (kbd "<backtab>") 'psw-switch-buffer)
-    (define-key map (kbd "M-I") 'popup-imenu)
-    (define-key map (kbd "<f7>") 'imenu-list-smart-toggle)
-
-    (define-key map (kbd "M-S-<up>") 'enlarge-window)
-    (define-key map (kbd "M-S-<down>") 'shrink-window)
-    (define-key map (kbd "M-S-<left>") 'shrink-window-horizontally)
-    (define-key map (kbd "M-S-<right>") 'enlarge-window-horizontally)
-
-    (define-key map (kbd "<f5>") 'transpose-frame)
-
-    (define-key map (kbd "<f9>") 'magit-status)
-
-    (define-key map (kbd "<C-f2>") 'bm-toggle)
-    (define-key map (kbd "<f2>")   'bm-next)
-    (define-key map (kbd "<S-f2>") 'bm-previous)
-
-    (define-key map (kbd "C-S-c C-S-c") 'mc/edit-lines)
-    (define-key map (kbd "C->") 'mc/mark-next-like-this)
-    (define-key map (kbd "C-<") 'mc/mark-previous-like-this)
-    (define-key map (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
-    (define-key map (kbd "C-S-c C-S-v") 'mc/mark-all-like-this)
-
-    (define-key map (kbd "M-x") 'helm-M-x)
-    (define-key map (kbd "C-x M-x") 'execute-extended-command)
-
-    (define-key map (kbd "<menu>") 'helm-M-x)
-    (define-key map (kbd "C-x C-f") 'helm-find-files)
-    (define-key map (kbd "<f6>") 'helm-mini)
-    (define-key map (kbd "M-y") 'helm-show-kill-ring)
-    (define-key map (kbd "C-x r b") 'helm-filtered-bookmarks)
-
-    (define-key map (kbd "<f8>") 'neotree-toggle)
-
-    (define-key map (kbd "C-x o") 'switch-window)
-
-    (define-key map (kbd "C-o") 'dumb-jump-go)
-
-    (define-key map (kbd "C-.") 'company-complete)
-
-    (define-key map (kbd "C-S-l") 'toggle-truncate-lines)
-
-    
-    map)
-  "mis-teclas-minor-mode keymap")
+    (define-key minibuffer-local-isearch-map (kbd "<left>") 'isearch-reverse-exit-minibuffer)
+    (define-key minibuffer-local-isearch-map (kbd "<right>") 'isearch-forward-exit-minibuffer))
 
 
-(define-minor-mode mis-teclas-minor-mode
-  "A minor mode so that my key settings override annoying major modes."
-  :init-value t
-  :lighter "mis-teclas")
+  ;; ESCAPE ESCAPA MÁS 
+  (define-key global-map [escape] 'keyboard-escape-quit)
+  ;; (define-key key-translation-map (kbd "ESC") (kbd "C-g")) // PROBLEMAS CON EL TERMINAL
 
-(mis-teclas-minor-mode 1)
+  ;; Remove Yasnippet's default tab key binding
+  (require 'yasnippet)
+  (define-key yas-minor-mode-map (kbd "<tab>") nil)
+  (define-key yas-minor-mode-map (kbd "TAB") nil)
+  (define-key yas-minor-mode-map (kbd "C-c TAB") 'yas-expand)
+
+  ;; MIS TECLAS
+  (defvar mis-teclas-minor-mode-map
+    (let ((map (make-sparse-keymap)))
+      ;(define-key map (kbd "C-i") 'some-function)
+      (define-key map (kbd "C-e") 'er/expand-region)
+      (define-key map (kbd "C-S-e") 'er/contract-region)
+      (define-key map (kbd "C-z") 'undo )
+      (define-key map (kbd "C-x C-d") 'dired)
+      (define-key map (kbd "C-x d") 'dired-other-frame)
+      (define-key map (kbd "C-x C-b") 'ibuffer)
+      (define-key map (kbd "C-x b") 'ibuffer)
+      ;(define-key map (kbd "C-f") 'swiper-helm)
+      (define-key map (kbd "C-f") 'helm-swoop)
+      (define-key map (kbd "C-S-f") 'helm-multi-swoop-all)
+      (define-key map (kbd "C-<f5>") 'reveal-y-pdf)
+      (define-key map (kbd "<backtab>") 'psw-switch-buffer)
+      (define-key map (kbd "M-I") 'popup-imenu)
+      (define-key map (kbd "<f7>") 'imenu-list-smart-toggle)
+
+      (define-key map (kbd "M-S-<up>") 'enlarge-window)
+      (define-key map (kbd "M-S-<down>") 'shrink-window)
+      (define-key map (kbd "M-S-<left>") 'shrink-window-horizontally)
+      (define-key map (kbd "M-S-<right>") 'enlarge-window-horizontally)
+
+      (define-key map (kbd "<f5>") 'transpose-frame)
+
+      (define-key map (kbd "<f9>") 'magit-status)
+
+      (define-key map (kbd "<C-f2>") 'bm-toggle)
+      (define-key map (kbd "<f2>")   'bm-next)
+      (define-key map (kbd "<S-f2>") 'bm-previous)
+
+      (define-key map (kbd "C-S-c C-S-c") 'mc/edit-lines)
+      (define-key map (kbd "C->") 'mc/mark-next-like-this)
+      (define-key map (kbd "C-<") 'mc/mark-previous-like-this)
+      (define-key map (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
+      (define-key map (kbd "C-S-c C-S-v") 'mc/mark-all-like-this)
+
+      (define-key map (kbd "M-x") 'helm-M-x)
+      (define-key map (kbd "C-x M-x") 'execute-extended-command)
+
+      (define-key map (kbd "<menu>") 'helm-M-x)
+      (define-key map (kbd "C-x C-f") 'helm-find-files)
+      (define-key map (kbd "<f6>") 'helm-mini)
+      (define-key map (kbd "M-y") 'helm-show-kill-ring)
+      (define-key map (kbd "C-x r b") 'helm-filtered-bookmarks)
+
+      (define-key map (kbd "<f8>") 'neotree-toggle)
+      (define-key map (kbd "C-<f8>") 'ibuffer-sidebar-toggle-sidebar)
+
+      (define-key map (kbd "C-x o") 'switch-window)
+
+      (define-key map (kbd "C-o") 'dumb-jump-go)
+
+      (define-key map (kbd "C-.") 'company-complete)
+
+      (define-key map (kbd "C-S-l") 'toggle-truncate-lines)
+
+
+      map)
+    "mis-teclas-minor-mode keymap")
+
+
+  (define-minor-mode mis-teclas-minor-mode
+    "A minor mode so that my key settings override annoying major modes."
+    :init-value t
+    :lighter "mis-teclas")
+
+  (mis-teclas-minor-mode 1)
 
 #+end_src
 
 * UTILS
 
+Los ficheros deben tener una línea nueva al final. Además, indicar el fin de fichero como en =vim=.
+#+begin_src emacs-lisp
+(setq indicate-empty-lines t require-final-newline t)
+#+end_src
 
+Agrupo los buffers por projecto de =projectile=
+#+begin_src emacs-lisp
+(add-hook 'ibuffer-hook #'ibuffer-projectile-set-filter-groups)
+#+end_src
 
 
 #+begin_src emacs-lisp
