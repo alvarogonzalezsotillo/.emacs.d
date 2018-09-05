@@ -67,6 +67,7 @@ Guardo los paquetes que necesito en una variable, y se reinstalan si no están y
     diffview
     dired-narrow
     dumb-jump
+    ensime
     expand-region
     flycheck
     gift-mode
