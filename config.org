@@ -1065,20 +1065,23 @@ Tengo dos temas, claro y oscuro. Pongo uno detrás de otro para "limpiar" lo que
 
 
 #+begin_src emacs-lisp
-(defun tema-oscuro()
-  (interactive)
-  (disable-theme 'intellij)
-  (load-theme 'sanityinc-tomorrow-bright t)
-  (load-theme 'alvaro t))
+  (defun tema-oscuro()
+    (interactive)
+    (disable-theme 'intellij)
+    (color-theme-sanityinc-tomorrow-bright)
+    (force-window-update)
+    (redisplay t))
 
-(defun tema-claro()
-  (interactive)
-  (disable-theme 'alvaro)
-  (disable-theme 'sanityinc-tomorrow-bright)
-  (load-theme 'intellij t))
+  (defun tema-claro()
+    (interactive)
+    (disable-theme 'sanityinc-tomorrow-bright)
+    (load-theme 'intellij t)
+    (force-window-update)
+    (redisplay t))
 
-(tema-claro)
-(tema-oscuro)
+  (tema-claro)
+  (tema-oscuro)
+
 #+end_src
 
 
