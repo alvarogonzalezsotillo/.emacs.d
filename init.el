@@ -2,15 +2,16 @@
 (setq debug-on-error t)
 (setq debug-on-quit t)
 
-(package-initialize)
+(package-initialize nil)
 (setq package-check-signature nil)
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+(setq package-archives
+      '(
+	("org" . "http://orgmode.org/elpa/")
+	("melpa" . "http://melpa.org/packages/") ) )
 
 
 (package-initialize t)
-
+(package-refresh-contents)
 (package-install 'org)
 (require 'org)
 (require 'ob-tangle)
