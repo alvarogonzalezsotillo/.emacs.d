@@ -12,7 +12,7 @@ Esta es mi configuración de Emacs, basada en la de [[http://pages.sachachua.com
 ** =init.el=
 Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplemente inicializa el sistema de paquetes y carga el paquete =org=, que es el que permite a Emacs manejar este tipo de ficheros. Después, carga este fichero interpretando los bloques de código.
 
-#+begin_src lisp  :tangle no
+#+begin_src lisp 
 (package-initialize t)
 (require 'org)
 (require 'ob-tangle)
@@ -535,13 +535,13 @@ Agrupo los buffers por proyecto de =projectile=
 - Al comenzar a escribir con una selección, se borra lo seleccionado
 #+begin_src emacs-lisp
 
-;; SELECCION TRAS COPIAR
-;(defadvice kill-ring-save (after keep-transient-mark-active ())
-;  "Override the deactivation of the mark."
-;  (setq deactivate-mark nil))
-;(ad-activate 'kill-ring-save)
 
-(delete-selection-mode t)
+(defadvice kill-ring-save (after keep-transient-mark-active ())
+  "Override the deactivation of the mark."
+  (setq deactivate-mark nil))
+(ad-activate 'kill-ring-save)
+
+(delete-selection-mode 1)
 
 
 #+end_src
@@ -1121,6 +1121,7 @@ Tengo dos temas, claro y oscuro. Pongo uno detrás de otro para "limpiar" lo que
     (interactive)
     (disable-theme 'intellij)
     (color-theme-sanityinc-tomorrow-bright)
+    (load-theme 'alvaro)
     (force-window-update)
     (redisplay t))
 
@@ -1128,6 +1129,7 @@ Tengo dos temas, claro y oscuro. Pongo uno detrás de otro para "limpiar" lo que
     (interactive)
     (disable-theme 'sanityinc-tomorrow-bright)
     (load-theme 'intellij t)
+    (load-theme 'alvaro)
     (force-window-update)
     (redisplay t))
 

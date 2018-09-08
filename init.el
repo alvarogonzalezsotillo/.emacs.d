@@ -6,8 +6,9 @@
 (setq package-check-signature nil)
 (setq package-archives
       '(
-	("org" . "http://orgmode.org/elpa/")
-	("melpa" . "http://melpa.org/packages/") ) )
+	      ("org" . "http://orgmode.org/elpa/")
+        ; (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+	      ("melpa" . "http://melpa.org/packages/") ) )
 
 
 (package-initialize t)
