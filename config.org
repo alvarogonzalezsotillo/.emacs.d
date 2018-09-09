@@ -1,4 +1,4 @@
-#+TITLE: Configuración Emacs de Álvaro González
+#+TITLE: Configuración /Emacs/ de Álvaro González
 #+OPTIONS: toc:4 h:4
 
 * Cómo funciona este fichero
@@ -142,6 +142,7 @@ Guardo los paquetes que necesito en una variable, y se reinstalan si no están y
       wgrep-helm
       which-key
       yafolding
+      yasnippet-snippets
       ))
 
   (defvar packages-refreshed? nil)
@@ -258,6 +259,14 @@ contextual information."
 
 
 
+
+* /Customize/
+El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
+#+begin_src emacs-lisp
+(setq custom-file "~/.emacs.d/custom-file.el")
+(load custom-file)
+#+end_src
+
 * Mi configuración
 
 ** =tramp=
@@ -289,8 +298,8 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 (setq org-babel-load-languages '((shell . t) (emacs-lisp . t) (dot . t)))
 #+end_src
 
-** Opciones avanzadas
-Hay opciones útiles que prefiero que estén activadas por defecto.
+** Opciones /avanzadas/ de edición
+Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones útiles que prefiero que estén activadas por defecto.
 #+begin_src emacs-lisp
 (put 'narrow-to-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
@@ -328,7 +337,6 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 ** Latex
 
 #+begin_src emacs-lisp
-;; PARA FUNCIONAR CON AUCTEX
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq TeX-save-query nil)
@@ -368,7 +376,6 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 
 
 * /Minor modes/
-
 
 
 - Ayuda de teclas
@@ -1113,32 +1120,41 @@ With a prefix ARG always prompt for command to use."
 
 
 * Temas
-Tengo dos temas, claro y oscuro. Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna cusomización
+Tengo dos temas, claro y oscuro. El tema =alvaro= cambia algunos tamaños de letra (no colores).
 
 
 #+begin_src emacs-lisp
-  (defun tema-oscuro()
-    (interactive)
-    (disable-theme 'intellij)
-    (color-theme-sanityinc-tomorrow-bright)
-    (load-theme 'alvaro)
-    (force-window-update)
-    (redisplay t))
 
-  (defun tema-claro()
-    (interactive)
-    (disable-theme 'sanityinc-tomorrow-bright)
-    (load-theme 'intellij t)
-    (load-theme 'alvaro)
-    (force-window-update)
-    (redisplay t))
+  (setq  custom-safe-themes  (quote
+  ("6e219d6b6a3f7e22888b203fd5492e12133ba40512be983858f05b42806fa573"
+  "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e"
+  "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" default)))
 
-  (tema-claro)
-  (tema-oscuro)
+
+
+       (defun tema-oscuro()
+         (interactive)
+         (disable-theme 'intellij)
+         (load-theme 'sanityinc-tomorrow-bright)
+         (load-theme 'alvaro t))
+
+       (defun tema-claro ()
+         (interactive)
+         (disable-theme 'sanityinc-tomorrow-bright)
+         (load-theme 'intellij t)
+         (load-theme 'alvaro t))
+
 
 #+end_src
 
 
+
+** Tema de inicio
+Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna customización.
+#+begin_src emacs-lisp
+(tema-claro)
+(tema-oscuro)
+#+end_src
 
 
 * =company=
@@ -1227,12 +1243,6 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 #+end_src
 
 
-* /Customize/
-El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
-#+begin_src emacs-lisp
-(setq custom-file "~/.emacs.d/custom-file.el")
-(load custom-file)
-#+end_src
 
 
 
