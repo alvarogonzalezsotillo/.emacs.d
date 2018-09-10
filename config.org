@@ -1,4 +1,4 @@
-#+TITLE: Configuración Emacs de Álvaro González
+#+TITLE: Configuración /Emacs/ de Álvaro González
 #+OPTIONS: toc:4 h:4
 
 * Cómo funciona este fichero
@@ -13,12 +13,27 @@ Cada bloque de código de tipo =emacs-lisp= se ejecuta al inicio. Algunos bloque
 Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplemente inicializa el sistema de paquetes y carga el paquete =org=, que es el que permite a Emacs manejar este tipo de ficheros. Después, carga este fichero interpretando los bloques de código.
 
 #+begin_src lisp 
+(package-initialize nil)
+(setq package-check-signature nil)
+(setq package-archives '(
+      ("org" . "http://orgmode.org/elpa/")
+      ("melpa" . "http://melpa.org/packages/")))
+
+
 (package-initialize t)
+(package-refresh-contents) ; OPCIONAL, NECESITA CONEXIÓN A INTERNET
+(package-install 'org)
 (require 'org)
 (require 'ob-tangle)
 (org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
 #+end_src
 
+** Algunos problemas
+- A veces, se empieza usando una versión de =org= (de gnu), y después se  utiliza la del repositorio de orgmode, lo que puede dar problemas. En ese caso, se necesitan dos reinicios.
+- Los ficheros =org= dan problemas sin tienen un =title:= definido. Para solucionarlo:
+#+begin_src sh
+rm $(find ~/.emacs.d/elpa | grep .elc$)
+#+end_src
 
 
 * Paquetes
@@ -142,6 +157,7 @@ Guardo los paquetes que necesito en una variable, y se reinstalan si no están y
       wgrep-helm
       which-key
       yafolding
+      yasnippet-snippets
       ))
 
   (defvar packages-refreshed? nil)
@@ -258,7 +274,38 @@ contextual information."
 
 
 
+
+* /Customize/
+El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
+#+begin_src emacs-lisp
+(setq custom-file "~/.emacs.d/custom-file.el")
+(load custom-file)
+#+end_src
+
 * Mi configuración
+
+** =tramp=
+=tramp= intenta optimizar las conexiones, enviando en línea los ficheros pequeños. Esto me da problemas en algunos sistemas, así que indico que los ficheros se copien a partir de 1 byte de tamaño:
+#+begin_src emacs-lisp
+(setq tramp-copy-size-limit 1)
+(setq tramp-debug-buffer t)
+(setq tramp-verbose 10)
+#+end_src
+
+En ocasiones, =tramp= no consigue conectar con un usuario que tiene =zsh= como shell. Para ello, hay que añadir lo siguiente al fichero =.zshrc= remoto:
+#+begin_src sh
+EN .zshrc PARA QUE FUNCIONE tramp
+if [[ "$TERM" == "dumb" ]]
+then
+  unsetopt zle
+  unsetopt prompt_cr
+  unsetopt prompt_subst
+  unfunction precmd
+  unfunction preexec
+  PS1='$ '
+fi
+#+end_src
+
 
 ** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
@@ -266,8 +313,8 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t)))
 #+end_src
 
-** Opciones avanzadas
-Hay opciones útiles que prefiero que estén activadas por defecto.
+** Opciones /avanzadas/ de edición
+Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones útiles que prefiero que estén activadas por defecto.
 #+begin_src emacs-lisp
 (put 'narrow-to-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
@@ -305,7 +352,6 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 ** Latex
 
 #+begin_src emacs-lisp
-;; PARA FUNCIONAR CON AUCTEX
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq TeX-save-query nil)
@@ -346,11 +392,6 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 
 * /Minor modes/
 
-- Mostrar líneas vacías al final del buffer, como =vim=
-#+begin_src emacs-lisp
-(add-hook 'prog-mode-hook 'vim-empty-lines-mode)
-(add-hook 'org-mode-hook 'vim-empty-lines-mode)
-#+end_src
 
 - Ayuda de teclas
 #+begin_src emacs-lisp
@@ -390,10 +431,6 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 (global-git-gutter-mode +1)
 #+end_src
 
-- Al comenzar a escribir con una selección, se borra lo seleccionado
-#+begin_src emacs-lisp
-(delete-selection-mode 1)
-#+end_src
 
 - Grabar la disposición de bufers y ventanas para la siguiente sesión
 #+begin_src emacs-lisp
@@ -423,12 +460,12 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 (helm-mode 1)
 (helm-projectile-on)
 (helm-flx-mode +1)
+(setq helm-echo-input-in-header-line t)
 #+end_src
 
-
+*** /Child frame/
 =helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original
-#+begin_src emacs-lisp
-(setq helm-echo-input-in-header-line t)
+#+begin_src emacs
 (setq helm-display-function 'helm-display-buffer-in-own-frame
       helm-display-buffer-reuse-frame t
       helm-display-buffer-width 120
@@ -437,9 +474,9 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 
 =swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Ahora estoy valorando si me quedo con =swiper= o =swop=. Lo siguiente es para hacer que también aparezca en una /child frame/.
 
-#+begin_src emacs-lisp
-  (setq swiper-helm-display-function helm-display-function)
-  (setq helm-swoop-split-window-function helm-display-function)
+#+begin_src emacs
+(setq swiper-helm-display-function helm-display-function)
+(setq helm-swoop-split-window-function helm-display-function)
 #+end_src
 
 
@@ -454,12 +491,6 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 ** =multiple-cursors=
 #+begin_src emacs-lisp
 (setq mc/always-run-for-all t)
-#+end_src
-
-** =tramp=
-=tramp= intenta optimizar las conexiones, enviando en línea los ficheros pequeños. Esto me da problemas en algunos sistemas, así que indico que los ficheros se copien a partir de 1 byte de tamaño:
-#+begin_src emacs-lisp
-(setq tramp-copy-size-limit 1)
 #+end_src
 
 
@@ -481,11 +512,34 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
 #+end_src
 
 * COSAS QUE AUN FALTAN POR MIGRAR
+
+Los ficheros deben tener una línea nueva al final. Además, indicar el fin de fichero como en =vim=.
+#+begin_src emacs-lisp
+(setq indicate-empty-lines t require-final-newline t)
+#+end_src
+
+Agrupo los buffers por proyecto de =projectile=
+#+begin_src emacs-lisp
+(add-hook 'ibuffer-hook #'ibuffer-projectile-set-filter-groups)
+#+end_src
+
+
+- Mostrar líneas vacías al final del buffer, como =vim=
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook 'vim-empty-lines-mode)
+(add-hook 'org-mode-hook 'vim-empty-lines-mode)
+#+end_src
+
 - Marcar la línea actual. Está deshabilitado porque no funciona bien con /overlays/
 #+begin_src emacs-lisp
 (global-hl-line-mode -1)
 #+end_src
 
+- Respuestas de confirmación más cortas
+
+#+begin_src emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+#+end_src
 
 - Desactivar la campana (/bell/)
 
@@ -499,13 +553,18 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
 (setq highlight-indent-guides-method 'fill)
 
 #+end_src
+
+- Al comenzar a escribir con una selección, se borra lo seleccionado
 #+begin_src emacs-lisp
 
-;; SELECCION TRAS COPIAR
+
 (defadvice kill-ring-save (after keep-transient-mark-active ())
   "Override the deactivation of the mark."
   (setq deactivate-mark nil))
 (ad-activate 'kill-ring-save)
+
+(delete-selection-mode 1)
+
 
 #+end_src
 #+begin_src emacs-lisp
@@ -519,6 +578,9 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
       version-control t)
 
 #+end_src
+
+
+Utilizo emacs de dos modos muy distintos: para trabajar y para proyectar en clase. Estas dos funciones cambian opciones de visualización adecuadas para cada ocasión.
 #+begin_src emacs-lisp
 
 ;; VISUALIZACIÓN AGRADABLE
@@ -667,11 +729,11 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
 
 #+begin_src emacs-lisp
 
-;; PARA EL MINIMAP
-(require 'sublimity)
-(require 'sublimity-map)
-(require 'sublimity-attractive)
-(sublimity-map-set-delay nil)
+  ;; PARA EL MINIMAP
+  (require 'sublimity)
+  (require 'sublimity-map)
+  (require 'sublimity-attractive)
+  (sublimity-map-set-delay 2)
 
 
 #+end_src
@@ -782,17 +844,6 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
 
 * UTILS
 
-Los ficheros deben tener una línea nueva al final. Además, indicar el fin de fichero como en =vim=.
-#+begin_src emacs-lisp
-(setq indicate-empty-lines t require-final-newline t)
-#+end_src
-
-Agrupo los buffers por projecto de =projectile=
-#+begin_src emacs-lisp
-(add-hook 'ibuffer-hook #'ibuffer-projectile-set-filter-groups)
-#+end_src
-
-
 #+begin_src emacs-lisp
 ;; RECTANGULOS CON RATON
 ;; https://emacs.stackexchange.com/questions/7244/enable-emacs-column-selection-using-mouse
@@ -810,12 +861,9 @@ Agrupo los buffers por projecto de =projectile=
 
 (global-set-key (kbd "S-<down-mouse-1>") #'mouse-start-rectangle)
 
+#+end_src
 
-;; PROBLEMAS CON TRAMP
-(require 'tramp)
-(setq tramp-debug-buffer t)
-(setq tramp-verbose 10)
-
+#+begin_src emacs-lisp
 ;; ABRIR EN PROGRAMA EXTERO http://pages.sachachua.com/.emacs.d/Sacha.html
 (defun abrir-programa-externo (arg)
   "Open visited file in default external program.
@@ -833,6 +881,9 @@ With a prefix ARG always prompt for command to use."
                           (shell-quote-argument buffer-file-name)))
     (run-at-time "2" nil
                  (lambda() (winner-undo)))))
+#+end_src
+
+#+begin_src emacs-lisp
 
 ;; NOMBRE DE FICHERO ACTUAL AL PORTAPAPELES http://pages.sachachua.com/.emacs.d/Sacha.html
 (defun copiar-nombre-fichero-actual ()
@@ -845,6 +896,10 @@ With a prefix ARG always prompt for command to use."
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
 
+#+end_src
+
+#+begin_src emacs-lisp
+
 ;; UN SERVIDOR HTTP
 (defun servidor-httpd-aqui (directory port)
   "Abre un servidor http en un directorio."
@@ -854,6 +909,10 @@ With a prefix ARG always prompt for command to use."
   (setq httpd-port port)
   (httpd-start)
   (browse-url (concat "http://localhost:" (number-to-string port) "/")))
+
+#+end_src
+
+#+begin_src emacs-lisp
 
 ;; REABRIR COMO ROOT emacs25
 (defun abrir-como-root-emacs25 ()
@@ -916,16 +975,10 @@ With a prefix ARG always prompt for command to use."
                   buffer-file-name))))
     (find-alternate-file file-name)))
 
-;; EN .zshrc PARA QUE FUNCIONE tramp
-;; if [[ "$TERM" == "dumb" ]]
-;; then
-;;   unsetopt zle
-;;   unsetopt prompt_cr
-;;   unsetopt prompt_subst
-;;   unfunction precmd
-;;   unfunction preexec
-;;   PS1='$ '
-;; fi
+#+end_src
+
+#+begin_src emacs-lisp
+
 
 
 ;; CONECTAR A TRANSMISSION
@@ -942,6 +995,9 @@ With a prefix ARG always prompt for command to use."
 
   (transmission))
 
+#+end_src
+
+#+begin_src emacs-lisp
 
 
 ;; REVEAL, HTML Y PDF A LA VEZ
@@ -974,6 +1030,10 @@ With a prefix ARG always prompt for command to use."
     (delete-file tex-filename) ) )
 
 
+#+end_src
+
+#+begin_src emacs-lisp
+
 ;; EXPERIMENTOS
 (defun url-decode-region (start end)
   "Replace a region with the same contents, only URL decoded."
@@ -981,6 +1041,10 @@ With a prefix ARG always prompt for command to use."
   (let ((text (url-unhex-string (buffer-substring start end))))
     (delete-region start end)
     (insert text)))
+
+#+end_src
+
+#+begin_src emacs-lisp
 
 (defun horario()
   (interactive)
@@ -996,6 +1060,10 @@ With a prefix ARG always prompt for command to use."
         '(("no_proxy" . "^\\(localhost\\|10\\.*|192\\.*\\)")
           ("http" . "213.0.88.85:8080")
           ("https" . "213.0.88.85:8080"))))
+
+#+end_src
+
+#+begin_src emacs-lisp
 
 (defun org-insert-clipboard-image()
   "Save the image in the clipboard  into a time stamped unique-named file in the same directory as the org-buffer and insert a link to this file."
@@ -1013,6 +1081,10 @@ With a prefix ARG always prompt for command to use."
   (insert (concat "[[file:" filename "]]"))
   (org-display-inline-images))
 
+
+#+end_src
+
+#+begin_src emacs-lisp
   
 
 (defun kill-other-buffers ()
@@ -1026,6 +1098,10 @@ With a prefix ARG always prompt for command to use."
              (or (buffer-file-name x)
                  (eq 'dired-mode (buffer-local-value 'major-mode  x))))
           (buffer-list)))))
+
+#+end_src
+
+#+begin_src emacs-lisp
 
 (defun org-code-block-from-region (beg end &optional results-switches inline)
   "Copiado de org-babel-examplify-region"
@@ -1059,35 +1135,46 @@ With a prefix ARG always prompt for command to use."
 
 
 * Temas
-Tengo dos temas, claro y oscuro. Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna cusomización
-
-
+Tengo dos temas, claro y oscuro. El tema =alvaro= cambia algunos tamaños de letra (no colores).
 
 
 #+begin_src emacs-lisp
-  (defun tema-oscuro()
-    (interactive)
-    (disable-theme 'intellij)
-    (color-theme-sanityinc-tomorrow-bright)
-    (force-window-update)
-    (redisplay t))
 
-  (defun tema-claro()
-    (interactive)
-    (disable-theme 'sanityinc-tomorrow-bright)
-    (load-theme 'intellij t)
-    (force-window-update)
-    (redisplay t))
+  (setq  custom-safe-themes  (quote
+  ("6e219d6b6a3f7e22888b203fd5492e12133ba40512be983858f05b42806fa573"
+  "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e"
+  "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" default)))
 
-  (tema-claro)
-  (tema-oscuro)
+
+
+       (defun tema-oscuro()
+         (interactive)
+         (disable-theme 'intellij)
+         (load-theme 'sanityinc-tomorrow-bright)
+         (load-theme 'alvaro t))
+
+       (defun tema-claro ()
+         (interactive)
+         (disable-theme 'sanityinc-tomorrow-bright)
+         (load-theme 'intellij t)
+         (load-theme 'alvaro t))
+
 
 #+end_src
 
 
 
+** Tema de inicio
+Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna customización.
+#+begin_src emacs-lisp
+(tema-claro)
+(tema-oscuro)
+#+end_src
+
 
 * =company=
+Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de programación y =org-mode=.
+
 #+begin_src emacs-lisp
   (require 'company)
   (company-flx-mode +1)
@@ -1127,27 +1214,8 @@ Tengo dos temas, claro y oscuro. Pongo uno detrás de otro para "limpiar" lo que
   (company-auctex-init)
 
   (add-hook 'after-init-hook 'global-company-mode)
-                                          ;(add-to-list 'company-backends 'company-c-headers)
-                                          ;(add-to-list 'company-backends 'company-web-html)
-                                          ;(add-to-list 'company-backends 'company-web-jade)
-                                          ;(add-to-list 'company-backends 'company-web-slim)
-                                          ;(add-to-list 'company-backends 'company-bbdb)
-                                          ;(add-to-list 'company-backends 'company-nxml)
-                                          ;(add-to-list 'company-backends 'company-css)
-                                          ;(add-to-list 'company-backends 'company-eclim)
-                                          ;(add-to-list 'company-backends 'company-semantic)
-                                          ;(add-to-list 'company-backends 'company-clang)
-                                          ;(add-to-list 'company-backends 'company-xcode)
-                                          ;(add-to-list 'company-backends 'company-cmake )
-                                          ;(add-to-list 'company-backends 'company-dabbrev-code)
-                                          ;(add-to-list 'company-backends 'company-gtags)
-                                          ;(add-to-list 'company-backends 'company-etags)
-                                          ;(add-to-list 'company-backends 'company-oddmuse)
 
   (company-quickhelp-mode 1)
-                                          ;(defun my-org-mode-hook-for-company ()
-                                          ;  (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t))
-                                          ;(add-hook 'org-mode-hook #'my-org-mode-hook-for-company)
 
   (defun my-company-backends-org-mode-function ()
     (interactive)
@@ -1175,6 +1243,8 @@ Tengo dos temas, claro y oscuro. Pongo uno detrás de otro para "limpiar" lo que
 
 
 * POR PROBAR
+
+- Me gusta que la tecla escape cancele cualquier acción. Con el siguiente código hago que se cancelen incluso más acciones que con =C-g=
 #+begin_src emacs-lisp
 (define-key company-active-map [escape] 'company-abort)
 
@@ -1188,10 +1258,12 @@ Tengo dos temas, claro y oscuro. Pongo uno detrás de otro para "limpiar" lo que
 #+end_src
 
 
-* /Customize/
-El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
-#+begin_src emacs-lisp
-(setq custom-file "~/.emacs.d/custom-file.el")
-(load custom-file)
-#+end_src
 
+
+
+* Investigación futura
+https://github.com/caisah/emacs.dz
+
+Elfeed
+Smartscan
+Zoom-frm
