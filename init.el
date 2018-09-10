@@ -12,7 +12,7 @@
 
 
 (package-initialize t)
-(package-refresh-contents)
+;(package-refresh-contents)
 (package-install 'org)
 (require 'org)
 (require 'ob-tangle)

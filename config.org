@@ -13,12 +13,27 @@ Esta es mi configuración de Emacs, basada en la de [[http://pages.sachachua.com
 Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplemente inicializa el sistema de paquetes y carga el paquete =org=, que es el que permite a Emacs manejar este tipo de ficheros. Después, carga este fichero interpretando los bloques de código.
 
 #+begin_src lisp 
+(package-initialize nil)
+(setq package-check-signature nil)
+(setq package-archives '(
+      ("org" . "http://orgmode.org/elpa/")
+      ("melpa" . "http://melpa.org/packages/")))
+
+
 (package-initialize t)
+(package-refresh-contents) ; OPCIONAL, NECESITA CONEXIÓN A INTERNET
+(package-install 'org)
 (require 'org)
 (require 'ob-tangle)
 (org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
 #+end_src
 
+** Algunos problemas
+- A veces, se empieza usando una versión de =org= (de gnu), y después se  utiliza la del repositorio de orgmode, lo que puede dar problemas. En ese caso, se necesitan dos reinicios.
+- Los ficheros =org= dan problemas sin tienen un =title:= definido. Para solucionarlo:
+#+begin_src sh
+rm $(find ~/.emacs.d/elpa | grep .elc$)
+#+end_src
 
 
 * Paquetes
