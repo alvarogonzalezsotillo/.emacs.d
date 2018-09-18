@@ -310,7 +310,11 @@ fi
 ** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
-(setq org-babel-load-languages '((shell . t) (emacs-lisp . t) (dot . t)))
+  (setq org-babel-load-languages '((shell . t) (emacs-lisp . t) (dot . t)))
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((dot . t))) ; this line activates dot
 #+end_src
 
 ** Opciones /avanzadas/ de edición
