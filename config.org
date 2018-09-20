@@ -332,6 +332,12 @@ Para visualizar documentos desde Emacs, aumento su resolución y anchura.
 
 ** =org-mode=
    
+*** Listas alfabéticas
+#+begin_src emacs-lisp
+(setq org-list-allow-alphabetical t)
+#+end_src
+
+
 *** Listados /Latex/
 Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 #+begin_src emacs-lisp
@@ -1134,7 +1140,18 @@ With a prefix ARG always prompt for command to use."
 : org-code-block-from-region
 
 
-* Temas
+* Apariencia
+** /Fringes/
+Prefiero ocultar las flechas que indican que una línea se sale de la pantalla, y solo mostrar las de la derecha.
+
+#+begin_src emacs-lisp
+(fringe-mode '(0 . nil))
+#+end_src
+
+#+RESULTS:
+: ((left-fringe . 0) (right-fringe))
+
+** Temas
 Tengo dos temas, claro y oscuro. El tema =alvaro= cambia algunos tamaños de letra (no colores).
 
 
