@@ -5,9 +5,9 @@
 
 La configuración de Emacs se realiza con código elisp. Al contrario que otros editores, que están pensados para ser usados sin demasiada customización, los usuarios de Emacs solemos cambiarlo de forma bastante /extrema/ (¡por eso nos gusta!).
 
-El problema es que, como con cualquier otro programa que se va modificando durante años, acabas olvidando el por qué de ciertas líneas de código, o dónde se realiza alguna coniguración. Para evitar remediarlo, se puede utilizar org-mode para crear al mismo tiempo la documentación y el código de la configuración (como en literate programming).
+El problema es que, como con cualquier otro programa que se va modificando durante años, acabas olvidando el por qué de ciertas líneas de código, o dónde se realiza alguna coniguración. Para evitar remediarlo, se puede utilizar org-mode para crear al mismo tiempo la documentación y el código de la configuración (como en literate programming). Descubrí en el blog de  [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua]] que podía mantener la configuración en un fichero =orgmode= y así documentar fácilmente cada opción.
 
-Esta es mi configuración de Emacs, basada en la de [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua]].
+Cada bloque de código de tipo =emacs-lisp= se ejecuta al inicio. Algunos bloques está deshabilitados, marcándolos con el tipo =lisp=. Así mantienen su apariencia, pero no son interpretados.
 
 ** =init.el=
 Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplemente inicializa el sistema de paquetes y carga el paquete =org=, que es el que permite a Emacs manejar este tipo de ficheros. Después, carga este fichero interpretando los bloques de código.
@@ -187,7 +187,7 @@ Guardo los paquetes que necesito en una variable, y se reinstalan si no están y
 
 #+end_src
 
-Por último, el paquete =ob-scala= es un paquete local bajado de [[https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el][https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el]].
+Por último, el paquete =ob-scala= es un paquete local bajado de [[https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el][https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el]]. Sirve para ejecutar código =scala= directamente desde un documento =orgmode=.
 
 #+begin_src emacs-lisp
 (require 'ob-scala)
@@ -310,7 +310,7 @@ fi
 ** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
-  (setq org-babel-load-languages '((shell . t) (emacs-lisp . t) (dot . t)))
+  (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t)))
 
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -336,6 +336,12 @@ Para visualizar documentos desde Emacs, aumento su resolución y anchura.
 
 ** =org-mode=
    
+*** Listas alfabéticas
+#+begin_src emacs-lisp
+(setq org-list-allow-alphabetical t)
+#+end_src
+
+
 *** Listados /Latex/
 Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 #+begin_src emacs-lisp
@@ -408,7 +414,7 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 (smartparens-global-mode 1)
 #+end_src
 
-- Mostrar ^L (saltos de página) como una línea horizontal
+- Mostrar =^L= (saltos de página) como una línea horizontal
 #+begin_src emacs-lisp
 (global-page-break-lines-mode)
 #+end_src
@@ -1138,7 +1144,18 @@ With a prefix ARG always prompt for command to use."
 : org-code-block-from-region
 
 
-* Temas
+* Apariencia
+** /Fringes/
+Prefiero ocultar las flechas que indican que una línea se sale de la pantalla, y solo mostrar las de la derecha.
+
+#+begin_src emacs-lisp
+(fringe-mode '(0 . nil))
+#+end_src
+
+#+RESULTS:
+: ((left-fringe . 0) (right-fringe))
+
+** Temas
 Tengo dos temas, claro y oscuro. El tema =alvaro= cambia algunos tamaños de letra (no colores).
 
 
