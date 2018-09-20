@@ -414,11 +414,6 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 (smartparens-global-mode 1)
 #+end_src
 
-- Mostrar =^L= (saltos de página) como una línea horizontal
-#+begin_src emacs-lisp
-(global-page-break-lines-mode)
-#+end_src
-
 - Resaltar el símbolo bajo el cursor de forma dinámica
 #+begin_src emacs-lisp
 (require 'auto-highlight-symbol)
@@ -435,12 +430,6 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 #+begin_src emacs-lisp
 (yas-global-mode 1)
 #+end_src
-
-- Indicación de líneas cambiadas respecto a la última versión Git.
-#+begin_src emacs-lisp
-(global-git-gutter-mode +1)
-#+end_src
-
 
 - Grabar la disposición de bufers y ventanas para la siguiente sesión
 #+begin_src emacs-lisp
@@ -523,7 +512,7 @@ Encuentro más conveniente que los ficheros se recarguen si un programa externo 
 
 * COSAS QUE AUN FALTAN POR MIGRAR
 
-Los ficheros deben tener una línea nueva al final. Además, indicar el fin de fichero como en =vim=.
+- Los ficheros deben tener una línea nueva al final. Además, indicar el fin de fichero como en =vim=.
 #+begin_src emacs-lisp
 (setq indicate-empty-lines t require-final-newline t)
 #+end_src
@@ -533,12 +522,6 @@ Agrupo los buffers por proyecto de =projectile=
 (add-hook 'ibuffer-hook #'ibuffer-projectile-set-filter-groups)
 #+end_src
 
-
-- Mostrar líneas vacías al final del buffer, como =vim=
-#+begin_src emacs-lisp
-(add-hook 'prog-mode-hook 'vim-empty-lines-mode)
-(add-hook 'org-mode-hook 'vim-empty-lines-mode)
-#+end_src
 
 - Marcar la línea actual. Está deshabilitado porque no funciona bien con /overlays/
 #+begin_src emacs-lisp
@@ -558,11 +541,7 @@ Agrupo los buffers por proyecto de =projectile=
 (setq ring-bell-function 'ignore)
 #+end_src
 
-#+begin_src emacs-lisp
-;; RESALTAR LA INDENTACION
-(setq highlight-indent-guides-method 'fill)
 
-#+end_src
 
 - Al comenzar a escribir con una selección, se borra lo seleccionado
 #+begin_src emacs-lisp
@@ -590,37 +569,6 @@ Agrupo los buffers por proyecto de =projectile=
 #+end_src
 
 
-Utilizo emacs de dos modos muy distintos: para trabajar y para proyectar en clase. Estas dos funciones cambian opciones de visualización adecuadas para cada ocasión.
-#+begin_src emacs-lisp
-
-;; VISUALIZACIÓN AGRADABLE
-(defun bonito-para-proyector()
-  (interactive)
-  (bonito-para-codigo)
-  (toggle-truncate-lines -1)
-  (highlight-indent-guides-mode 0)
-  (if (>= emacs-major-version 26)
-      (display-line-numbers-mode 0))
-  (org-display-inline-images))
-
-(defun bonito-para-codigo()
-  (interactive)
-  (electric-pair-mode 1)
-  (toggle-truncate-lines 1)
-  (highlight-indent-guides-mode 1)
-  (toggle-word-wrap 1)
-  (if (>= emacs-major-version 26)
-      (display-line-numbers-mode 1))
-  (auto-highlight-symbol-mode 1)
-  (yafolding-mode 1)
-  (adaptive-wrap-prefix-mode 1))
-
-(add-hook 'prog-mode-hook 'bonito-para-codigo)
-(add-hook 'text-mode-hook 'bonito-para-proyector)
-(add-hook 'org-mode-hook 'bonito-para-proyector)
-(add-hook 'tex-mode-hook 'bonito-para-codigo)
-
-#+end_src
 #+begin_src emacs-lisp
 
 ;; VALIDACIONES
@@ -1145,15 +1093,69 @@ With a prefix ARG always prompt for command to use."
 
 
 * Apariencia
+
+- Mostrar líneas vacías al final del buffer, como =vim=
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook 'vim-empty-lines-mode)
+(add-hook 'org-mode-hook 'vim-empty-lines-mode)
+#+end_src
+
+- Resaltar el nivel de indentación
+#+begin_src emacs-lisp
+(setq highlight-indent-guides-method 'fill)
+#+end_src
+
+
+- Indicación de líneas cambiadas respecto a la última versión Git.
+#+begin_src emacs-lisp
+(global-git-gutter-mode +1)
+#+end_src
+
+
+
+- Mostrar =^L= (saltos de página) como una línea horizontal
+#+begin_src emacs-lisp
+(global-page-break-lines-mode)
+#+end_src
+
+** Modo proyección o modo trabajo
+Utilizo emacs de dos modos muy distintos: para trabajar y para proyectar en clase. Estas dos funciones cambian opciones de visualización adecuadas para cada ocasión.
+#+begin_src emacs-lisp
+(defun bonito-para-proyector()
+  (interactive)
+  (bonito-para-codigo)
+  (toggle-truncate-lines -1)
+  (highlight-indent-guides-mode 0)
+  (if (>= emacs-major-version 26)
+      (display-line-numbers-mode 0))
+  (org-display-inline-images))
+
+(defun bonito-para-codigo()
+  (interactive)
+  (electric-pair-mode 1)
+  (toggle-truncate-lines 1)
+  (highlight-indent-guides-mode 1)
+  (toggle-word-wrap 1)
+  (if (>= emacs-major-version 26)
+      (display-line-numbers-mode 1))
+  (auto-highlight-symbol-mode 1)
+  (yafolding-mode 1)
+  (adaptive-wrap-prefix-mode 1))
+
+(add-hook 'prog-mode-hook 'bonito-para-codigo)
+(add-hook 'text-mode-hook 'bonito-para-proyector)
+(add-hook 'org-mode-hook 'bonito-para-proyector)
+(add-hook 'tex-mode-hook 'bonito-para-codigo)
+
+#+end_src
+
+
 ** /Fringes/
 Prefiero ocultar las flechas que indican que una línea se sale de la pantalla, y solo mostrar las de la derecha.
 
 #+begin_src emacs-lisp
 (fringe-mode '(0 . nil))
 #+end_src
-
-#+RESULTS:
-: ((left-fringe . 0) (right-fringe))
 
 ** Temas
 Tengo dos temas, claro y oscuro. El tema =alvaro= cambia algunos tamaños de letra (no colores).
