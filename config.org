@@ -193,7 +193,7 @@ Por último, el paquete =ob-scala= es un paquete local bajado de [[https://githu
 (require 'ob-scala)
 #+end_src
 
-* Parches sobre los paquetes
+** Parches sobre los paquetes
 En este momento los paquetes ya están cargados, pero necesito modificar el comportamiento de algunos de ellos de formas que no están soportadas en su configuración
 
 ** =dumb-jump=
@@ -307,6 +307,22 @@ fi
 #+end_src
 
 
+
+** /Backup/ de ficheros
+Emacs guarda una copia de seguridad de los ficheros editados. Si no se configura, crea la copia en el mismo directorio.
+
+Las copias de seguridad son interesantes aunque se utilice un control de versiones. Por ejemplo, se guardan versiones de ficheros del sistema y de los editados con Tramp.
+
+Prefiero guardar todas las copias en un directorio, manteniendo varias versiones de cada fichero.
+#+begin_src emacs-lisp
+(setq backup-directory-alist `(("." . "~/.saves")))
+(setq backup-by-copying t)
+(setq delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)
+#+end_src
+
 ** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
@@ -400,10 +416,9 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 #+end_src
 
 
-* /Minor modes/
+** Otros /Minor modes/
 
-
-- Ayuda de teclas
+- Ayuda interactiva de teclado
 #+begin_src emacs-lisp
 (which-key-mode t)
 #+end_src
@@ -493,13 +508,80 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 #+end_src
 
 
+** =company=
+Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de programación y =org-mode=.
+
+#+begin_src emacs-lisp
+  (require 'company)
+  (company-flx-mode +1)
+
+
+
+  (defvar my-company-backends-prog-mode
+    '(
+      (
+       company-web-html
+       company-files
+       company-dabbrev-code
+       company-capf
+       company-keywords
+       company-lsp
+       company-yasnippet
+       company-emoji
+       )
+      ))
+
+
+  (defvar my-company-backends-org-mode
+  '(
+    (
+      company-files
+      company-dabbrev-code
+      company-dabbrev
+      company-yasnippet
+      company-emoji
+      ))
+  )
+
+  (defvar my-company-backends my-company-backends-org-mode)
+
+  ;; set default `company-backends'
+  (setq company-backends my-company-backends)
+  (company-auctex-init)
+
+  (add-hook 'after-init-hook 'global-company-mode)
+
+  (company-quickhelp-mode 1)
+
+  (defun my-company-backends-org-mode-function ()
+    (interactive)
+    (set (make-local-variable 'company-backends) my-company-backends-org-mode))
+
+  (add-hook 'org-mode-hook #'my-company-backends-org-mode-function)
+
+  (defun my-company-backends-prog-mode-function ()
+    (interactive)
+    (set (make-local-variable 'company-backends) my-company-backends-prog-mode))
+
+
+  (add-hook 'prog-mode-hook #'my-company-backends-prog-mode-function)
+
+
+  (define-key company-active-map [escape] 'company-abort)
+  (global-company-mode)
+
+#+end_src
+
+#+RESULTS:
+: t
+
+
+
 ** Historia del portapapeles
 Una de las ventajas de Emacs es su /kill ring/, donde se guarda la historia del portapapeles. Con esta opción, añado a esta historia el portapapeles del sistema. Descubierto en [[https://writequit.org/org/settings.html#sec-1-33][https://writequit.org/org/settings.html#sec-1-33]]
 #+begin_src emacs-lisp
 (setq save-interprogram-paste-before-kill t)
 #+end_src
-
-
 
 ** Recarga de ficheros modificados
 Encuentro más conveniente que los ficheros se recarguen si un programa externo los modifica, sin preguntas.
@@ -529,13 +611,11 @@ Agrupo los buffers por proyecto de =projectile=
 #+end_src
 
 - Respuestas de confirmación más cortas
-
 #+begin_src emacs-lisp
 (fset 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
-- Desactivar la campana (/bell/)
-
+- Desactivar la campana (/bell/), tanto la señal auditiva como la visual
 #+begin_src emacs-lisp
 (setq visible-bell 1)
 (setq ring-bell-function 'ignore)
@@ -543,48 +623,26 @@ Agrupo los buffers por proyecto de =projectile=
 
 
 
-- Al comenzar a escribir con una selección, se borra lo seleccionado
+- Al comenzar a escribir con una selección, se borra lo seleccionado. 
 #+begin_src emacs-lisp
+(delete-selection-mode 1)
+#+end_src
 
-
+- Al copiar la  selección, mantener la selección (deshabilitado)
+#+begin_src lisp
 (defadvice kill-ring-save (after keep-transient-mark-active ())
   "Override the deactivation of the mark."
   (setq deactivate-mark nil))
 (ad-activate 'kill-ring-save)
-
-(delete-selection-mode 1)
-
-
-#+end_src
-#+begin_src emacs-lisp
-
-;; DIRECTORIOS DE BACKUP
-(setq backup-directory-alist `(("." . "~/.saves")))
-(setq backup-by-copying t)
-(setq delete-old-versions t
-      kept-new-versions 6
-      kept-old-versions 2
-      version-control t)
-
 #+end_src
 
 
+- Utilizo /flycheck/ para que emacs compruebe automáticamente cada buffer
 #+begin_src emacs-lisp
-
 ;; VALIDACIONES
 (add-hook 'after-init-hook #'global-flycheck-mode)
-
 #+end_src
-#+begin_src emacs-lisp
 
-;; NO PREGUNTAR CUANDO SE CIERRA EL BUFFER
-(defun kill-this-buffer-dont-ask ()
-  (interactive)
-  (kill-buffer (current-buffer)))
-(global-set-key (kbd "C-x k") 'kill-this-buffer-dont-ask)
-(global-set-key (kbd "C-x k") 'kill-buffer-and-window)
-
-#+end_src
 
 
 #+begin_src emacs-lisp
@@ -704,6 +762,17 @@ Agrupo los buffers por proyecto de =projectile=
 
 
 * TECLAS
+
+- Cuando quiero cerrar un buffer, prefiero que no pregunte.
+#+begin_src emacs-lisp
+(defun kill-this-buffer-dont-ask ()
+  (interactive)
+  (kill-buffer (current-buffer)))
+(global-set-key (kbd "C-x k") 'kill-this-buffer-dont-ask)
+#+end_src
+
+
+- En una búsqueda incremental, utilizo los cursores para ir a otras búsquedas anteriores o para navegar entre las ocurrencias en el fichero
 #+begin_src emacs-lisp
   ;; TECLAS PARA ISEARCH
   (progn
@@ -718,15 +787,38 @@ Agrupo los buffers por proyecto de =projectile=
     (define-key minibuffer-local-isearch-map (kbd "<right>") 'isearch-forward-exit-minibuffer))
 
 
-  ;; ESCAPE ESCAPA MÁS 
-  (define-key global-map [escape] 'keyboard-escape-quit)
-  ;; (define-key key-translation-map (kbd "ESC") (kbd "C-g")) // PROBLEMAS CON EL TERMINAL
+#+end_src
+
+
+- A veces es fácil perderse entre comandos a medio introducir y ventanas popup. Me gusta que la tecla escape cancele cualquier acción. Con el siguiente código hago que se cancelen incluso más acciones que con =C-g=.
+#+begin_src emacs-lisp
+;;(define-key global-map [escape] 'keyboard-escape-quit)
+;; (define-key key-translation-map (kbd "ESC") (kbd "C-g")) // PROBLEMAS CON EL TERMINAL
+(defun super-escape()
+  (interactive)
+  (keyboard-escape-quit)
+  (keyboard-quit)
+  (setq quit-flag t))
+(define-key global-map [escape] 'super-escape)
+
+(define-key company-active-map [escape] 'company-abort)
+#+end_src
+
+
+- /yasnippet/ interfiere con otros modos en su uso del tabulador, así que cambio su combinación.
+#+begin_src emacs-lisp
 
   ;; Remove Yasnippet's default tab key binding
   (require 'yasnippet)
   (define-key yas-minor-mode-map (kbd "<tab>") nil)
   (define-key yas-minor-mode-map (kbd "TAB") nil)
   (define-key yas-minor-mode-map (kbd "C-c TAB") 'yas-expand)
+
+#+end_src
+
+
+- Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por ejemplo, prefiero que =C-Z= sea "deshacer"). Para poder definir teclas con prioridad sobre los demás modos defino un modo con mis atajos.
+#+begin_src emacs-lisp
 
   ;; MIS TECLAS
   (defvar mis-teclas-minor-mode-map
@@ -802,8 +894,8 @@ Agrupo los buffers por proyecto de =projectile=
 
 * UTILS
 
++ Inicio de una selección rectangular usando el ratón (lo uso poco, prefiero =C-x spc=)
 #+begin_src emacs-lisp
-;; RECTANGULOS CON RATON
 ;; https://emacs.stackexchange.com/questions/7244/enable-emacs-column-selection-using-mouse
 (defun mouse-start-rectangle (start-event)
   (interactive "e")
@@ -821,8 +913,9 @@ Agrupo los buffers por proyecto de =projectile=
 
 #+end_src
 
+- Abrir el fichero del buffer actual con un programa externo
 #+begin_src emacs-lisp
-;; ABRIR EN PROGRAMA EXTERO http://pages.sachachua.com/.emacs.d/Sacha.html
+;; http://pages.sachachua.com/.emacs.d/Sacha.html
 (defun abrir-programa-externo (arg)
   "Open visited file in default external program.
 
@@ -841,9 +934,9 @@ With a prefix ARG always prompt for command to use."
                  (lambda() (winner-undo)))))
 #+end_src
 
+- Copiar el nombre del fichero actual al portapapeles
 #+begin_src emacs-lisp
-
-;; NOMBRE DE FICHERO ACTUAL AL PORTAPAPELES http://pages.sachachua.com/.emacs.d/Sacha.html
+;; http://pages.sachachua.com/.emacs.d/Sacha.html
 (defun copiar-nombre-fichero-actual ()
   "Copy the current buffer file name to the clipboard."
   (interactive)
@@ -856,23 +949,21 @@ With a prefix ARG always prompt for command to use."
 
 #+end_src
 
+- Arrancar el servidor http de emacs en el directorio actual
 #+begin_src emacs-lisp
-
-;; UN SERVIDOR HTTP
 (defun servidor-httpd-aqui (directory port)
   "Abre un servidor http en un directorio."
   (interactive (list (read-directory-name "Root directory: " default-directory nil t)
-                     (read-number "Port: " 8017)))
+                     (read-number "Port: " 8080)))
   (setq httpd-root directory)
   (setq httpd-port port)
   (httpd-start)
   (browse-url (concat "http://localhost:" (number-to-string port) "/")))
-
 #+end_src
 
-#+begin_src emacs-lisp
 
-;; REABRIR COMO ROOT emacs25
+- Al visitar un fichero, reabrir el bufer como root, incluso a través de tramp. Hay una versión para emacs25 y otra para emacs26.
+#+begin_src emacs-lisp
 (defun abrir-como-root-emacs25 ()
   "Reabre el fichero actual como root, incluso via tramp."
   (interactive)
@@ -935,10 +1026,8 @@ With a prefix ARG always prompt for command to use."
 
 #+end_src
 
+- Cuando hay que añadir muchos torrents similares, es muy útil hacerlo desde un buffer de emacs.
 #+begin_src emacs-lisp
-
-
-
 ;; CONECTAR A TRANSMISSION
 (defun conectar-a-transmission ()
   (interactive)
@@ -955,10 +1044,8 @@ With a prefix ARG always prompt for command to use."
 
 #+end_src
 
+- Generalmente utilizo un fichero orgmode para hacer transparencias y materiales para clase, y quiero generar a la vez las transparencias, la versión HTML y el PDF.
 #+begin_src emacs-lisp
-
-
-;; REVEAL, HTML Y PDF A LA VEZ
 (defun reveal-y-pdf ()
   "Crea transparencias de reveal y hace el pdf a la vez."
   (interactive)
@@ -991,7 +1078,6 @@ With a prefix ARG always prompt for command to use."
 #+end_src
 
 #+begin_src emacs-lisp
-
 ;; EXPERIMENTOS
 (defun url-decode-region (start end)
   "Replace a region with the same contents, only URL decoded."
@@ -1003,11 +1089,14 @@ With a prefix ARG always prompt for command to use."
 #+end_src
 
 #+begin_src emacs-lisp
-
 (defun horario()
   (interactive)
   (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/ags.iesavellaneda%40gmail.com/private-8d8f10c04ef7daee164d8d8a8f4707d5/basic.ics"))
 
+#+end_src
+
+- Durante una temporada, en los colegios de la Comunidad de Madrid era obligatorio el uso de un proxy.
+#+begin_src emacs-lisp
 (defun quitar-proxy()
   (interactive)
   (setq url-proxy-services '()))
@@ -1021,8 +1110,8 @@ With a prefix ARG always prompt for command to use."
 
 #+end_src
 
+- Inserta la imagen del portapapeles en un fichero orgmode. No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
 #+begin_src emacs-lisp
-
 (defun org-insert-clipboard-image()
   "Save the image in the clipboard  into a time stamped unique-named file in the same directory as the org-buffer and insert a link to this file."
   (interactive)
@@ -1038,13 +1127,10 @@ With a prefix ARG always prompt for command to use."
   (call-process "xclip" nil (list :file filename) nil "-selection"  "clipboard" "-t" "image/png" "-o")
   (insert (concat "[[file:" filename "]]"))
   (org-display-inline-images))
-
-
 #+end_src
 
+- Eliminar el resto de buffers y ventanas
 #+begin_src emacs-lisp
-  
-
 (defun kill-other-buffers ()
   "Kill all otherbuffers."
   (interactive)
@@ -1059,8 +1145,8 @@ With a prefix ARG always prompt for command to use."
 
 #+end_src
 
+- Convertir la selección en un bloque de código de orgmode
 #+begin_src emacs-lisp
-
 (defun org-code-block-from-region (beg end &optional results-switches inline)
   "Copiado de org-babel-examplify-region"
   (interactive "*r")
@@ -1088,8 +1174,6 @@ With a prefix ARG always prompt for command to use."
 		 (insert (funcall maybe-cap "#+end_src\n")))))))))
 #+end_src
 
-#+RESULTS:
-: org-code-block-from-region
 
 
 * Apariencia
@@ -1146,7 +1230,6 @@ Utilizo emacs de dos modos muy distintos: para trabajar y para proyectar en clas
 (add-hook 'text-mode-hook 'bonito-para-proyector)
 (add-hook 'org-mode-hook 'bonito-para-proyector)
 (add-hook 'tex-mode-hook 'bonito-para-codigo)
-
 #+end_src
 
 
@@ -1187,7 +1270,6 @@ Tengo dos temas, claro y oscuro. El tema =alvaro= cambia algunos tamaños de let
 
 
 
-** Tema de inicio
 Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna customización.
 #+begin_src emacs-lisp
 (tema-claro)
@@ -1195,90 +1277,9 @@ Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna c
 #+end_src
 
 
-* =company=
-Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de programación y =org-mode=.
-
-#+begin_src emacs-lisp
-  (require 'company)
-  (company-flx-mode +1)
 
 
 
-  (defvar my-company-backends-prog-mode
-    '(
-      (
-       company-web-html
-       company-files
-       company-dabbrev-code
-       company-capf
-       company-keywords
-       company-lsp
-       company-yasnippet
-       company-emoji
-       )
-      ))
-
-
-  (defvar my-company-backends-org-mode
-  '(
-    (
-      company-files
-      company-dabbrev-code
-      company-dabbrev
-      company-yasnippet
-      company-emoji
-      ))
-  )
-
-  (defvar my-company-backends my-company-backends-org-mode)
-
-  ;; set default `company-backends'
-  (setq company-backends my-company-backends)
-  (company-auctex-init)
-
-  (add-hook 'after-init-hook 'global-company-mode)
-
-  (company-quickhelp-mode 1)
-
-  (defun my-company-backends-org-mode-function ()
-    (interactive)
-    (set (make-local-variable 'company-backends) my-company-backends-org-mode))
-
-  (add-hook 'org-mode-hook #'my-company-backends-org-mode-function)
-
-  (defun my-company-backends-prog-mode-function ()
-    (interactive)
-    (set (make-local-variable 'company-backends) my-company-backends-prog-mode))
-
-
-  (add-hook 'prog-mode-hook #'my-company-backends-prog-mode-function)
-
-
-  (define-key company-active-map [escape] 'company-abort)
-  (global-company-mode)
-
-#+end_src
-
-#+RESULTS:
-: t
-
-
-
-
-* POR PROBAR
-
-- Me gusta que la tecla escape cancele cualquier acción. Con el siguiente código hago que se cancelen incluso más acciones que con =C-g=
-#+begin_src emacs-lisp
-(define-key company-active-map [escape] 'company-abort)
-
-
-(defun super-escape()
-  (interactive)
-  (keyboard-escape-quit)
-  (keyboard-quit)
-  (setq quit-flag t))
-(define-key global-map [escape] 'super-escape)
-#+end_src
 
 
 
@@ -1286,7 +1287,6 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
 * Investigación futura
 https://github.com/caisah/emacs.dz
-
 Elfeed
 Smartscan
 Zoom-frm
