@@ -140,6 +140,7 @@ Guardo los paquetes que necesito en una variable, y se reinstalan si no están y
       scala-mode
       skewer-mode
       smartparens
+      smartscan
       sublimity
       swiper-helm
       switch-window
@@ -688,32 +689,30 @@ Agrupo los buffers por proyecto de =projectile=
 #+end_src
 
 #+begin_src emacs-lisp
-
 ;; MOSTRAR LOS PARENTESIS ASOCIADOS
 (show-paren-mode)
-
 #+end_src
 
+- Modo para localizar ocurrencias de símbolos
 #+begin_src emacs-lisp
+(smartscan-mode t)
+#+end_src
 
-
-;; MODO SERVIDOR
+- Arranco el servidor para utilizar /emacsclient/
+#+begin_src emacs-lisp
 (server-force-delete)
 (server-start)
-
 #+end_src
 
+- Imagex permite hace zoom en las imágenes
 #+begin_src emacs-lisp
-
-;; imagex PARA HACER ZOOM EN IMÁGENES
 (imagex-global-sticky-mode)
 (imagex-auto-adjust-mode)
 
 #+end_src
 
+- Con estos cambios, se tienen en cuenta los formatos de orgmode en electric-pair-mode
 #+begin_src emacs-lisp
-
-;; ORG MODE, PARA EL electric-pair-mode
 (require 'org)
 (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
 (modify-syntax-entry ?= "(=" org-mode-syntax-table)
@@ -722,10 +721,9 @@ Agrupo los buffers por proyecto de =projectile=
 
 #+end_src
 
+
+- Mi línea de estado (modeline)
 #+begin_src emacs-lisp
-
-
-;; MODELINE
 (setq-default mode-line-format
               (list
                " "
