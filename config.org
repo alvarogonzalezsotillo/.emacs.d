@@ -695,7 +695,7 @@ Agrupo los buffers por proyecto de =projectile=
 
 - Modo para localizar ocurrencias de símbolos
 #+begin_src emacs-lisp
-(smartscan-mode t)
+(global-smartscan-mode 1)
 #+end_src
 
 - Arranco el servidor para utilizar /emacsclient/
