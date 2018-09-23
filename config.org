@@ -30,7 +30,7 @@ Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplement
 
 ** Algunos problemas
 - A veces, se empieza usando una versión de =org= (de gnu), y después se  utiliza la del repositorio de orgmode, lo que puede dar problemas. En ese caso, se necesitan dos reinicios.
-- Los ficheros =org= dan problemas sin tienen un =title:= definido. Para solucionarlo:
+- Los ficheros =org= dan problemas sin tienen un =title:= definido y la versión de =org= instalada no se recompiló. Para solucionarlo:
 #+begin_src sh
 rm $(find ~/.emacs.d/elpa | grep .elc$)
 #+end_src
@@ -40,7 +40,7 @@ rm $(find ~/.emacs.d/elpa | grep .elc$)
 
 Utilizo tres repositorios de paquetes:
 - melpa: el más habitual
-- gnu: me hizo falta para algo que no recuerdo (!)
+- gnu: me hizo falta para algo que no recuerdo, lo tengo actualmente deshabilitado.
 - org: las versiones nuevas de org-mode se publican antes en este repositorio
 
 Guardo los paquetes que necesito en una variable, y se reinstalan si no están ya instalados.
@@ -49,12 +49,9 @@ Guardo los paquetes que necesito en una variable, y se reinstalan si no están y
 #+begin_src emacs-lisp
   (setq package-check-signature nil)
 
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
-  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
   (package-initialize)
 
-  ;; REINSTALAR LOS PAQUETES (SI ES UN EMACS NUEVO)
+  ;; LISTA DE PAQUETES UTILIZADOS
   (defvar my/install-packages
     '(
       2048-game
@@ -161,7 +158,7 @@ Guardo los paquetes que necesito en una variable, y se reinstalan si no están y
       yasnippet-snippets
       ))
 
-  (defvar packages-refreshed? nil)
+  (defvar my/packages-refreshed? nil)
 
   (defun reinstalar-paquetes-en-emacs-nuevo()
     (interactive)
@@ -169,9 +166,9 @@ Guardo los paquetes que necesito en una variable, y se reinstalan si no están y
       (message (concat "Refrescando:" (symbol-name pack )))
       (unless (package-installed-p pack)
         (message (concat "Necesita reinstalar:" (symbol-name pack )))
-        (unless packages-refreshed?
+        (unless my/packages-refreshed?
           (package-refresh-contents)
-          (setq packages-refreshed? t))
+          (setq my/packages-refreshed? t))
         (package-install pack))))
 
 
@@ -283,229 +280,82 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
 (load custom-file)
 #+end_src
 
-* Mi configuración
+* Edición
 
-** =tramp=
-=tramp= intenta optimizar las conexiones, enviando en línea los ficheros pequeños. Esto me da problemas en algunos sistemas, así que indico que los ficheros se copien a partir de 1 byte de tamaño:
+
+** Tabuladores /vs/ espacios
+- No utilizo tabuladores en las indentaciones. 
 #+begin_src emacs-lisp
-(setq tramp-copy-size-limit 1)
-(setq tramp-debug-buffer t)
-(setq tramp-verbose 10)
+(setq-default indent-tabs-mode nil)
+(setq tab-width 2)
 #+end_src
 
-En ocasiones, =tramp= no consigue conectar con un usuario que tiene =zsh= como shell. Para ello, hay que añadir lo siguiente al fichero =.zshrc= remoto:
-#+begin_src sh
-EN .zshrc PARA QUE FUNCIONE tramp
-if [[ "$TERM" == "dumb" ]]
-then
-  unsetopt zle
-  unsetopt prompt_cr
-  unsetopt prompt_subst
-  unfunction precmd
-  unfunction preexec
-  PS1='$ '
-fi
-#+end_src
-
-
-
-** /Backup/ de ficheros
-Emacs guarda una copia de seguridad de los ficheros editados. Si no se configura, crea la copia en el mismo directorio.
-
-Las copias de seguridad son interesantes aunque se utilice un control de versiones. Por ejemplo, se guardan versiones de ficheros del sistema y de los editados con Tramp.
-
-Prefiero guardar todas las copias en un directorio, manteniendo varias versiones de cada fichero.
+** Comportamiento de la selección
+- Al comenzar a escribir con una selección, se borra lo seleccionado. 
 #+begin_src emacs-lisp
-(setq backup-directory-alist `(("." . "~/.saves")))
-(setq backup-by-copying t)
-(setq delete-old-versions t
-      kept-new-versions 6
-      kept-old-versions 2
-      version-control t)
+(delete-selection-mode 1)
 #+end_src
 
-** Lenguajes =org-babel=
-Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
+- Al copiar la  selección, mantener la selección 
 #+begin_src emacs-lisp
-  (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t)))
-
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((dot . t))) ; this line activates dot
+(defadvice kill-ring-save (after keep-transient-mark-active ())
+  "Override the deactivation of the mark."
+  (setq deactivate-mark nil))
+(ad-activate 'kill-ring-save)
 #+end_src
 
-** Opciones /avanzadas/ de edición
-Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones útiles que prefiero que estén activadas por defecto.
+
+** Línea nueva al final de fichero
+- Los ficheros deben tener una línea nueva al final. Además, indicar el fin de fichero como en =vim=.
+#+begin_src emacs-lisp
+(setq indicate-empty-lines t require-final-newline t)
+#+end_src
+
+
+** Historia del portapapeles
+Una de las ventajas de Emacs es su /kill ring/, donde se guarda la historia del portapapeles. Con esta opción, añado a esta historia el portapapeles del sistema. Descubierto en [[https://writequit.org/org/settings.html#sec-1-33][https://writequit.org/org/settings.html#sec-1-33]]
+#+begin_src emacs-lisp
+(setq save-interprogram-paste-before-kill t)
+#+end_src
+
+** Recarga de ficheros modificados
+Encuentro más conveniente que los ficheros se recarguen si un programa externo los modifica, sin preguntas.
+
+#+begin_src emacs-lisp
+(global-auto-revert-mode 1)
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil)
+#+end_src
+
+** Comandos que se consideran /avanzados/
+- Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones útiles que prefiero que estén activadas por defecto.
 #+begin_src emacs-lisp
 (put 'narrow-to-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 #+end_src
 
-** =doc-view=
-Para visualizar documentos desde Emacs, aumento su resolución y anchura.
-#+begin_src emacs-lisp
-(require 'doc-view)
-(setq doc-view-continuous t)
-(setq doc-view-image-width 1600)
-(setq doc-view-resolution 400)
-#+end_src
-
-** =org-mode=
-   
-*** Listas alfabéticas
-#+begin_src emacs-lisp
-(setq org-list-allow-alphabetical t)
-#+end_src
-
-
-*** Listados /Latex/
-Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
-#+begin_src emacs-lisp
-(setq org-latex-listings t)
-#+end_src
-
-*** Selección con mayúsculas 
-#+begin_src emacs-lisp
-(setq org-support-shift-select t)
-#+end_src
-
-*** Scroll con teclas de avance de página hasta el extremo del fichero
-#+begin_src emacs-lisp
-(setq scroll-error-top-bottom t)
-#+end_src
-
-
-** Latex
-
-#+begin_src emacs-lisp
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq TeX-save-query nil)
-(setq TeX-PDF-mode t)
-#+end_src
-
-- Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
-#+begin_src emacs-lisp
-
-(setq LaTeX-verbatim-environments
-      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql"))
-#+end_src
-
-- En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
-#+begin_src emacs-lisp
-(setq TeX-source-correlate-mode t)
-(setq TeX-source-correlate-start-server t)
-#+end_src
-
-
-- Modifico el comando Latex para incluir =-shell-escape=, de forma que Latex pueda arrancar programas de ayuda (por ejemplo, *Inkscape* para convertir SVG a PDF)
-
-#+begin_src emacs-lisp
-(setq LaTeX-command-style
-   (quote (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
-#+end_src
-
-
-- Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en el buffer de Emacs ([[https://www.gnu.org/software/auctex/manual/preview-latex.html][https://www.gnu.org/software/auctex/manual/preview-latex.html]])
-
-#+begin_src emacs-lisp
-(eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t) )
-(eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
-#+end_src
-
-
-** Otros /Minor modes/
-
-- Ayuda interactiva de teclado
-#+begin_src emacs-lisp
-(which-key-mode t)
-#+end_src
-
-
-- Paréntesis autocerrables
-#+begin_src emacs-lisp
-(smartparens-global-mode 1)
-#+end_src
-
-- Resaltar el símbolo bajo el cursor de forma dinámica
-#+begin_src emacs-lisp
-(require 'auto-highlight-symbol)
-(global-auto-highlight-symbol-mode t)
-(setq ahs-default-range 'ahs-range-whole-buffer)
-#+end_src
-
-- Retroceder en la historia de disposición de ventanas y búferes
-#+begin_src emacs-lisp
-(winner-mode 1)
-#+end_src
-
+** =yasnippet=
 - Plantillas para introducción rápida de partes del texto
 #+begin_src emacs-lisp
 (yas-global-mode 1)
 #+end_src
 
-- Grabar la disposición de bufers y ventanas para la siguiente sesión
+
+** Paréntesis
+- Este modo cierra automáticamente los paréntesis y otros bloques
 #+begin_src emacs-lisp
-(setq desktop-save t)
-(desktop-save-mode)
+(smartparens-global-mode 1)
 #+end_src
 
-
-** =helm=
-=helm= es un sistema para seleccionar una opción entre varias posibilidades, que se puede usar para casi todo
-- Buscar un comando
-- Cambiar de buffer
-- Navegar por la historia del portapapeles
-- Visualizar las ocurrencias de un patrón en un buffer
-- ... y más
-
+- Con estos cambios, se tienen en cuenta los formatos de orgmode en electric-pair-mode
 #+begin_src emacs-lisp
+(require 'org)
+(modify-syntax-entry ?~ "(~" org-mode-syntax-table)
+(modify-syntax-entry ?= "(=" org-mode-syntax-table)
+(modify-syntax-entry ?* "(*" org-mode-syntax-table)
+(modify-syntax-entry ?/ "(/" org-mode-syntax-table)
 
-;; HELM
-(require 'tramp) ;; PARA EVITAR EL ERROR Symbol’s value as variable is void: tramp-methods
-(setq helm-split-window-inside-p t)
-(setq helm-display-header-line nil)
-(setq helm-autoresize-max-height 30)
-(setq helm-autoresize-min-height 30)
-(setq projectile-completion-system 'helm)
-(helm-autoresize-mode 1)
-(helm-mode 1)
-(helm-projectile-on)
-(helm-flx-mode +1)
-(setq helm-echo-input-in-header-line t)
-#+end_src
-
-*** /Child frame/
-=helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original
-#+begin_src emacs
-(setq helm-display-function 'helm-display-buffer-in-own-frame
-      helm-display-buffer-reuse-frame t
-      helm-display-buffer-width 120
-      helm-use-undecorated-frame-option t)
-#+end_src
-
-=swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Ahora estoy valorando si me quedo con =swiper= o =swop=. Lo siguiente es para hacer que también aparezca en una /child frame/.
-
-#+begin_src emacs
-(setq swiper-helm-display-function helm-display-function)
-(setq helm-swoop-split-window-function helm-display-function)
-#+end_src
-
-
-** =projectile=
-=projectile= necesita conocer su tecla de prefijo (utilizo la tradicional).
-#+begin_src emacs-lisp
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-(projectile-mode 1)
-#+end_src
-
-
-** =multiple-cursors=
-#+begin_src emacs-lisp
-(setq mc/always-run-for-all t)
 #+end_src
 
 
@@ -573,37 +423,246 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
 #+end_src
 
-#+RESULTS:
-: t
 
 
+* Navegación
 
-** Historia del portapapeles
-Una de las ventajas de Emacs es su /kill ring/, donde se guarda la historia del portapapeles. Con esta opción, añado a esta historia el portapapeles del sistema. Descubierto en [[https://writequit.org/org/settings.html#sec-1-33][https://writequit.org/org/settings.html#sec-1-33]]
+
+- Scroll con teclas de avance de página hasta el extremo del fichero. Sin esta opción, /Emacs/ no avanza hasta la primera línea si al dar a =RePag= no quedan páginas por retroceder.
 #+begin_src emacs-lisp
-(setq save-interprogram-paste-before-kill t)
+(setq scroll-error-top-bottom t)
 #+end_src
 
-** Recarga de ficheros modificados
-Encuentro más conveniente que los ficheros se recarguen si un programa externo los modifica, sin preguntas.
 
+
+- Utilizo =smartscan= para localizar ocurrencias de símbolos.
 #+begin_src emacs-lisp
-(global-auto-revert-mode 1)
-(setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil)
+(smartscan-mode t)
 #+end_src
 
-* COSAS QUE AUN FALTAN POR MIGRAR
-
-- Los ficheros deben tener una línea nueva al final. Además, indicar el fin de fichero como en =vim=.
+- Algunas ventanas tienen menor /importancia/ que otras, ya que tienden a ser temporales (por ejemplo, las ventanas de ayuda). Con =popwin=, estas ventanas ocupan menos espacio en pantalla y desaparecen con =C-g=
 #+begin_src emacs-lisp
-(setq indicate-empty-lines t require-final-newline t)
+(popwin-mode 1)
 #+end_src
 
-Agrupo los buffers por proyecto de =projectile=
+
+- Agrupo los buffers por proyecto de =projectile=
 #+begin_src emacs-lisp
 (add-hook 'ibuffer-hook #'ibuffer-projectile-set-filter-groups)
 #+end_src
+
+
+- Retroceder en la historia de disposición de ventanas y búferes
+#+begin_src emacs-lisp
+(winner-mode 1)
+#+end_src
+
+
+- Grabar la disposición de bufers y ventanas para la siguiente sesión
+#+begin_src emacs-lisp
+(setq desktop-save t)
+(desktop-save-mode)
+#+end_src
+
+
+** =projectile=
+=projectile= necesita conocer su tecla de prefijo (utilizo la tradicional).
+#+begin_src emacs-lisp
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(projectile-mode 1)
+#+end_src
+
+
+
+
+* Mi configuración
+
+** =tramp=
+=tramp= intenta optimizar las conexiones, enviando en línea los ficheros pequeños. Esto me da problemas en algunos sistemas, así que indico que los ficheros se copien a partir de 1 byte de tamaño:
+#+begin_src emacs-lisp
+(setq tramp-copy-size-limit 1)
+(setq tramp-debug-buffer t)
+(setq tramp-verbose 10)
+#+end_src
+
+En ocasiones, =tramp= no consigue conectar con un usuario que tiene =zsh= como shell. Para ello, hay que añadir lo siguiente al fichero =.zshrc= remoto:
+#+begin_src sh
+EN .zshrc PARA QUE FUNCIONE tramp
+if [[ "$TERM" == "dumb" ]]
+then
+  unsetopt zle
+  unsetopt prompt_cr
+  unsetopt prompt_subst
+  unfunction precmd
+  unfunction preexec
+  PS1='$ '
+fi
+#+end_src
+
+
+
+** /Backup/ de ficheros
+Emacs guarda una copia de seguridad de los ficheros editados. Si no se configura, crea la copia en el mismo directorio.
+
+Las copias de seguridad son interesantes aunque se utilice un control de versiones. Por ejemplo, se guardan versiones de ficheros del sistema y de los editados con Tramp.
+
+Prefiero guardar todas las copias en un directorio, manteniendo varias versiones de cada fichero.
+#+begin_src emacs-lisp
+(setq backup-directory-alist `(("." . "~/.saves")))
+(setq backup-by-copying t)
+(setq delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)
+#+end_src
+
+** =doc-view=
+Para visualizar documentos desde Emacs, aumento su resolución y anchura.
+#+begin_src emacs-lisp
+(require 'doc-view)
+(setq doc-view-continuous t)
+(setq doc-view-image-width 1600)
+(setq doc-view-resolution 400)
+#+end_src
+
+** =org-mode=
+
+
+*** Lenguajes =org-babel=
+Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
+#+begin_src emacs-lisp
+  (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t)))
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((dot . t))) ; this line activates dot
+#+end_src
+   
+*** Listas alfabéticas
+#+begin_src emacs-lisp
+(setq org-list-allow-alphabetical t)
+#+end_src
+
+
+*** Listados /Latex/
+Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
+#+begin_src emacs-lisp
+(setq org-latex-listings t)
+#+end_src
+
+*** Selección con mayúsculas 
+#+begin_src emacs-lisp
+(setq org-support-shift-select t)
+#+end_src
+
+** Latex
+
+#+begin_src emacs-lisp
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq TeX-save-query nil)
+(setq TeX-PDF-mode t)
+#+end_src
+
+- Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
+#+begin_src emacs-lisp
+
+(setq LaTeX-verbatim-environments
+      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql"))
+#+end_src
+
+- En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
+#+begin_src emacs-lisp
+(setq TeX-source-correlate-mode t)
+(setq TeX-source-correlate-start-server t)
+#+end_src
+
+
+- Modifico el comando Latex para incluir =-shell-escape=, de forma que Latex pueda arrancar programas de ayuda (por ejemplo, *Inkscape* para convertir SVG a PDF)
+
+#+begin_src emacs-lisp
+(setq LaTeX-command-style
+   (quote (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
+#+end_src
+
+
+- Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en el buffer de Emacs ([[https://www.gnu.org/software/auctex/manual/preview-latex.html][https://www.gnu.org/software/auctex/manual/preview-latex.html]])
+
+#+begin_src emacs-lisp
+(eval-after-load "preview"
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t) )
+(eval-after-load "preview"
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
+#+end_src
+
+
+** Otros /Minor modes/
+
+- Ayuda interactiva de teclado
+#+begin_src emacs-lisp
+(which-key-mode t)
+#+end_src
+
+
+- Resaltar el símbolo bajo el cursor de forma dinámica. Además resaltarlo en todo el buffer, para que se pueda navegar por todas las ocurrencias del fichero.
+#+begin_src emacs-lisp
+(require 'auto-highlight-symbol)
+(global-auto-highlight-symbol-mode t)
+(setq ahs-default-range 'ahs-range-whole-buffer)
+#+end_src
+
+** =helm=
+=helm= es un sistema para seleccionar una opción entre varias posibilidades, que se puede usar para casi todo
+- Buscar un comando
+- Cambiar de buffer
+- Navegar por la historia del portapapeles
+- Visualizar las ocurrencias de un patrón en un buffer
+- ... y más
+
+#+begin_src emacs-lisp
+
+;; HELM
+(require 'tramp) ;; PARA EVITAR EL ERROR Symbol’s value as variable is void: tramp-methods
+(setq helm-split-window-inside-p t)
+(setq helm-display-header-line nil)
+(setq helm-autoresize-max-height 30)
+(setq helm-autoresize-min-height 30)
+(setq projectile-completion-system 'helm)
+(helm-autoresize-mode 1)
+(helm-mode 1)
+(helm-projectile-on)
+(helm-flx-mode +1)
+(setq helm-echo-input-in-header-line t)
+#+end_src
+
+*** /Child frame/
+=helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original. En este momento tengo esta opción deshabilitada, ya que en algunos sistemas de ventanas es bastante lento.
+#+begin_src emacs
+(setq helm-display-function 'helm-display-buffer-in-own-frame
+      helm-display-buffer-reuse-frame t
+      helm-display-buffer-width 120
+      helm-use-undecorated-frame-option t)
+#+end_src
+
+=swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Ahora estoy valorando si me quedo con =swiper= o =swop=. Lo siguiente es para hacer que también aparezca en una /child frame/.
+
+#+begin_src emacs
+(setq swiper-helm-display-function helm-display-function)
+(setq helm-swoop-split-window-function helm-display-function)
+#+end_src
+
+
+
+** =multiple-cursors=
+#+begin_src emacs-lisp
+(setq mc/always-run-for-all t)
+#+end_src
+
+
+
+
+* Visualización
+
 
 
 - Marcar la línea actual. Está deshabilitado porque no funciona bien con /overlays/
@@ -624,19 +683,6 @@ Agrupo los buffers por proyecto de =projectile=
 
 
 
-- Al comenzar a escribir con una selección, se borra lo seleccionado. 
-#+begin_src emacs-lisp
-(delete-selection-mode 1)
-#+end_src
-
-- Al copiar la  selección, mantener la selección (deshabilitado)
-#+begin_src lisp
-(defadvice kill-ring-save (after keep-transient-mark-active ())
-  "Override the deactivation of the mark."
-  (setq deactivate-mark nil))
-(ad-activate 'kill-ring-save)
-#+end_src
-
 
 - Utilizo /flycheck/ para que emacs compruebe automáticamente cada buffer
 #+begin_src emacs-lisp
@@ -654,11 +700,6 @@ Agrupo los buffers por proyecto de =projectile=
       scroll-conservatively 10000
       scroll-preserve-screen-position 1)
 
-#+end_src
-#+begin_src emacs-lisp
-
-;; POPWIN
-(popwin-mode 1)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -680,23 +721,10 @@ Agrupo los buffers por proyecto de =projectile=
 #+end_src
 
 #+begin_src emacs-lisp
-
-;; INDENTACIONES
-(setq-default indent-tabs-mode nil)
-(setq tab-width 2)
-
-
-#+end_src
-
-#+begin_src emacs-lisp
 ;; MOSTRAR LOS PARENTESIS ASOCIADOS
 (show-paren-mode)
 #+end_src
 
-- Modo para localizar ocurrencias de símbolos
-#+begin_src emacs-lisp
-(smartscan-mode t)
-#+end_src
 
 - Arranco el servidor para utilizar /emacsclient/
 #+begin_src emacs-lisp
@@ -711,15 +739,6 @@ Agrupo los buffers por proyecto de =projectile=
 
 #+end_src
 
-- Con estos cambios, se tienen en cuenta los formatos de orgmode en electric-pair-mode
-#+begin_src emacs-lisp
-(require 'org)
-(modify-syntax-entry ?~ "(~" org-mode-syntax-table)
-(modify-syntax-entry ?= "(=" org-mode-syntax-table)
-(modify-syntax-entry ?* "(*" org-mode-syntax-table)
-(modify-syntax-entry ?/ "(/" org-mode-syntax-table)
-
-#+end_src
 
 
 - Mi línea de estado (modeline)
@@ -741,20 +760,16 @@ Agrupo los buffers por proyecto de =projectile=
 
 #+end_src
 
+- El minimap parece una buena idea, pero no funciona demasiado bien
 #+begin_src emacs-lisp
-
-  ;; PARA EL MINIMAP
-  (require 'sublimity)
-  (require 'sublimity-map)
-  (require 'sublimity-attractive)
-  (sublimity-map-set-delay 2)
-
-
+(require 'sublimity)
+(require 'sublimity-map)
+(require 'sublimity-attractive)
+(sublimity-map-set-delay 2)
 #+end_src
 
+- El ratón también puede utilizarse en un xterm
 #+begin_src emacs-lisp
-
-;; RATON EN MODO TEXTO
 (xterm-mouse-mode)
 #+end_src
 
@@ -1143,7 +1158,7 @@ With a prefix ARG always prompt for command to use."
 
 #+end_src
 
-- Convertir la selección en un bloque de código de orgmode
+- Convertir la selección en un bloque de código de =orgmode=
 #+begin_src emacs-lisp
 (defun org-code-block-from-region (beg end &optional results-switches inline)
   "Copiado de org-babel-examplify-region"
@@ -1182,20 +1197,21 @@ With a prefix ARG always prompt for command to use."
 (add-hook 'org-mode-hook 'vim-empty-lines-mode)
 #+end_src
 
-- Resaltar el nivel de indentación
+** Nivel de indentación
 #+begin_src emacs-lisp
 (setq highlight-indent-guides-method 'fill)
 #+end_src
 
 
-- Indicación de líneas cambiadas respecto a la última versión Git.
+** Indicación de cambios de /git/
+Utilizo /git/ para casi todos mis ficheros. =git-gutter= marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual.
 #+begin_src emacs-lisp
 (global-git-gutter-mode +1)
 #+end_src
 
 
-
-- Mostrar =^L= (saltos de página) como una línea horizontal
+** Saltos de página
+Mostrar =^L= (saltos de página) como una línea horizontal
 #+begin_src emacs-lisp
 (global-page-break-lines-mode)
 #+end_src
@@ -1241,9 +1257,9 @@ Prefiero ocultar las flechas que indican que una línea se sale de la pantalla, 
 ** Temas
 Tengo dos temas, claro y oscuro. El tema =alvaro= cambia algunos tamaños de letra (no colores).
 
+Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas en =custom-safe-themes= (lo he copiado del fichero =custom.el=).
 
 #+begin_src emacs-lisp
-
   (setq  custom-safe-themes  (quote
   ("6e219d6b6a3f7e22888b203fd5492e12133ba40512be983858f05b42806fa573"
   "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e"
@@ -1268,7 +1284,7 @@ Tengo dos temas, claro y oscuro. El tema =alvaro= cambia algunos tamaños de let
 
 
 
-Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna customización.
+Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna customización. Por lo visto, un tema siempre añade cambios, pero al quitarse no se deshacen  completamente. Algunas configuraciones solo se tienen en cuenta al reiniciar /Emacs/ o al reaplicar un modo: por ejemplo, los colores de =highlight-indent-guides= necesitan reabrir el buffer.
 #+begin_src emacs-lisp
 (tema-claro)
 (tema-oscuro)
@@ -1278,13 +1294,7 @@ Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna c
 
 
 
-
-
-
-
-
-* Investigación futura
-https://github.com/caisah/emacs.dz
-Elfeed
-Smartscan
-Zoom-frm
+* Futuras adiciones
+En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
+- Elfeed
+- Zoom-frm
