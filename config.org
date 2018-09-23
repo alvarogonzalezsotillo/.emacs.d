@@ -437,7 +437,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
 - Utilizo =smartscan= para localizar ocurrencias de símbolos.
 #+begin_src emacs-lisp
-(smartscan-mode t)
+(global-smartscan-mode 1)
 #+end_src
 
 - Algunas ventanas tienen menor /importancia/ que otras, ya que tienden a ser temporales (por ejemplo, las ventanas de ayuda). Con =popwin=, estas ventanas ocupan menos espacio en pantalla y desaparecen con =C-g=
@@ -724,7 +724,6 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 ;; MOSTRAR LOS PARENTESIS ASOCIADOS
 (show-paren-mode)
 #+end_src
-
 
 - Arranco el servidor para utilizar /emacsclient/
 #+begin_src emacs-lisp
