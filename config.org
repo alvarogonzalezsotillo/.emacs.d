@@ -76,6 +76,7 @@ Guardo los paquetes que necesito en una variable, y se reinstalan si no están y
       company-shell
       company-web
       crappy-jsp-mode
+      default-text-scale
       diffview
       dired-narrow
       dumb-jump
@@ -664,6 +665,10 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 * Visualización
 
 
+- Cambiar el tamaño de fuente de todo /emacs/ (no solo el buffer actual)
+#+begin_src emacs-lisp
+(default-text-scale-mode 1)
+#+end_src
 
 - Marcar la línea actual. Está deshabilitado porque no funciona bien con /overlays/
 #+begin_src emacs-lisp
