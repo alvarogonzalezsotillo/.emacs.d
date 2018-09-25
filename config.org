@@ -1209,9 +1209,10 @@ With a prefix ARG always prompt for command to use."
 
 
 ** Indicación de cambios de /git/
-Utilizo /git/ para casi todos mis ficheros. =git-gutter= marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual.
+Utilizo /git/ para casi todos mis ficheros. =git-gutter= marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual. indico que se refresquen los buffers cada 10 segundos.
 #+begin_src emacs-lisp
 (global-git-gutter-mode +1)
+(setq git-gutter:update-interval 10)
 #+end_src
 
 
