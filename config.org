@@ -609,8 +609,9 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 #+begin_src emacs-lisp
 (require 'auto-highlight-symbol)
 (global-auto-highlight-symbol-mode t)
-(setq ahs-default-range 'ahs-range-whole-buffer)
+(setq ahs-default-range 'ahs-range-display)
 #+end_src
+
 
 ** =helm=
 =helm= es un sistema para seleccionar una opción entre varias posibilidades, que se puede usar para casi todo

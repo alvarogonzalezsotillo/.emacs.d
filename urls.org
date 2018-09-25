@@ -87,7 +87,11 @@ byzanz-record -v -e 'screenkey --no-detach' --delay=10 screencast.gif
 #+RESULTS:
 * FCT
 iesavellaneda.fct.asir@gmail.com
-s
+
+* Máquinas virtuales Windows
+- https://developer.microsoft.com/en-us/windows/downloads/virtual-machines
+- https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/
+
 * Repositorios
 
 https://alvarogonzalezsotillo@github.com/alvarogonzalezsotillo/apuntes-clase.git
