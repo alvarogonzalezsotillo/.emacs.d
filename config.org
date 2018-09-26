@@ -314,8 +314,20 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((dot . t))) ; this line activates dot
+   '((dot . t) ; this line activates dot
+     (shell . t))) 
 #+end_src
+
+Además, no pido confirmación para varios lenguajes
+#+begin_src emacs-lisp
+(defun my-org-confirm-babel-evaluate (lang body)
+  (not (member lang '("dot" "emacs-lisp shell"))))
+
+(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+#+end_src
+
+#+RESULTS:
+: my-org-confirm-babel-evaluate
 
 ** Opciones /avanzadas/ de edición
 Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones útiles que prefiero que estén activadas por defecto.
