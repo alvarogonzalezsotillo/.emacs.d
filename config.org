@@ -123,6 +123,7 @@ Guardo los paquetes que necesito en una variable, y se reinstalan si no están y
       page-break-lines
       paradox
       php-mode
+      plantuml-mode
       popup-imenu
       popup-complete
       popup-switcher
@@ -610,10 +611,9 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 #+end_src
 
 
-- Resaltar el símbolo bajo el cursor de forma dinámica. Además resaltarlo en todo el buffer, para que se pueda navegar por todas las ocurrencias del fichero.
+- Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en todo el buffer, para que se pueda navegar por todas las ocurrencias del fichero, pero ralentizaba bastante. Ahora uso =smartscan=.
 #+begin_src emacs-lisp
 (require 'auto-highlight-symbol)
-(global-auto-highlight-symbol-mode t)
 (setq ahs-default-range 'ahs-range-display)
 #+end_src
 
@@ -640,15 +640,16 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 (helm-projectile-on)
 (helm-flx-mode +1)
 (setq helm-echo-input-in-header-line t)
+(setq helm-display-buffer-reuse-frame t)
+(setq helm-use-undecorated-frame-option t)
 #+end_src
 
+
 *** /Child frame/
-=helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original. En este momento tengo esta opción deshabilitada, ya que en algunos sistemas de ventanas es bastante lento.
-#+begin_src emacs
+=helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original. Estas opción es bastante lenta en algunos sistemas de ventanas.
+#+begin_src emacs-lisp
 (setq helm-display-function 'helm-display-buffer-in-own-frame
-      helm-display-buffer-reuse-frame t
-      helm-display-buffer-width 120
-      helm-use-undecorated-frame-option t)
+      helm-display-buffer-width 120)
 #+end_src
 
 =swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Ahora estoy valorando si me quedo con =swiper= o =swop=. Lo siguiente es para hacer que también aparezca en una /child frame/.
@@ -1229,6 +1230,7 @@ Mostrar =^L= (saltos de página) como una línea horizontal
 
 ** Modo proyección o modo trabajo
 Utilizo emacs de dos modos muy distintos: para trabajar y para proyectar en clase. Estas dos funciones cambian opciones de visualización adecuadas para cada ocasión.
+He deshabilitado la indentación en los modos de programación, ralentiza bastante en los ficheros grandes.
 #+begin_src emacs-lisp
 (defun bonito-para-proyector()
   (interactive)
@@ -1243,7 +1245,7 @@ Utilizo emacs de dos modos muy distintos: para trabajar y para proyectar en clas
   (interactive)
   (electric-pair-mode 1)
   (toggle-truncate-lines 1)
-  (highlight-indent-guides-mode 1)
+  (highlight-indent-guides-mode 0)
   (toggle-word-wrap 1)
   (if (>= emacs-major-version 26)
       (display-line-numbers-mode 1))
