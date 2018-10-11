@@ -532,13 +532,18 @@ Para visualizar documentos desde Emacs, aumento su resolución y anchura.
 *** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
-  (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t)))
+  (setq org-plantuml-jar-path "/home/alvaro/apuntes-clase/bin/plantuml.1.2018.11.jar")
 
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((dot . t))) ; this line activates dot
+  (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t) (plantuml . t )))
+
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '(
+                                 (dot . t)
+                                 (plantuml . t)
+                                 (scala . t)
+                                 )) 
 #+end_src
-   
+
 *** Listas alfabéticas
 #+begin_src emacs-lisp
 (setq org-list-allow-alphabetical t)
