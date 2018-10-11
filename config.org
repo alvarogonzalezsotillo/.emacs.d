@@ -534,7 +534,7 @@ Para visualizar documentos desde Emacs, aumento su resolución y anchura.
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
   (setq org-plantuml-jar-path "/home/alvaro/apuntes-clase/bin/plantuml.1.2018.11.jar")
- '(setq plantuml-jar-path org-plantuml-jar-path)
+  (setq plantuml-jar-path org-plantuml-jar-path)
 
 
   (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t) (plantuml . t )))
