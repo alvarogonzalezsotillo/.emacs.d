@@ -508,13 +508,17 @@ Emacs guarda una copia de seguridad de los ficheros editados. Si no se configura
 Las copias de seguridad son interesantes aunque se utilice un control de versiones. Por ejemplo, se guardan versiones de ficheros del sistema y de los editados con Tramp.
 
 Prefiero guardar todas las copias en un directorio, manteniendo varias versiones de cada fichero.
+
+Tampoco me interesan los ficheros de /lock/.
 #+begin_src emacs-lisp
-(setq backup-directory-alist `(("." . "~/.saves")))
-(setq backup-by-copying t)
-(setq delete-old-versions t
-      kept-new-versions 6
-      kept-old-versions 2
-      version-control t)
+  (setq backup-directory-alist `(("." . "~/.saves")))
+  (setq backup-by-copying t)
+  (setq delete-old-versions t
+        kept-new-versions 6
+        kept-old-versions 2
+        version-control t)
+
+  (setq create-lockfiles nil)
 #+end_src
 
 ** =doc-view=
@@ -534,10 +538,20 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 #+begin_src emacs-lisp
   (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t)))
 
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((dot . t))) ; this line activates dot
+  (org-babel-do-load-languages                                                                                                                               
+    'org-babel-load-languages                                                                                                                                 
+    '((dot . t) ; this line activates dot                                                                                                                     
+      (shell . t)))
+#+end_src                                                                                                                                                    
+
+ Además, no pido confirmación para varios lenguajes                                                                                                           
+ #+begin_src emacs-lisp
+ (defun my-org-confirm-babel-evaluate (lang body)                                                                                                             
+   (not (member lang '("dot" "emacs-lisp shell"))))                                                                                                           
+                                                                                                                                                              
+ (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)                                                                                             
 #+end_src
+
    
 *** Listas alfabéticas
 #+begin_src emacs-lisp
@@ -639,7 +653,7 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 
 *** /Child frame/
 =helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original. En este momento tengo esta opción deshabilitada, ya que en algunos sistemas de ventanas es bastante lento.
-#+begin_src emacs
+#+begin_src lisp
 (setq helm-display-function 'helm-display-buffer-in-own-frame
       helm-display-buffer-reuse-frame t
       helm-display-buffer-width 120
@@ -648,7 +662,7 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 
 =swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Ahora estoy valorando si me quedo con =swiper= o =swop=. Lo siguiente es para hacer que también aparezca en una /child frame/.
 
-#+begin_src emacs
+#+begin_src lisp
 (setq swiper-helm-display-function helm-display-function)
 (setq helm-swoop-split-window-function helm-display-function)
 #+end_src
