@@ -7,7 +7,7 @@
 (setq package-archives
       '(
 	      ("org" . "http://orgmode.org/elpa/")
-        ; (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+              ("gnu" . "http://elpa.gnu.org/packages/")
 	      ("melpa" . "http://melpa.org/packages/") ) )
 
 

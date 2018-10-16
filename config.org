@@ -1,6 +1,7 @@
 #+TITLE: Configuración /Emacs/ de Álvaro González
 #+OPTIONS: toc:4 h:4
 
+
 * Cómo funciona este fichero
 
 La configuración de Emacs se realiza con código elisp. Al contrario que otros editores, que están pensados para ser usados sin demasiada customización, los usuarios de Emacs solemos cambiarlo de forma bastante /extrema/ (¡por eso nos gusta!).
