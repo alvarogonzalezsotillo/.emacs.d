@@ -123,6 +123,7 @@ Guardo los paquetes que necesito en una variable, y se reinstalan si no están y
       page-break-lines
       paradox
       php-mode
+      plantuml-mode
       popup-imenu
       popup-complete
       popup-switcher
@@ -380,20 +381,25 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
        company-lsp
        company-yasnippet
        company-emoji
+       company-capf
        )
-      ))
+      )
+    )
 
 
   (defvar my-company-backends-org-mode
-  '(
-    (
-      company-files
-      company-dabbrev-code
-      company-dabbrev
-      company-yasnippet
-      company-emoji
-      ))
-  )
+    '(
+      (
+       company-files
+       company-dabbrev-code
+       company-dabbrev
+       company-keywords
+       company-yasnippet
+       company-emoji
+       company-capf
+       )
+      )
+    )
 
   (defvar my-company-backends my-company-backends-org-mode)
 
@@ -423,6 +429,17 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
   (global-company-mode)
 
 #+end_src
+
+Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta el /case/
+#+begin_src emacs-lisp
+  (setq company-dabbrev-code-everywhere t)
+  (setq company-dabbrev-code-ignore-case nil)
+  (setq company-dabbrev-everywhere t)
+  (setq company-dabbrev-ignore-case 'keep-prefix)
+  (setq company-dabbrev-downcase nil)
+#+end_src
+
+#+RESULTS:
 
 
 
@@ -477,6 +494,19 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
 
 * Mi configuración
+
+** Correo electrónico
+Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smarthost/)
+#+begin_src emacs-lisp
+(setq send-mail-function (quote sendmail-send-it))
+#+end_src
+
+** =quickrun=
+=Quickrun= ejecuta el buffer actual. Aumento el tiempo límite de la ejecución antes de matar el proceso.
+#+begin_src emacs-lisp
+(setq quickrun-timeout-seconds 100)
+#+end_src
+
 
 ** =tramp=
 =tramp= intenta optimizar las conexiones, enviando en línea los ficheros pequeños. Esto me da problemas en algunos sistemas, así que indico que los ficheros se copien a partir de 1 byte de tamaño:
@@ -536,13 +566,19 @@ Para visualizar documentos desde Emacs, aumento su resolución y anchura.
 *** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
-  (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t)))
+  (setq org-plantuml-jar-path "/home/alvaro/apuntes-clase/bin/plantuml.1.2018.11.jar")
+  (setq plantuml-jar-path org-plantuml-jar-path)
 
-  (org-babel-do-load-languages                                                                                                                               
-    'org-babel-load-languages                                                                                                                                 
-    '((dot . t) ; this line activates dot                                                                                                                     
-      (shell . t)))
-#+end_src                                                                                                                                                    
+  (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t) (plantuml . t )))
+
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '(
+                                 (dot . t)
+                                 (plantuml . t)
+                                 (scala . t)
+                                 )) 
+
+#+end_src                                                                                                                                                   
 
  Además, no pido confirmación para varios lenguajes                                                                                                           
  #+begin_src emacs-lisp
@@ -619,10 +655,9 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 #+end_src
 
 
-- Resaltar el símbolo bajo el cursor de forma dinámica. Además resaltarlo en todo el buffer, para que se pueda navegar por todas las ocurrencias del fichero.
+- Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en todo el buffer, para que se pueda navegar por todas las ocurrencias del fichero, pero ralentizaba bastante. Ahora uso =smartscan=.
 #+begin_src emacs-lisp
 (require 'auto-highlight-symbol)
-(global-auto-highlight-symbol-mode t)
 (setq ahs-default-range 'ahs-range-display)
 #+end_src
 
@@ -649,15 +684,15 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 (helm-projectile-on)
 (helm-flx-mode +1)
 (setq helm-echo-input-in-header-line t)
+(setq helm-display-buffer-reuse-frame t)
+(setq helm-use-undecorated-frame-option t)
 #+end_src
 
 *** /Child frame/
-=helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original. En este momento tengo esta opción deshabilitada, ya que en algunos sistemas de ventanas es bastante lento.
-#+begin_src lisp
+=helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original. Estas opción es bastante lenta en algunos sistemas de ventanas.
+#+begin_src emacs
 (setq helm-display-function 'helm-display-buffer-in-own-frame
-      helm-display-buffer-reuse-frame t
-      helm-display-buffer-width 120
-      helm-use-undecorated-frame-option t)
+      helm-display-buffer-width 120)
 #+end_src
 
 =swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Ahora estoy valorando si me quedo con =swiper= o =swop=. Lo siguiente es para hacer que también aparezca en una /child frame/.
@@ -924,9 +959,22 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 
 #+end_src
 
-* UTILS
+* Utilidades
 
-+ Inicio de una selección rectangular usando el ratón (lo uso poco, prefiero =C-x spc=)
+- Convierto el buffer actual a una frame nueva
+#+begin_src emacs-lisp
+(defun saca-a-nueva-frame()
+  (interactive)
+  (let ((buffer (current-buffer)))
+    (unless (one-window-p)
+      (delete-window))
+    (display-buffer-pop-up-frame buffer nil)))
+#+end_src
+
+#+RESULTS:
+: saca-a-nueva-frame
+
+- Inicio de una selección rectangular usando el ratón (lo uso poco, prefiero =C-x spc=)
 #+begin_src emacs-lisp
 ;; https://emacs.stackexchange.com/questions/7244/enable-emacs-column-selection-using-mouse
 (defun mouse-start-rectangle (start-event)
@@ -1238,6 +1286,7 @@ Mostrar =^L= (saltos de página) como una línea horizontal
 
 ** Modo proyección o modo trabajo
 Utilizo emacs de dos modos muy distintos: para trabajar y para proyectar en clase. Estas dos funciones cambian opciones de visualización adecuadas para cada ocasión.
+He deshabilitado la indentación en los modos de programación, ralentiza bastante en los ficheros grandes.
 #+begin_src emacs-lisp
 (defun bonito-para-proyector()
   (interactive)
@@ -1248,11 +1297,16 @@ Utilizo emacs de dos modos muy distintos: para trabajar y para proyectar en clas
       (display-line-numbers-mode 0))
   (org-display-inline-images))
 
+(defun bonito-para-org()
+  (interactive)
+  (bonito-para-proyector)
+  (electric-pair-mode 1))
+
+
 (defun bonito-para-codigo()
   (interactive)
-  (electric-pair-mode 1)
   (toggle-truncate-lines 1)
-  (highlight-indent-guides-mode 1)
+  (highlight-indent-guides-mode 0)
   (toggle-word-wrap 1)
   (if (>= emacs-major-version 26)
       (display-line-numbers-mode 1))
@@ -1262,7 +1316,7 @@ Utilizo emacs de dos modos muy distintos: para trabajar y para proyectar en clas
 
 (add-hook 'prog-mode-hook 'bonito-para-codigo)
 (add-hook 'text-mode-hook 'bonito-para-proyector)
-(add-hook 'org-mode-hook 'bonito-para-proyector)
+(add-hook 'org-mode-hook 'bonito-para-org)
 (add-hook 'tex-mode-hook 'bonito-para-codigo)
 #+end_src
 
