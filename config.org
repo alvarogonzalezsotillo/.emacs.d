@@ -496,6 +496,14 @@ Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta 
 
 * Mi configuración
 
+** =neotree=
+En =neotree=, quiero ver todos los ficheros, y no me importa el ancho fijo de la ventana.
+#+begin_src emacs-lisp
+(setq neo-show-hidden-files t)
+(setq neo-window-fixed-size nil)
+#+end_src
+
+
 ** Correo electrónico
 Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smarthost/)
 #+begin_src emacs-lisp
