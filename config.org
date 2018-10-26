@@ -468,6 +468,7 @@ Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta 
 - Agrupo los buffers por proyecto de =projectile=
 #+begin_src emacs-lisp
 (add-hook 'ibuffer-hook #'ibuffer-projectile-set-filter-groups)
+(add-hook 'ibuffer-sidebar-mode-hook #'ibuffer-projectile-set-filter-groups)
 #+end_src
 
 
@@ -1301,7 +1302,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 (defun bonito-para-org()
   (interactive)
   (bonito-para-proyector)
-  (electric-pair-mode 1))
+  (electric-pair-local-mode 1))
 
 
 (defun bonito-para-codigo()
