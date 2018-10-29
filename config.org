@@ -1041,14 +1041,18 @@ With a prefix ARG always prompt for command to use."
 
 - Arrancar el servidor http de emacs en el directorio actual
 #+begin_src emacs-lisp
-(defun servidor-httpd-aqui (directory port)
-  "Abre un servidor http en un directorio."
-  (interactive (list (read-directory-name "Root directory: " default-directory nil t)
-                     (read-number "Port: " 8080)))
-  (setq httpd-root directory)
-  (setq httpd-port port)
-  (httpd-start)
-  (browse-url (concat "http://localhost:" (number-to-string port) "/")))
+  (defun servidor-httpd-aqui (directory host port)
+    "Abre un servidor http en un directorio."
+    (interactive   (list
+    (read-directory-name "Root directory: " default-directory nil t)
+    (read-string "Host: " "127.0.0.1" )
+    (read-number "Port: " 8080)))
+
+    (setq httpd-root directory)
+    (setq httpd-host host)
+    (setq httpd-port port)
+    (httpd-start)
+    (browse-url (concat "http://localhost:" (number-to-string port) "/")))
 #+end_src
 
 
