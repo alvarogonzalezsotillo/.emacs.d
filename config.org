@@ -37,6 +37,13 @@ rm $(find ~/.emacs.d/elpa | grep .elc$)
 #+end_src
 
 
+* Utilidades externas al /PATH/
+#+begin_src emacs-lisp
+(setenv "PATH" (concat (expand-file-name "~/.emacs.d/bin") ":" (getenv "PATH")))
+(setq exec-path (append exec-path '("~/.emacs.d/bin")))
+#+end_src
+
+
 * Paquetes
 
 Utilizo tres repositorios de paquetes:

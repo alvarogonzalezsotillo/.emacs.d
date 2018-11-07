@@ -22,4 +22,3 @@
 ;; DESACTIVAR EL DEBUG, LO QUE QUEDA YA ES DE CUSTOMIZE
 (setq debug-on-error nil)
 (setq debug-on-quit nil)
-
