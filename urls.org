@@ -19,7 +19,7 @@ ultimo gh-pages correcto: 24d33a287d33276a06dfc68b0eb8b7d9fac0c9df
    | FCT                | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=190 |               |
    | ED Jose Manuel     | https://fpdistancia.educa.madrid.org/course/view.php?id=484                             |               |
    | ED distancia VIEJO | https://fpdistancia.educa.madrid.org/course/view.php?id=16                              |               |
-   | ED distancia MIO   | https://fpdistancia.educa.madrid.org/course/view.php?id=632                                                                                        |               |
+   | ED distancia MIO   | https://fpdistancia.educa.madrid.org/course/view.php?id=632                             |               |
 
 
 

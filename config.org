@@ -1,6 +1,7 @@
 #+TITLE: Configuración /Emacs/ de Álvaro González
 #+OPTIONS: toc:4 h:4
 
+
 * Cómo funciona este fichero
 
 La configuración de Emacs se realiza con código elisp. Al contrario que otros editores, que están pensados para ser usados sin demasiada customización, los usuarios de Emacs solemos cambiarlo de forma bastante /extrema/ (¡por eso nos gusta!).
@@ -381,20 +382,25 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
        company-lsp
        company-yasnippet
        company-emoji
+       company-capf
        )
-      ))
+      )
+    )
 
 
   (defvar my-company-backends-org-mode
-  '(
-    (
-      company-files
-      company-dabbrev-code
-      company-dabbrev
-      company-yasnippet
-      company-emoji
-      ))
-  )
+    '(
+      (
+       company-files
+       company-dabbrev-code
+       company-dabbrev
+       company-keywords
+       company-yasnippet
+       company-emoji
+       company-capf
+       )
+      )
+    )
 
   (defvar my-company-backends my-company-backends-org-mode)
 
@@ -425,6 +431,17 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
 #+end_src
 
+Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta el /case/
+#+begin_src emacs-lisp
+  (setq company-dabbrev-code-everywhere t)
+  (setq company-dabbrev-code-ignore-case nil)
+  (setq company-dabbrev-everywhere t)
+  (setq company-dabbrev-ignore-case 'keep-prefix)
+  (setq company-dabbrev-downcase nil)
+#+end_src
+
+#+RESULTS:
+
 
 
 * Navegación
@@ -451,6 +468,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 - Agrupo los buffers por proyecto de =projectile=
 #+begin_src emacs-lisp
 (add-hook 'ibuffer-hook #'ibuffer-projectile-set-filter-groups)
+(add-hook 'ibuffer-sidebar-mode-hook #'ibuffer-projectile-set-filter-groups)
 #+end_src
 
 
@@ -478,6 +496,27 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
 
 * Mi configuración
+
+** =neotree=
+En =neotree=, quiero ver todos los ficheros, y no me importa el ancho fijo de la ventana.
+#+begin_src emacs-lisp
+(setq neo-show-hidden-files t)
+(setq neo-window-fixed-size nil)
+#+end_src
+
+
+** Correo electrónico
+Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smarthost/)
+#+begin_src emacs-lisp
+(setq send-mail-function (quote sendmail-send-it))
+#+end_src
+
+** =quickrun=
+=Quickrun= ejecuta el buffer actual. Aumento el tiempo límite de la ejecución antes de matar el proceso.
+#+begin_src emacs-lisp
+(setq quickrun-timeout-seconds 100)
+#+end_src
+
 
 ** =tramp=
 =tramp= intenta optimizar las conexiones, enviando en línea los ficheros pequeños. Esto me da problemas en algunos sistemas, así que indico que los ficheros se copien a partir de 1 byte de tamaño:
@@ -509,13 +548,17 @@ Emacs guarda una copia de seguridad de los ficheros editados. Si no se configura
 Las copias de seguridad son interesantes aunque se utilice un control de versiones. Por ejemplo, se guardan versiones de ficheros del sistema y de los editados con Tramp.
 
 Prefiero guardar todas las copias en un directorio, manteniendo varias versiones de cada fichero.
+
+Tampoco me interesan los ficheros de /lock/.
 #+begin_src emacs-lisp
-(setq backup-directory-alist `(("." . "~/.saves")))
-(setq backup-by-copying t)
-(setq delete-old-versions t
-      kept-new-versions 6
-      kept-old-versions 2
-      version-control t)
+  (setq backup-directory-alist `(("." . "~/.saves")))
+  (setq backup-by-copying t)
+  (setq delete-old-versions t
+        kept-new-versions 6
+        kept-old-versions 2
+        version-control t)
+
+  (setq create-lockfiles nil)
 #+end_src
 
 ** =doc-view=
@@ -536,7 +579,6 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
   (setq org-plantuml-jar-path "/home/alvaro/apuntes-clase/bin/plantuml.1.2018.11.jar")
   (setq plantuml-jar-path org-plantuml-jar-path)
 
-
   (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t) (plantuml . t ) ( C . t)))
 
   (org-babel-do-load-languages 'org-babel-load-languages
@@ -546,8 +588,18 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
                                  (plantuml . t)
                                  (scala . t)
                                  )) 
+
+#+end_src                                                                                                                                                   
+
+ Además, no pido confirmación para varios lenguajes                                                                                                           
+ #+begin_src emacs-lisp
+ (defun my-org-confirm-babel-evaluate (lang body)                                                                                                             
+   (not (member lang '("dot" "emacs-lisp shell"))))                                                                                                           
+                                                                                                                                                              
+ (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)                                                                                             
 #+end_src
 
+   
 *** Listas alfabéticas
 #+begin_src emacs-lisp
 (setq org-list-allow-alphabetical t)
@@ -647,17 +699,16 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 (setq helm-use-undecorated-frame-option t)
 #+end_src
 
-
 *** /Child frame/
 =helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original. Estas opción es bastante lenta en algunos sistemas de ventanas.
-#+begin_src emacs-lisp
+#+begin_src emacs
 (setq helm-display-function 'helm-display-buffer-in-own-frame
       helm-display-buffer-width 120)
 #+end_src
 
 =swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Ahora estoy valorando si me quedo con =swiper= o =swop=. Lo siguiente es para hacer que también aparezca en una /child frame/.
 
-#+begin_src emacs
+#+begin_src lisp
 (setq swiper-helm-display-function helm-display-function)
 (setq helm-swoop-split-window-function helm-display-function)
 #+end_src
@@ -919,9 +970,22 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 
 #+end_src
 
-* UTILS
+* Utilidades
 
-+ Inicio de una selección rectangular usando el ratón (lo uso poco, prefiero =C-x spc=)
+- Convierto el buffer actual a una frame nueva
+#+begin_src emacs-lisp
+(defun saca-a-nueva-frame()
+  (interactive)
+  (let ((buffer (current-buffer)))
+    (unless (one-window-p)
+      (delete-window))
+    (display-buffer-pop-up-frame buffer nil)))
+#+end_src
+
+#+RESULTS:
+: saca-a-nueva-frame
+
+- Inicio de una selección rectangular usando el ratón (lo uso poco, prefiero =C-x spc=)
 #+begin_src emacs-lisp
 ;; https://emacs.stackexchange.com/questions/7244/enable-emacs-column-selection-using-mouse
 (defun mouse-start-rectangle (start-event)
@@ -978,14 +1042,18 @@ With a prefix ARG always prompt for command to use."
 
 - Arrancar el servidor http de emacs en el directorio actual
 #+begin_src emacs-lisp
-(defun servidor-httpd-aqui (directory port)
-  "Abre un servidor http en un directorio."
-  (interactive (list (read-directory-name "Root directory: " default-directory nil t)
-                     (read-number "Port: " 8080)))
-  (setq httpd-root directory)
-  (setq httpd-port port)
-  (httpd-start)
-  (browse-url (concat "http://localhost:" (number-to-string port) "/")))
+  (defun servidor-httpd-aqui (directory host port)
+    "Abre un servidor http en un directorio."
+    (interactive   (list
+    (read-directory-name "Root directory: " default-directory nil t)
+    (read-string "Host: " "127.0.0.1" )
+    (read-number "Port: " 8080)))
+
+    (setq httpd-root directory)
+    (setq httpd-host host)
+    (setq httpd-port port)
+    (httpd-start)
+    (browse-url (concat "http://localhost:" (number-to-string port) "/")))
 #+end_src
 
 
@@ -1244,9 +1312,14 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
       (display-line-numbers-mode 0))
   (org-display-inline-images))
 
+(defun bonito-para-org()
+  (interactive)
+  (bonito-para-proyector)
+  (electric-pair-local-mode 1))
+
+
 (defun bonito-para-codigo()
   (interactive)
-  (electric-pair-mode 1)
   (toggle-truncate-lines 1)
   (highlight-indent-guides-mode 0)
   (toggle-word-wrap 1)
@@ -1258,7 +1331,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 
 (add-hook 'prog-mode-hook 'bonito-para-codigo)
 (add-hook 'text-mode-hook 'bonito-para-proyector)
-(add-hook 'org-mode-hook 'bonito-para-proyector)
+(add-hook 'org-mode-hook 'bonito-para-org)
 (add-hook 'tex-mode-hook 'bonito-para-codigo)
 #+end_src
 
