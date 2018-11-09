@@ -537,10 +537,11 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
   (setq plantuml-jar-path org-plantuml-jar-path)
 
 
-  (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t) (plantuml . t )))
+  (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t) (plantuml . t ) ( C . t)))
 
   (org-babel-do-load-languages 'org-babel-load-languages
                                '(
+                                 (C . t )
                                  (dot . t)
                                  (plantuml . t)
                                  (scala . t)
