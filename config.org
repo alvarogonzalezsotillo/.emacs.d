@@ -158,6 +158,7 @@ Guardo los paquetes que necesito en una variable, y se reinstalan si no están y
       wgrep-helm
       which-key
       yafolding
+      yasnippet
       yasnippet-snippets
       ))
 
