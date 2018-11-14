@@ -1193,8 +1193,8 @@ Generalmente utilizo un fichero orgmode para hacer transparencias y materiales p
 
 #+end_src
 
+Función para decodificar una URL
 #+begin_src emacs-lisp
-;; EXPERIMENTOS
 (defun url-decode-region (start end)
   "Replace a region with the same contents, only URL decoded."
   (interactive "r")
@@ -1204,6 +1204,7 @@ Generalmente utilizo un fichero orgmode para hacer transparencias y materiales p
 
 #+end_src
 
+Este es mi horario lectivo (sin incluir guardias y otras horas que no son de docencia directa a alumnos)
 #+begin_src emacs-lisp
 (defun horario()
   (interactive)
@@ -1288,6 +1289,23 @@ Convertir la selección en un bloque de código de =orgmode=
 		   (if (markerp end) (goto-char end) (forward-char (- end beg)))
 		   (org-escape-code-in-region p (point)))
 		 (insert (funcall maybe-cap "#+end_src\n")))))))))
+#+end_src
+
+
+Diferencias con la última versión de =git=, usando =git-gutter=
+#+begin_src emacs-lisp
+  (defun diferencias-git (&optional diffinfo)
+    "Popup current diff hunk."
+    (interactive)
+    (git-gutter:awhen (or diffinfo
+                          (git-gutter:search-here-diffinfo git-gutter:diffinfos))
+      (save-selected-window 
+        ;;(pop-to-buffer (git-gutter:update-popuped-buffer it))
+        (display-buffer-pop-up-frame (git-gutter:update-popuped-buffer it) nil)
+        )
+
+      )
+    )
 #+end_src
 
 
