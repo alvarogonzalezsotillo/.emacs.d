@@ -507,9 +507,33 @@ Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta 
 ** =neotree=
 En =neotree=, quiero ver todos los ficheros, y no me importa el ancho fijo de la ventana.
 #+begin_src emacs-lisp
-(setq neo-show-hidden-files t)
-(setq neo-window-fixed-size nil)
+
+  ; https://github.com/jaypei/emacs-neotree/issues/149
+  (defun neotree-project-root-dir-or-current-dir ()
+    "Open NeoTree using the project root, using projectile, or the
+  current buffer directory."
+    (interactive)
+    (let ((project-dir (ignore-errors (projectile-project-root)))
+          (file-name (buffer-file-name))
+          (neo-smart-open t))
+      (if (neo-global--window-exists-p)
+          (neotree-hide)
+        (progn
+          (neotree-show)
+          (if project-dir
+              ;(neotree-dir project-dir)
+              (neotree-projectile-action))
+          (if file-name
+              (neotree-find file-name))))))
+
+  (setq neo-show-hidden-files t)
+  (setq neo-window-fixed-size nil)
+  (setq neo-hidden-regexp-list (quote ("\\.pyc$" "~$" "^#.*#$" "\\.elc$")))
+
 #+end_src
+
+#+RESULTS:
+| \.pyc$ | ~$ | ^#.*#$ | \.elc$ |
 
 
 ** Correo electrónico
@@ -600,8 +624,7 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
  Además, no pido confirmación para varios lenguajes                                                                                                           
  #+begin_src emacs-lisp
  (defun my-org-confirm-babel-evaluate (lang body)                                                                                                             
-   (not (member lang '("dot" "emacs-lisp shell"))))                                                                                                           
-                                                                                                                                                              
+   (not (member lang '("dot" "emacs-lisp" "shell"))))
  (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)                                                                                             
 #+end_src
 
@@ -951,7 +974,7 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
       (define-key map (kbd "M-y") 'helm-show-kill-ring)
       (define-key map (kbd "C-x r b") 'helm-filtered-bookmarks)
 
-      (define-key map (kbd "<f8>") 'neotree-toggle)
+      (define-key map (kbd "<f8>") 'neotree-project-root-dir-or-current-dir)
       (define-key map (kbd "C-<f8>") 'ibuffer-sidebar-toggle-sidebar)
 
       (define-key map (kbd "C-x o") 'switch-window)
@@ -975,6 +998,9 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
   (mis-teclas-minor-mode 1)
 
 #+end_src
+
+#+RESULTS:
+: t
 
 * Utilidades
 
