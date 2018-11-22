@@ -817,7 +817,7 @@ Utilizo /flycheck/ para que emacs compruebe automáticamente cada buffer
 
 
 El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminales modo texto que costaba refrescar. Con los ordenadores actuales, mejor un /scroll/ suave
-#+begin_src emacs-lisps
+#+begin_src emacs-lisp
 (setq scroll-margin 0
       scroll-step 1
       scroll-conservatively 10000
