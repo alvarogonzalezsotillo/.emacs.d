@@ -8,6 +8,7 @@
 #+latex_header: \renewcommand{\ttdefault}{pcr} % MONOESPACIO CON NEGRITA
 #+latex_header: \usepackage{listings}
 #+latex_header: \usepackage{listingsutf8}
+#+latex_header: \usepackage{indentfirst}
 #+latex_header: \lstset{frame=single,inputencoding=utf8,basicstyle=\scriptsize\ttfamily,showstringspaces=false,numbers=none}
 #+latex_header: \definecolor{MyDarkGreen}{rgb}{0.0,0.4,0.0} % This is the color used for comments
 #+latex_header: \lstset{ breaklines=true, postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}, keywordstyle=\bfseries, keywordstyle=[1]\color{Blue}\bfseries,  keywordstyle=[2]\color{Purple}\bfseries,  keywordstyle=[3]\color{Blue}\underbar,   identifierstyle=,   commentstyle=\usefont{T1}{pcr}{m}{sl}\color{MyDarkGreen}\small,   stringstyle=\color{Purple},   showstringspaces=false,   tabsize=2,   morecomment=[l][\color{Blue}]{...} }
@@ -29,6 +30,9 @@
 #+LATEX_HEADER: \lfoot{alvarogonzalezsotillo@gmail.com}
 #+LATEX_HEADER: \rfoot{\thepage}
 
+#+latex: \begin{center}
+Puedes encontrar la última versión de esta configuración en [[https://github.com/alvarogonzalezsotillo/.emacs.d][https://github.com/alvarogonzalezsotillo/.emacs.d]].
+#+latex: \end{center}
 
 * Cómo funciona este fichero
 
@@ -1450,6 +1454,9 @@ Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna c
 (tema-claro)
 (tema-oscuro)
 #+end_src
+
+#+RESULTS:
+: t
 
 
 
