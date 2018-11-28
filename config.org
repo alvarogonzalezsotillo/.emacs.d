@@ -1,6 +1,7 @@
 #+TITLE: Configuración /Emacs/ de Álvaro González
 #+OPTIONS: toc:4 h:4
 
+* Opciones /latex/ :noexport:
 # COLORES
 #+latex_header: \usepackage[usenames,dvipsnames]{color} % Required for custom colors
 
@@ -11,7 +12,7 @@
 #+latex_header: \usepackage{indentfirst}
 #+latex_header: \lstset{frame=single,inputencoding=utf8,basicstyle=\scriptsize\ttfamily,showstringspaces=false,numbers=none}
 #+latex_header: \definecolor{MyDarkGreen}{rgb}{0.0,0.4,0.0} % This is the color used for comments
-#+latex_header: \lstset{ breaklines=true, postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}, keywordstyle=\bfseries, keywordstyle=[1]\color{Blue}\bfseries,  keywordstyle=[2]\color{Purple}\bfseries,  keywordstyle=[3]\color{Blue}\underbar,   identifierstyle=,   commentstyle=\usefont{T1}{pcr}{m}{sl}\color{MyDarkGreen}\small,   stringstyle=\color{Purple},   showstringspaces=false,   tabsize=2,   morecomment=[l][\color{Blue}]{...} }
+#+latex_header: \lstset{ breaklines=true, postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}, keywordstyle=\bfseries, keywordstyle=[1]\color{Blue}\bfseries,  keywordstyle=[2]\color{Purple}\bfseries,  keywordstyle=[3]\color{Blue}\underbar,   identifierstyle=,   commentstyle=\color{MyDarkGreen},   stringstyle=\color{Purple},   showstringspaces=false,   tabsize=2,   morecomment=[l][\color{Blue}]{...} }
 #+latex_header: \lstset{literate=  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1   {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1   {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1   {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1   {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1   {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1   {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1   {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1   {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1   {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1   {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1   {€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1   {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1 } 
 
 # OPCIONES DE PÁGINA DE LATEX
@@ -31,7 +32,7 @@
 #+LATEX_HEADER: \rfoot{\thepage}
 
 #+latex: \begin{center}
-Puedes encontrar la última versión de esta configuración en [[https://github.com/alvarogonzalezsotillo/.emacs.d][https://github.com/alvarogonzalezsotillo/.emacs.d]].
+La última versión de esta configuración puede encontrarse en [[https://github.com/alvarogonzalezsotillo/.emacs.d][https://github.com/alvarogonzalezsotillo/.emacs.d]].
 #+latex: \end{center}
 
 * Cómo funciona este fichero
@@ -69,11 +70,32 @@ Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplement
   #+end_src
 - En instalaciones nuevas, la carga final de =custom.el= falla si no existe.
 
+
 * Utilidades externas al /PATH/
+En el directorio =~/.emacs.d/bin/= guardo algunas utilidades que me interesa tener en todos los entornos de trabajo. Lo siguiente es para que estén disponibles desde las /shells/ que arranque desde emacs
 #+begin_src emacs-lisp
 (setenv "PATH" (concat (expand-file-name "~/.emacs.d/bin") ":" (getenv "PATH")))
 (setq exec-path (append exec-path '("~/.emacs.d/bin")))
 #+end_src
+
+Las utilidades pueden consultarse en el [[https://github.com/alvarogonzalezsotillo/.emacs.d/tree/master/bin][repositorio en github]], y son:
+#+begin_src shell :exports results
+ls ~/.emacs.d/bin
+#+end_src
+
+#+RESULTS:
+| addtopath.sh           |
+| ec                     |
+| ghpages.sh             |
+| gifttolatex            |
+| githubclone.sh         |
+| keymon.sh              |
+| plantuml.1.2018.11.jar |
+| rmtemplatex.sh         |
+| shrinkpdf.sh           |
+| svg2pdf.sh             |
+| vncserver.sh           |
+| wake-alvarogonzalez.sh |
 
 
 * Paquetes
@@ -651,9 +673,10 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
                                  (dot . t)
                                  (plantuml . t)
                                  (scala . t)
+                                 (shell . t)
                                  ))
+#+end_src
 
-#+end_src                                                                                                                                                   
 
  Además, no pido confirmación para varios lenguajes                                                                                                           
  #+begin_src emacs-lisp
