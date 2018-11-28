@@ -1,0 +1,8 @@
+#!/bin/sh
+file="$1"
+if [ "$file" = "" ]
+then
+    file="."
+fi
+   
+emacsclient -n $file
