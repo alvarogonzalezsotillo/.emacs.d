@@ -13,8 +13,10 @@
 (package-initialize t)
 ;(package-refresh-contents)
 (package-install 'org)
+(package-install 'use-package)
 (require 'org)
 (require 'ob-tangle)
+(require 'use-package)
 (org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
 
 

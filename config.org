@@ -116,83 +116,6 @@ Guardo los paquetes que necesito en una variable, y se reinstalan si no están y
  
 #+end_src
 
-Por último, el paquete =ob-scala= es un paquete local bajado de [[https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el][https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el]]. Sirve para ejecutar código =scala= directamente desde un documento =orgmode=.
-
-#+begin_src emacs-lisp
-(require 'ob-scala)
-#+end_src
-
-** Parches sobre los paquetes
-En este momento los paquetes ya están cargados, pero necesito modificar el comportamiento de algunos de ellos de formas que no están soportadas en su configuración
-
-
-** =ox-reveal=
-Cuando exporto un fichero =org= a =reveal.js= tengo problemas en la forma en que se escapan los caracteres =>= y =<= de los bloques de código. Con esta redefinición de la función =org-reveal-src-block= queda solucionado
-
-#+begin_src emacs-lisp
-;; ESCAPE HTML IN REVEAL
-(setq mi-org-html-protect-char-alist
-  '(("&" . "&amp;")
-    ("<" . "&lt;")
-    (">" . "&gt;")
-    ("\\%" . "&#37;")))
-
-(defun mi-org-html-encode-plain-text (text)
-  "Convert plain text characters from TEXT to HTML equivalent.
-Possible conversions are set in `org-html-protect-char-alist'."
-  (dolist (pair org-html-protect-char-alist text)
-    (setq text (replace-regexp-in-string (car pair) (cdr pair) text t t))))
-
-
-(defun org-reveal-src-block (src-block contents info)
-  "Transcode a SRC-BLOCK element from Org to Reveal.
-CONTENTS holds the contents of the item.  INFO is a plist holding
-contextual information."
-  (if (org-export-read-attribute :attr_html src-block :textarea)
-      (org-html--textarea-block src-block)
-    (let* ((use-highlight (org-reveal--using-highlight.js info))
-           (lang (org-element-property :language src-block))
-           (caption (org-export-get-caption src-block))
-           (not-escaped-code (if (not use-highlight)
-                     (org-html-format-code src-block info)
-                   (cl-letf (((symbol-function 'org-html-htmlize-region-for-paste)
-                              #'buffer-substring))
-                     (org-html-format-code src-block info))))
-           (code (mi-org-html-encode-plain-text not-escaped-code))
-           ;(code  not-escaped-code)
-           
-           (frag (org-export-read-attribute :attr_reveal src-block :frag))
-	   (code-attribs (or (org-export-read-attribute
-			 :attr_reveal src-block :code_attribs) ""))
-           (label (let ((lbl (org-element-property :name src-block)))
-                    (if (not lbl) ""
-                      (format " id=\"%s\"" lbl)))))
-      (if (not lang)
-          (format "<pre %s%s>\n%s</pre>"
-                  (or (frag-class frag info) " class=\"example\"")
-                  label
-                  code)
-        (format
-         "<div class=\"org-src-container\">\n%s%s\n</div>"
-         (if (not caption) ""
-           (format "<label class=\"org-src-name\">%s</label>"
-                   (org-export-data caption info)))
-         (if use-highlight
-             (format "\n<pre%s%s><code class=\"%s\" %s>%s</code></pre>"
-                     (or (frag-class frag info) "")
-                     label lang code-attribs code)
-           (format "\n<pre %s%s>%s</pre>"
-                   (or (frag-class frag info)
-                       (format " class=\"src src-%s\"" lang))
-                   label code)))))))
-#+end_src
-
-
-
-
-
-
-
 * =use-package=
 Voy a intentar usar =use-package=
 
@@ -228,118 +151,131 @@ Para actualizar siempre los paquetes, se puede utilizar auto-package-update
 
 
 *** Tabla =mis-paquetes=
-#+tblname: mis-paquetes
-| auto-package-update            |
-| adaptive-wrap                  |
-| 2048-game                      |
-| auto-highlight-symbol          |
-| default-text-scale             |
-| ag                             |
-| alert                          |
-| auto-highlight-symbol          |
-| bind-key                       |
-| calfw                          |
-| calfw-ical                     |
-| chess                          |
-| color-theme-sanityinc-tomorrow |
-| company                        |
-| company-auctex                 |
-| company-c-headers              |
-| company-emoji                  |
-| company-flx                    |
-| company-lsp                    |
-| company-quickhelp              |
-| company-restclient             |
-| company-shell                  |
-| company-web                    |
-| crappy-jsp-mode                |
-| diffview                       |
-| dired-narrow                   |
-| ensime                         |
-| expand-region                  |
-| flycheck                       |
-| gift-mode                      |
-| git-gutter                     |
-| git-timemachine                |
-| gitignore-mode                 |
-| graphviz-dot-mode              |
-| helm-ag                        |
-| helm-company                   |
-| helm-flx                       |
-| helm-gitignore                 |
-| helm-google                    |
-| helm-projectile                |
-| highlight-indent-guides        |
-| howdoi                         |
-| htmlize                        |
-| ibuffer-sidebar                |
-| image+                         |
-| imenu-anywhere                 |
-| imenu-list                     |
-| intellij-theme                 |
-| kodi-remote                    |
-| latex-preview-pane             |
-| lorem-ipsum                    |
-| lsp-mode                       |
-| lsp-javascript-typescript      |
-| lsp-ui                         |
-| magit                          |
-| markdown-mode                  |
-| markdown-preview-mode          |
-| neotree                        |
-| ob-restclient                  |
-| org                            |
-| org-attach-screenshot          |
-| org-page                       |
-| ox-reveal                      |
-| page-break-lines               |
-| paradox                        |
-| php-mode                       |
-| plantuml-mode                  |
-| popup-imenu                    |
-| popup-complete                 |
-| popup-switcher                 |
-| popwin                         |
-| prettier-js                    |
-| quickrun                       |
-| rectangle-utils                |
-| request-deferred               |
-| restclient                     |
-| restclient-helm                |
-| scad-mode                      |
-| scad-preview                   |
-| scala-mode                     |
-| skewer-mode                    |
-| sublimity                      |
-| swiper-helm                    |
-| switch-window                  |
-| swoop                          |
-| helm-swoop                     |
-| tablist                        |
-| transmission                   |
-| transpose-frame                |
-| use-package                    |
-| vim-empty-lines-mode           |
-| volatile-highlights            |
-| web-beautify                   |
-| web-mode                       |
-| wgrep                          |
-| wgrep-helm                     |
-| which-key                      |
-| yafolding                      |
+Esta tabla contiene los paquetes que utilizo sin configuración adicional
 
+#+tblname: mis-paquetes
+#+ATTR_LATEX: :environment longtable
+|--------------------------------+---|
+| 2048-game                      |   |
+| esup                           |   |
+| adaptive-wrap                  |   |
+| auto-highlight-symbol          |   |
+| default-text-scale             |   |
+| ag                             |   |
+| alert                          |   |
+| auto-highlight-symbol          |   |
+| bind-key                       |   |
+| calfw                          |   |
+| calfw-ical                     |   |
+| chess                          |   |
+| color-theme-sanityinc-tomorrow |   |
+| company                        |   |
+| company-auctex                 |   |
+| company-c-headers              |   |
+| company-emoji                  |   |
+| company-flx                    |   |
+| company-lsp                    |   |
+| company-quickhelp              |   |
+| company-restclient             |   |
+| company-shell                  |   |
+| company-web                    |   |
+| crappy-jsp-mode                |   |
+| diffview                       |   |
+| dired-narrow                   |   |
+| ensime                         |   |
+| expand-region                  |   |
+| flycheck                       |   |
+| gift-mode                      |   |
+| git-gutter                     |   |
+| git-timemachine                |   |
+| gitignore-mode                 |   |
+| graphviz-dot-mode              |   |
+| helm-ag                        |   |
+| helm-company                   |   |
+| helm-flx                       |   |
+| helm-gitignore                 |   |
+| helm-google                    |   |
+| helm-projectile                |   |
+| highlight-indent-guides        |   |
+| howdoi                         |   |
+| htmlize                        |   |
+| ibuffer-sidebar                |   |
+| image+                         |   |
+| imenu-anywhere                 |   |
+| imenu-list                     |   |
+| intellij-theme                 |   |
+| kodi-remote                    |   |
+| latex-preview-pane             |   |
+| lorem-ipsum                    |   |
+| lsp-mode                       |   |
+| lsp-javascript-typescript      |   |
+| lsp-ui                         |   |
+| magit                          |   |
+| markdown-mode                  |   |
+| markdown-preview-mode          |   |
+| neotree                        |   |
+| ob-restclient                  |   |
+| org                            |   |
+| org-attach-screenshot          |   |
+| org-page                       |   |
+| ox-reveal                      |   |
+| page-break-lines               |   |
+| paradox                        |   |
+| php-mode                       |   |
+| plantuml-mode                  |   |
+| popup-imenu                    |   |
+| popup-complete                 |   |
+| popup-switcher                 |   |
+| popwin                         |   |
+| prettier-js                    |   |
+| quickrun                       |   |
+| rectangle-utils                |   |
+| request-deferred               |   |
+| restclient                     |   |
+| restclient-helm                |   |
+| scad-mode                      |   |
+| scad-preview                   |   |
+| scala-mode                     |   |
+| skewer-mode                    |   |
+| sublimity                      |   |
+| swiper-helm                    |   |
+| switch-window                  |   |
+| swoop                          |   |
+| helm-swoop                     |   |
+| tablist                        |   |
+| transmission                   |   |
+| transpose-frame                |   |
+| use-package                    |   |
+| vim-empty-lines-mode           |   |
+| volatile-highlights            |   |
+| web-beautify                   |   |
+| web-mode                       |   |
+| wgrep                          |   |
+| wgrep-helm                     |   |
+| which-key                      |   |
+| yafolding                      |   |
+|--------------------------------+---|
 
 *** Carga de paquetes sin opciones
 Por cada paquete sin opciones especiales, simplemente lo cargo con =use-package= instalándolo si no está ya instalado.
 El bucle =dolist= se realiza sobre los datos de la tabla =mis-paquetes=. Cada fila se recibe como una lista de columnas, así que me quedo con la primera columna y la convierto a un =symbol=. Después, construyo la llamada a =use-package= y la evaluo (como =use-package= es una macro, no puedo hacerlo directamente)
 #+BEGIN_SRC emacs-lisp :var mis-paquetes=mis-paquetes
   (dolist (paquete mis-paquetes)
+    (message (concat "Voy a cargar el paquete: " (car paquete)))
     (setq lista `(use-package ,(intern (car paquete)) :ensure t ) )
     (eval lista))
 #+END_SRC
 
 
 #+RESULTS:
+
+
+Por último, el paquete =ob-scala= es un paquete local bajado de [[https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el][https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el]]. Sirve para ejecutar código =scala= directamente desde un documento =orgmode=.
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/mis-paquetes")
+(require 'ob-scala)
+#+end_src
 
 
 ** Paquete =dumb-jump=
@@ -387,18 +323,23 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 
 
 ** Paquete =yasnippet=
-Plantillas para introducción rápida de partes del texto
-#+begin_src emacs-lisp
+Plantillas para introducción rápida de partes del texto. =yasnippet= interfiere con otros modos en su uso del tabulador, así que cambio su combinación.
+#+begin_src lisp
 (use-package yasnippet
   :ensure t
   :config 
-    (yas-global-mode 1))
+    (yas-global-mode 1)
+    (define-key yas-minor-mode-map (kbd "<tab>") nil)
+    (define-key yas-minor-mode-map (kbd "TAB") nil)
+    (define-key yas-minor-mode-map (kbd "C-c TAB") 'yas-expand))
 
 (use-package yasnippet-snippets
   :ensure t
   :after (yasnippet))
     
 #+end_src
+
+
 
 
 
@@ -413,81 +354,7 @@ Este modo cierra automáticamente los paréntesis y otros bloques
 #+end_src
 
 
-** Paréntesis
-
-Con estos cambios, se tienen en cuenta los formatos de orgmode en electric-pair-mode
-#+begin_src emacs-lisp
-  (use-package org
-    :ensure t
-    :config
-      (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
-      (modify-syntax-entry ?= "(=" org-mode-syntax-table)
-      (modify-syntax-entry ?* "(*" org-mode-syntax-table)
-      (modify-syntax-entry ?/ "(/" org-mode-syntax-table))
-#+end_src
-
-
-* /Customize/
-El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
-#+begin_src emacs-lisp
-(setq custom-file "~/.emacs.d/custom-file.el")
-(load custom-file)
-#+end_src
-
-* Edición
-
-
-** Tabuladores /vs/ espacios
-No utilizo tabuladores en las indentaciones. 
-#+begin_src emacs-lisp
-(setq-default indent-tabs-mode nil)
-(setq tab-width 2)
-#+end_src
-
-** Comportamiento de la selección
-Al comenzar a escribir con una selección, se borra lo seleccionado. 
-#+begin_src emacs-lisp
-(delete-selection-mode 1)
-#+end_src
-
-Al copiar la  selección, mantener la selección 
-#+begin_src emacs-lisp
-(defadvice kill-ring-save (after keep-transient-mark-active ())
-  "Override the deactivation of the mark."
-  (setq deactivate-mark nil))
-(ad-activate 'kill-ring-save)
-#+end_src
-
-
-** Línea nueva al final de fichero
-Los ficheros deben tener una línea nueva al final. Además, indicar el fin de fichero como en =vim=.
-#+begin_src emacs-lisp
-(setq indicate-empty-lines t require-final-newline t)
-#+end_src
-
-
-** Historia del portapapeles
-Una de las ventajas de Emacs es su /kill ring/, donde se guarda la historia del portapapeles. Con esta opción, añado a esta historia el portapapeles del sistema. Descubierto en [[https://writequit.org/org/settings.html#sec-1-33][https://writequit.org/org/settings.html#sec-1-33]]
-#+begin_src emacs-lisp
-(setq save-interprogram-paste-before-kill t)
-#+end_src
-
-** Recarga de ficheros modificados
-Encuentro más conveniente que los ficheros se recarguen si un programa externo los modifica, sin preguntas.
-
-#+begin_src emacs-lisp
-(global-auto-revert-mode 1)
-(setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil)
-#+end_src
-
-** Comandos que se consideran /avanzados/
-Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones útiles que prefiero que estén activadas por defecto.
-#+begin_src emacs-lisp
-(put 'narrow-to-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-#+end_src
+** Paquete =adaptive-wrap=
 
 
 
@@ -570,6 +437,157 @@ Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta 
 #+end_src
 
 #+RESULTS:
+
+
+
+
+** Paréntesis
+
+Con estos cambios, se tienen en cuenta los formatos de orgmode en electric-pair-mode
+#+begin_src emacs-lisp
+  (use-package org
+    :ensure t
+    :config
+      (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
+      (modify-syntax-entry ?= "(=" org-mode-syntax-table)
+      (modify-syntax-entry ?* "(*" org-mode-syntax-table)
+      (modify-syntax-entry ?/ "(/" org-mode-syntax-table))
+#+end_src
+
+
+
+** Parches sobre los paquetes
+En este momento los paquetes ya están cargados, pero necesito modificar el comportamiento de algunos de ellos de formas que no están soportadas en su configuración
+
+
+*** =ox-reveal=
+Cuando exporto un fichero =org= a =reveal.js= tengo problemas en la forma en que se escapan los caracteres =>= y =<= de los bloques de código. Con esta redefinición de la función =org-reveal-src-block= queda solucionado
+
+#+begin_src emacs-lisp
+;; ESCAPE HTML IN REVEAL
+(setq mi-org-html-protect-char-alist
+  '(("&" . "&amp;")
+    ("<" . "&lt;")
+    (">" . "&gt;")
+    ("\\%" . "&#37;")))
+
+(defun mi-org-html-encode-plain-text (text)
+  "Convert plain text characters from TEXT to HTML equivalent.
+Possible conversions are set in `org-html-protect-char-alist'."
+  (dolist (pair org-html-protect-char-alist text)
+    (setq text (replace-regexp-in-string (car pair) (cdr pair) text t t))))
+
+
+(defun org-reveal-src-block (src-block contents info)
+  "Transcode a SRC-BLOCK element from Org to Reveal.
+CONTENTS holds the contents of the item.  INFO is a plist holding
+contextual information."
+  (if (org-export-read-attribute :attr_html src-block :textarea)
+      (org-html--textarea-block src-block)
+    (let* ((use-highlight (org-reveal--using-highlight.js info))
+           (lang (org-element-property :language src-block))
+           (caption (org-export-get-caption src-block))
+           (not-escaped-code (if (not use-highlight)
+                     (org-html-format-code src-block info)
+                   (cl-letf (((symbol-function 'org-html-htmlize-region-for-paste)
+                              #'buffer-substring))
+                     (org-html-format-code src-block info))))
+           (code (mi-org-html-encode-plain-text not-escaped-code))
+           ;(code  not-escaped-code)
+           
+           (frag (org-export-read-attribute :attr_reveal src-block :frag))
+	   (code-attribs (or (org-export-read-attribute
+			 :attr_reveal src-block :code_attribs) ""))
+           (label (let ((lbl (org-element-property :name src-block)))
+                    (if (not lbl) ""
+                      (format " id=\"%s\"" lbl)))))
+      (if (not lang)
+          (format "<pre %s%s>\n%s</pre>"
+                  (or (frag-class frag info) " class=\"example\"")
+                  label
+                  code)
+        (format
+         "<div class=\"org-src-container\">\n%s%s\n</div>"
+         (if (not caption) ""
+           (format "<label class=\"org-src-name\">%s</label>"
+                   (org-export-data caption info)))
+         (if use-highlight
+             (format "\n<pre%s%s><code class=\"%s\" %s>%s</code></pre>"
+                     (or (frag-class frag info) "")
+                     label lang code-attribs code)
+           (format "\n<pre %s%s>%s</pre>"
+                   (or (frag-class frag info)
+                       (format " class=\"src src-%s\"" lang))
+                   label code)))))))
+#+end_src
+
+
+
+
+
+
+
+* /Customize/
+El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
+#+begin_src emacs-lisp
+(setq custom-file "~/.emacs.d/custom-file.el")
+(load custom-file)
+#+end_src
+
+* Edición
+
+
+** Tabuladores /vs/ espacios
+No utilizo tabuladores en las indentaciones. 
+#+begin_src emacs-lisp
+(setq-default indent-tabs-mode nil)
+(setq tab-width 2)
+#+end_src
+
+** Comportamiento de la selección
+Al comenzar a escribir con una selección, se borra lo seleccionado. 
+#+begin_src emacs-lisp
+(delete-selection-mode 1)
+#+end_src
+
+Al copiar la  selección, mantener la selección 
+#+begin_src emacs-lisp
+(defadvice kill-ring-save (after keep-transient-mark-active ())
+  "Override the deactivation of the mark."
+  (setq deactivate-mark nil))
+(ad-activate 'kill-ring-save)
+#+end_src
+
+
+** Línea nueva al final de fichero
+Los ficheros deben tener una línea nueva al final. Además, indicar el fin de fichero como en =vim=.
+#+begin_src emacs-lisp
+(setq indicate-empty-lines t require-final-newline t)
+#+end_src
+
+
+** Historia del portapapeles
+Una de las ventajas de Emacs es su /kill ring/, donde se guarda la historia del portapapeles. Con esta opción, añado a esta historia el portapapeles del sistema. Descubierto en [[https://writequit.org/org/settings.html#sec-1-33][https://writequit.org/org/settings.html#sec-1-33]]
+#+begin_src emacs-lisp
+(setq save-interprogram-paste-before-kill t)
+#+end_src
+
+** Recarga de ficheros modificados
+Encuentro más conveniente que los ficheros se recarguen si un programa externo los modifica, sin preguntas.
+
+#+begin_src emacs-lisp
+(global-auto-revert-mode 1)
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil)
+#+end_src
+
+** Comandos que se consideran /avanzados/
+Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones útiles que prefiero que estén activadas por defecto.
+#+begin_src emacs-lisp
+(put 'narrow-to-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+#+end_src
 
 
 
@@ -671,9 +689,6 @@ En =neotree=, quiero ver todos los ficheros, y no me importa el ancho fijo de la
 
 #+end_src
 
-#+RESULTS:
-| \.pyc$ | ~$ | ^#.*#$ | \.elc$ |
-
 
 ** Correo electrónico
 Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smarthost/)
@@ -684,7 +699,10 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 ** =quickrun=
 =Quickrun= ejecuta el buffer actual. Aumento el tiempo límite de la ejecución antes de matar el proceso.
 #+begin_src emacs-lisp
-(setq quickrun-timeout-seconds 100)
+(use-package quickrun
+  :ensure t
+  :config 
+    (setq quickrun-timeout-seconds 100))
 #+end_src
 
 
@@ -834,14 +852,19 @@ Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en e
 
 Ayuda interactiva de teclado
 #+begin_src emacs-lisp
-(which-key-mode t)
+(use-package which-key
+  :ensure t
+  :config
+    (which-key-mode t))
 #+end_src
 
 
 Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en todo el buffer, para que se pueda navegar por todas las ocurrencias del fichero, pero ralentizaba bastante. Ahora uso =smartscan=.
 #+begin_src emacs-lisp
-(require 'auto-highlight-symbol)
-(setq ahs-default-range 'ahs-range-display)
+  (use-package auto-highlight-symbol
+    :ensure t
+    :config
+      (setq ahs-default-range 'ahs-range-display))
 #+end_src
 
 
@@ -856,19 +879,22 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 #+begin_src emacs-lisp
 
 ;; HELM
-(require 'tramp) ;; PARA EVITAR EL ERROR Symbol’s value as variable is void: tramp-methods
-(setq helm-split-window-inside-p t)
-(setq helm-display-header-line nil)
-(setq helm-autoresize-max-height 30)
-(setq helm-autoresize-min-height 30)
-(setq projectile-completion-system 'helm)
-(helm-autoresize-mode 1)
-(helm-mode 1)
-(helm-projectile-on)
-(helm-flx-mode +1)
-(setq helm-echo-input-in-header-line t)
-(setq helm-display-buffer-reuse-frame t)
-(setq helm-use-undecorated-frame-option t)
+(use-package helm
+  :ensure t
+  :config
+    (setq helm-split-window-inside-p t)
+    (setq helm-display-header-line nil)
+    (setq helm-autoresize-max-height 30)
+    (setq helm-autoresize-min-height 30)
+    (setq projectile-completion-system 'helm)
+    (helm-autoresize-mode 1)
+    (helm-mode 1)
+    (helm-projectile-on)
+    (helm-flx-mode +1)
+    (setq helm-echo-input-in-header-line t)
+    (setq helm-display-buffer-reuse-frame t)
+    (setq helm-use-undecorated-frame-option t)
+  :after (tramp)) ;; PARA EVITAR EL ERROR Symbol’s value as variable is void: tramp-methods
 #+end_src
 
 *** /Child frame/
@@ -878,11 +904,18 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
       helm-display-buffer-width 120)
 #+end_src
 
-=swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Ahora estoy valorando si me quedo con =swiper= o =swop=. Lo siguiente es para hacer que también aparezca en una /child frame/.
+=swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Ahora estoy valorando si me quedo con =swiper= o =swoop=. Lo siguiente es para hacer que también aparezca en una /child frame/.
 
 #+begin_src lisp
-(setq swiper-helm-display-function helm-display-function)
-(setq helm-swoop-split-window-function helm-display-function)
+(use-package swiper
+  :ensure t
+  :config
+    (setq swiper-helm-display-function helm-display-function))
+
+(use-package swoop
+  :ensure t
+  :config
+    (setq helm-swoop-split-window-function helm-display-function))
 #+end_src
 
 
@@ -1046,17 +1079,6 @@ A veces es fácil perderse entre comandos a medio introducir y ventanas popup. M
 #+end_src
 
 
-/yasnippet/ interfiere con otros modos en su uso del tabulador, así que cambio su combinación.
-#+begin_src emacs-lisp
-
-  ;; Remove Yasnippet's default tab key binding
-  (require 'yasnippet)
-  (define-key yas-minor-mode-map (kbd "<tab>") nil)
-  (define-key yas-minor-mode-map (kbd "TAB") nil)
-  (define-key yas-minor-mode-map (kbd "C-c TAB") 'yas-expand)
-
-#+end_src
-
 
 Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por ejemplo, prefiero que =C-Z= sea "deshacer"). Para poder definir teclas con prioridad sobre los demás modos defino un modo con mis atajos.
 #+begin_src emacs-lisp
@@ -1135,7 +1157,7 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
 * Utilidades
 
-Convierto el buffer actual a una frame nueva
+** Convierto el buffer actual a una frame nueva
 #+begin_src emacs-lisp
 (defun saca-a-nueva-frame()
   (interactive)
@@ -1148,7 +1170,7 @@ Convierto el buffer actual a una frame nueva
 #+RESULTS:
 : saca-a-nueva-frame
 
-Inicio de una selección rectangular usando el ratón (lo uso poco, prefiero =C-x spc=)
+** Inicio de una selección rectangular usando el ratón (lo uso poco, prefiero =C-x spc=)
 #+begin_src emacs-lisp
 ;; https://emacs.stackexchange.com/questions/7244/enable-emacs-column-selection-using-mouse
 (defun mouse-start-rectangle (start-event)
@@ -1167,7 +1189,7 @@ Inicio de una selección rectangular usando el ratón (lo uso poco, prefiero =C-
 
 #+end_src
 
-Abrir el fichero del buffer actual con un programa externo
+** Abrir el fichero del buffer actual con un programa externo
 #+begin_src emacs-lisp
 ;; http://pages.sachachua.com/.emacs.d/Sacha.html
 (defun abrir-programa-externo (arg)
@@ -1188,7 +1210,7 @@ With a prefix ARG always prompt for command to use."
                  (lambda() (winner-undo)))))
 #+end_src
 
-Copiar el nombre del fichero actual al portapapeles
+** Copiar el nombre del fichero actual al portapapeles
 #+begin_src emacs-lisp
 ;; http://pages.sachachua.com/.emacs.d/Sacha.html
 (defun copiar-nombre-fichero-actual ()
@@ -1203,7 +1225,7 @@ Copiar el nombre del fichero actual al portapapeles
 
 #+end_src
 
-Arrancar el servidor http de emacs en el directorio actual
+** Arrancar el servidor http de emacs en el directorio actual
 #+begin_src emacs-lisp
   (defun servidor-httpd-aqui (directory host port)
     "Abre un servidor http en un directorio."
@@ -1220,7 +1242,7 @@ Arrancar el servidor http de emacs en el directorio actual
 #+end_src
 
 
-Al visitar un fichero, reabrir el bufer como root, incluso a través de tramp. Hay una versión para emacs25 y otra para emacs26.
+** Al visitar un fichero, reabrir el bufer como root, incluso a través de tramp. Hay una versión para emacs25 y otra para emacs26.
 #+begin_src emacs-lisp
 (defun abrir-como-root-emacs25 ()
   "Reabre el fichero actual como root, incluso via tramp."
@@ -1284,6 +1306,7 @@ Al visitar un fichero, reabrir el bufer como root, incluso a través de tramp. H
 
 #+end_src
 
+** /Transmission/
 Cuando hay que añadir muchos torrents similares, es muy útil hacerlo desde un buffer de emacs.
 #+begin_src emacs-lisp
 ;; CONECTAR A TRANSMISSION
@@ -1302,6 +1325,7 @@ Cuando hay que añadir muchos torrents similares, es muy útil hacerlo desde un 
 
 #+end_src
 
+** Generar /reveal/ y PDF
 Generalmente utilizo un fichero orgmode para hacer transparencias y materiales para clase, y quiero generar a la vez las transparencias, la versión HTML y el PDF.
 #+begin_src emacs-lisp
 (defun reveal-y-pdf ()
@@ -1335,7 +1359,7 @@ Generalmente utilizo un fichero orgmode para hacer transparencias y materiales p
 
 #+end_src
 
-Función para decodificar una URL
+** Función para decodificar una URL
 #+begin_src emacs-lisp
 (defun url-decode-region (start end)
   "Replace a region with the same contents, only URL decoded."
@@ -1346,6 +1370,7 @@ Función para decodificar una URL
 
 #+end_src
 
+** Horario
 Este es mi horario lectivo (sin incluir guardias y otras horas que no son de docencia directa a alumnos)
 #+begin_src emacs-lisp
 (defun horario()
@@ -1354,6 +1379,7 @@ Este es mi horario lectivo (sin incluir guardias y otras horas que no son de doc
 
 #+end_src
 
+** Proxy de educamadrid
 Durante una temporada, en los colegios de la Comunidad de Madrid era obligatorio el uso de un proxy.
 #+begin_src emacs-lisp
 (defun quitar-proxy()
@@ -1369,7 +1395,8 @@ Durante una temporada, en los colegios de la Comunidad de Madrid era obligatorio
 
 #+end_src
 
-Inserta la imagen del portapapeles en un fichero orgmode. No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
+** Inserta la imagen del portapapeles en orgmode.
+No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
 #+begin_src emacs-lisp
 (defun org-insert-clipboard-image()
   "Save the image in the clipboard  into a time stamped unique-named file in the same directory as the org-buffer and insert a link to this file."
@@ -1388,7 +1415,7 @@ Inserta la imagen del portapapeles en un fichero orgmode. No lo uso mucho, quiz�
   (org-display-inline-images))
 #+end_src
 
-Eliminar el resto de buffers y ventanas
+** Eliminar el resto de buffers y ventanas
 #+begin_src emacs-lisp
 (defun kill-other-buffers ()
   "Kill all otherbuffers."
@@ -1404,7 +1431,7 @@ Eliminar el resto de buffers y ventanas
 
 #+end_src
 
-Convertir la selección en un bloque de código de =orgmode=
+** Convertir la selección en un bloque de código de =orgmode=
 #+begin_src emacs-lisp
 (defun org-code-block-from-region (beg end &optional results-switches inline)
   "Copiado de org-babel-examplify-region"
@@ -1434,7 +1461,7 @@ Convertir la selección en un bloque de código de =orgmode=
 #+end_src
 
 
-Diferencias con la última versión de =git=, usando =git-gutter=
+** Diferencias con la última versión de =git=, usando =git-gutter=
 #+begin_src emacs-lisp
   (defun diferencias-git (&optional diffinfo)
     "Popup current diff hunk."
