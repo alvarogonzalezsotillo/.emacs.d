@@ -1,24 +1,36 @@
-;; POR SI FALLA ALGO DURANTE LA CARGA
-(setq debug-on-error t)
-
-(package-initialize nil)
-(setq package-check-signature nil)
-(setq package-archives
-      '(
-	      ("org" . "http://orgmode.org/elpa/")
-              ("gnu" . "http://elpa.gnu.org/packages/")
-	      ("melpa" . "http://melpa.org/packages/") ) )
 
 
-(package-initialize t)
-;(package-refresh-contents)
-(package-install 'org)
-(package-install 'use-package)
-(require 'org)
-(require 'ob-tangle)
-(require 'use-package)
-(org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
+;;; Code:
+(defun carga-config-org (refresh)
+  "Carga la configuración, refrescando la lista de paquetes si se indica REFRESH."
+  (setq debug-on-error t)
+
+  (package-initialize nil)
+  (setq package-check-signature nil)
+  (setq package-archives
+        '(
+          ("org" . "http://orgmode.org/elpa/")
+          ("gnu" . "http://elpa.gnu.org/packages/")
+          ("melpa" . "http://melpa.org/packages/") ) )
 
 
-;; DESACTIVAR EL DEBUG
-(setq debug-on-error nil)
+  (package-initialize t)
+
+  (if refresh
+      (progn
+        (package-refresh-contents)
+        (package-install 'org)
+        (package-install 'use-package)))
+  
+  (require 'org)
+  (require 'ob-tangle)
+  (require 'use-package)
+  (org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
+
+
+  ;; DESACTIVAR EL DEBUG
+  (setq debug-on-error nil))
+
+(carga-config-org nil)
+
+

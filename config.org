@@ -46,21 +46,7 @@ Cada bloque de código de tipo =emacs-lisp= se ejecuta al inicio. Algunos bloque
 ** =init.el=
 Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplemente inicializa el sistema de paquetes y carga el paquete =org=, que es el que permite a Emacs manejar este tipo de ficheros. Después, carga este fichero interpretando los bloques de código.
 
-#+begin_src lisp 
-(package-initialize nil)
-(setq package-check-signature nil)
-(setq package-archives '(
-      ("org" . "http://orgmode.org/elpa/")
-      ("melpa" . "http://melpa.org/packages/")))
-
-
-(package-initialize t)
-(package-refresh-contents) ; OPCIONAL, NECESITA CONEXIÓN A INTERNET
-(package-install 'org)
-(require 'org)
-(require 'ob-tangle)
-(org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
-#+end_src
+#+include: "~/.emacs.d/init.el" src lisp
 
 ** Algunos problemas
 - A veces, se empieza usando una versión de =org= (de gnu), y después se  utiliza la del repositorio de orgmode, lo que puede dar problemas. En ese caso, se necesitan dos reinicios.
@@ -69,14 +55,21 @@ Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplement
   rm $(find ~/.emacs.d/elpa | grep .elc$)
   #+end_src
 - En instalaciones nuevas, la carga final de =custom.el= falla si no existe.
+  #+begin_src sh
+  touch ~/.emacs.d/custom.el
+  #+end_src
 
 
 * Utilidades externas al /PATH/
 En el directorio =~/.emacs.d/bin/= guardo algunas utilidades que me interesa tener en todos los entornos de trabajo. Lo siguiente es para que estén disponibles desde las /shells/ que arranque desde emacs
 #+begin_src emacs-lisp
-(setenv "PATH" (concat (expand-file-name "~/.emacs.d/bin") ":" (getenv "PATH")))
-(setq exec-path (append exec-path '("~/.emacs.d/bin")))
+  (setq exec-path-separator
+        (if (string-equal system-type "windows-nt") ";" ":"))
+  (setenv "PATH"
+          (concat (expand-file-name "~/.emacs.d/bin") exec-path-separator (getenv "PATH")))
+  (setq exec-path (append exec-path '("~/.emacs.d/bin")))
 #+end_src
+
 
 Las utilidades pueden consultarse en el [[https://github.com/alvarogonzalezsotillo/.emacs.d/tree/master/bin][repositorio en github]], y son:
 #+begin_src shell :exports results
@@ -98,171 +91,147 @@ ls ~/.emacs.d/bin
 | wake-alvarogonzalez.sh |
 
 
-* Paquetes
+* Carga de paquetes
 
 Utilizo tres repositorios de paquetes:
-- melpa: el más habitual
-- gnu: me hizo falta para algo que no recuerdo, lo tengo actualmente deshabilitado.
-- org: las versiones nuevas de org-mode se publican antes en este repositorio
-
-Guardo los paquetes que necesito en una variable, y se reinstalan si no están ya instalados.
-
-
-#+begin_src emacs-lisp
-  (setq package-check-signature nil)
-
-  (package-initialize)
-
- 
-#+end_src
+- *melpa*: el más habitual
+- *gnu*: me hizo falta para algo que no recuerdo, lo tengo actualmente deshabilitado.
+- *org*: las versiones nuevas de org-mode se publican antes en este repositorio
 
 * =use-package=
-Voy a intentar usar =use-package=
 
-#+BEGIN_SRC lisp
-(use-package PAQUETE
-  :ensure t ;; lo instala si no está
-  :init
-  COSAS ANTES DE LA CARGA DEL PAQUETE 
-  :config
-  COSAS DESPUÉS DE LA CARGA DEL PAQUETE
-  :bind 
-  (("TECLA" . comando) ("TECLA" . comando))
-  :bind-keymap
-  ("TECLA" . keymapcomocpenprojectile)
-  :hook prog-mode ;; es como (add-hook 'prog-mode-hook #'elmododeestepaquete))
-  :custom (comint-buffer-maximum-size 20000) ;; para variables que se pueden cambiar en customize
-  :custom-face tipodeletra
-  :after (foo bar) ;; después de estos paquetes
+=use-package= es una utilidad para la carga y configuración de paquetes con las siguientes ventajas:
+- Puede definir dependencias entre paquetes (=requires= y =after=)
+- Permite la carga diferida, lo que acelera el arranque y el uso de memoria
+- Agrupa la configuración de cada paquete
+- Instala el paquete si no está instalado
 
-#+END_SRC
-
-Para actualizar siempre los paquetes, se puede utilizar auto-package-update 
+Para actualizar siempre los paquetes, utilizo =auto-package-update= 
 #+BEGIN_SRC emacs-lisp 
-(use-package auto-package-update
-  :ensure t
-  :config
-  (setq auto-package-update-delete-old-versions t)
-  (setq auto-package-update-hide-results t)
-  (auto-package-update-maybe))
+  (use-package auto-package-update
+    :ensure t
+    :defer nil
+    :config
+    (setq auto-package-update-delete-old-versions t)
+    (setq auto-package-update-hide-results t)
+    (auto-package-update-maybe))
 #+END_SRC
 
 
-
-
-*** Tabla =mis-paquetes=
+*** Tabla de paquetes
 Esta tabla contiene los paquetes que utilizo sin configuración adicional
 
 #+tblname: mis-paquetes
-#+ATTR_LATEX: :environment longtable
-|--------------------------------+---|
-| 2048-game                      |   |
-| esup                           |   |
-| adaptive-wrap                  |   |
-| auto-highlight-symbol          |   |
-| default-text-scale             |   |
-| ag                             |   |
-| alert                          |   |
-| auto-highlight-symbol          |   |
-| bind-key                       |   |
-| calfw                          |   |
-| calfw-ical                     |   |
-| chess                          |   |
-| color-theme-sanityinc-tomorrow |   |
-| company                        |   |
-| company-auctex                 |   |
-| company-c-headers              |   |
-| company-emoji                  |   |
-| company-flx                    |   |
-| company-lsp                    |   |
-| company-quickhelp              |   |
-| company-restclient             |   |
-| company-shell                  |   |
-| company-web                    |   |
-| crappy-jsp-mode                |   |
-| diffview                       |   |
-| dired-narrow                   |   |
-| ensime                         |   |
-| expand-region                  |   |
-| flycheck                       |   |
-| gift-mode                      |   |
-| git-gutter                     |   |
-| git-timemachine                |   |
-| gitignore-mode                 |   |
-| graphviz-dot-mode              |   |
-| helm-ag                        |   |
-| helm-company                   |   |
-| helm-flx                       |   |
-| helm-gitignore                 |   |
-| helm-google                    |   |
-| helm-projectile                |   |
-| highlight-indent-guides        |   |
-| howdoi                         |   |
-| htmlize                        |   |
-| ibuffer-sidebar                |   |
-| image+                         |   |
-| imenu-anywhere                 |   |
-| imenu-list                     |   |
-| intellij-theme                 |   |
-| kodi-remote                    |   |
-| latex-preview-pane             |   |
-| lorem-ipsum                    |   |
-| lsp-mode                       |   |
-| lsp-javascript-typescript      |   |
-| lsp-ui                         |   |
-| magit                          |   |
-| markdown-mode                  |   |
-| markdown-preview-mode          |   |
-| neotree                        |   |
-| ob-restclient                  |   |
-| org                            |   |
-| org-attach-screenshot          |   |
-| org-page                       |   |
-| ox-reveal                      |   |
-| page-break-lines               |   |
-| paradox                        |   |
-| php-mode                       |   |
-| plantuml-mode                  |   |
-| popup-imenu                    |   |
-| popup-complete                 |   |
-| popup-switcher                 |   |
-| popwin                         |   |
-| prettier-js                    |   |
-| quickrun                       |   |
-| rectangle-utils                |   |
-| request-deferred               |   |
-| restclient                     |   |
-| restclient-helm                |   |
-| scad-mode                      |   |
-| scad-preview                   |   |
-| scala-mode                     |   |
-| skewer-mode                    |   |
-| sublimity                      |   |
-| swiper-helm                    |   |
-| switch-window                  |   |
-| swoop                          |   |
-| helm-swoop                     |   |
-| tablist                        |   |
-| transmission                   |   |
-| transpose-frame                |   |
-| use-package                    |   |
-| vim-empty-lines-mode           |   |
-| volatile-highlights            |   |
-| web-beautify                   |   |
-| web-mode                       |   |
-| wgrep                          |   |
-| wgrep-helm                     |   |
-| which-key                      |   |
-| yafolding                      |   |
-|--------------------------------+---|
+#+caption: Tabla =mis-paquetes=
+#+ATTR_LATEX: :environment longtable :align |l|p{10cm}|
+|--------------------------------+-------------------------------------------------|
+| 2048-game                      |                                                 |
+| adaptive-wrap                  |                                                 |
+| ag                             |                                                 |
+| alert                          |                                                 |
+| auto-highlight-symbol          |                                                 |
+| bind-key                       |                                                 |
+| calfw                          |                                                 |
+| calfw-ical                     |                                                 |
+| chess                          |                                                 |
+| color-theme-sanityinc-tomorrow |                                                 |
+| company                        |                                                 |
+| company-auctex                 |                                                 |
+| company-c-headers              |                                                 |
+| company-emoji                  |                                                 |
+| company-flx                    |                                                 |
+| company-lsp                    |                                                 |
+| company-quickhelp              |                                                 |
+| company-restclient             |                                                 |
+| company-shell                  |                                                 |
+| company-web                    |                                                 |
+| crappy-jsp-mode                |                                                 |
+| default-text-scale             |                                                 |
+| diffview                       |                                                 |
+| dired-narrow                   |                                                 |
+| ensime                         |                                                 |
+| esup                           |                                                 |
+| expand-region                  |                                                 |
+| flycheck                       |                                                 |
+| gift-mode                      |                                                 |
+| git-gutter                     |                                                 |
+| git-timemachine                |                                                 |
+| gitignore-mode                 |                                                 |
+| graphviz-dot-mode              |                                                 |
+| helm-ag                        |                                                 |
+| helm-company                   |                                                 |
+| helm-flx                       |                                                 |
+| helm-gitignore                 |                                                 |
+| helm-google                    |                                                 |
+| helm-projectile                |                                                 |
+| helm-swoop                     |                                                 |
+| highlight-indent-guides        |                                                 |
+| howdoi                         |                                                 |
+| htmlize                        |                                                 |
+| ibuffer-sidebar                |                                                 |
+| image+                         |                                                 |
+| imenu-anywhere                 |                                                 |
+| imenu-list                     |                                                 |
+| intellij-theme                 |                                                 |
+| kodi-remote                    |                                                 |
+| latex-preview-pane             |                                                 |
+| lorem-ipsum                    |                                                 |
+| lsp-javascript-typescript      |                                                 |
+| lsp-mode                       |                                                 |
+| lsp-ui                         |                                                 |
+| magit                          |                                                 |
+| markdown-mode                  |                                                 |
+| markdown-preview-mode          |                                                 |
+| neotree                        |                                                 |
+| ob-restclient                  |                                                 |
+| org                            |                                                 |
+| org-attach-screenshot          |                                                 |
+| org-page                       |                                                 |
+| ox-reveal                      |                                                 |
+| page-break-lines               |                                                 |
+| paradox                        |                                                 |
+| php-mode                       |                                                 |
+| plantuml-mode                  |                                                 |
+| popup-complete                 |                                                 |
+| popup-imenu                    |                                                 |
+| popup-switcher                 |                                                 |
+| popwin                         |                                                 |
+| prettier-js                    |                                                 |
+| quickrun                       |                                                 |
+| rectangle-utils                |                                                 |
+| request-deferred               |                                                 |
+| restclient                     |                                                 |
+| restclient-helm                |                                                 |
+| scad-mode                      |                                                 |
+| scad-preview                   |                                                 |
+| scala-mode                     |                                                 |
+| skewer-mode                    |                                                 |
+| sublimity                      |                                                 |
+| swiper-helm                    |                                                 |
+| switch-window                  |                                                 |
+| swoop                          |                                                 |
+| tablist                        |                                                 |
+| transmission                   |                                                 |
+| transpose-frame                |                                                 |
+| use-package                    |                                                 |
+| vim-empty-lines-mode           |                                                 |
+| volatile-highlights            |                                                 |
+| web-beautify                   |                                                 |
+| web-mode                       |                                                 |
+| wgrep                          |                                                 |
+| wgrep-helm                     |                                                 |
+| which-key                      |                                                 |
+| yafolding                      | /Folding/ de secciones basado en la indentación |
+|--------------------------------+-------------------------------------------------|
 
-*** Carga de paquetes sin opciones
-Por cada paquete sin opciones especiales, simplemente lo cargo con =use-package= instalándolo si no está ya instalado.
+*** Carga de paquetes sin configuración adicional
+Por cada paquete sin opciones especiales, simplemente lo cargo con =use-package=, instalándolo si no está ya instalado.
+
 El bucle =dolist= se realiza sobre los datos de la tabla =mis-paquetes=. Cada fila se recibe como una lista de columnas, así que me quedo con la primera columna y la convierto a un =symbol=. Después, construyo la llamada a =use-package= y la evaluo (como =use-package= es una macro, no puedo hacerlo directamente)
 #+BEGIN_SRC emacs-lisp :var mis-paquetes=mis-paquetes
   (dolist (paquete mis-paquetes)
     (message (concat "Voy a cargar el paquete: " (car paquete)))
-    (setq lista `(use-package ,(intern (car paquete)) :ensure t ) )
+    (setq lista `(use-package ,(intern (car paquete)) :defer t :ensure t ) )
     (eval lista))
 #+END_SRC
 
@@ -534,6 +503,7 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
 (load custom-file)
 #+end_src
 
+
 * Edición
 
 
@@ -650,9 +620,8 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión
 #+begin_src emacs-lisp
 (use-package projectile
   :ensure t
-  :init
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   :config
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
     (projectile-mode 1))
 #+end_src
 
