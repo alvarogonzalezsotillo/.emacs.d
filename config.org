@@ -575,6 +575,7 @@ Utilizo =smartscan= para localizar ocurrencias de símbolos.
 #+begin_src emacs-lisp
 (use-package smartscan
   :ensure t
+  :defer 1
   :config
     (global-smartscan-mode 1))
 #+end_src
@@ -583,6 +584,7 @@ Algunas ventanas tienen menor /importancia/ que otras, ya que tienden a ser temp
 #+begin_src emacs-lisp
 (use-package popwin
   :ensure t
+  :defer 1
   :config
     (popwin-mode 1))
 #+end_src
@@ -592,6 +594,7 @@ Agrupo los buffers por proyecto de =projectile=
 #+begin_src emacs-lisp
 (use-package ibuffer-projectile
   :ensure t
+  :defer 1
   :config
     (add-hook 'ibuffer-hook #'ibuffer-projectile-set-filter-groups)
     (add-hook 'ibuffer-sidebar-mode-hook #'ibuffer-projectile-set-filter-groups)
@@ -603,6 +606,7 @@ Retroceder en la historia de disposición de ventanas y búferes
 #+begin_src emacs-lisp
 (use-package winner
   :ensure t
+  :defer 1 
   :config
     (winner-mode 1))
 #+end_src
@@ -625,6 +629,16 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión
     (projectile-mode 1))
 #+end_src
 
+
+Image+ permite hace zoom en las imágenes
+#+begin_src emacs-lisp
+(use-package image+
+  :ensure t
+  :defer 1
+  :config
+    (imagex-global-sticky-mode)
+    (imagex-auto-adjust-mode))
+#+end_src
 
 
 
@@ -960,13 +974,6 @@ Arranco el servidor para utilizar /emacsclient/
 #+begin_src emacs-lisp
 (server-force-delete)
 (server-start)
-#+end_src
-
-Imagex permite hace zoom en las imágenes
-#+begin_src emacs-lisp
-(imagex-global-sticky-mode)
-(imagex-auto-adjust-mode)
-
 #+end_src
 
 
