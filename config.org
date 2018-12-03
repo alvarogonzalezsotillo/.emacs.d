@@ -163,7 +163,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | helm-flx                       |                                                 |
 | helm-gitignore                 |                                                 |
 | helm-google                    |                                                 |
-| helm-projectile                |                                                 |
 | helm-swoop                     |                                                 |
 | highlight-indent-guides        |                                                 |
 | howdoi                         |                                                 |
@@ -231,7 +230,7 @@ El bucle =dolist= se realiza sobre los datos de la tabla =mis-paquetes=. Cada fi
 #+BEGIN_SRC emacs-lisp :var mis-paquetes=mis-paquetes
   (dolist (paquete mis-paquetes)
     (message (concat "Voy a cargar el paquete: " (car paquete)))
-    (setq lista `(use-package ,(intern (car paquete)) :defer t :ensure t ) )
+    (setq lista `(use-package ,(intern (car paquete)) :defer 1 :ensure t ) )
     (eval lista))
 #+END_SRC
 
@@ -872,13 +871,22 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
     (setq projectile-completion-system 'helm)
     (helm-autoresize-mode 1)
     (helm-mode 1)
-    (helm-projectile-on)
     (helm-flx-mode +1)
     (setq helm-echo-input-in-header-line t)
     (setq helm-display-buffer-reuse-frame t)
     (setq helm-use-undecorated-frame-option t)
   :after (tramp)) ;; PARA EVITAR EL ERROR Symbol’s value as variable is void: tramp-methods
+
+
+(use-package helm-projectile
+  :ensure t
+  :config 
+    (helm-projectile-on)
+  :after (helm))
+
 #+end_src
+
+
 
 *** /Child frame/
 =helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original. Estas opción es bastante lenta en algunos sistemas de ventanas.
