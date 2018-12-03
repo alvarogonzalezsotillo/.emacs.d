@@ -496,14 +496,6 @@ contextual information."
 
 
 
-* /Customize/
-El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
-#+begin_src emacs-lisp
-(setq custom-file "~/.emacs.d/custom-file.el")
-(load custom-file)
-#+end_src
-
-
 * Edición
 
 
@@ -907,43 +899,44 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 
 * Visualización
 
-No utilizo las /scroll bars/
+** /scroll bars/
 
 #+BEGIN_SRC emacs-lisp
   (scroll-bar-mode -1)
 #+END_SRC
 
-Cambiar el tamaño de fuente de todo /emacs/ (no solo el buffer actual)
+** Cambiar el tamaño de fuente de todo /emacs/ (no solo el buffer actual)
 #+begin_src emacs-lisp
 (default-text-scale-mode 1)
 #+end_src
 
-Marcar la línea actual. Está deshabilitado porque no funciona bien con /overlays/
+** Marcar la línea actual. 
+Está deshabilitado porque no funciona bien con /overlays/
 #+begin_src emacs-lisp
 (global-hl-line-mode -1)
 #+end_src
 
-Respuestas de confirmación más cortas
+** Respuestas de confirmación más cortas
 #+begin_src emacs-lisp
 (fset 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
-Desactivar la campana (/bell/), tanto la señal auditiva como la visual
+** Desactivar la campana (/bell/)
+Tanto la señal auditiva como la visual
 #+begin_src emacs-lisp
 (setq visible-bell 1)
 (setq ring-bell-function 'ignore)
 #+end_src
 
 
-
-
-Utilizo /flycheck/ para que emacs compruebe automáticamente cada buffer
+** /flycheck/ 
+Marca errores en el fichero
 #+begin_src emacs-lisp
 ;; VALIDACIONES
 (add-hook 'after-init-hook #'global-flycheck-mode)
 #+end_src
 
-
+** /scroll/
 El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminales modo texto que costaba refrescar. Con los ordenadores actuales, mejor un /scroll/ suave
 #+begin_src emacs-lisp
 (setq scroll-margin 0
@@ -952,6 +945,7 @@ El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminale
       scroll-preserve-screen-position 1)
 #+end_src
 
+** Barra de menú
 La barra de menú y la de herramientas es de lo primero que se quita al personalizar /emacs/, lo mismo que esa pantalla de inicio.
 #+begin_src emacs-lisp
 (setq inhibit-startup-message t)
@@ -959,17 +953,18 @@ La barra de menú y la de herramientas es de lo primero que se quita al personal
 (tool-bar-mode -1)
 #+end_src
 
-Ancho de la página de =man=
+** Ancho de la página de =man=
 #+begin_src emacs-lisp
 (setenv "MANWIDTH" "80")
 #+end_src
 
-Muestro los paréntesis asociados al situado bajo el cursor
+** Mostrar paréntesis asociados
 #+begin_src emacs-lisp
 ;; MOSTRAR LOS PARENTESIS ASOCIADOS
 (show-paren-mode)
 #+end_src
 
+** Servidor emacs
 Arranco el servidor para utilizar /emacsclient/
 #+begin_src emacs-lisp
 (server-force-delete)
@@ -977,7 +972,7 @@ Arranco el servidor para utilizar /emacsclient/
 #+end_src
 
 
-
+** /Modeline/
 Mi línea de estado (modeline)
 #+begin_src emacs-lisp
 (setq-default mode-line-format
@@ -997,6 +992,7 @@ Mi línea de estado (modeline)
 
 #+end_src
 
+** /Minimap/
 El minimap parece una buena idea, pero no funciona demasiado bien
 #+begin_src lisp
 (require 'sublimity)
@@ -1005,6 +1001,7 @@ El minimap parece una buena idea, pero no funciona demasiado bien
 (sublimity-map-set-delay 2)
 #+end_src
 
+** Ratón en =xterm=
 El ratón también puede utilizarse en un =xterm=
 #+begin_src emacs-lisp
 (xterm-mouse-mode)
@@ -1457,7 +1454,7 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
 
 * Apariencia
 
-Mostrar líneas vacías al final del buffer, como =vim=
+** Líneas vacías al final, como =vim=
 #+begin_src emacs-lisp
 (add-hook 'prog-mode-hook 'vim-empty-lines-mode)
 (add-hook 'org-mode-hook 'vim-empty-lines-mode)
@@ -1569,6 +1566,14 @@ Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna c
 
 
 
+
+
+* /Customize/
+El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
+#+begin_src emacs-lisp
+(setq custom-file "~/.emacs.d/custom-file.el")
+(load custom-file)
+#+end_src
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
