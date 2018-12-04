@@ -54,6 +54,11 @@ Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplement
   #+begin_src sh
   rm $(find ~/.emacs.d/elpa | grep .elc$)
   #+end_src
+  Después es necesario volver a compilar los ficheros
+  #+BEGIN_SRC lisp
+    (byte-recompile-directory (expand-file-name "~/.emacs.d/elpa") 0 t)
+  #+END_SRC
+
 - En instalaciones nuevas, la carga final de =custom.el= falla si no existe.
   #+begin_src sh
   touch ~/.emacs.d/custom.el
