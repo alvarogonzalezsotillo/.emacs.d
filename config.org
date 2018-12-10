@@ -1,5 +1,5 @@
 #+TITLE: Configuración /Emacs/ de Álvaro González
-#+OPTIONS: toc:4 h:4
+#+OPTIONS: toc:2 h:5
 
 * Opciones /latex/ :noexport:
 # COLORES
@@ -103,6 +103,8 @@ Utilizo tres repositorios de paquetes:
 - *gnu*: me hizo falta para algo que no recuerdo, lo tengo actualmente deshabilitado.
 - *org*: las versiones nuevas de org-mode se publican antes en este repositorio
 
+
+
 ** =use-package=
 
 =use-package= es una utilidad para la carga y configuración de paquetes con las siguientes ventajas:
@@ -174,7 +176,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | howdoi                         |                                                                 |
 | htmlize                        |                                                                 |
 | ibuffer-sidebar                |                                                                 |
-| image+                         |                                                                 |
 | imenu-anywhere                 |                                                                 |
 | imenu-list                     |                                                                 |
 | intellij-theme                 |                                                                 |
@@ -191,7 +192,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | org                            |                                                                 |
 | org-attach-screenshot          |                                                                 |
 | org-page                       |                                                                 |
-| ox-reveal                      |                                                                 |
 | page-break-lines               |                                                                 |
 | paradox                        |                                                                 |
 | php-mode                       |                                                                 |
@@ -247,6 +247,18 @@ Por último, el paquete =ob-scala= es un paquete local bajado de [[https://githu
 #+begin_src emacs-lisp
 (add-to-list 'load-path "~/.emacs.d/mis-paquetes")
 (require 'ob-scala)
+#+end_src
+
+
+** Paquete =image+=
+Image+ permite hace zoom en las imágenes
+#+begin_src emacs-lisp
+(use-package image+
+  :ensure t
+  :defer 1
+  :config
+    (imagex-global-sticky-mode)
+    (imagex-auto-adjust-mode))
 #+end_src
 
 
@@ -324,10 +336,6 @@ Este modo cierra automáticamente los paréntesis y otros bloques
   :config
     (smartparens-global-mode 1))
 #+end_src
-
-
-** Paquete =adaptive-wrap=
-
 
 
 ** Paquete =company=
@@ -448,9 +456,9 @@ En =neotree=, quiero ver todos los ficheros, y no me importa el ancho fijo de la
 #+end_src
 
 
-** Paréntesis
+** Paquete =org=
 
-Con estos cambios, se tienen en cuenta los formatos de orgmode en electric-pair-mode
+Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair-mode=
 #+begin_src emacs-lisp
   (use-package org
     :ensure t
@@ -462,70 +470,333 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en electric-pair-
 #+end_src
 
 
+*** Lenguajes =org-babel=
+Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
+#+begin_src emacs-lisp
+  (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.1.2018.11.jar"))
+  (setq plantuml-jar-path org-plantuml-jar-path)
 
-** Parches sobre los paquetes
-En este momento los paquetes ya están cargados, pero necesito modificar el comportamiento de algunos de ellos de formas que no están soportadas en su configuración
+  (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t) (plantuml . t ) ( C . t)))
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '(
+     (C . t )
+     (dot . t)
+     (plantuml . t)
+     (scala . t)
+     (shell . t)))
+#+end_src
 
 
-*** =ox-reveal=
+ Además, no pido confirmación para varios lenguajes                                                                                                           
+ #+begin_src emacs-lisp
+ (defun my-org-confirm-babel-evaluate (lang body)                                                                                                             
+   (not (member lang '("dot" "emacs-lisp" "shell"))))
+ (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)                                                                                             
+#+end_src
+
+   
+*** Listas alfabéticas
+#+begin_src emacs-lisp
+(setq org-list-allow-alphabetical t)
+#+end_src
+
+
+*** Listados /Latex/
+Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
+#+begin_src emacs-lisp
+(setq org-latex-listings t)
+#+end_src
+
+*** Selección con mayúsculas 
+#+begin_src emacs-lisp
+(setq org-support-shift-select t)
+#+end_src
+
+** Paquete =quickrun=
+=Quickrun= ejecuta el buffer actual. Aumento el tiempo límite de la ejecución antes de matar el proceso.
+#+begin_src emacs-lisp
+(use-package quickrun
+  :ensure t
+  :config 
+    (setq quickrun-timeout-seconds 100))
+#+end_src
+
+
+** Paquete =doc-view=
+Para visualizar documentos desde Emacs, aumento su resolución y anchura.
+#+begin_src emacs-lisp
+(require 'doc-view)
+(setq doc-view-continuous t)
+(setq doc-view-image-width 1600)
+(setq doc-view-resolution 400)
+#+end_src
+
+
+
+** Correo electrónico
+Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smarthost/)
+#+begin_src emacs-lisp
+(setq send-mail-function (quote sendmail-send-it))
+#+end_src
+
+
+
+** =tramp=
+=tramp= intenta optimizar las conexiones, enviando en línea los ficheros pequeños. Esto me da problemas en algunos sistemas, así que indico que los ficheros se copien a partir de 1 byte de tamaño:
+#+begin_src emacs-lisp
+(setq tramp-copy-size-limit 1)
+(setq tramp-debug-buffer t)
+(setq tramp-verbose 10)
+#+end_src
+
+En ocasiones, =tramp= no consigue conectar con un usuario que tiene =zsh= como shell. Para ello, hay que añadir lo siguiente al fichero =.zshrc= remoto:
+#+begin_src sh
+EN .zshrc PARA QUE FUNCIONE tramp
+if [[ "$TERM" == "dumb" ]]
+then
+  unsetopt zle
+  unsetopt prompt_cr
+  unsetopt prompt_subst
+  unfunction precmd
+  unfunction preexec
+  PS1='$ '
+fi
+#+end_src
+
+
+
+** /Backup/ de ficheros
+Emacs guarda una copia de seguridad de los ficheros editados. Si no se configura, crea la copia en el mismo directorio.
+
+Las copias de seguridad son interesantes aunque se utilice un control de versiones. Por ejemplo, se guardan versiones de ficheros del sistema y de los editados con Tramp.
+
+Prefiero guardar todas las copias en un directorio, manteniendo varias versiones de cada fichero.
+
+Tampoco me interesan los ficheros de /lock/.
+#+begin_src emacs-lisp
+  (setq backup-directory-alist `(("." . "~/.saves")))
+  (setq backup-by-copying t)
+  (setq delete-old-versions t
+        kept-new-versions 6
+        kept-old-versions 2
+        version-control t)
+
+  (setq create-lockfiles nil)
+#+end_src
+
+
+
+** Latex
+
+#+begin_src emacs-lisp
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq TeX-save-query nil)
+(setq TeX-PDF-mode t)
+#+end_src
+
+Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
+#+begin_src emacs-lisp
+
+(setq LaTeX-verbatim-environments
+      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql"))
+#+end_src
+
+En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
+#+begin_src emacs-lisp
+(setq TeX-source-correlate-mode t)
+(setq TeX-source-correlate-start-server t)
+#+end_src
+
+
+Modifico el comando Latex para incluir =-shell-escape=, de forma que Latex pueda arrancar programas de ayuda (por ejemplo, *Inkscape* para convertir SVG a PDF)
+
+#+begin_src emacs-lisp
+(setq LaTeX-command-style
+   (quote (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
+#+end_src
+
+
+Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en el buffer de Emacs ([[https://www.gnu.org/software/auctex/manual/preview-latex.html][https://www.gnu.org/software/auctex/manual/preview-latex.html]])
+
+#+begin_src emacs-lisp
+(eval-after-load "preview"
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t) )
+(eval-after-load "preview"
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
+(eval-after-load "preview"
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{homeworkProblem}" t) )
+#+end_src
+
+
+** Paquete =which-key=
+
+Ayuda interactiva de teclado
+#+begin_src emacs-lisp
+(use-package which-key
+  :ensure t
+  :config
+    (which-key-mode t))
+#+end_src
+
+
+** Paquete =auto-highlight-symbol=
+Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en todo el buffer, para que se pueda navegar por todas las ocurrencias del fichero, pero ralentizaba bastante. Ahora uso =smartscan=.
+#+begin_src emacs-lisp
+  (use-package auto-highlight-symbol
+    :ensure t
+    :config
+      (setq ahs-default-range 'ahs-range-display))
+#+end_src
+
+
+** Paquete =helm=
+=helm= es un sistema para seleccionar una opción entre varias posibilidades, que se puede usar para casi todo
+- Buscar un comando
+- Cambiar de buffer
+- Navegar por la historia del portapapeles
+- Visualizar las ocurrencias de un patrón en un buffer
+- ... y más
+
+#+begin_src emacs-lisp
+
+;; HELM
+(use-package helm
+  :ensure t
+  :defer 1
+  :config
+    (setq helm-split-window-inside-p t)
+    (setq helm-display-header-line nil)
+    (setq helm-autoresize-max-height 30)
+    (setq helm-autoresize-min-height 30)
+    (setq projectile-completion-system 'helm)
+    (helm-autoresize-mode 1)
+    (helm-mode 1)
+    (helm-flx-mode +1)
+    (setq helm-echo-input-in-header-line t)
+    (setq helm-display-buffer-reuse-frame t)
+    (setq helm-use-undecorated-frame-option t)
+  :after (tramp)) ;; PARA EVITAR EL ERROR Symbol’s value as variable is void: tramp-methods
+
+
+(use-package helm-projectile
+  :ensure t
+  :defer 1
+  :config 
+    (helm-projectile-on)
+  :after (helm))
+
+#+end_src
+
+
+
+*** /Child frame/
+=helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original. Estas opción es bastante lenta en algunos sistemas de ventanas.
+#+begin_src lisp
+(setq helm-display-function 'helm-display-buffer-in-own-frame
+      helm-display-buffer-width 120)
+#+end_src
+
+=swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Ahora estoy valorando si me quedo con =swiper= o =swoop=. Lo siguiente es para hacer que también aparezca en una /child frame/.
+
+#+begin_src lisp
+(use-package swiper
+  :ensure t
+  :defer 1
+  :after (helm)
+  :config
+    (setq swiper-helm-display-function helm-display-function))
+
+
+(use-package swoop
+  :ensure t
+  :defer 1
+  :after (helm)
+  :config
+    (setq helm-swoop-split-window-function helm-display-function))
+#+end_src
+
+
+
+
+
+
+
+** =projectile=
+=projectile= necesita conocer su tecla de prefijo (utilizo la tradicional).
+#+begin_src emacs-lisp
+(use-package projectile
+  :ensure t
+  :config
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (projectile-mode 1))
+#+end_src
+
+*** Paquete =ox-reveal=
 Cuando exporto un fichero =org= a =reveal.js= tengo problemas en la forma en que se escapan los caracteres =>= y =<= de los bloques de código. Con esta redefinición de la función =org-reveal-src-block= queda solucionado
 
 #+begin_src emacs-lisp
-;; ESCAPE HTML IN REVEAL
-(setq mi-org-html-protect-char-alist
-  '(("&" . "&amp;")
-    ("<" . "&lt;")
-    (">" . "&gt;")
-    ("\\%" . "&#37;")))
+  ;; ESCAPE HTML IN REVEAL
+  (setq mi-org-html-protect-char-alist
+        '(("&" . "&amp;")
+          ("<" . "&lt;")
+          (">" . "&gt;")
+          ("\\%" . "&#37;")))
 
-(defun mi-org-html-encode-plain-text (text)
-  "Convert plain text characters from TEXT to HTML equivalent.
-Possible conversions are set in `org-html-protect-char-alist'."
-  (dolist (pair org-html-protect-char-alist text)
-    (setq text (replace-regexp-in-string (car pair) (cdr pair) text t t))))
+  (defun mi-org-html-encode-plain-text (text)
+    "Convert plain text characters from TEXT to HTML equivalent.
+  Possible conversions are set in `org-html-protect-char-alist'."
+    (dolist (pair org-html-protect-char-alist text)
+      (setq text (replace-regexp-in-string (car pair) (cdr pair) text t t))))
 
-
-(defun org-reveal-src-block (src-block contents info)
-  "Transcode a SRC-BLOCK element from Org to Reveal.
-CONTENTS holds the contents of the item.  INFO is a plist holding
-contextual information."
-  (if (org-export-read-attribute :attr_html src-block :textarea)
-      (org-html--textarea-block src-block)
-    (let* ((use-highlight (org-reveal--using-highlight.js info))
-           (lang (org-element-property :language src-block))
-           (caption (org-export-get-caption src-block))
-           (not-escaped-code (if (not use-highlight)
-                     (org-html-format-code src-block info)
-                   (cl-letf (((symbol-function 'org-html-htmlize-region-for-paste)
-                              #'buffer-substring))
-                     (org-html-format-code src-block info))))
-           (code (mi-org-html-encode-plain-text not-escaped-code))
-           ;(code  not-escaped-code)
-           
-           (frag (org-export-read-attribute :attr_reveal src-block :frag))
-	   (code-attribs (or (org-export-read-attribute
-			 :attr_reveal src-block :code_attribs) ""))
-           (label (let ((lbl (org-element-property :name src-block)))
-                    (if (not lbl) ""
-                      (format " id=\"%s\"" lbl)))))
-      (if (not lang)
-          (format "<pre %s%s>\n%s</pre>"
-                  (or (frag-class frag info) " class=\"example\"")
-                  label
-                  code)
-        (format
-         "<div class=\"org-src-container\">\n%s%s\n</div>"
-         (if (not caption) ""
-           (format "<label class=\"org-src-name\">%s</label>"
-                   (org-export-data caption info)))
-         (if use-highlight
-             (format "\n<pre%s%s><code class=\"%s\" %s>%s</code></pre>"
-                     (or (frag-class frag info) "")
-                     label lang code-attribs code)
-           (format "\n<pre %s%s>%s</pre>"
-                   (or (frag-class frag info)
-                       (format " class=\"src src-%s\"" lang))
-                   label code)))))))
+  (use-package ox-reveal
+    :ensure t
+    :defer 1
+    :config
+  
+    (defun org-reveal-src-block (src-block contents info)
+      "Transcode a SRC-BLOCK element from Org to Reveal.
+       CONTENTS holds the contents of the item.  INFO is a plist holding
+       contextual information."
+      (if (org-export-read-attribute :attr_html src-block :textarea)
+          (org-html--textarea-block src-block)
+        (let* ((use-highlight (org-reveal--using-highlight.js info))
+               (lang (org-element-property :language src-block))
+               (caption (org-export-get-caption src-block))
+               (not-escaped-code (if (not use-highlight)
+                                     (org-html-format-code src-block info)
+                                   (cl-letf (((symbol-function 'org-html-htmlize-region-for-paste)
+                                              #'buffer-substring))
+                                     (org-html-format-code src-block info))))
+               (code (mi-org-html-encode-plain-text not-escaped-code))
+                                          ;(code  not-escaped-code)
+             
+               (frag (org-export-read-attribute :attr_reveal src-block :frag))
+               (code-attribs (or (org-export-read-attribute
+                                  :attr_reveal src-block :code_attribs) ""))
+               (label (let ((lbl (org-element-property :name src-block)))
+                        (if (not lbl) ""
+                          (format " id=\"%s\"" lbl)))))
+          (if (not lang)
+              (format "<pre %s%s>\n%s</pre>"
+                      (or (frag-class frag info) " class=\"example\"")
+                      label
+                      code)
+            (format
+             "<div class=\"org-src-container\">\n%s%s\n</div>"
+             (if (not caption) ""
+               (format "<label class=\"org-src-name\">%s</label>"
+                       (org-export-data caption info)))
+             (if use-highlight
+                 (format "\n<pre%s%s><code class=\"%s\" %s>%s</code></pre>"
+                         (or (frag-class frag info) "")
+                         label lang code-attribs code)
+               (format "\n<pre %s%s>%s</pre>"
+                       (or (frag-class frag info)
+                           (format " class=\"src src-%s\"" lang))
+                       label code))))))))
 #+end_src
 
 
@@ -648,275 +919,22 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión
 (desktop-save-mode)
 #+end_src
 
-
-** =projectile=
-=projectile= necesita conocer su tecla de prefijo (utilizo la tradicional).
+** Ratón en =xterm=
+El ratón también puede utilizarse en un =xterm=
 #+begin_src emacs-lisp
-(use-package projectile
-  :ensure t
-  :config
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-    (projectile-mode 1))
-#+end_src
-
-
-Image+ permite hace zoom en las imágenes
-#+begin_src emacs-lisp
-(use-package image+
-  :ensure t
-  :defer 1
-  :config
-    (imagex-global-sticky-mode)
-    (imagex-auto-adjust-mode))
+(xterm-mouse-mode)
 #+end_src
 
 
 
-* Mi configuración
 
-
-** Correo electrónico
-Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smarthost/)
-#+begin_src emacs-lisp
-(setq send-mail-function (quote sendmail-send-it))
-#+end_src
-
-** =quickrun=
-=Quickrun= ejecuta el buffer actual. Aumento el tiempo límite de la ejecución antes de matar el proceso.
-#+begin_src emacs-lisp
-(use-package quickrun
-  :ensure t
-  :config 
-    (setq quickrun-timeout-seconds 100))
-#+end_src
-
-
-** =tramp=
-=tramp= intenta optimizar las conexiones, enviando en línea los ficheros pequeños. Esto me da problemas en algunos sistemas, así que indico que los ficheros se copien a partir de 1 byte de tamaño:
-#+begin_src emacs-lisp
-(setq tramp-copy-size-limit 1)
-(setq tramp-debug-buffer t)
-(setq tramp-verbose 10)
-#+end_src
-
-En ocasiones, =tramp= no consigue conectar con un usuario que tiene =zsh= como shell. Para ello, hay que añadir lo siguiente al fichero =.zshrc= remoto:
-#+begin_src sh
-EN .zshrc PARA QUE FUNCIONE tramp
-if [[ "$TERM" == "dumb" ]]
-then
-  unsetopt zle
-  unsetopt prompt_cr
-  unsetopt prompt_subst
-  unfunction precmd
-  unfunction preexec
-  PS1='$ '
-fi
-#+end_src
-
-
-
-** /Backup/ de ficheros
-Emacs guarda una copia de seguridad de los ficheros editados. Si no se configura, crea la copia en el mismo directorio.
-
-Las copias de seguridad son interesantes aunque se utilice un control de versiones. Por ejemplo, se guardan versiones de ficheros del sistema y de los editados con Tramp.
-
-Prefiero guardar todas las copias en un directorio, manteniendo varias versiones de cada fichero.
-
-Tampoco me interesan los ficheros de /lock/.
-#+begin_src emacs-lisp
-  (setq backup-directory-alist `(("." . "~/.saves")))
-  (setq backup-by-copying t)
-  (setq delete-old-versions t
-        kept-new-versions 6
-        kept-old-versions 2
-        version-control t)
-
-  (setq create-lockfiles nil)
-#+end_src
-
-** =doc-view=
-Para visualizar documentos desde Emacs, aumento su resolución y anchura.
-#+begin_src emacs-lisp
-(require 'doc-view)
-(setq doc-view-continuous t)
-(setq doc-view-image-width 1600)
-(setq doc-view-resolution 400)
-#+end_src
-
-** =org-mode=
-
-
-*** Lenguajes =org-babel=
-Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
-#+begin_src emacs-lisp
-  (setq org-plantuml-jar-path "/home/alvaro/apuntes-clase/bin/plantuml.1.2018.11.jar")
-  (setq plantuml-jar-path org-plantuml-jar-path)
-
-  (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t) (plantuml . t ) ( C . t)))
-
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               '(
-                                 (C . t )
-                                 (dot . t)
-                                 (plantuml . t)
-                                 (scala . t)
-                                 (shell . t)
-                                 ))
-#+end_src
-
-
- Además, no pido confirmación para varios lenguajes                                                                                                           
- #+begin_src emacs-lisp
- (defun my-org-confirm-babel-evaluate (lang body)                                                                                                             
-   (not (member lang '("dot" "emacs-lisp" "shell"))))
- (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)                                                                                             
-#+end_src
-
-   
-*** Listas alfabéticas
-#+begin_src emacs-lisp
-(setq org-list-allow-alphabetical t)
-#+end_src
-
-
-*** Listados /Latex/
-Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
-#+begin_src emacs-lisp
-(setq org-latex-listings t)
-#+end_src
-
-*** Selección con mayúsculas 
-#+begin_src emacs-lisp
-(setq org-support-shift-select t)
-#+end_src
-
-** Latex
-
-#+begin_src emacs-lisp
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq TeX-save-query nil)
-(setq TeX-PDF-mode t)
-#+end_src
-
-Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
-#+begin_src emacs-lisp
-
-(setq LaTeX-verbatim-environments
-      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql"))
-#+end_src
-
-En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
-#+begin_src emacs-lisp
-(setq TeX-source-correlate-mode t)
-(setq TeX-source-correlate-start-server t)
-#+end_src
-
-
-Modifico el comando Latex para incluir =-shell-escape=, de forma que Latex pueda arrancar programas de ayuda (por ejemplo, *Inkscape* para convertir SVG a PDF)
-
-#+begin_src emacs-lisp
-(setq LaTeX-command-style
-   (quote (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
-#+end_src
-
-
-Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en el buffer de Emacs ([[https://www.gnu.org/software/auctex/manual/preview-latex.html][https://www.gnu.org/software/auctex/manual/preview-latex.html]])
-
-#+begin_src emacs-lisp
-(eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t) )
-(eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
-(eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{homeworkProblem}" t) )
-#+end_src
-
-
-** Otros /Minor modes/
-
-Ayuda interactiva de teclado
-#+begin_src emacs-lisp
-(use-package which-key
-  :ensure t
-  :config
-    (which-key-mode t))
-#+end_src
-
-
-Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en todo el buffer, para que se pueda navegar por todas las ocurrencias del fichero, pero ralentizaba bastante. Ahora uso =smartscan=.
-#+begin_src emacs-lisp
-  (use-package auto-highlight-symbol
-    :ensure t
-    :config
-      (setq ahs-default-range 'ahs-range-display))
-#+end_src
-
-
-** =helm=
-=helm= es un sistema para seleccionar una opción entre varias posibilidades, que se puede usar para casi todo
-- Buscar un comando
-- Cambiar de buffer
-- Navegar por la historia del portapapeles
-- Visualizar las ocurrencias de un patrón en un buffer
-- ... y más
-
-#+begin_src emacs-lisp
-
-;; HELM
-(use-package helm
-  :ensure t
-  :config
-    (setq helm-split-window-inside-p t)
-    (setq helm-display-header-line nil)
-    (setq helm-autoresize-max-height 30)
-    (setq helm-autoresize-min-height 30)
-    (setq projectile-completion-system 'helm)
-    (helm-autoresize-mode 1)
-    (helm-mode 1)
-    (helm-flx-mode +1)
-    (setq helm-echo-input-in-header-line t)
-    (setq helm-display-buffer-reuse-frame t)
-    (setq helm-use-undecorated-frame-option t)
-  :after (tramp)) ;; PARA EVITAR EL ERROR Symbol’s value as variable is void: tramp-methods
-
-
-(use-package helm-projectile
-  :ensure t
-  :config 
-    (helm-projectile-on)
-  :after (helm))
-
-#+end_src
-
-
-
-*** /Child frame/
-=helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original. Estas opción es bastante lenta en algunos sistemas de ventanas.
-#+begin_src emacs
-(setq helm-display-function 'helm-display-buffer-in-own-frame
-      helm-display-buffer-width 120)
-#+end_src
-
-=swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Ahora estoy valorando si me quedo con =swiper= o =swoop=. Lo siguiente es para hacer que también aparezca en una /child frame/.
-
-#+begin_src lisp
-(use-package swiper
-  :ensure t
-  :config
-    (setq swiper-helm-display-function helm-display-function))
-
-(use-package swoop
-  :ensure t
-  :config
-    (setq helm-swoop-split-window-function helm-display-function))
-#+end_src
 
 
 
 
 
 * Visualización
+
 
 ** /scroll bars/
 
@@ -1018,12 +1036,6 @@ El minimap parece una buena idea, pero no funciona demasiado bien
 (require 'sublimity-map)
 (require 'sublimity-attractive)
 (sublimity-map-set-delay 2)
-#+end_src
-
-** Ratón en =xterm=
-El ratón también puede utilizarse en un =xterm=
-#+begin_src emacs-lisp
-(xterm-mouse-mode)
 #+end_src
 
 

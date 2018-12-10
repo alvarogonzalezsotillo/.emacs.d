@@ -27,6 +27,7 @@
   (require 'use-package)
   (org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
 
+  (byte-compile-file (expand-file-name "~/.emacs.d/config.el"))
 
   ;; DESACTIVAR EL DEBUG
   (setq debug-on-error nil))
