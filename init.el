@@ -1,9 +1,9 @@
 
 
 ;;; Code:
-(defun carga-config-org (refresh)
-  "Carga la configuración, refrescando la lista de paquetes si se indica REFRESH."
-  (setq debug-on-error t)
+(defun carga-config-org (refresh debug)
+  "Carga la configuración, refrescando la lista de paquetes si se indica REFRESH, con debug si se indica DEBUG"
+  (setq debug-on-error debug)
 
   (package-initialize nil)
   (setq package-check-signature nil)
@@ -32,6 +32,6 @@
   ;; DESACTIVAR EL DEBUG
   (setq debug-on-error nil))
 
-(carga-config-org nil)
+(carga-config-org nil nil)
 
 
