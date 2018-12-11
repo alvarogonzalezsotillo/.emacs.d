@@ -893,13 +893,12 @@ Algunas ventanas tienen menor /importancia/ que otras, ya que tienden a ser temp
 
 Agrupo los buffers por proyecto de =projectile=
 #+begin_src emacs-lisp
-(use-package ibuffer-projectile
-  :ensure t
-  :defer 1
-  :config
-    (add-hook 'ibuffer-hook #'ibuffer-projectile-set-filter-groups)
-    (add-hook 'ibuffer-sidebar-mode-hook #'ibuffer-projectile-set-filter-groups)
-  :after (projectile))
+  (use-package ibuffer-projectile
+    :ensure t
+    :defer 1
+    :config
+      (add-hook 'ibuffer-hook #'ibuffer-projectile-set-filter-groups)
+      (add-hook 'ibuffer-sidebar-mode-hook #'ibuffer-projectile-set-filter-groups))
 #+end_src
 
 
