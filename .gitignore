@@ -23,3 +23,5 @@ elpa
 eshell
 
 custom-file.el
+/config.el
+/.last-package-update-day
