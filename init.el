@@ -25,9 +25,7 @@
   (require 'org)
   (require 'ob-tangle)
   (require 'use-package)
-  (org-babel-load-file (expand-file-name "~/.emacs.d/config.org") t)
-
-  (byte-compile-file (expand-file-name "~/.emacs.d/config.el"))
+  (org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
 
   ;; DESACTIVAR EL DEBUG
   (setq debug-on-error nil))
