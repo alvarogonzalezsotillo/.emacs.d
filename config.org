@@ -106,101 +106,102 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 #+tblname: mis-paquetes
 #+caption: Tabla =mis-paquetes=
 #+ATTR_LATEX: :environment longtable :align |l|p{10cm}|
-|--------------------------------+-----------------------------------------------------------------|
-| 2048-game                      |                                                                 |
-| adaptive-wrap                  | Indentación visual de las líneas respecto a su prefijo          |
-| ag                             |                                                                 |
-| alert                          |                                                                 |
-| auto-highlight-symbol          | Resalte automático del símbolo bajo el cursor                   |
-| bind-key                       |                                                                 |
-| calfw                          |                                                                 |
-| calfw-ical                     |                                                                 |
-| chess                          |                                                                 |
-| color-theme-sanityinc-tomorrow |                                                                 |
-| company                        |                                                                 |
-| company-auctex                 |                                                                 |
-| company-c-headers              |                                                                 |
-| company-emoji                  |                                                                 |
-| company-flx                    |                                                                 |
-| company-lsp                    |                                                                 |
-| company-quickhelp              |                                                                 |
-| company-restclient             |                                                                 |
-| company-shell                  |                                                                 |
-| company-web                    |                                                                 |
-| crappy-jsp-mode                |                                                                 |
-| default-text-scale             |                                                                 |
-| diffview                       |                                                                 |
-| dired-narrow                   |                                                                 |
-| ensime                         |                                                                 |
-| esup                           |                                                                 |
-| expand-region                  |                                                                 |
-| flycheck                       |                                                                 |
-| gift-mode                      |                                                                 |
-| git-gutter                     | Marca las filas cambiadas en el margen                          |
-| git-timemachine                |                                                                 |
-| gitignore-mode                 |                                                                 |
-| graphviz-dot-mode              |                                                                 |
-| helm-ag                        |                                                                 |
-| helm-company                   |                                                                 |
-| helm-flx                       |                                                                 |
-| helm-gitignore                 |                                                                 |
-| helm-google                    |                                                                 |
-| helm-projectile                |                                                                 |
-| helm-swoop                     |                                                                 |
-| highlight-indent-guides        |                                                                 |
-| howdoi                         |                                                                 |
-| htmlize                        |                                                                 |
-| ibuffer-sidebar                |                                                                 |
-| imenu-anywhere                 |                                                                 |
-| imenu-list                     |                                                                 |
-| intellij-theme                 |                                                                 |
-| kodi-remote                    |                                                                 |
-| latex-preview-pane             |                                                                 |
-| lorem-ipsum                    |                                                                 |
-| lsp-javascript-typescript      |                                                                 |
-| lsp-mode                       |                                                                 |
-| lsp-ui                         |                                                                 |
-| magit                          | Interfaz para git                                               |
-| markdown-mode                  |                                                                 |
-| markdown-preview-mode          |                                                                 |
-| ob-restclient                  |                                                                 |
-| org                            |                                                                 |
-| org-attach-screenshot          |                                                                 |
-| org-page                       |                                                                 |
-| page-break-lines               |                                                                 |
-| paradox                        |                                                                 |
-| php-mode                       |                                                                 |
-| plantuml-mode                  |                                                                 |
-| popup-complete                 |                                                                 |
-| popup-imenu                    |                                                                 |
-| popup-switcher                 |                                                                 |
-| popwin                         |                                                                 |
-| prettier-js                    |                                                                 |
-| quickrun                       | Ejecuta el buffer actual con el intérprete/compilador adecuado  |
-| rectangle-utils                |                                                                 |
-| restclient                     |                                                                 |
-| restclient-helm                |                                                                 |
-| scad-mode                      |                                                                 |
-| scad-preview                   |                                                                 |
-| scala-mode                     |                                                                 |
-| skewer-mode                    |                                                                 |
-| sublimity                      |                                                                 |
-| swiper-helm                    |                                                                 |
-| switch-window                  |                                                                 |
-| swoop                          | Búsqueda con previsualización                                   |
-| tablist                        |                                                                 |
-| transmission                   |                                                                 |
-| transpose-frame                |                                                                 |
-| use-package                    |                                                                 |
-| vim-empty-lines-mode           |                                                                 |
-| volatile-highlights            |                                                                 |
-| web-beautify                   |                                                                 |
-| web-mode                       |                                                                 |
-| wgrep                          |                                                                 |
-| wgrep-helm                     |                                                                 |
-| which-key                      | Pistas acerca de los atajos de teclado                          |
-| yafolding                      | /Folding/ de secciones basado en la indentación                 |
-|--------------------------------+-----------------------------------------------------------------|
+|--------------------------------+----------------------------------------------------------------|
+| 2048-game                      |                                                                |
+| adaptive-wrap                  | Indentación visual de las líneas respecto a su prefijo         |
+| ag                             |                                                                |
+| alert                          |                                                                |
+| auto-highlight-symbol          | Resalte automático del símbolo bajo el cursor                  |
+| bind-key                       |                                                                |
+| calfw                          |                                                                |
+| calfw-ical                     |                                                                |
+| chess                          |                                                                |
+| color-theme-sanityinc-tomorrow |                                                                |
+| company                        |                                                                |
+| company-auctex                 |                                                                |
+| company-c-headers              |                                                                |
+| company-emoji                  |                                                                |
+| company-flx                    |                                                                |
+| company-lsp                    |                                                                |
+| company-quickhelp              |                                                                |
+| company-restclient             |                                                                |
+| company-shell                  |                                                                |
+| company-web                    |                                                                |
+| crappy-jsp-mode                |                                                                |
+| default-text-scale             |                                                                |
+| diffview                       |                                                                |
+| dired-narrow                   |                                                                |
+| ensime                         |                                                                |
+| esup                           |                                                                |
+| expand-region                  |                                                                |
+| flycheck                       |                                                                |
+| gift-mode                      |                                                                |
+| git-gutter                     | Marca las filas cambiadas en el margen                         |
+| git-timemachine                |                                                                |
+| gitignore-mode                 |                                                                |
+| graphviz-dot-mode              |                                                                |
+| helm-ag                        |                                                                |
+| helm-company                   |                                                                |
+| helm-flx                       |                                                                |
+| helm-gitignore                 |                                                                |
+| helm-google                    |                                                                |
+| helm-projectile                |                                                                |
+| helm-swoop                     |                                                                |
+| highlight-indent-guides        |                                                                |
+| howdoi                         |                                                                |
+| htmlize                        |                                                                |
+| ibuffer-sidebar                |                                                                |
+| imenu-anywhere                 |                                                                |
+| imenu-list                     |                                                                |
+| intellij-theme                 |                                                                |
+| kodi-remote                    |                                                                |
+| latex-preview-pane             |                                                                |
+| lorem-ipsum                    |                                                                |
+| lsp-javascript-typescript      |                                                                |
+| lsp-mode                       |                                                                |
+| lsp-ui                         |                                                                |
+| magit                          | Interfaz para git                                              |
+| markdown-mode                  |                                                                |
+| markdown-preview-mode          |                                                                |
+| ob-restclient                  |                                                                |
+| org                            |                                                                |
+| org-attach-screenshot          |                                                                |
+| org-page                       |                                                                |
+| page-break-lines               |                                                                |
+| paradox                        |                                                                |
+| php-mode                       |                                                                |
+| plantuml-mode                  |                                                                |
+| popup-complete                 |                                                                |
+| popup-imenu                    |                                                                |
+| popup-switcher                 |                                                                |
+| popwin                         |                                                                |
+| prettier-js                    |                                                                |
+| quickrun                       | Ejecuta el buffer actual con el intérprete/compilador adecuado |
+| rectangle-utils                |                                                                |
+| restclient                     |                                                                |
+| restclient-helm                |                                                                |
+| scad-mode                      |                                                                |
+| scad-preview                   |                                                                |
+| scala-mode                     |                                                                |
+| skewer-mode                    |                                                                |
+| sublimity                      |                                                                |
+| swiper-helm                    |                                                                |
+| switch-window                  |                                                                |
+| swoop                          | Búsqueda con previsualización                                  |
+| tablist                        |                                                                |
+| transmission                   |                                                                |
+| transpose-frame                |                                                                |
+| use-package                    |                                                                |
+| use-ttf                        | Instala la fuente por defecto en todos los sistemas            |
+| vim-empty-lines-mode           |                                                                |
+| volatile-highlights            |                                                                |
+| web-beautify                   |                                                                |
+| web-mode                       |                                                                |
+| wgrep                          |                                                                |
+| wgrep-helm                     |                                                                |
+| which-key                      | Pistas acerca de los atajos de teclado                         |
+| yafolding                      | /Folding/ de secciones basado en la indentación                |
+|--------------------------------+----------------------------------------------------------------|
 
 *** Carga de paquetes sin configuración adicional
 Por cada paquete sin opciones especiales, simplemente lo cargo con =use-package=, instalándolo si no está ya instalado.
