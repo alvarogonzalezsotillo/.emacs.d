@@ -4,7 +4,7 @@
 
 
 #+latex: \newpage
-#+html: <div style="margin:auto; text-align:center;">
+#+html: <div style="margin:auto; text-align:center; font-size:1.5em">
 #+latex: \begin{center}
 La última versión de esta configuración puede encontrarse en [[https://github.com/alvarogonzalezsotillo/.emacs.d][https://github.com/alvarogonzalezsotillo/.emacs.d]].
 #+latex: \end{center}
@@ -96,6 +96,7 @@ Para actualizar siempre los paquetes, utilizo =auto-package-update=
     :config
     (setq auto-package-update-delete-old-versions t)
     (setq auto-package-update-hide-results t)
+    (setq auto-package-update-interval 9999)
     (auto-package-update-maybe))
 #+END_SRC
 
