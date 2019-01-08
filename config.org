@@ -970,6 +970,7 @@ Marca errores en el fichero
 #+begin_src emacs-lisp
 ;; VALIDACIONES
 (add-hook 'after-init-hook #'global-flycheck-mode)
+;(setq flycheck-shellcheck-follow-sources nil)
 #+end_src
 
 ** /scroll/
@@ -1609,6 +1610,19 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - Elfeed
 - Zoom-frm
 
+* usettf
+
+
+#+BEGIN_SRC emacs-lisp
+  (setq use-ttf-default-ttf-fonts '("/.emacs.d/fonts/SourceCodeVariable-Roman.ttf"
+                                    "/.emacs.d/fonts/NotoSansMono-Regular.ttf"))
+  (setq use-ttf-default-ttf-font-name "Source Code Variable")
+  (call-interactively #'use-ttf-install-fonts)
+  (call-interactively #'use-ttf-set-default-font)
+#+END_SRC
+
+#+RESULTS:
+: [Install fonts process still running, please call ’use-ttf-set-default-font’ after a while.]
 
 * Opciones Latex :noexport:
 # COLORES
