@@ -26,8 +26,6 @@ https://alvarogonzalezsotillo.github.io/apuntes-clase/planificacion-administraci
 https://alvarogonzalezsotillo.github.io/apuntes-clase/planificacion-administracion-redes-asir1/apuntes/1/par-1-clasificacion-redes.reveal.html#/slide-orgce1dc7e
 
 
-<h3 id="orgce1dc7e"><span class="section-number-3">1.2</span> Empieza la clase de redes</h3>
-
 ** 2017-2018
    | Curso        | url                                                                                     | directorio    |
    |--------------+-----------------------------------------------------------------------------------------+---------------|
