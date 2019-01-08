@@ -946,6 +946,7 @@ Marca errores en el fichero
 #+begin_src emacs-lisp
 ;; VALIDACIONES
 (add-hook 'after-init-hook #'global-flycheck-mode)
+;(setq flycheck-shellcheck-follow-sources nil)
 #+end_src
 
 ** /scroll/
