@@ -939,7 +939,10 @@ El ratón también puede utilizarse en un =xterm=
 ** /scroll bars/
 
 #+BEGIN_SRC emacs-lisp
-  (scroll-bar-mode -1)
+(if (display-graphic-p)
+ (progn 
+   (tool-bar-mode -1)
+   (scroll-bar-mode -1)))
 #+END_SRC
 
 ** Cambiar el tamaño de fuente de todo /emacs/ (no solo el buffer actual)
@@ -1553,7 +1556,8 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 Prefiero ocultar las flechas que indican que una línea se sale de la pantalla, y solo mostrar las de la derecha.
 
 #+begin_src emacs-lisp
-(fringe-mode '(0 . nil))
+(if (display-graphic-p)
+  (fringe-mode '(0 . nil)))
 #+end_src
 
 ** Temas
