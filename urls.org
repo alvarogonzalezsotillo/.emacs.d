@@ -127,3 +127,372 @@ git remote add asus git@alvarogonzalez.no-ip.biz:/home/git/apuntes-clase.git
 
 * Curso IFC06CM17 bootstrap
 https://aulavirtual2.educa.madrid.org/course/category.php?id=2943
+
+* lg 6
+
+#+BEGIN_SRC shell
+adb shell "pm list packages"
+#+END_SRC
+
+#+RESULTS:
+| package:android                                        |
+| package:androidlab.allcall                             |
+| package:com.RayDarLLC.rShopping                        |
+| package:com.alokm.soundgenerator                       |
+| package:com.android.LGSetupWizard                      |
+| package:com.android.apps.tag                           |
+| package:com.android.backupconfirm                      |
+| package:com.android.bluetooth                          |
+| package:com.android.bluetoothmidiservice               |
+| package:com.android.bookmarkprovider                   |
+| package:com.android.calendar                           |
+| package:com.android.calllogbackup                      |
+| package:com.android.captiveportallogin                 |
+| package:com.android.carrierconfig                      |
+| package:com.android.cellbroadcastreceiver              |
+| package:com.android.certinstaller                      |
+| package:com.android.chrome                             |
+| package:com.android.contacts                           |
+| package:com.android.cts.ctsshim                        |
+| package:com.android.cts.priv.ctsshim                   |
+| package:com.android.defcontainer                       |
+| package:com.android.documentsui                        |
+| package:com.android.egg                                |
+| package:com.android.emergency                          |
+| package:com.android.externalstorage                    |
+| package:com.android.frameworks.telresources            |
+| package:com.android.gallery3d                          |
+| package:com.android.htmlviewer                         |
+| package:com.android.incallui                           |
+| package:com.android.inputdevices                       |
+| package:com.android.keychain                           |
+| package:com.android.location.fused                     |
+| package:com.android.managedprovisioning                |
+| package:com.android.mms                                |
+| package:com.android.mms.service                        |
+| package:com.android.mtp                                |
+| package:com.android.nfc                                |
+| package:com.android.pacprocessor                       |
+| package:com.android.phone                              |
+| package:com.android.printspooler                       |
+| package:com.android.providers.blockednumber            |
+| package:com.android.providers.calendar                 |
+| package:com.android.providers.contacts                 |
+| package:com.android.providers.downloads                |
+| package:com.android.providers.downloads.ui             |
+| package:com.android.providers.media                    |
+| package:com.android.providers.partnerbookmarks         |
+| package:com.android.providers.settings                 |
+| package:com.android.providers.telephony                |
+| package:com.android.providers.userdictionary           |
+| package:com.android.proxyhandler                       |
+| package:com.android.server.telecom                     |
+| package:com.android.settings                           |
+| package:com.android.settingsaccessibility              |
+| package:com.android.sharedstoragebackup                |
+| package:com.android.shell                              |
+| package:com.android.statementservice                   |
+| package:com.android.stk                                |
+| package:com.android.storagemanager                     |
+| package:com.android.systemui                           |
+| package:com.android.vending                            |
+| package:com.android.vpndialogs                         |
+| package:com.android.wallpaper.livepicker               |
+| package:com.android.wallpaperbackup                    |
+| package:com.android.wallpapercropper                   |
+| package:com.appgenix.bizcal                            |
+| package:com.bytestemplar.tonedef                       |
+| package:com.coffeebeanventures.easyvoicerecorder       |
+| package:com.cootek.smartinputv5                        |
+| package:com.delphicoder.flud                           |
+| package:com.estrongs.android.pop                       |
+| package:com.explusalpha.Snes9xPlus                     |
+| package:com.facebook.appmanager                        |
+| package:com.facebook.system                            |
+| package:com.freestylelibre.app.es                      |
+| package:com.google.android.apps.docs                   |
+| package:com.google.android.apps.docs.editors.docs      |
+| package:com.google.android.apps.docs.editors.sheets    |
+| package:com.google.android.apps.docs.editors.slides    |
+| package:com.google.android.apps.maps                   |
+| package:com.google.android.apps.photos                 |
+| package:com.google.android.apps.tachyon                |
+| package:com.google.android.backuptransport             |
+| package:com.google.android.calculator                  |
+| package:com.google.android.configupdater               |
+| package:com.google.android.diskusage                   |
+| package:com.google.android.ext.services                |
+| package:com.google.android.ext.shared                  |
+| package:com.google.android.feedback                    |
+| package:com.google.android.gm                          |
+| package:com.google.android.gms                         |
+| package:com.google.android.googlequicksearchbox        |
+| package:com.google.android.gsf                         |
+| package:com.google.android.gsf.login                   |
+| package:com.google.android.ims                         |
+| package:com.google.android.instantapps.supervisor      |
+| package:com.google.android.keep                        |
+| package:com.google.android.marvin.talkback             |
+| package:com.google.android.music                       |
+| package:com.google.android.onetimeinitializer          |
+| package:com.google.android.packageinstaller            |
+| package:com.google.android.partnersetup                |
+| package:com.google.android.printservice.recommendation |
+| package:com.google.android.projection.gearhead         |
+| package:com.google.android.setupwizard                 |
+| package:com.google.android.syncadapters.calendar       |
+| package:com.google.android.syncadapters.contacts       |
+| package:com.google.android.talk                        |
+| package:com.google.android.tts                         |
+| package:com.google.android.videos                      |
+| package:com.google.android.webview                     |
+| package:com.google.android.youtube                     |
+| package:com.google.zxing.client.android                |
+| package:com.hy.system.fontserver                       |
+| package:com.kidga.quadris.nostalgie                    |
+| package:com.lavadip.skeye                              |
+| package:com.lge                                        |
+| package:com.lge.LGSetupView                            |
+| package:com.lge.NfcSettings                            |
+| package:com.lge.android.atservice                      |
+| package:com.lge.app.floating.res                       |
+| package:com.lge.appbox.client                          |
+| package:com.lge.autosimlockservice                     |
+| package:com.lge.bluetoothsetting                       |
+| package:com.lge.bnr                                    |
+| package:com.lge.bnr.launcher                           |
+| package:com.lge.camera                                 |
+| package:com.lge.clock                                  |
+| package:com.lge.drmservice                             |
+| package:com.lge.effect                                 |
+| package:com.lge.eltest                                 |
+| package:com.lge.email                                  |
+| package:com.lge.entitlementcheckservice                |
+| package:com.lge.eula                                   |
+| package:com.lge.eulaprovider                           |
+| package:com.lge.exchange                               |
+| package:com.lge.faceglance.enrollment                  |
+| package:com.lge.filemanager                            |
+| package:com.lge.fmradio                                |
+| package:com.lge.gallery.collagewallpaper               |
+| package:com.lge.gametuner                              |
+| package:com.lge.gba.android                            |
+| package:com.lge.gcuv                                   |
+| package:com.lge.gnss.airtest                           |
+| package:com.lge.gnsslogcat                             |
+| package:com.lge.gnsspostest                            |
+| package:com.lge.gnsstest                               |
+| package:com.lge.hiddenmenu                             |
+| package:com.lge.hiddenpersomenu                        |
+| package:com.lge.hifirecorder                           |
+| package:com.lge.homeselector                           |
+| package:com.lge.ia.task.incalagent                     |
+| package:com.lge.ia.task.smartcare                      |
+| package:com.lge.icecontacts                            |
+| package:com.lge.ime                                    |
+| package:com.lge.ime.solution.handwriting               |
+| package:com.lge.ime.solution.text                      |
+| package:com.lge.inputdevices                           |
+| package:com.lge.launcher2.theme.optimus                |
+| package:com.lge.launcher3                              |
+| package:com.lge.lgdmsclient                            |
+| package:com.lge.lgdrm.permission                       |
+| package:com.lge.lgfota.permission                      |
+| package:com.lge.lginstallservies                       |
+| package:com.lge.lgmapui                                |
+| package:com.lge.lgworld                                |
+| package:com.lge.lockscreensettings                     |
+| package:com.lge.lteconfig                              |
+| package:com.lge.mlt                                    |
+| package:com.lge.music                                  |
+| package:com.lge.networksettings                        |
+| package:com.lge.nextcapture                            |
+| package:com.lge.phonemanagement                        |
+| package:com.lge.privacylock                            |
+| package:com.lge.provider.lockscreensettings            |
+| package:com.lge.provider.systemui                      |
+| package:com.lge.qmemoplus                              |
+| package:com.lge.rcs.sharedsketch                       |
+| package:com.lge.servicemenu                            |
+| package:com.lge.shutdownmonitor                        |
+| package:com.lge.signboard                              |
+| package:com.lge.sizechangable.musicwidget.widget       |
+| package:com.lge.sizechangable.weather                  |
+| package:com.lge.sizechangable.weather.platform         |
+| package:com.lge.sizechangable.weather.theme.optimus    |
+| package:com.lge.smartdoctor.webview                    |
+| package:com.lge.springcleaning                         |
+| package:com.lge.srtc                                   |
+| package:com.lge.sui.widget                             |
+| package:com.lge.sync                                   |
+| package:com.lge.systemservice                          |
+| package:com.lge.task                                   |
+| package:com.lge.theme.black                            |
+| package:com.lge.theme.highcontrast                     |
+| package:com.lge.theme.titan                            |
+| package:com.lge.theme.white                            |
+| package:com.lge.themeservice                           |
+| package:com.lge.themesquare                            |
+| package:com.lge.touchcontrol                           |
+| package:com.lge.updatecenter                           |
+| package:com.lge.videoplayer                            |
+| package:com.lge.videostudio                            |
+| package:com.lge.wapservice                             |
+| package:com.lge.wfds.service.v3                        |
+| package:com.lge.wifi.p2p                               |
+| package:com.lge.wifisettings                           |
+| package:com.librelink.app                              |
+| package:com.madsvyat.simplerssreader                   |
+| package:com.mictale.gpsessentials                      |
+| package:com.mojang.minecraftpe.demo                    |
+| package:com.navigation.offlinemaps.gps                 |
+| package:com.o_taiji.digitimer4                         |
+| package:com.orange.miamena                             |
+| package:com.orange.update                              |
+| package:com.pd7l.sshbutton                             |
+| package:com.qti.dpmserviceapp                          |
+| package:com.qualcomm.atfwd                             |
+| package:com.qualcomm.location                          |
+| package:com.qualcomm.location.XT                       |
+| package:com.qualcomm.qcrilmsgtunnel                    |
+| package:com.qualcomm.qti.tetherservice                 |
+| package:com.qualcomm.timeservice                       |
+| package:com.qualcomm.wfd.service                       |
+| package:com.quicinc.cne.CNEService                     |
+| package:com.rsupport.rs.activity.lge.allinone          |
+| package:com.shazam.android                             |
+| package:com.skype.raider                               |
+| package:com.socratica.mobile.chemistry                 |
+| package:com.sony.playmemories.mobile                   |
+| package:com.termux                                     |
+| package:com.teslacoilsw.launcher                       |
+| package:com.tpvision.philipstvapp                      |
+| package:com.twitter.android                            |
+| package:com.whatsapp                                   |
+| package:de.telekom.tsc                                 |
+| package:fr.gouv.etalab.mastodon                        |
+| package:it.medieval.blueftp                            |
+| package:jp.yhonda                                      |
+| package:net.difer.weather                              |
+| package:netgenius.bizcal                               |
+| package:org.connectbot                                 |
+| package:org.madrid.citasanitaria                       |
+| package:org.mozilla.firefox                            |
+| package:org.mupen64plusae.v3.fzurita                   |
+| package:org.pocketworkstation.pckeyboard               |
+| package:org.simalliance.openmobileapi.service          |
+| package:org.videolan.vlc                               |
+| package:uk.co.aifactory.checkersfree                   |
+| package:uk.co.aifactory.chessfree                      |
+| package:uk.co.nickfines.RealCalc                       |
+
+
+pm uninstall -k --user 0 <name of package>
+
+** https://forum.xda-developers.com/lg-g6/help/bloatware-removing-t3639013/page3
+app:LG Mobile Switch
+package:com.lge.bnr
+
+app:360 Image Wallpaper
+package:com.lge.gallery.vr.wallpaper
+
+app:QuickMemo+
+package:com.lge.qmemoplus
+
+app:Exchange
+package:com.lge.exchange
+
+app:Video Wallpaper
+package:com.lge.video.vr.wallpaper
+
+app:SmartWorld
+package:com.lge.lgworld
+
+app:Facebook App Installer
+package:com.facebook.system
+
+app:360 Video
+package:com.lge.vrplayer
+
+app:LG Health
+package:com.lge.lifetracker
+
+app:RemoteCall Service
+package:com.rsupport.rs.activity.lge.allinone
+
+app:Home
+package:com.lge.launcher3
+
+app:Facebook App Manager
+package:com.facebook.appmanager
+
+app:LG Friends Manager
+package:com.lge.friendsmanager
+
+app:PromoHelper
+package:com.evernote.promohelper
+
+app:EasyHome
+package:com.lge.easyhome
+
+app:Slides
+package:com.google.android.apps.docs.editors.slide s
+
+app:Evernote
+package:com.evernote
+
+app:LG Switch Launcher
+package:com.lge.bnr.launcher
+
+app:E-mail
+package:com.lge.email
+
+app:High Contrast Theme
+com.lge.theme.highcontrast
+
+app:Music
+package:com.lge.music
+
+app:Music
+package:com.lge.sizechangable.musicwidget.widget 
+
+*** Las que hice
+#+BEGIN_SRC sh
+BLOATWARE="
+ com.rsupport.rs.activity.lge.allinone 
+ com.lge.ime                           
+ com.lge.lgworld                       
+ com.lge.smartdoctor.webview           
+ com.lge.phonemanagement               
+ com.lge.springcleaning                
+ com.lge.qmemoplus                     
+ com.lge.bnr.launcher                  
+ com.lge.task
+"
+
+for bw in $BLOATWARE
+do
+  echo DESINSTALANDO: $bw
+  adb shell pm uninstall -k --user 0 $bw
+done;
+#+END_SRC
+
+#+RESULTS:
+| DESINSTALANDO: | com.rsupport.rs.activity.lge.allinone |
+| Success        |                                       |
+| DESINSTALANDO: | com.lge.ime                           |
+| Success        |                                       |
+| DESINSTALANDO: | com.lge.lgworld                       |
+| Success        |                                       |
+| DESINSTALANDO: | com.lge.smartdoctor.webview           |
+| Success        |                                       |
+| DESINSTALANDO: | com.lge.phonemanagement               |
+| Success        |                                       |
+| DESINSTALANDO: | com.lge.springcleaning                |
+| Success        |                                       |
+| DESINSTALANDO: | com.lge.qmemoplus                     |
+| Success        |                                       |
+| DESINSTALANDO: | com.lge.bnr.launcher                  |
+| Success        |                                       |
+| DESINSTALANDO: | com.lge.task                          |
+| Success        |                                       |
