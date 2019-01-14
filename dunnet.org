@@ -45,13 +45,52 @@ insert cpu into vax
 type
 toukmond
 robert
+ls
+cd ..
+ls
+cd ..
+ls
+cd rooms
+ls
+cd hidden-area
+ls
+cat description
 exit
+e
+s
+look
+sw
+sw
+se
+se
+sw
+take bracelet
+ne
+nw
+nw
+ne
+ne
+in
+w
+look
+type
+cd /usr/toukmond
+ls
+uncompress paper.o.Z
+ftp gamma
+toukmond
+worms
+
+
+
+rlogin gamma
+worms
 quit
 ENDOFGAME
 #+END_SRC
 
 #+RESULTS:
-:RESULTS:
+:results:
 
 Dead end
 You are at a dead end of a dirt road.  The road goes to the east.
@@ -138,10 +177,113 @@ directory, and deletes them after they are sent!  Be careful.
 
 Note: Restricted bourne shell in use.
 
+$ total 467
+drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ftp
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o.Z
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
+$ $ total 4
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 toukmond
+$ $ total 4
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 usr
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 rooms
+$ $ total 16
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 computer-room
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 mailroom
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 old-building-hallway
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 building-front
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 ne-sw-road
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 bear-hangout
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 se-nw-road
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 fork
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 e-w-dirt-road
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 dead-end
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 hidden-area
+$ $ total 4
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+-rwxr-xr-x  3 root     staff          2048 Jan 1 1970 description
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
+$ You are in a well-hidden area off to the side of a road.  Back to the
+northeast through the brush you can see the bear hangout.
 $ 
 You step back from the console.
 
+>Old Building hallway
+>Building front
+>Building front
+You are at the end of the road.  There is a building in front of you
+to the northeast, and the road leads back to the southwest.
+>NE/SW road
+>Fork
+>SE/NW road
+>Bear hangout
+>Hidden area
+There is an emerald bracelet here.
+>Taken.  
+>Bear hangout
+>SE/NW road
+>Fork
+>NE/SW road
+>Building front
+>Old Building hallway
+>Computer room
+The panel lights are flashing in a seemingly organized pattern.
+>Computer room
+You are in a computer room.  It seems like most of the equipment has
+been removed.  There is a VAX 11/780 in front of you, however, with
+one of the cabinets wide open.  A sign on the front of the machine
+says: This VAX is named ‘pokey’.  To type on the console, use the
+‘type’ command.  The exit is to the east.
+The panel lights are flashing in a seemingly organized pattern.
+>$ $ total 467
+drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ftp
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o.Z
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
+$ $ Connected to gamma. FTP ver 0.9 00:00:00 01/01/70
+Username: toukmond ftp access not allowed.
+$ worms: not found.
+$ $ $ $ Password: 
+You begin to feel strange for a moment, and you lose your items.
+You step back from the console.
+
+Receiving room
+You are in a round, stone room with a door to the east.  There
+is a sign on the wall that reads: ‘receiving room’.
 >
 You have scored 0 out of a possible 90 points.
-:END:
+:end:
 
+** otro apartado
