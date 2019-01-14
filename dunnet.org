@@ -6,6 +6,9 @@ digraph{
   "boulder" -> "E/W Dirt road"
   "E/W Dirt road" -> "Fork"
   "cpu" -> "Fork"
+  "Fork" -> "SE/NW road"
+  "food" -> "SE/NW road"
+  "Fork" -> "NE/SW road"
 }
 
 #+END_SRC
@@ -21,6 +24,28 @@ east
 dig
 look
 take cpu
+southeast
+take food
+southeast
+drop food
+look
+take key
+northwest
+northwest
+look
+northeast
+look
+northeast
+in
+east
+look bin
+west
+west
+insert cpu into vax
+type
+toukmond
+robert
+exit
 quit
 ENDOFGAME
 #+END_SRC
@@ -48,6 +73,74 @@ You are at a fork of two passages, one to the northeast, and one to the
 southeast.  The ground here seems very soft. You can also go back west.
 There is a CPU card here.
 >Taken.  
+>SE/NW road
+You are on a southeast/northwest road.
+There is some food here.
+>Taken.  
+>Bear hangout
+You are standing at the end of a road.  A passage leads back to the
+northwest.
+There is a ferocious bear here!
+>Done.
+The bear takes the food and runs away with it. He left something behind.
+>Bear hangout
+You are standing at the end of a road.  A passage leads back to the
+northwest.
+There is a shiny brass key here.
+>Taken.  
+>SE/NW road
+>Fork
+>Fork
+You are at a fork of two passages, one to the northeast, and one to the
+southeast.  The ground here seems very soft. You can also go back west.
+>NE/SW road
+You are on a northeast/southwest road.
+>NE/SW road
+You are on a northeast/southwest road.
+>Building front
+You are at the end of the road.  There is a building in front of you
+to the northeast, and the road leads back to the southwest.
+>Old Building hallway
+You are in the hallway of an old building.  There are rooms to the east
+and west, and doors leading out to the north and south.
+>Mailroom
+You are in a mailroom.  There are many bins where the mail is usually
+kept.  The exit is to the west.
+>All of the bins are empty.  Looking closely you can see that there
+are names written at the bottom of each bin, but most of them are
+faded away so that you cannot read them.  You can only make out three
+names:
+                   Jeffrey Collier
+                   Robert Toukmond
+                   Thomas Stock
+
+>Old Building hallway
+>Computer room
+You are in a computer room.  It seems like most of the equipment has
+been removed.  There is a VAX 11/780 in front of you, however, with
+one of the cabinets wide open.  A sign on the front of the machine
+says: This VAX is named ‘pokey’.  To type on the console, use the
+‘type’ command.  The exit is to the east.
+The panel lights are steady and motionless.
+>As you put the CPU board in the computer, it immediately springs to life.
+The lights start flashing, and the fans seem to startup.
+>
+
+UNIX System V, Release 2.2 (pokey)
+
+login: password: 
+Welcome to Unix
+
+Please clean up your directories.  The filesystem is getting full.
+Our tcp/ip link to gamma is a little flaky, but seems to work.
+The current version of ftp can only send files from your home
+directory, and deletes them after they are sent!  Be careful.
+
+Note: Restricted bourne shell in use.
+
+$ 
+You step back from the console.
+
 >
 You have scored 0 out of a possible 90 points.
 :END:
