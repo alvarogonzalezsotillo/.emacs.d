@@ -1,0 +1,54 @@
+
+#+BEGIN_SRC dot :file ./dunnet.svg :exports results :cmd dot :cmdline -Tsvg
+digraph{
+  "shovel" -> "Dead end"
+  "Dead end" -> "E/W Dirt road"
+  "boulder" -> "E/W Dirt road"
+  "E/W Dirt road" -> "Fork"
+  "cpu" -> "Fork"
+}
+
+#+END_SRC
+
+#+RESULTS:
+[[file:./dunnet.svg]]
+
+#+BEGIN_SRC sh :results drawer
+emacs -q --batch -l dunnet <<ENDOFGAME
+take shovel
+east
+east
+dig
+look
+take cpu
+quit
+ENDOFGAME
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+
+Dead end
+You are at a dead end of a dirt road.  The road goes to the east.
+In the distance you can see that it will eventually fork off.  The
+trees here are very tall royal palms, and they are spaced equidistant
+from each other.
+There is a shovel here.
+>Taken.  
+>E/W Dirt road
+You are on the continuation of a dirt road.  There are more trees on
+both sides of you.  The road continues to the east and west.
+There is a large boulder here.
+>Fork
+You are at a fork of two passages, one to the northeast, and one to the
+southeast.  The ground here seems very soft. You can also go back west.
+>I think you found something.
+>Fork
+You are at a fork of two passages, one to the northeast, and one to the
+southeast.  The ground here seems very soft. You can also go back west.
+There is a CPU card here.
+>Taken.  
+>
+You have scored 0 out of a possible 90 points.
+:END:
+
