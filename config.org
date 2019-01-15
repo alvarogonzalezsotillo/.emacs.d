@@ -915,9 +915,7 @@ El ratón también puede utilizarse en un =xterm=
 
 #+BEGIN_SRC emacs-lisp
 (if (display-graphic-p)
- (progn 
-   (tool-bar-mode -1)
-   (scroll-bar-mode -1)))
+   (scroll-bar-mode -1))
 #+END_SRC
 
 ** Cambiar el tamaño de fuente de todo /emacs/ (no solo el buffer actual)
@@ -966,7 +964,8 @@ La barra de menú y la de herramientas es de lo primero que se quita al personal
 #+begin_src emacs-lisp
 (setq inhibit-startup-message t)
 (menu-bar-mode -1)
-(tool-bar-mode -1)
+(if (display-graphic-p)
+  (tool-bar-mode -1))
 #+end_src
 
 ** Ancho de la página de =man=
