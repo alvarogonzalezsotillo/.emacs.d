@@ -8,7 +8,29 @@ digraph{
   "cpu" -> "Fork"
   "Fork" -> "SE/NW road"
   "food" -> "SE/NW road"
+  "SE/NW road" -> "Bear hangout"
+  "key" -> "Bear hangout"
+  "Bear hangout" -> "Hidden area"
+  "bracelet" -> "Hidden area"
   "Fork" -> "NE/SW road"
+  "NE/SW road" -> "Building front"
+  "Building front" -> "Old Building hallway"
+  "Old Building hallway" -> "Computer room"
+  "paper" -> "Computer room"
+  "Computer room" -> "Pockey"
+  "Pockey" -> "Receiving room"
+  "Receiving room" -> "Northbound Hallway"
+  "Northbound Hallway" -> "Sauna"
+  "Northbound Hallway" -> "End of N/S Hallway"
+  "End of N/S Hallway" -> "Weight room"
+  "Weight room" -> "Maze button room"
+  "button" -> "Maze button room"
+  "Maze button room" -> "Maze"
+  "statuette" -> "Maze"
+  "floppy" -> "Maze"
+  "Maze" -> "Reception area"
+  "Reception area" -> "Health Club front"
+  "Lakefront North" -> "Lakefront North"
 }
 
 #+END_SRC
@@ -77,20 +99,77 @@ type
 cd /usr/toukmond
 ls
 uncompress paper.o.Z
+exit
+inventory
+look paper
+type
 ftp gamma
-toukmond
-worms
-
-
-
+anonymous
+toukmond@pockey
+help
+type binary
+send bracelet.o
+send paper.o
+send shovel.o
+send key.o
+send lamp.o
+quit
+ls
 rlogin gamma
 worms
+take bracelet
+take paper
+take shovel
+take key
+take lamp
+look bracelet
+look lamp
+look shovel
+look key
+east
+east
+look dial
+turn dial counterclockwise
+look
+turn dial counterclockwise
+look
+turn dial counterclockwise
+look
+west
+north
+east
+take weight
+take life preserver
+look life preserver
+down
+look button
+press button
+up
+drop life preserver
+drop bracelet
+drop paper
+drop shovel
+drop key
+take weight
+down
+put weight on button
+nw
+up
+take floppy
+take statuette
+look statuette
+se
+down
+nw
+nw
+s
+s
 quit
 ENDOFGAME
 #+END_SRC
 
 #+RESULTS:
-:results:
+:RESULTS:
 
 Dead end
 You are at a dead end of a dirt road.  The road goes to the east.
@@ -272,18 +351,149 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
-$ $ Connected to gamma. FTP ver 0.9 00:00:00 01/01/70
-Username: toukmond ftp access not allowed.
-$ worms: not found.
-$ $ $ $ Password: 
+$ $ 
+You step back from the console.
+
+>You currently have:
+A lamp
+A shovel
+A brass key
+A bracelet
+A slip of paper
+>The paper says: Don't forget to type ‘help’ for help.  Also, remember
+this word: ‘worms’
+>$ Connected to gamma. FTP ver 0.9 00:00:00 01/01/70
+Username: Guest login okay, send your user ident as password.
+Password: Guest login okay, user access restrictions apply.
+ftp> Possible commands are:
+send    quit    type   ascii  binary   help
+ftp> Type set to binary.
+ftp> Sending binary file for a bracelet, (0 bytes)
+Transfer complete.
+ftp> Sending binary file for a slip of paper, (0 bytes)
+Transfer complete.
+ftp> Sending binary file for a shovel, (0 bytes)
+Transfer complete.
+ftp> Sending binary file for a brass key, (0 bytes)
+Transfer complete.
+ftp> Sending binary file for a lamp, (0 bytes)
+Transfer complete.
+ftp> $ total 467
+drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ftp
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
+$ Password: 
 You begin to feel strange for a moment, and you lose your items.
 You step back from the console.
 
 Receiving room
 You are in a round, stone room with a door to the east.  There
 is a sign on the wall that reads: ‘receiving room’.
+There is an emerald bracelet here.
+There is a slip of paper here.
+There is a shovel here.
+There is a shiny brass key here.
+There is a lamp nearby.
+>Taken.  
+>Taken.  
+>Taken.  
+>Taken.  
+>Taken.  
+>I see nothing special about that.
+>The lamp is hand-crafted by Geppetto.
+>It is a normal shovel with a price tag attached that says $19.99.
+>I see nothing special about that.
+>Northbound Hallway
+You are at the south end of a hallway that leads to the north.  There
+are rooms to the east and west.
+>Sauna
+You are in a sauna.  There is nothing in the room except for a dial
+on the wall.  A door leads out to west.
+It is normal room temperature in here.
+>The dial points to a temperature scale which has long since faded away.
+>The dial will not turn further in that direction.
+>Sauna
+You are in a sauna.  There is nothing in the room except for a dial
+on the wall.  A door leads out to west.
+It is normal room temperature in here.
+>The dial will not turn further in that direction.
+>Sauna
+You are in a sauna.  There is nothing in the room except for a dial
+on the wall.  A door leads out to west.
+It is normal room temperature in here.
+>The dial will not turn further in that direction.
+>Sauna
+You are in a sauna.  There is nothing in the room except for a dial
+on the wall.  A door leads out to west.
+It is normal room temperature in here.
+>Northbound Hallway
+>End of N/S Hallway
+You are at the end of a north/south hallway.  You can go back to the south,
+or off to a room to the east.
+>Weight room
+You are in an old weight room.  All of the equipment is either destroyed
+or completely broken.  There is a door out to the west, and there is a ladder
+leading down a hole in the floor.
+There is a 10 pound weight here.
+There is a life preserver here.
+>Your load would be too heavy.
+>Taken.  
+>It says S. S. Minnow.
+>Maze button room
+You are in a maze of twisty little passages, all alike.
+There is a button on the ground here.
+>I see nothing special about that.
+>As you press the button, you notice a passageway open up, but
+as you release it, the passageway closes.
+>Weight room
+There is a 10 pound weight here.
+>Done.
+>Done.
+>Done.
+>Done.
+>Done.
+>Taken.  
+>Maze button room
+>Done.
+A passageway opens.
+>Maze
+You are in a maze of little twisty passages, all alike.
+>Maze
+You are in a maze of thirsty little passages, all alike.
+There is a wax statuette of Richard Stallman here.
+There is a floppy disk here.
+>Taken.  
+>Taken.  
+>The statuette is of the likeness of Richard Stallman, the author of the
+famous EMACS editor.  You notice that he is not wearing any shoes.
+>Maze
+You are in a maze of twenty little passages, all alike.
+>Maze
+You are in a daze of twisty little passages, all alike.
+>Maze
+You are in a maze of twisty little cabbages, all alike.
+>Reception area
+You are in a reception area for a health and fitness center.  The place
+appears to have been recently ransacked, and nothing is left.  There is
+a door out to the south, and a crawlspace to the southeast.
+>Health Club front
+You are outside a large building to the north which used to be a health
+and fitness center.  A road leads to the south.
+>Lakefront North
+You are at the north side of a lake.  On the other side you can see
+a road which leads to a cave.  The water appears very deep.
 >
 You have scored 0 out of a possible 90 points.
-:end:
+:END:
 
 ** otro apartado
+adsadfs
