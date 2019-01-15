@@ -136,6 +136,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | esup                           |                                                                |
 | expand-region                  |                                                                |
 | flycheck                       |                                                                |
+| flycheck-plantuml              |                                                                |
 | gift-mode                      |                                                                |
 | git-gutter                     | Marca las filas cambiadas en el margen                         |
 | git-timemachine                |                                                                |
@@ -166,6 +167,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | markdown-preview-mode          |                                                                |
 | ob-restclient                  |                                                                |
 | org                            |                                                                |
+| org-bullets                    |                                                                |
 | org-attach-screenshot          |                                                                |
 | org-page                       |                                                                |
 | page-break-lines               |                                                                |
@@ -188,7 +190,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | sublimity                      |                                                                |
 | swiper-helm                    |                                                                |
 | switch-window                  |                                                                |
-| swoop                          | Búsqueda con previsualización                                  |
 | tablist                        |                                                                |
 | transmission                   |                                                                |
 | transpose-frame                |                                                                |
@@ -224,6 +225,30 @@ Por último, el paquete =ob-scala= es un paquete local bajado de [[https://githu
 #+begin_src emacs-lisp
 (add-to-list 'load-path "~/.emacs.d/mis-paquetes")
 (require 'ob-scala)
+#+end_src
+
+** Paquete =flycheck-inline=
+#+begin_src emacs-lisp
+(use-package flycheck-inline
+  :ensure t
+  :defer 1
+  :config
+    (with-eval-after-load 'flycheck
+    (add-hook 'flycheck-mode-hook #'turn-on-flycheck-inline))
+)
+#+end_src
+
+
+
+** Paquete =swoop=
+Búsqueda con previsualización. Lo configuro para que no seleccione el símbolo en en cursor.
+#+begin_src emacs-lisp
+(use-package swoop
+  :ensure t
+  :defer 1
+  :config
+    ;(setq helm-swoop-pre-input-function nil)
+)
 #+end_src
 
 
@@ -1504,6 +1529,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 (defun bonito-para-org()
   (interactive)
   (bonito-para-proyector)
+  (org-bullets-mode 1)
   (electric-pair-local-mode 1))
 
 

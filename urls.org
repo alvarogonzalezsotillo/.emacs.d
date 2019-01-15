@@ -21,12 +21,7 @@ ultimo gh-pages correcto: 24d33a287d33276a06dfc68b0eb8b7d9fac0c9df
    | ED distancia VIEJO | https://fpdistancia.educa.madrid.org/course/view.php?id=16                              |               |
    | ED distancia MIO   | https://fpdistancia.educa.madrid.org/course/view.php?id=632                             |               |
 
-https://alvarogonzalezsotillo.github.io/apuntes-clase/planificacion-administracion-redes-asir1/apuntes/1/par-1-clasificacion-redes.reveal.html#/slide-orga70e40d
 
-https://alvarogonzalezsotillo.github.io/apuntes-clase/planificacion-administracion-redes-asir1/apuntes/1/par-1-clasificacion-redes.reveal.html#/slide-orgce1dc7e
-
-
-<h3 id="orgce1dc7e"><span class="section-number-3">1.2</span> Empieza la clase de redes</h3>
 
 ** 2017-2018
    | Curso        | url                                                                                     | directorio    |
