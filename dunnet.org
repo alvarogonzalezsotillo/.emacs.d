@@ -144,15 +144,22 @@ look life preserver
 down
 look button
 press button
-up
+
 drop life preserver
 drop bracelet
 drop paper
 drop shovel
 drop key
+up
 take weight
 down
 put weight on button
+take life preserver
+take bracelet
+take paper
+take shovel
+take key
+
 nw
 up
 take floppy
@@ -164,12 +171,27 @@ nw
 nw
 s
 s
+s
+s
+put bracelet on chute
+s
+take gold bar
+e
+e
+n
+down
+look painting
+down
+sw
+e
+up
+look boulder
 quit
 ENDOFGAME
 #+END_SRC
 
 #+RESULTS:
-:RESULTS:
+:results:
 
 Dead end
 You are at a dead end of a dirt road.  The road goes to the east.
@@ -454,18 +476,28 @@ There is a button on the ground here.
 >I see nothing special about that.
 >As you press the button, you notice a passageway open up, but
 as you release it, the passageway closes.
+>>Done.
+>Done.
+>Done.
+>Done.
+>Done.
 >Weight room
 There is a 10 pound weight here.
->Done.
->Done.
->Done.
->Done.
->Done.
 >Taken.  
 >Maze button room
+There is a life preserver here.
+There is an emerald bracelet here.
+There is a slip of paper here.
+There is a shovel here.
+There is a shiny brass key here.
 >Done.
 A passageway opens.
->Maze
+>Taken.  
+>Taken.  
+>Taken.  
+>Taken.  
+>Taken.  
+>>Maze
 You are in a maze of little twisty passages, all alike.
 >Maze
 You are in a maze of thirsty little passages, all alike.
@@ -491,9 +523,54 @@ and fitness center.  A road leads to the south.
 >Lakefront North
 You are at the north side of a lake.  On the other side you can see
 a road which leads to a cave.  The water appears very deep.
+>Lakefront South
+You are at the south side of a lake.  A road goes to the south.
+>Cave Entrance
+The entrance to a cave is to the south.  To the north, a road leads
+towards a deep lake.  On the ground nearby there is a chute, with a sign
+that says ‘put treasures here for points’.
+>You hear it slide down the chute and off into the distance.
+You have scored 10 out of a possible 90 points.
+>As you enter the room you hear a rumbling noise.  You look back to see
+huge rocks sliding down from the ceiling, and blocking your way out.
+
+Misty Room
+You are in a misty, humid room carved into a mountain.
+To the north is the remains of a rockslide.  To the east, a small
+passage leads away into the darkness.
+There is a gold bar here.
+>Taken.  
+>Cave E/W passage
+You are in an east/west passageway.  The walls here are made of
+multicolored rock and are quite beautiful.
+>N/S/W Junction
+You are at the junction of two passages. One goes north/south, and
+the other goes west.
+>North end of cave passage
+You are at the north end of a north/south passageway.  There are stairs
+leading down from here.  There is also a door leading west.
+>Bedroom
+You are in what appears to be a worker's bedroom.  There is a queen-
+sized bed in the middle of the room, and a painting hanging on the
+wall.  A door leads to another room to the south, and stairways
+lead up and down.
+>It is a velvet painting of Elvis Presley.  It seems to be nailed to the
+wall, and you cannot move it.
+>NE end of NE/SW cave passage
+You are at the northeast end of a northeast/southwest passageway.
+Stairs lead up out of sight.
+>NE/SW-E/W junction
+You are at the junction of northeast/southwest and east/west passages.
+>East end of E/W cave passage
+You are at the east end of an E/W passage.  There are stairs leading up
+to a room above.
+>Horseshoe boulder room
+You are in a room which is bare, except for a horseshoe shaped boulder
+in the center.  Stairs lead down from here.
+>It is just a boulder.  It cannot be moved.
 >
-You have scored 0 out of a possible 90 points.
-:END:
+You have scored 10 out of a possible 90 points.
+:end:
 
 ** otro apartado
 adsadfs
