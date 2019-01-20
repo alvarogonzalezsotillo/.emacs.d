@@ -186,6 +186,30 @@ sw
 e
 up
 look boulder
+
+
+d
+w
+look
+w
+look
+d
+#empty room
+n
+e
+s
+look towel
+take towel
+down
+n
+n
+u
+look box
+put key on box
+look
+
+
+
 quit
 ENDOFGAME
 #+END_SRC
@@ -568,7 +592,49 @@ to a room above.
 You are in a room which is bare, except for a horseshoe shaped boulder
 in the center.  Stairs lead down from here.
 >It is just a boulder.  It cannot be moved.
->
+>>>East end of E/W cave passage
+>NE/SW-E/W junction
+>NE/SW-E/W junction
+You are at the junction of northeast/southwest and east/west passages.
+>West end of E/W cave passage
+You are at the west end of an E/W passage.  There is a hole on the ground
+which leads down out of sight.
+>West end of E/W cave passage
+You are at the west end of an E/W passage.  There is a hole on the ground
+which leads down out of sight.
+>Empty room
+You are in a room which is completely empty.  Doors lead out to the north
+and east.
+>I don't understand that.
+>Blue room
+You are in an empty room.  Interestingly enough, the stones in this
+room are painted blue.  Doors lead out to the east and south.
+>Yellow room
+You are in an empty room.  Interestingly enough, the stones in this
+room are painted yellow.  Doors lead out to the south and west.
+>Red room
+You are in an empty room.  Interestingly enough, the stones in this room
+are painted red.  Doors lead out to the west and north.
+There is a beach towel on the ground here.
+>It has a picture of snoopy on it.
+>Taken.  Taking the towel reveals a hole in the floor.
+>Long n/s hallway
+You are in the middle of a long north/south hallway.
+>3/4 north
+You are 3/4 of the way towards the north end of a long north/south hallway.
+>North end of long hallway
+You are at the north end of a long north/south hallway.  There are stairs
+leading upwards.
+>Stair landing
+You are at a landing in a stairwell which continues up and down.
+There is a box with a slit in it, bolted to the wall here.
+>The box has a slit in the top of it, and on it, in sloppy handwriting, is
+written: ‘For key upgrade, put key in here.’
+>As you drop the key, the box begins to shake.  Finally it explodes
+with a bang.  The key seems to have vanished!
+>Stair landing
+You are at a landing in a stairwell which continues up and down.
+>>>>
 You have scored 10 out of a possible 90 points.
 :end:
 
