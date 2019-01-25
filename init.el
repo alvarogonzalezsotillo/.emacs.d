@@ -1,5 +1,6 @@
 
 
+
 ;;; Code:
 (defun carga-config-org (refresh debug)
   "Carga la configuración, refrescando la lista de paquetes si se indica REFRESH, con debug si se indica DEBUG"

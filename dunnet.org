@@ -1,0 +1,642 @@
+
+#+BEGIN_SRC dot :file ./dunnet.svg :exports results :cmd dot :cmdline -Tsvg
+digraph{
+  "shovel" -> "Dead end"
+  "Dead end" -> "E/W Dirt road"
+  "boulder" -> "E/W Dirt road"
+  "E/W Dirt road" -> "Fork"
+  "cpu" -> "Fork"
+  "Fork" -> "SE/NW road"
+  "food" -> "SE/NW road"
+  "SE/NW road" -> "Bear hangout"
+  "key" -> "Bear hangout"
+  "Bear hangout" -> "Hidden area"
+  "bracelet" -> "Hidden area"
+  "Fork" -> "NE/SW road"
+  "NE/SW road" -> "Building front"
+  "Building front" -> "Old Building hallway"
+  "Old Building hallway" -> "Computer room"
+  "paper" -> "Computer room"
+  "Computer room" -> "Pockey"
+  "Pockey" -> "Receiving room"
+  "Receiving room" -> "Northbound Hallway"
+  "Northbound Hallway" -> "Sauna"
+  "Northbound Hallway" -> "End of N/S Hallway"
+  "End of N/S Hallway" -> "Weight room"
+  "Weight room" -> "Maze button room"
+  "button" -> "Maze button room"
+  "Maze button room" -> "Maze"
+  "statuette" -> "Maze"
+  "floppy" -> "Maze"
+  "Maze" -> "Reception area"
+  "Reception area" -> "Health Club front"
+  "Lakefront North" -> "Lakefront North"
+}
+
+#+END_SRC
+
+#+RESULTS:
+[[file:./dunnet.svg]]
+
+#+BEGIN_SRC sh :results drawer
+emacs -q --batch -l dunnet <<ENDOFGAME
+take shovel
+east
+east
+dig
+look
+take cpu
+southeast
+take food
+southeast
+drop food
+look
+take key
+northwest
+northwest
+look
+northeast
+look
+northeast
+in
+east
+look bin
+west
+west
+insert cpu into vax
+type
+toukmond
+robert
+ls
+cd ..
+ls
+cd ..
+ls
+cd rooms
+ls
+cd hidden-area
+ls
+cat description
+exit
+e
+s
+look
+sw
+sw
+se
+se
+sw
+take bracelet
+ne
+nw
+nw
+ne
+ne
+in
+w
+look
+type
+cd /usr/toukmond
+ls
+uncompress paper.o.Z
+exit
+inventory
+look paper
+type
+ftp gamma
+anonymous
+toukmond@pockey
+help
+type binary
+send bracelet.o
+send paper.o
+send shovel.o
+send key.o
+send lamp.o
+quit
+ls
+rlogin gamma
+worms
+take bracelet
+take paper
+take shovel
+take key
+take lamp
+look bracelet
+look lamp
+look shovel
+look key
+east
+east
+look dial
+turn dial counterclockwise
+look
+turn dial counterclockwise
+look
+turn dial counterclockwise
+look
+west
+north
+east
+take weight
+take life preserver
+look life preserver
+down
+look button
+press button
+
+drop life preserver
+drop bracelet
+drop paper
+drop shovel
+drop key
+up
+take weight
+down
+put weight on button
+take life preserver
+take bracelet
+take paper
+take shovel
+take key
+
+nw
+up
+take floppy
+take statuette
+look statuette
+se
+down
+nw
+nw
+s
+s
+s
+s
+put bracelet on chute
+s
+take gold bar
+e
+e
+n
+down
+look painting
+down
+sw
+e
+up
+look boulder
+
+
+d
+w
+look
+w
+look
+d
+#empty room
+n
+e
+s
+look towel
+take towel
+down
+n
+n
+u
+look box
+put key on box
+look
+
+
+
+quit
+ENDOFGAME
+#+END_SRC
+
+#+RESULTS:
+:results:
+
+Dead end
+You are at a dead end of a dirt road.  The road goes to the east.
+In the distance you can see that it will eventually fork off.  The
+trees here are very tall royal palms, and they are spaced equidistant
+from each other.
+There is a shovel here.
+>Taken.  
+>E/W Dirt road
+You are on the continuation of a dirt road.  There are more trees on
+both sides of you.  The road continues to the east and west.
+There is a large boulder here.
+>Fork
+You are at a fork of two passages, one to the northeast, and one to the
+southeast.  The ground here seems very soft. You can also go back west.
+>I think you found something.
+>Fork
+You are at a fork of two passages, one to the northeast, and one to the
+southeast.  The ground here seems very soft. You can also go back west.
+There is a CPU card here.
+>Taken.  
+>SE/NW road
+You are on a southeast/northwest road.
+There is some food here.
+>Taken.  
+>Bear hangout
+You are standing at the end of a road.  A passage leads back to the
+northwest.
+There is a ferocious bear here!
+>Done.
+The bear takes the food and runs away with it. He left something behind.
+>Bear hangout
+You are standing at the end of a road.  A passage leads back to the
+northwest.
+There is a shiny brass key here.
+>Taken.  
+>SE/NW road
+>Fork
+>Fork
+You are at a fork of two passages, one to the northeast, and one to the
+southeast.  The ground here seems very soft. You can also go back west.
+>NE/SW road
+You are on a northeast/southwest road.
+>NE/SW road
+You are on a northeast/southwest road.
+>Building front
+You are at the end of the road.  There is a building in front of you
+to the northeast, and the road leads back to the southwest.
+>Old Building hallway
+You are in the hallway of an old building.  There are rooms to the east
+and west, and doors leading out to the north and south.
+>Mailroom
+You are in a mailroom.  There are many bins where the mail is usually
+kept.  The exit is to the west.
+>All of the bins are empty.  Looking closely you can see that there
+are names written at the bottom of each bin, but most of them are
+faded away so that you cannot read them.  You can only make out three
+names:
+                   Jeffrey Collier
+                   Robert Toukmond
+                   Thomas Stock
+
+>Old Building hallway
+>Computer room
+You are in a computer room.  It seems like most of the equipment has
+been removed.  There is a VAX 11/780 in front of you, however, with
+one of the cabinets wide open.  A sign on the front of the machine
+says: This VAX is named ‘pokey’.  To type on the console, use the
+‘type’ command.  The exit is to the east.
+The panel lights are steady and motionless.
+>As you put the CPU board in the computer, it immediately springs to life.
+The lights start flashing, and the fans seem to startup.
+>
+
+UNIX System V, Release 2.2 (pokey)
+
+login: password: 
+Welcome to Unix
+
+Please clean up your directories.  The filesystem is getting full.
+Our tcp/ip link to gamma is a little flaky, but seems to work.
+The current version of ftp can only send files from your home
+directory, and deletes them after they are sent!  Be careful.
+
+Note: Restricted bourne shell in use.
+
+$ total 467
+drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ftp
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o.Z
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
+$ $ total 4
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 toukmond
+$ $ total 4
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 usr
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 rooms
+$ $ total 16
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 computer-room
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 mailroom
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 old-building-hallway
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 building-front
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 ne-sw-road
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 bear-hangout
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 se-nw-road
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 fork
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 e-w-dirt-road
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 dead-end
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 hidden-area
+$ $ total 4
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+-rwxr-xr-x  3 root     staff          2048 Jan 1 1970 description
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
+$ You are in a well-hidden area off to the side of a road.  Back to the
+northeast through the brush you can see the bear hangout.
+$ 
+You step back from the console.
+
+>Old Building hallway
+>Building front
+>Building front
+You are at the end of the road.  There is a building in front of you
+to the northeast, and the road leads back to the southwest.
+>NE/SW road
+>Fork
+>SE/NW road
+>Bear hangout
+>Hidden area
+There is an emerald bracelet here.
+>Taken.  
+>Bear hangout
+>SE/NW road
+>Fork
+>NE/SW road
+>Building front
+>Old Building hallway
+>Computer room
+The panel lights are flashing in a seemingly organized pattern.
+>Computer room
+You are in a computer room.  It seems like most of the equipment has
+been removed.  There is a VAX 11/780 in front of you, however, with
+one of the cabinets wide open.  A sign on the front of the machine
+says: This VAX is named ‘pokey’.  To type on the console, use the
+‘type’ command.  The exit is to the east.
+The panel lights are flashing in a seemingly organized pattern.
+>$ $ total 467
+drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ftp
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o.Z
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
+$ $ 
+You step back from the console.
+
+>You currently have:
+A lamp
+A shovel
+A brass key
+A bracelet
+A slip of paper
+>The paper says: Don't forget to type ‘help’ for help.  Also, remember
+this word: ‘worms’
+>$ Connected to gamma. FTP ver 0.9 00:00:00 01/01/70
+Username: Guest login okay, send your user ident as password.
+Password: Guest login okay, user access restrictions apply.
+ftp> Possible commands are:
+send    quit    type   ascii  binary   help
+ftp> Type set to binary.
+ftp> Sending binary file for a bracelet, (0 bytes)
+Transfer complete.
+ftp> Sending binary file for a slip of paper, (0 bytes)
+Transfer complete.
+ftp> Sending binary file for a shovel, (0 bytes)
+Transfer complete.
+ftp> Sending binary file for a brass key, (0 bytes)
+Transfer complete.
+ftp> Sending binary file for a lamp, (0 bytes)
+Transfer complete.
+ftp> $ total 467
+drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ftp
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
+$ Password: 
+You begin to feel strange for a moment, and you lose your items.
+You step back from the console.
+
+Receiving room
+You are in a round, stone room with a door to the east.  There
+is a sign on the wall that reads: ‘receiving room’.
+There is an emerald bracelet here.
+There is a slip of paper here.
+There is a shovel here.
+There is a shiny brass key here.
+There is a lamp nearby.
+>Taken.  
+>Taken.  
+>Taken.  
+>Taken.  
+>Taken.  
+>I see nothing special about that.
+>The lamp is hand-crafted by Geppetto.
+>It is a normal shovel with a price tag attached that says $19.99.
+>I see nothing special about that.
+>Northbound Hallway
+You are at the south end of a hallway that leads to the north.  There
+are rooms to the east and west.
+>Sauna
+You are in a sauna.  There is nothing in the room except for a dial
+on the wall.  A door leads out to west.
+It is normal room temperature in here.
+>The dial points to a temperature scale which has long since faded away.
+>The dial will not turn further in that direction.
+>Sauna
+You are in a sauna.  There is nothing in the room except for a dial
+on the wall.  A door leads out to west.
+It is normal room temperature in here.
+>The dial will not turn further in that direction.
+>Sauna
+You are in a sauna.  There is nothing in the room except for a dial
+on the wall.  A door leads out to west.
+It is normal room temperature in here.
+>The dial will not turn further in that direction.
+>Sauna
+You are in a sauna.  There is nothing in the room except for a dial
+on the wall.  A door leads out to west.
+It is normal room temperature in here.
+>Northbound Hallway
+>End of N/S Hallway
+You are at the end of a north/south hallway.  You can go back to the south,
+or off to a room to the east.
+>Weight room
+You are in an old weight room.  All of the equipment is either destroyed
+or completely broken.  There is a door out to the west, and there is a ladder
+leading down a hole in the floor.
+There is a 10 pound weight here.
+There is a life preserver here.
+>Your load would be too heavy.
+>Taken.  
+>It says S. S. Minnow.
+>Maze button room
+You are in a maze of twisty little passages, all alike.
+There is a button on the ground here.
+>I see nothing special about that.
+>As you press the button, you notice a passageway open up, but
+as you release it, the passageway closes.
+>>Done.
+>Done.
+>Done.
+>Done.
+>Done.
+>Weight room
+There is a 10 pound weight here.
+>Taken.  
+>Maze button room
+There is a life preserver here.
+There is an emerald bracelet here.
+There is a slip of paper here.
+There is a shovel here.
+There is a shiny brass key here.
+>Done.
+A passageway opens.
+>Taken.  
+>Taken.  
+>Taken.  
+>Taken.  
+>Taken.  
+>>Maze
+You are in a maze of little twisty passages, all alike.
+>Maze
+You are in a maze of thirsty little passages, all alike.
+There is a wax statuette of Richard Stallman here.
+There is a floppy disk here.
+>Taken.  
+>Taken.  
+>The statuette is of the likeness of Richard Stallman, the author of the
+famous EMACS editor.  You notice that he is not wearing any shoes.
+>Maze
+You are in a maze of twenty little passages, all alike.
+>Maze
+You are in a daze of twisty little passages, all alike.
+>Maze
+You are in a maze of twisty little cabbages, all alike.
+>Reception area
+You are in a reception area for a health and fitness center.  The place
+appears to have been recently ransacked, and nothing is left.  There is
+a door out to the south, and a crawlspace to the southeast.
+>Health Club front
+You are outside a large building to the north which used to be a health
+and fitness center.  A road leads to the south.
+>Lakefront North
+You are at the north side of a lake.  On the other side you can see
+a road which leads to a cave.  The water appears very deep.
+>Lakefront South
+You are at the south side of a lake.  A road goes to the south.
+>Cave Entrance
+The entrance to a cave is to the south.  To the north, a road leads
+towards a deep lake.  On the ground nearby there is a chute, with a sign
+that says ‘put treasures here for points’.
+>You hear it slide down the chute and off into the distance.
+You have scored 10 out of a possible 90 points.
+>As you enter the room you hear a rumbling noise.  You look back to see
+huge rocks sliding down from the ceiling, and blocking your way out.
+
+Misty Room
+You are in a misty, humid room carved into a mountain.
+To the north is the remains of a rockslide.  To the east, a small
+passage leads away into the darkness.
+There is a gold bar here.
+>Taken.  
+>Cave E/W passage
+You are in an east/west passageway.  The walls here are made of
+multicolored rock and are quite beautiful.
+>N/S/W Junction
+You are at the junction of two passages. One goes north/south, and
+the other goes west.
+>North end of cave passage
+You are at the north end of a north/south passageway.  There are stairs
+leading down from here.  There is also a door leading west.
+>Bedroom
+You are in what appears to be a worker's bedroom.  There is a queen-
+sized bed in the middle of the room, and a painting hanging on the
+wall.  A door leads to another room to the south, and stairways
+lead up and down.
+>It is a velvet painting of Elvis Presley.  It seems to be nailed to the
+wall, and you cannot move it.
+>NE end of NE/SW cave passage
+You are at the northeast end of a northeast/southwest passageway.
+Stairs lead up out of sight.
+>NE/SW-E/W junction
+You are at the junction of northeast/southwest and east/west passages.
+>East end of E/W cave passage
+You are at the east end of an E/W passage.  There are stairs leading up
+to a room above.
+>Horseshoe boulder room
+You are in a room which is bare, except for a horseshoe shaped boulder
+in the center.  Stairs lead down from here.
+>It is just a boulder.  It cannot be moved.
+>>>East end of E/W cave passage
+>NE/SW-E/W junction
+>NE/SW-E/W junction
+You are at the junction of northeast/southwest and east/west passages.
+>West end of E/W cave passage
+You are at the west end of an E/W passage.  There is a hole on the ground
+which leads down out of sight.
+>West end of E/W cave passage
+You are at the west end of an E/W passage.  There is a hole on the ground
+which leads down out of sight.
+>Empty room
+You are in a room which is completely empty.  Doors lead out to the north
+and east.
+>I don't understand that.
+>Blue room
+You are in an empty room.  Interestingly enough, the stones in this
+room are painted blue.  Doors lead out to the east and south.
+>Yellow room
+You are in an empty room.  Interestingly enough, the stones in this
+room are painted yellow.  Doors lead out to the south and west.
+>Red room
+You are in an empty room.  Interestingly enough, the stones in this room
+are painted red.  Doors lead out to the west and north.
+There is a beach towel on the ground here.
+>It has a picture of snoopy on it.
+>Taken.  Taking the towel reveals a hole in the floor.
+>Long n/s hallway
+You are in the middle of a long north/south hallway.
+>3/4 north
+You are 3/4 of the way towards the north end of a long north/south hallway.
+>North end of long hallway
+You are at the north end of a long north/south hallway.  There are stairs
+leading upwards.
+>Stair landing
+You are at a landing in a stairwell which continues up and down.
+There is a box with a slit in it, bolted to the wall here.
+>The box has a slit in the top of it, and on it, in sloppy handwriting, is
+written: ‘For key upgrade, put key in here.’
+>As you drop the key, the box begins to shake.  Finally it explodes
+with a bang.  The key seems to have vanished!
+>Stair landing
+You are at a landing in a stairwell which continues up and down.
+>>>>
+You have scored 10 out of a possible 90 points.
+:end:
+
+** otro apartado
+adsadfs

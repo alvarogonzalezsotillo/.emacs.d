@@ -136,6 +136,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | esup                           |                                                                |
 | expand-region                  |                                                                |
 | flycheck                       |                                                                |
+| flycheck-plantuml              |                                                                |
 | gift-mode                      |                                                                |
 | git-gutter                     | Marca las filas cambiadas en el margen                         |
 | git-timemachine                |                                                                |
@@ -166,6 +167,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | markdown-preview-mode          |                                                                |
 | ob-restclient                  |                                                                |
 | org                            |                                                                |
+| org-bullets                    |                                                                |
 | org-attach-screenshot          |                                                                |
 | org-page                       |                                                                |
 | page-break-lines               |                                                                |
@@ -188,7 +190,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | sublimity                      |                                                                |
 | swiper-helm                    |                                                                |
 | switch-window                  |                                                                |
-| swoop                          | Búsqueda con previsualización                                  |
 | tablist                        |                                                                |
 | transmission                   |                                                                |
 | transpose-frame                |                                                                |
@@ -224,6 +225,30 @@ Por último, el paquete =ob-scala= es un paquete local bajado de [[https://githu
 #+begin_src emacs-lisp
 (add-to-list 'load-path "~/.emacs.d/mis-paquetes")
 (require 'ob-scala)
+#+end_src
+
+** Paquete =flycheck-inline=
+#+begin_src emacs-lisp
+(use-package flycheck-inline
+  :ensure t
+  :defer 1
+  :config
+    (with-eval-after-load 'flycheck
+    (add-hook 'flycheck-mode-hook #'turn-on-flycheck-inline))
+)
+#+end_src
+
+
+
+** Paquete =swoop=
+Búsqueda con previsualización. Lo configuro para que no seleccione el símbolo en en cursor.
+#+begin_src emacs-lisp
+(use-package swoop
+  :ensure t
+  :defer 1
+  :config
+    ;(setq helm-swoop-pre-input-function nil)
+)
 #+end_src
 
 
@@ -580,6 +605,12 @@ Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auc
       '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql"))
 #+end_src
 
+Para imenu
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'TeX-outline-extra '("\\\\PROBLEMA{" 4))
+#+END_SRC
+
+
 En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
 #+begin_src emacs-lisp
 (setq TeX-source-correlate-mode t)
@@ -605,6 +636,16 @@ Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en e
 (eval-after-load "preview"
   '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{homeworkProblem}" t) )
 #+end_src
+
+Añadir XeLatex
+
+#+BEGIN_SRC emacs-lisp
+(eval-after-load "tex"
+  '(add-to-list 'TeX-command-list
+     		'("XeLaTeX" "xelatex -interaction=nonstopmode %s"
+		  TeX-run-command t t :help "Run xelatex") t))
+#+END_SRC
+
 
 
 ** Paquete =which-key=
@@ -875,6 +916,8 @@ Agrupo los buffers por proyecto de =projectile=
     :config
       (add-hook 'ibuffer-hook #'ibuffer-projectile-set-filter-groups)
       (add-hook 'ibuffer-sidebar-mode-hook #'ibuffer-projectile-set-filter-groups))
+
+(add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
 #+end_src
 
 
@@ -914,7 +957,8 @@ El ratón también puede utilizarse en un =xterm=
 ** /scroll bars/
 
 #+BEGIN_SRC emacs-lisp
-  (scroll-bar-mode -1)
+(if (display-graphic-p)
+   (scroll-bar-mode -1))
 #+END_SRC
 
 ** Cambiar el tamaño de fuente de todo /emacs/ (no solo el buffer actual)
@@ -963,7 +1007,8 @@ La barra de menú y la de herramientas es de lo primero que se quita al personal
 #+begin_src emacs-lisp
 (setq inhibit-startup-message t)
 (menu-bar-mode -1)
-(tool-bar-mode -1)
+(if (display-graphic-p)
+  (tool-bar-mode -1))
 #+end_src
 
 ** Ancho de la página de =man=
@@ -1136,9 +1181,32 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
 * Utilidades
 
+
+
+** Abrir proyecto en ventana nueva con neotree
+#+begin_src emacs-lisp
+
+  (defun abrir-proyecto--selecciona-proyecto()
+    (helm :sources (helm-build-sync-source "Selecciona un proyecto"
+                     :candidates projectile-known-projects
+                     :fuzzy-match t)
+          :buffer "*Selección de proyecto*"))
+  (defun abrir-proyecto()
+    (interactive)
+
+    (let ( (proyecto (abrir-proyecto--selecciona-proyecto) )
+           (frame (make-frame)))
+
+      (select-frame-set-input-focus frame)
+      (message (concat "El proyecto seleccionado es:" proyecto ))
+      (dired proyecto)
+      (neotree-project-root-dir-or-current-dir)
+      (magit-status)))
+#+end_src
+
 ** Convierto el buffer actual a una frame nueva
 #+begin_src emacs-lisp
-(defun saca-a-nueva-frame()
+(defun sacar-a-nueva-frame()
   (interactive)
   (let ((buffer (current-buffer)))
     (unless (one-window-p)
@@ -1146,8 +1214,6 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
     (display-buffer-pop-up-frame buffer nil)))
 #+end_src
 
-#+RESULTS:
-: saca-a-nueva-frame
 
 ** Inicio de una selección rectangular usando el ratón (lo uso poco, prefiero =C-x spc=)
 #+begin_src emacs-lisp
@@ -1502,6 +1568,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 (defun bonito-para-org()
   (interactive)
   (bonito-para-proyector)
+  (org-bullets-mode 1)
   (electric-pair-local-mode 1))
 
 
@@ -1527,7 +1594,8 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 Prefiero ocultar las flechas que indican que una línea se sale de la pantalla, y solo mostrar las de la derecha.
 
 #+begin_src emacs-lisp
-(fringe-mode '(0 . nil))
+(if (display-graphic-p)
+  (fringe-mode '(0 . nil)))
 #+end_src
 
 ** Temas
