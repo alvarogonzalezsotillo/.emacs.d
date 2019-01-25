@@ -605,6 +605,12 @@ Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auc
       '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql"))
 #+end_src
 
+Para imenu
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'TeX-outline-extra '("\\\\PROBLEMA{" 4))
+#+END_SRC
+
+
 En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
 #+begin_src emacs-lisp
 (setq TeX-source-correlate-mode t)
@@ -630,6 +636,16 @@ Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en e
 (eval-after-load "preview"
   '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{homeworkProblem}" t) )
 #+end_src
+
+Añadir XeLatex
+
+#+BEGIN_SRC emacs-lisp
+(eval-after-load "tex"
+  '(add-to-list 'TeX-command-list
+     		'("XeLaTeX" "xelatex -interaction=nonstopmode %s"
+		  TeX-run-command t t :help "Run xelatex") t))
+#+END_SRC
+
 
 
 ** Paquete =which-key=
@@ -900,6 +916,8 @@ Agrupo los buffers por proyecto de =projectile=
     :config
       (add-hook 'ibuffer-hook #'ibuffer-projectile-set-filter-groups)
       (add-hook 'ibuffer-sidebar-mode-hook #'ibuffer-projectile-set-filter-groups))
+
+(add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
 #+end_src
 
 
