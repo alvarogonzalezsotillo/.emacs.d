@@ -1181,9 +1181,32 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
 * Utilidades
 
+
+
+** Abrir proyecto en ventana nueva con neotree
+#+begin_src emacs-lisp
+
+  (defun abrir-proyecto--selecciona-proyecto()
+    (helm :sources (helm-build-sync-source "Selecciona un proyecto"
+                     :candidates projectile-known-projects
+                     :fuzzy-match t)
+          :buffer "*Selección de proyecto*"))
+  (defun abrir-proyecto()
+    (interactive)
+
+    (let ( (proyecto (abrir-proyecto--selecciona-proyecto) )
+           (frame (make-frame)))
+
+      (select-frame-set-input-focus frame)
+      (message (concat "El proyecto seleccionado es:" proyecto ))
+      (dired proyecto)
+      (neotree-project-root-dir-or-current-dir)
+      (magit-status)))
+#+end_src
+
 ** Convierto el buffer actual a una frame nueva
 #+begin_src emacs-lisp
-(defun saca-a-nueva-frame()
+(defun sacar-a-nueva-frame()
   (interactive)
   (let ((buffer (current-buffer)))
     (unless (one-window-p)
@@ -1191,8 +1214,6 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
     (display-buffer-pop-up-frame buffer nil)))
 #+end_src
 
-#+RESULTS:
-: saca-a-nueva-frame
 
 ** Inicio de una selección rectangular usando el ratón (lo uso poco, prefiero =C-x spc=)
 #+begin_src emacs-lisp
