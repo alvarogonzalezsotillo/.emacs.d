@@ -41,12 +41,75 @@ digraph{
 
 * Prueba
 #+begin_src bash :results drawer
-script -c bash >(cat) <<eof
-ls
-eof
+trap 'kill $(jobs -p)' EXIT
+rm dunnet.log
+emacs=$(which emacs)
+rm dunnet.in
+mkfifo dunnet.in
+mkfifo dunnet.keepalive
+sleep 1h > dunnet.in & #keep fifo open
+
+$emacs -q --batch -l dunnet < dunnet.in &
+sleep 10s
+
+log(){
+  echo $* >> dunnet.log
+}
+linea_a_linea(){
+  while IFS='' read -r line || [[ -n "$line" ]]; do
+     log "Text read from file: $line"
+     echo TECLEO: $line 
+     echo $line > dunnet.in
+  done 
+}
+ps > dunnet.log
+log fin de espera a emacs
+
+linea_a_linea <<endoffile
+  look
+  look
+  east
+  quit
+endoffile
+
+log fin de dunnet
+
+
+rm dunnet.in
 #+end_src
 
 #+RESULTS:
+:results:
+
+Dead end
+You are at a dead end of a dirt road.  The road goes to the east.
+In the distance you can see that it will eventually fork off.  The
+trees here are very tall royal palms, and they are spaced equidistant
+from each other.
+There is a shovel here.
+>TECLEO: look
+Dead end
+You are at a dead end of a dirt road.  The road goes to the east.
+In the distance you can see that it will eventually fork off.  The
+trees here are very tall royal palms, and they are spaced equidistant
+from each other.
+There is a shovel here.
+>TECLEO: look
+Dead end
+You are at a dead end of a dirt road.  The road goes to the east.
+In the distance you can see that it will eventually fork off.  The
+trees here are very tall royal palms, and they are spaced equidistant
+from each other.
+There is a shovel here.
+>TECLEO: east
+E/W Dirt road
+You are on the continuation of a dirt road.  There are more trees on
+both sides of you.  The road continues to the east and west.
+There is a large boulder here.
+>TECLEO: quit
+
+You have scored 0 out of a possible 90 points.
+:end:
 
 
 * Partida
