@@ -1,4 +1,4 @@
-
+* Grafo
 #+BEGIN_SRC dot :file ./dunnet.svg :exports results :cmd dot :cmdline -Tsvg
 digraph{
   "shovel" -> "Dead end"
@@ -38,9 +38,24 @@ digraph{
 #+RESULTS:
 [[file:./dunnet.svg]]
 
-#+BEGIN_SRC sh :results drawer
-emacs -q --batch -l dunnet <<ENDOFGAME
+
+* Prueba
+#+begin_src bash :results drawer
+script -c bash >(cat) <<eof
+ls
+eof
+#+end_src
+
+#+RESULTS:
+
+
+* Partida
+#+BEGIN_SRC bash :results drawer
+emacs26 -q --batch -l dunnet <<ENDOFGAME
+
 take shovel
+
+
 east
 east
 dig
@@ -208,9 +223,23 @@ look box
 put key on box
 look
 
+# stair landing, box has exploded
+u
+u
+ne
+ne
+get axe
+look axe
+d
 
+#N/S/W Junction
+n
+look
+d
+lookq
 
 quit
+exit
 ENDOFGAME
 #+END_SRC
 
@@ -223,8 +252,8 @@ In the distance you can see that it will eventually fork off.  The
 trees here are very tall royal palms, and they are spaced equidistant
 from each other.
 There is a shovel here.
->Taken.  
->E/W Dirt road
+>>Taken.  
+>>>E/W Dirt road
 You are on the continuation of a dirt road.  There are more trees on
 both sides of you.  The road continues to the east and west.
 There is a large boulder here.
@@ -634,7 +663,29 @@ written: ‘For key upgrade, put key in here.’
 with a bang.  The key seems to have vanished!
 >Stair landing
 You are at a landing in a stairwell which continues up and down.
->>>>
+>>I don't understand that.
+>Up/down staircase
+You are at the continuation of an up/down staircase.
+>Top of staircase.
+You are at the top of a staircase leading down.  A crawlway leads off
+to the northeast.
+>NE crawlway
+You are in a crawlway that leads northeast or southwest.
+>Small crawlspace
+You are in a small crawlspace.  There is a hole in the ground here, and
+a small passage back to the southwest.
+There is an axe here.
+>Taken.  
+>I see nothing special about that.
+>N/S/W Junction
+>>I don't understand that.
+>North end of cave passage
+>North end of cave passage
+You are at the north end of a north/south passageway.  There are stairs
+leading down from here.  There is also a door leading west.
+>Bedroom
+>I don't understand that.
+>>
 You have scored 10 out of a possible 90 points.
 :end:
 
