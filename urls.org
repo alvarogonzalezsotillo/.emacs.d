@@ -468,6 +468,8 @@ BLOATWARE="
  com.lge.qmemoplus                     
  com.lge.bnr.launcher                  
  com.lge.task
+ com.lge.lgdmsclient                            
+ com.android.calendar
 "
 
 for bw in $BLOATWARE
@@ -478,21 +480,25 @@ done;
 #+END_SRC
 
 #+RESULTS:
-| DESINSTALANDO: | com.rsupport.rs.activity.lge.allinone |
-| Success        |                                       |
-| DESINSTALANDO: | com.lge.ime                           |
-| Success        |                                       |
-| DESINSTALANDO: | com.lge.lgworld                       |
-| Success        |                                       |
-| DESINSTALANDO: | com.lge.smartdoctor.webview           |
-| Success        |                                       |
-| DESINSTALANDO: | com.lge.phonemanagement               |
-| Success        |                                       |
-| DESINSTALANDO: | com.lge.springcleaning                |
-| Success        |                                       |
-| DESINSTALANDO: | com.lge.qmemoplus                     |
-| Success        |                                       |
-| DESINSTALANDO: | com.lge.bnr.launcher                  |
-| Success        |                                       |
-| DESINSTALANDO: | com.lge.task                          |
-| Success        |                                       |
+| DESINSTALANDO: | com.rsupport.rs.activity.lge.allinone |           |     |    |
+| Failure        | [not                                  | installed | for | 0] |
+| DESINSTALANDO: | com.lge.ime                           |           |     |    |
+| Failure        | [not                                  | installed | for | 0] |
+| DESINSTALANDO: | com.lge.lgworld                       |           |     |    |
+| Failure        | [not                                  | installed | for | 0] |
+| DESINSTALANDO: | com.lge.smartdoctor.webview           |           |     |    |
+| Failure        | [not                                  | installed | for | 0] |
+| DESINSTALANDO: | com.lge.phonemanagement               |           |     |    |
+| Failure        | [not                                  | installed | for | 0] |
+| DESINSTALANDO: | com.lge.springcleaning                |           |     |    |
+| Failure        | [not                                  | installed | for | 0] |
+| DESINSTALANDO: | com.lge.qmemoplus                     |           |     |    |
+| Failure        | [not                                  | installed | for | 0] |
+| DESINSTALANDO: | com.lge.bnr.launcher                  |           |     |    |
+| Failure        | [not                                  | installed | for | 0] |
+| DESINSTALANDO: | com.lge.task                          |           |     |    |
+| Failure        | [not                                  | installed | for | 0] |
+| DESINSTALANDO: | com.lge.lgdmsclient                   |           |     |    |
+| Success        |                                       |           |     |    |
+| DESINSTALANDO: | com.android.calendar                  |           |     |    |
+| Success        |                                       |           |     |    |
