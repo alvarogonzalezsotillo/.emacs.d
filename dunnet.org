@@ -1,5 +1,5 @@
 * Grafo
-#+BEGIN_SRC dot :file ./dunnet.svg :exports results :cmd dot :cmdline -Tsvg
+#+BEGIN_SRC dot :file ./dunnet.svg :exports results :cmd neato :cmdline -Tsvg
 digraph{
   "shovel" -> "Dead end"
   "Dead end" -> "E/W Dirt road"
@@ -47,6 +47,26 @@ digraph{
   "East end of E/W cave passage" -> "Horseshoe boulder room"
   "NE/SW-E/W junction" -> "West end of E/W cave passage"
   "West end of E/W cave passage" -> "Empty room"
+  "Empty room" -> "Blue room"
+  "Empty room" -> "Red room"
+  "Blue room" -> "Yellow room"
+  "Yellow room" -> "Red room"
+  "towel" -> "Red room"
+  "Red room" -> "Long n/s hallway"
+  "Long n/s hallway" -> "3/4 north"
+  "3/4 north" -> "North end of long hallway"
+  "North end of long hallway" -> "Stair landing"
+  "box" -> "Stair landing"
+  "Stair landing" -> "Top of staircase"
+  "Top of staircase" -> "NE crawlway"
+  "NE crawlway" -> "Small crawlspace"
+  "axe" -> "Small crawlspace"
+  "Small crawlspace" -> "N/S/W Junction"
+
+
+  
+
+
 
   
 }
@@ -250,6 +270,8 @@ w
 look
 d
 #empty room
+e
+quit
 n
 e
 s
@@ -290,7 +312,7 @@ exit
 #+END_SRC
 
 #+RESULTS:
-:results:
+:RESULTS:
 
 Dead end
 You are at a dead end of a dirt road.  The road goes to the east.
@@ -302,10 +324,10 @@ There is a shovel here.
 
 >TECLEO: take shovel
 
-TECLEO:
-
 Taken.  
->>TECLEO:
+>TECLEO:
+
+>TECLEO:
 
 >TECLEO: east
 
@@ -331,67 +353,68 @@ There is a CPU card here.
 
 Taken.  
 >TECLEO: southeast
+
 SE/NW road
 You are on a southeast/northwest road.
 There is some food here.
->
-TECLEO: take food
+>TECLEO: take food
+
 Taken.  
->
-TECLEO: southeast
+>TECLEO: southeast
+
 Bear hangout
 You are standing at the end of a road.  A passage leads back to the
 northwest.
 There is a ferocious bear here!
->
-TECLEO: drop food
+>TECLEO: drop food
+
 Done.
 The bear takes the food and runs away with it. He left something behind.
->
-TECLEO: look
+>TECLEO: look
+
 Bear hangout
 You are standing at the end of a road.  A passage leads back to the
 northwest.
 There is a shiny brass key here.
->
-TECLEO: take key
+>TECLEO: take key
+
 Taken.  
->
-TECLEO: northwest
+>TECLEO: northwest
+
 SE/NW road
->
-TECLEO: northwest
+>TECLEO: northwest
+
 Fork
->
-TECLEO: look
+>TECLEO: look
+
 Fork
 You are at a fork of two passages, one to the northeast, and one to the
 southeast.  The ground here seems very soft. You can also go back west.
->
-TECLEO: northeast
-NE/SW road
+>TECLEO: northeast
 
+NE/SW road
 You are on a northeast/southwest road.
 >TECLEO: look
+
 NE/SW road
 You are on a northeast/southwest road.
->
-TECLEO: northeast
+>TECLEO: northeast
+
 Building front
 You are at the end of the road.  There is a building in front of you
 to the northeast, and the road leads back to the southwest.
->
-TECLEO: in
+>TECLEO: in
+
 Old Building hallway
 You are in the hallway of an old building.  There are rooms to the east
 and west, and doors leading out to the north and south.
->
-TECLEO: east
+>TECLEO: east
+
 Mailroom
 You are in a mailroom.  There are many bins where the mail is usually
 kept.  The exit is to the west.
->
-TECLEO: look bin
+>TECLEO: look bin
+
 All of the bins are empty.  Looking closely you can see that there
 are names written at the bottom of each bin, but most of them are
 faded away so that you cannot read them.  You can only make out three
@@ -400,8 +423,7 @@ names:
                    Robert Toukmond
                    Thomas Stock
 
->
-TECLEO: west
+>TECLEO: west
 
 Old Building hallway
 >TECLEO: west
@@ -420,10 +442,10 @@ The lights start flashing, and the fans seem to startup.
 >TECLEO: type
 
 
+
 UNIX System V, Release 2.2 (pokey)
 
-login: 
-TECLEO: toukmond
+login: TECLEO: toukmond
 password: 
 TECLEO: robert
 
@@ -436,8 +458,8 @@ directory, and deletes them after they are sent!  Be careful.
 
 Note: Restricted bourne shell in use.
 
-$ 
-TECLEO: ls
+
+$ TECLEO: ls
 
 total 467
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
@@ -447,19 +469,19 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
--rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 TECLEO: cd ..
+pwd
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
--rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 
+ssh
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o.Z
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
-$ TECLEO: cd ..
+$ TECLEO: ls
 $ 
-TECLEO: ls
-
 total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
@@ -467,13 +489,13 @@ drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 toukmond
 $ TECLEO: cd ..
 
 $ TECLEO: ls
+
 total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 usr
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 rooms
-$ 
-TECLEO: cd rooms
+$ TECLEO: cd rooms
 
 $ TECLEO: ls
 
@@ -513,8 +535,8 @@ You step back from the console.
 
 Old Building hallway
 >TECLEO: s
-Building front
 
+Building front
 >TECLEO: look
 
 Building front
@@ -524,14 +546,14 @@ to the northeast, and the road leads back to the southwest.
 
 NE/SW road
 >TECLEO: sw
-Fork
 
+Fork
 >TECLEO: se
 
 SE/NW road
 >TECLEO: se
-Bear hangout
 
+Bear hangout
 >TECLEO: sw
 
 Hidden area
@@ -549,8 +571,8 @@ SE/NW road
 
 Fork
 >TECLEO: ne
-NE/SW road
 
+NE/SW road
 >TECLEO: ne
 
 Building front
@@ -585,18 +607,18 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
--rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rloginTECLEO: uncompress paper.o.Z
+
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
+
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o.Z
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
-$ TECLEO: uncompress paper.o.Z
-
-$ TECLEO: exit
+$ $ TECLEO: exit
 
 
 You step back from the console.
@@ -622,8 +644,8 @@ Username: TECLEO: anonymous
 Guest login okay, send your user ident as password.
 
 Password: TECLEO: toukmond@pockey
-
 Guest login okay, user access restrictions apply.
+
 ftp> TECLEO: help
 
 Possible commands are:
@@ -636,8 +658,8 @@ ftp> TECLEO: send bracelet.o
 Sending binary file for a bracelet, (0 bytes)
 Transfer complete.
 ftp> TECLEO: send paper.o
-Sending 
-binary file for a slip of paper, (0 bytes)
+
+Sending binary file for a slip of paper, (0 bytes)
 Transfer complete.
 ftp> TECLEO: send shovel.o
 
@@ -664,13 +686,13 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
--rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rloginTECLEO: rlogin gamma
+
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
--rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
-$ TECLEO: rlogin gamma
 
-Password: TECLEO: worms
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
+$ Password: TECLEO: worms
 
 You begin to feel strange for a moment, and you lose your items.
 
@@ -691,8 +713,8 @@ Taken.
 
 Taken.  
 >TECLEO: take shovel
-Taken.  
 
+Taken.  
 >TECLEO: take key
 
 Taken.  
@@ -717,8 +739,8 @@ Northbound Hallway
 You are at the south end of a hallway that leads to the north.  There
 are rooms to the east and west.
 >TECLEO: east
-Sauna
 
+Sauna
 You are in a sauna.  There is nothing in the room except for a dial
 on the wall.  A door leads out to west.
 It is normal room temperature in here.
@@ -773,10 +795,10 @@ There is a life preserver here.
 Your load would be too heavy.
 >TECLEO: take life preserver
 
-Taken.  
->TECLEO: look life preserver
+TECLEO: look life preserver
 
-It says S. S. Minnow.
+Taken.  
+>It says S. S. Minnow.
 >TECLEO: down
 
 Maze button room
@@ -835,14 +857,14 @@ Taken.
 
 Taken.  
 >TECLEO: take shovel
-Taken.  
 
+Taken.  
 >TECLEO: take key
 
 Taken.  
 >TECLEO:
->
-TECLEO: nw
+
+>TECLEO: nw
 
 Maze
 You are in a maze of little twisty passages, all alike.
@@ -933,8 +955,8 @@ North end of cave passage
 You are at the north end of a north/south passageway.  There are stairs
 leading down from here.  There is also a door leading west.
 >TECLEO: down
-Bedroom
 
+Bedroom
 You are in what appears to be a worker's bedroom.  There is a queen-
 sized bed in the middle of the room, and a painting hanging on the
 wall.  A door leads to another room to the south, and stairways
@@ -968,8 +990,8 @@ It is just a boulder.  It cannot be moved.
 >TECLEO:
 
 >TECLEO:
-
->TECLEO: d
+>
+TECLEO: d
 
 East end of E/W cave passage
 >TECLEO: w
@@ -990,141 +1012,92 @@ West end of E/W cave passage
 You are at the west end of an E/W passage.  There is a hole on the ground
 which leads down out of sight.
 >TECLEO: d
-Empty room
 
+Empty room
 You are in a room which is completely empty.  Doors lead out to the north
 and east.
 >TECLEO: #empty room
 
 I don't understand that.
->TECLEO: n
-Blue room
-
-You are in an empty room.  Interestingly enough, the stones in this
-room are painted blue.  Doors lead out to the east and south.
 >TECLEO: e
-Yellow room
-
-You are in an empty room.  Interestingly enough, the stones in this
-room are painted yellow.  Doors lead out to the south and west.
->TECLEO: s
 
 Red room
 You are in an empty room.  Interestingly enough, the stones in this room
 are painted red.  Doors lead out to the west and north.
 There is a beach towel on the ground here.
->TECLEO: look towel
-
-It has a picture of snoopy on it.
->TECLEO: take towel
-
-Taken.  Taking the towel reveals a hole in the floor.
->TECLEO: down
-
-Long n/s hallway
-You are in the middle of a long north/south hallway.
->TECLEO: n
-3/4 north
-
-You are 3/4 of the way towards the north end of a long north/south hallway.
->TECLEO: n
-
-North end of long hallway
-You are at the north end of a long north/south hallway.  There are stairs
-leading upwards.
->TECLEO: u
-
-Stair landing
-You are at a landing in a stairwell which continues up and down.
-There is a box with a slit in it, bolted to the wall here.
->TECLEO: look box
-
-The box has a slit in the top of it, and on it, in sloppy handwriting, is
-written: ‘For key upgrade, put key in here.’
->TECLEO: put key on box
-
-As you drop the key, the box begins to shake.  Finally it explodes
-with a bang.  The key seems to have vanished!
->TECLEO: look
-
-Stair landing
-You are at a landing in a stairwell which continues up and down.
->TECLEO:
-
->TECLEO: # stair landing, box has exploded
-
-I don't understand that.
->TECLEO: u
-
-Up/down staircase
-You are at the continuation of an up/down staircase.
->TECLEO: u
-
-Top of staircase.
-You are at the top of a staircase leading down.  A crawlway leads off
-to the northeast.
->TECLEO: ne
-
-NE crawlway
-You are in a crawlway that leads northeast or southwest.
->TECLEO: ne
-
-Small crawlspace
-You are in a small crawlspace.  There is a hole in the ground here, and
-a small passage back to the southwest.
-There is an axe here.
->TECLEO: get axe
-
-Taken.  
->TECLEO: look axe
-
-I see nothing special about that.
->TECLEO: d
-
-N/S/W Junction
->TECLEO:
-
->TECLEO: #N/S/W Junction
-
-I don't understand that.
->TECLEO: n
-
-North end of cave passage
->TECLEO: look
-
-North end of cave passage
-You are at the north end of a north/south passageway.  There are stairs
-leading down from here.  There is also a door leading west.
->TECLEO: d
-
-Bedroom
->TECLEO: look
-
-Bedroom
-You are in what appears to be a worker's bedroom.  There is a queen-
-sized bed in the middle of the room, and a painting hanging on the
-wall.  A door leads to another room to the south, and stairways
-lead up and down.
->TECLEO: d
-
-NE end of NE/SW cave passage
->TECLEO: # Aqui ya he estado
-
-I don't understand that.
->TECLEO: d
-
-You can't go that way.
->TECLEO:
-
->TECLEO:
-
 >TECLEO: quit
 
 
-TECLEO:
+TECLEO: n
+
+TECLEO: e
+
+TECLEO: s
+
+TECLEO: look towel
+
+TECLEO: take towel
+
+TECLEO: down
+
+TECLEO: n
+
+TECLEO: n
+
+TECLEO: u
+
+TECLEO: look box
 
 You have scored 10 out of a possible 90 points.
-:end:
+TECLEO: put key on box
+
+TECLEO: look
+
+TECLEO:
+
+TECLEO: # stair landing, box has exploded
+
+TECLEO: u
+
+TECLEO: u
+
+TECLEO: ne
+
+TECLEO: ne
+
+TECLEO: get axe
+
+TECLEO: look axe
+
+TECLEO: d
+
+TECLEO:
+
+TECLEO: #N/S/W Junction
+
+TECLEO: n
+
+TECLEO: look
+
+TECLEO: d
+
+TECLEO: look
+
+TECLEO: d
+
+TECLEO: # Aqui ya he estado
+
+TECLEO: d
+
+TECLEO:
+
+TECLEO:
+
+TECLEO: quit
+
+TECLEO:
+
+:END:
 
 ** otro apartado
    adsadfs
