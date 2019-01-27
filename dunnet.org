@@ -30,7 +30,25 @@ digraph{
   "floppy" -> "Maze"
   "Maze" -> "Reception area"
   "Reception area" -> "Health Club front"
-  "Lakefront North" -> "Lakefront North"
+  "Health Club front" -> "Lakefront North"
+  "Lakefront North" -> "Lakefront South"
+  "Lakefront South" -> "Cave Entrance"
+  "chute" -> "Cave Entrance"
+  "Cave Entrance" -> "Misty Room"
+  "gold bar" -> "Misty Room"
+  "Misty Room" -> "Cave E/W passage"
+  "Cave E/W passage" -> "N/S/W Junction"
+  "N/S/W Junction" -> "North end of cave passage"
+  "North end of cave passage" -> "Bedroom"
+  "painting" -> "Bedroom"
+  "Bedroom" -> "NE end of NE/SW cave passage"
+  "NE end of NE/SW cave passage" -> "NE/SW-E/W junction"
+  "NE/SW-E/W junction" -> "East end of E/W cave passage"
+  "East end of E/W cave passage" -> "Horseshoe boulder room"
+  "NE/SW-E/W junction" -> "West end of E/W cave passage"
+  "West end of E/W cave passage" -> "Empty room"
+
+  
 }
 
 #+END_SRC
@@ -1109,4 +1127,4 @@ You have scored 10 out of a possible 90 points.
 :end:
 
 ** otro apartado
-adsadfs
+   adsadfs
