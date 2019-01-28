@@ -24,8 +24,7 @@
 <!-- shovel&#45;&gt;Dead end -->
 <g id="edge1" class="edge">
 <title>shovel&#45;&gt;Dead end</title>
-<path fill="none" stroke="#000000" d="M92.8449,-2015.8314C92.8449,-2008.131 92.8449,-1998.9743 92.8449,-1990.4166"/>
-<polygon fill="#000000" stroke="#000000" points="96.345,-1990.4132 92.8449,-1980.4133 89.345,-1990.4133 96.345,-1990.4132"/>
+<path fill="none" stroke="#000000" d="M92.8449,-2015.8314C92.8449,-2005 92.8449,-1991.2876 92.8449,-1980.4133"/>
 </g>
 <!-- E/W Dirt road -->
 <g id="node3" class="node">
@@ -36,8 +35,7 @@
 <!-- Dead end&#45;&gt;E/W Dirt road -->
 <g id="edge2" class="edge">
 <title>Dead end&#45;&gt;E/W Dirt road</title>
-<path fill="none" stroke="#000000" d="M104.9485,-1944.5708C110.8787,-1936.0312 118.1422,-1925.5719 124.7178,-1916.1029"/>
-<polygon fill="#000000" stroke="#000000" points="127.6762,-1917.979 130.5054,-1907.7689 121.9266,-1913.9862 127.6762,-1917.979"/>
+<path fill="none" stroke="#000000" d="M104.9485,-1944.5708C112.6941,-1933.4171 122.7141,-1918.9882 130.5054,-1907.7689"/>
 </g>
 <!-- Fork -->
 <g id="node5" class="node">
@@ -48,8 +46,7 @@
 <!-- E/W Dirt road&#45;&gt;Fork -->
 <g id="edge4" class="edge">
 <title>E/W Dirt road&#45;&gt;Fork</title>
-<path fill="none" stroke="#000000" d="M155.946,-1872.2022C162.4897,-1863.3127 170.5125,-1852.4138 177.6436,-1842.7263"/>
-<polygon fill="#000000" stroke="#000000" points="180.5116,-1844.7341 183.6211,-1834.6058 174.8742,-1840.5843 180.5116,-1844.7341"/>
+<path fill="none" stroke="#000000" d="M155.946,-1872.2022C164.4065,-1860.7088 175.3397,-1845.8561 183.6211,-1834.6058"/>
 </g>
 <!-- boulder -->
 <g id="node4" class="node">
@@ -60,8 +57,7 @@
 <!-- boulder&#45;&gt;E/W Dirt road -->
 <g id="edge3" class="edge">
 <title>boulder&#45;&gt;E/W Dirt road</title>
-<path fill="none" stroke="#000000" d="M180.7413,-1944.5708C174.811,-1936.0312 167.5475,-1925.5719 160.9719,-1916.1029"/>
-<polygon fill="#000000" stroke="#000000" points="163.7632,-1913.9862 155.1844,-1907.7689 158.0136,-1917.979 163.7632,-1913.9862"/>
+<path fill="none" stroke="#000000" d="M180.7413,-1944.5708C172.9956,-1933.4171 162.9756,-1918.9882 155.1844,-1907.7689"/>
 </g>
 <!-- SE/NW road -->
 <g id="node7" class="node">
@@ -72,8 +68,7 @@
 <!-- Fork&#45;&gt;SE/NW road -->
 <g id="edge6" class="edge">
 <title>Fork&#45;&gt;SE/NW road</title>
-<path fill="none" stroke="#000000" d="M174.2824,-1806.75C153.4879,-1795.9007 121.5525,-1779.2388 96.383,-1766.1069"/>
-<polygon fill="#000000" stroke="#000000" points="97.9342,-1762.9685 87.4493,-1761.4458 94.6962,-1769.1746 97.9342,-1762.9685"/>
+<path fill="none" stroke="#000000" d="M174.2824,-1806.75C150.9342,-1794.5684 113.5407,-1775.0587 87.4493,-1761.4458"/>
 </g>
 <!-- NE/SW road -->
 <g id="node13" class="node">
@@ -84,8 +79,7 @@
 <!-- Fork&#45;&gt;NE/SW road -->
 <g id="edge12" class="edge">
 <title>Fork&#45;&gt;NE/SW road</title>
-<path fill="none" stroke="#000000" d="M212.2137,-1803.0816C222.6685,-1793.5532 236.4612,-1780.9825 248.4415,-1770.0638"/>
-<polygon fill="#000000" stroke="#000000" points="250.9659,-1772.4986 255.9993,-1763.1757 246.2507,-1767.325 250.9659,-1772.4986"/>
+<path fill="none" stroke="#000000" d="M212.2137,-1803.0816C224.9586,-1791.466 242.664,-1775.3294 255.9993,-1763.1757"/>
 </g>
 <!-- cpu -->
 <g id="node6" class="node">
@@ -96,8 +90,7 @@
 <!-- cpu&#45;&gt;Fork -->
 <g id="edge5" class="edge">
 <title>cpu&#45;&gt;Fork</title>
-<path fill="none" stroke="#000000" d="M237.5914,-1873.6621C230.6872,-1864.4564 221.9272,-1852.7764 214.2164,-1842.4953"/>
-<polygon fill="#000000" stroke="#000000" points="216.8499,-1840.1733 208.0498,-1834.2733 211.2498,-1844.3733 216.8499,-1840.1733"/>
+<path fill="none" stroke="#000000" d="M237.5914,-1873.6621C228.754,-1861.8788 216.8761,-1846.0416 208.0498,-1834.2733"/>
 </g>
 <!-- Bear hangout -->
 <g id="node9" class="node">
@@ -108,8 +101,7 @@
 <!-- SE/NW road&#45;&gt;Bear hangout -->
 <g id="edge8" class="edge">
 <title>SE/NW road&#45;&gt;Bear hangout</title>
-<path fill="none" stroke="#000000" d="M57.8449,-1727.8314C57.8449,-1720.131 57.8449,-1710.9743 57.8449,-1702.4166"/>
-<polygon fill="#000000" stroke="#000000" points="61.345,-1702.4132 57.8449,-1692.4133 54.345,-1702.4133 61.345,-1702.4132"/>
+<path fill="none" stroke="#000000" d="M57.8449,-1727.8314C57.8449,-1717 57.8449,-1703.2876 57.8449,-1692.4133"/>
 </g>
 <!-- food -->
 <g id="node8" class="node">
@@ -120,8 +112,7 @@
 <!-- food&#45;&gt;SE/NW road -->
 <g id="edge7" class="edge">
 <title>food&#45;&gt;SE/NW road</title>
-<path fill="none" stroke="#000000" d="M57.8449,-1799.8314C57.8449,-1792.131 57.8449,-1782.9743 57.8449,-1774.4166"/>
-<polygon fill="#000000" stroke="#000000" points="61.345,-1774.4132 57.8449,-1764.4133 54.345,-1774.4133 61.345,-1774.4132"/>
+<path fill="none" stroke="#000000" d="M57.8449,-1799.8314C57.8449,-1789 57.8449,-1775.2876 57.8449,-1764.4133"/>
 </g>
 <!-- Hidden area -->
 <g id="node11" class="node">
@@ -132,8 +123,7 @@
 <!-- Bear hangout&#45;&gt;Hidden area -->
 <g id="edge10" class="edge">
 <title>Bear hangout&#45;&gt;Hidden area</title>
-<path fill="none" stroke="#000000" d="M66.7437,-1656.2022C70.8544,-1647.981 75.8243,-1638.041 80.3798,-1628.9301"/>
-<polygon fill="#000000" stroke="#000000" points="83.5819,-1630.3521 84.9236,-1619.8425 77.3209,-1627.2216 83.5819,-1630.3521"/>
+<path fill="none" stroke="#000000" d="M66.7437,-1656.2022C72.2823,-1645.1252 79.3809,-1630.928 84.9236,-1619.8425"/>
 </g>
 <!-- key -->
 <g id="node10" class="node">
@@ -144,8 +134,7 @@
 <!-- key&#45;&gt;Bear hangout -->
 <g id="edge9" class="edge">
 <title>key&#45;&gt;Bear hangout</title>
-<path fill="none" stroke="#000000" d="M141.1365,-1732.7941C126.8356,-1722.6993 106.78,-1708.5424 89.9323,-1696.65"/>
-<polygon fill="#000000" stroke="#000000" points="91.6501,-1693.5784 81.462,-1690.6709 87.6133,-1699.2972 91.6501,-1693.5784"/>
+<path fill="none" stroke="#000000" d="M141.1365,-1732.7941C124.3428,-1720.9397 99.6133,-1703.4836 81.462,-1690.6709"/>
 </g>
 <!-- bracelet -->
 <g id="node12" class="node">
@@ -156,8 +145,7 @@
 <!-- bracelet&#45;&gt;Hidden area -->
 <g id="edge11" class="edge">
 <title>bracelet&#45;&gt;Hidden area</title>
-<path fill="none" stroke="#000000" d="M154.1455,-1657.6621C143.9929,-1648.2905 131.0622,-1636.3545 119.7806,-1625.9407"/>
-<polygon fill="#000000" stroke="#000000" points="122.0101,-1623.2355 112.2881,-1619.0245 117.2622,-1628.3792 122.0101,-1623.2355"/>
+<path fill="none" stroke="#000000" d="M154.1455,-1657.6621C141.65,-1646.1278 124.9463,-1630.709 112.2881,-1619.0245"/>
 </g>
 <!-- Building front -->
 <g id="node14" class="node">
@@ -168,8 +156,7 @@
 <!-- NE/SW road&#45;&gt;Building front -->
 <g id="edge13" class="edge">
 <title>NE/SW road&#45;&gt;Building front</title>
-<path fill="none" stroke="#000000" d="M278.3777,-1727.8314C279.875,-1720.131 281.6554,-1710.9743 283.3194,-1702.4166"/>
-<polygon fill="#000000" stroke="#000000" points="286.7914,-1702.8975 285.2645,-1692.4133 279.9201,-1701.5614 286.7914,-1702.8975"/>
+<path fill="none" stroke="#000000" d="M278.3777,-1727.8314C280.4838,-1717 283.1501,-1703.2876 285.2645,-1692.4133"/>
 </g>
 <!-- Old Building hallway -->
 <g id="node15" class="node">
@@ -180,8 +167,7 @@
 <!-- Building front&#45;&gt;Old Building hallway -->
 <g id="edge14" class="edge">
 <title>Building front&#45;&gt;Old Building hallway</title>
-<path fill="none" stroke="#000000" d="M288.8449,-1655.8314C288.8449,-1648.131 288.8449,-1638.9743 288.8449,-1630.4166"/>
-<polygon fill="#000000" stroke="#000000" points="292.345,-1630.4132 288.8449,-1620.4133 285.345,-1630.4133 292.345,-1630.4132"/>
+<path fill="none" stroke="#000000" d="M288.8449,-1655.8314C288.8449,-1645 288.8449,-1631.2876 288.8449,-1620.4133"/>
 </g>
 <!-- Computer room -->
 <g id="node16" class="node">
@@ -192,8 +178,7 @@
 <!-- Old Building hallway&#45;&gt;Computer room -->
 <g id="edge15" class="edge">
 <title>Old Building hallway&#45;&gt;Computer room</title>
-<path fill="none" stroke="#000000" d="M305.6539,-1584.2022C313.9708,-1575.396 324.1502,-1564.6179 333.2348,-1554.9989"/>
-<polygon fill="#000000" stroke="#000000" points="335.9075,-1557.2664 340.2292,-1547.593 330.8184,-1552.46 335.9075,-1557.2664"/>
+<path fill="none" stroke="#000000" d="M305.6539,-1584.2022C316.1942,-1573.0419 329.7258,-1558.7143 340.2292,-1547.593"/>
 </g>
 <!-- Pockey -->
 <g id="node18" class="node">
@@ -204,8 +189,7 @@
 <!-- Computer room&#45;&gt;Pockey -->
 <g id="edge17" class="edge">
 <title>Computer room&#45;&gt;Pockey</title>
-<path fill="none" stroke="#000000" d="M356.8449,-1511.8314C356.8449,-1504.131 356.8449,-1494.9743 356.8449,-1486.4166"/>
-<polygon fill="#000000" stroke="#000000" points="360.345,-1486.4132 356.8449,-1476.4133 353.345,-1486.4133 360.345,-1486.4132"/>
+<path fill="none" stroke="#000000" d="M356.8449,-1511.8314C356.8449,-1501 356.8449,-1487.2876 356.8449,-1476.4133"/>
 </g>
 <!-- paper -->
 <g id="node17" class="node">
@@ -216,8 +200,7 @@
 <!-- paper&#45;&gt;Computer room -->
 <g id="edge16" class="edge">
 <title>paper&#45;&gt;Computer room</title>
-<path fill="none" stroke="#000000" d="M409.7535,-1586.0209C401.2102,-1576.975 390.3315,-1565.4564 380.6629,-1555.2191"/>
-<polygon fill="#000000" stroke="#000000" points="382.9747,-1552.5695 373.5639,-1547.7025 377.8856,-1557.3759 382.9747,-1552.5695"/>
+<path fill="none" stroke="#000000" d="M409.7535,-1586.0209C399.0325,-1574.6692 384.6337,-1559.4235 373.5639,-1547.7025"/>
 </g>
 <!-- Receiving room -->
 <g id="node19" class="node">
@@ -228,8 +211,7 @@
 <!-- Pockey&#45;&gt;Receiving room -->
 <g id="edge18" class="edge">
 <title>Pockey&#45;&gt;Receiving room</title>
-<path fill="none" stroke="#000000" d="M356.8449,-1439.8314C356.8449,-1432.131 356.8449,-1422.9743 356.8449,-1414.4166"/>
-<polygon fill="#000000" stroke="#000000" points="360.345,-1414.4132 356.8449,-1404.4133 353.345,-1414.4133 360.345,-1414.4132"/>
+<path fill="none" stroke="#000000" d="M356.8449,-1439.8314C356.8449,-1429 356.8449,-1415.2876 356.8449,-1404.4133"/>
 </g>
 <!-- Northbound Hallway -->
 <g id="node20" class="node">
@@ -240,8 +222,7 @@
 <!-- Receiving room&#45;&gt;Northbound Hallway -->
 <g id="edge19" class="edge">
 <title>Receiving room&#45;&gt;Northbound Hallway</title>
-<path fill="none" stroke="#000000" d="M356.8449,-1367.8314C356.8449,-1360.131 356.8449,-1350.9743 356.8449,-1342.4166"/>
-<polygon fill="#000000" stroke="#000000" points="360.345,-1342.4132 356.8449,-1332.4133 353.345,-1342.4133 360.345,-1342.4132"/>
+<path fill="none" stroke="#000000" d="M356.8449,-1367.8314C356.8449,-1357 356.8449,-1343.2876 356.8449,-1332.4133"/>
 </g>
 <!-- Sauna -->
 <g id="node21" class="node">
@@ -252,8 +233,7 @@
 <!-- Northbound Hallway&#45;&gt;Sauna -->
 <g id="edge20" class="edge">
 <title>Northbound Hallway&#45;&gt;Sauna</title>
-<path fill="none" stroke="#000000" d="M340.2831,-1296.2022C331.7215,-1287.0017 321.1568,-1275.6487 311.9121,-1265.7141"/>
-<polygon fill="#000000" stroke="#000000" points="314.2191,-1263.0554 304.8445,-1258.119 309.0946,-1267.824 314.2191,-1263.0554"/>
+<path fill="none" stroke="#000000" d="M340.2831,-1296.2022C329.4327,-1284.5422 315.3653,-1269.4249 304.8445,-1258.119"/>
 </g>
 <!-- End of N/S Hallway -->
 <g id="node22" class="node">
@@ -264,8 +244,7 @@
 <!-- Northbound Hallway&#45;&gt;End of N/S Hallway -->
 <g id="edge21" class="edge">
 <title>Northbound Hallway&#45;&gt;End of N/S Hallway</title>
-<path fill="none" stroke="#000000" d="M373.4067,-1296.2022C381.5402,-1287.4617 391.4814,-1276.7786 400.3814,-1267.2144"/>
-<polygon fill="#000000" stroke="#000000" points="402.9913,-1269.5476 407.2414,-1259.8425 397.8668,-1264.7789 402.9913,-1269.5476"/>
+<path fill="none" stroke="#000000" d="M373.4067,-1296.2022C383.7145,-1285.1252 396.9258,-1270.928 407.2414,-1259.8425"/>
 </g>
 <!-- Weight room -->
 <g id="node23" class="node">
@@ -276,8 +255,7 @@
 <!-- End of N/S Hallway&#45;&gt;Weight room -->
 <g id="edge22" class="edge">
 <title>End of N/S Hallway&#45;&gt;Weight room</title>
-<path fill="none" stroke="#000000" d="M423.8449,-1223.8314C423.8449,-1216.131 423.8449,-1206.9743 423.8449,-1198.4166"/>
-<polygon fill="#000000" stroke="#000000" points="427.345,-1198.4132 423.8449,-1188.4133 420.345,-1198.4133 427.345,-1198.4132"/>
+<path fill="none" stroke="#000000" d="M423.8449,-1223.8314C423.8449,-1213 423.8449,-1199.2876 423.8449,-1188.4133"/>
 </g>
 <!-- Maze button room -->
 <g id="node24" class="node">
@@ -288,8 +266,7 @@
 <!-- Weight room&#45;&gt;Maze button room -->
 <g id="edge23" class="edge">
 <title>Weight room&#45;&gt;Maze button room</title>
-<path fill="none" stroke="#000000" d="M437.4404,-1152.2022C443.9188,-1143.7214 451.7944,-1133.4115 458.9306,-1124.0696"/>
-<polygon fill="#000000" stroke="#000000" points="461.9261,-1125.9139 465.2151,-1115.8425 456.3633,-1121.6646 461.9261,-1125.9139"/>
+<path fill="none" stroke="#000000" d="M437.4404,-1152.2022C445.902,-1141.1252 456.7471,-1126.928 465.2151,-1115.8425"/>
 </g>
 <!-- Maze -->
 <g id="node26" class="node">
@@ -300,8 +277,7 @@
 <!-- Maze button room&#45;&gt;Maze -->
 <g id="edge25" class="edge">
 <title>Maze button room&#45;&gt;Maze</title>
-<path fill="none" stroke="#000000" d="M510.046,-1081.4817C531.8668,-1069.9296 560.9222,-1054.5473 582.904,-1042.9099"/>
-<polygon fill="#000000" stroke="#000000" points="584.6498,-1045.9459 591.8501,-1038.1737 581.3745,-1039.7594 584.6498,-1045.9459"/>
+<path fill="none" stroke="#000000" d="M510.046,-1081.4817C534.9841,-1068.2792 569.3713,-1050.0742 591.8501,-1038.1737"/>
 </g>
 <!-- button -->
 <g id="node25" class="node">
@@ -312,8 +288,7 @@
 <!-- button&#45;&gt;Maze button room -->
 <g id="edge24" class="edge">
 <title>button&#45;&gt;Maze button room</title>
-<path fill="none" stroke="#000000" d="M521.0885,-1153.3008C514.4617,-1144.6256 506.2131,-1133.8275 498.7681,-1124.0813"/>
-<polygon fill="#000000" stroke="#000000" points="501.3452,-1121.6892 492.4934,-1115.8671 495.7824,-1125.9385 501.3452,-1121.6892"/>
+<path fill="none" stroke="#000000" d="M521.0885,-1153.3008C512.5205,-1142.0844 501.2414,-1127.3191 492.4934,-1115.8671"/>
 </g>
 <!-- Reception area -->
 <g id="node29" class="node">
@@ -324,8 +299,7 @@
 <!-- Maze&#45;&gt;Reception area -->
 <g id="edge28" class="edge">
 <title>Maze&#45;&gt;Reception area</title>
-<path fill="none" stroke="#000000" d="M614.8449,-1007.8314C614.8449,-1000.131 614.8449,-990.9743 614.8449,-982.4166"/>
-<polygon fill="#000000" stroke="#000000" points="618.345,-982.4132 614.8449,-972.4133 611.345,-982.4133 618.345,-982.4132"/>
+<path fill="none" stroke="#000000" d="M614.8449,-1007.8314C614.8449,-997 614.8449,-983.2876 614.8449,-972.4133"/>
 </g>
 <!-- statuette -->
 <g id="node27" class="node">
@@ -336,8 +310,7 @@
 <!-- statuette&#45;&gt;Maze -->
 <g id="edge26" class="edge">
 <title>statuette&#45;&gt;Maze</title>
-<path fill="none" stroke="#000000" d="M614.8449,-1079.8314C614.8449,-1072.131 614.8449,-1062.9743 614.8449,-1054.4166"/>
-<polygon fill="#000000" stroke="#000000" points="618.345,-1054.4132 614.8449,-1044.4133 611.345,-1054.4133 618.345,-1054.4132"/>
+<path fill="none" stroke="#000000" d="M614.8449,-1079.8314C614.8449,-1069 614.8449,-1055.2876 614.8449,-1044.4133"/>
 </g>
 <!-- floppy -->
 <g id="node28" class="node">
@@ -348,8 +321,7 @@
 <!-- floppy&#45;&gt;Maze -->
 <g id="edge27" class="edge">
 <title>floppy&#45;&gt;Maze</title>
-<path fill="none" stroke="#000000" d="M687.7824,-1083.0816C674.4074,-1072.6142 656.3412,-1058.4754 641.5356,-1046.8884"/>
-<polygon fill="#000000" stroke="#000000" points="643.2873,-1043.8149 633.2551,-1040.408 638.9731,-1049.3274 643.2873,-1043.8149"/>
+<path fill="none" stroke="#000000" d="M687.7824,-1083.0816C671.7824,-1070.5598 649.0691,-1052.7842 633.2551,-1040.408"/>
 </g>
 <!-- Health Club front -->
 <g id="node30" class="node">
@@ -360,8 +332,7 @@
 <!-- Reception area&#45;&gt;Health Club front -->
 <g id="edge29" class="edge">
 <title>Reception area&#45;&gt;Health Club front</title>
-<path fill="none" stroke="#000000" d="M614.8449,-935.8314C614.8449,-928.131 614.8449,-918.9743 614.8449,-910.4166"/>
-<polygon fill="#000000" stroke="#000000" points="618.345,-910.4132 614.8449,-900.4133 611.345,-910.4133 618.345,-910.4132"/>
+<path fill="none" stroke="#000000" d="M614.8449,-935.8314C614.8449,-925 614.8449,-911.2876 614.8449,-900.4133"/>
 </g>
 <!-- Lakefront North -->
 <g id="node31" class="node">
@@ -372,8 +343,7 @@
 <!-- Health Club front&#45;&gt;Lakefront North -->
 <g id="edge30" class="edge">
 <title>Health Club front&#45;&gt;Lakefront North</title>
-<path fill="none" stroke="#000000" d="M614.8449,-863.8314C614.8449,-856.131 614.8449,-846.9743 614.8449,-838.4166"/>
-<polygon fill="#000000" stroke="#000000" points="618.345,-838.4132 614.8449,-828.4133 611.345,-838.4133 618.345,-838.4132"/>
+<path fill="none" stroke="#000000" d="M614.8449,-863.8314C614.8449,-853 614.8449,-839.2876 614.8449,-828.4133"/>
 </g>
 <!-- Lakefront South -->
 <g id="node32" class="node">
@@ -384,8 +354,7 @@
 <!-- Lakefront North&#45;&gt;Lakefront South -->
 <g id="edge31" class="edge">
 <title>Lakefront North&#45;&gt;Lakefront South</title>
-<path fill="none" stroke="#000000" d="M614.8449,-791.8314C614.8449,-784.131 614.8449,-774.9743 614.8449,-766.4166"/>
-<polygon fill="#000000" stroke="#000000" points="618.345,-766.4132 614.8449,-756.4133 611.345,-766.4133 618.345,-766.4132"/>
+<path fill="none" stroke="#000000" d="M614.8449,-791.8314C614.8449,-781 614.8449,-767.2876 614.8449,-756.4133"/>
 </g>
 <!-- Cave Entrance -->
 <g id="node33" class="node">
@@ -396,8 +365,8 @@
 <!-- Lakefront South&#45;&gt;Cave Entrance -->
 <g id="edge32" class="edge">
 <title>Lakefront South&#45;&gt;Cave Entrance</title>
-<path fill="none" stroke="#000000" d="M629.1819,-720.2022C636.1354,-711.5704 644.615,-701.0439 652.2455,-691.5717"/>
-<polygon fill="#000000" stroke="#000000" points="655.125,-693.5763 658.6727,-683.593 649.6737,-689.1849 655.125,-693.5763"/>
+<path fill="none" stroke="#000000" d="M629.1819,-720.2022C638.1722,-709.0419 649.7139,-694.7143 658.6727,-683.593"/>
+<text text-anchor="middle" x="655.6727" y="-687.393" font-family="Times,serif" font-size="14.00" fill="#000000">s</text>
 </g>
 <!-- Misty Room -->
 <g id="node35" class="node">
@@ -408,8 +377,7 @@
 <!-- Cave Entrance&#45;&gt;Misty Room -->
 <g id="edge34" class="edge">
 <title>Cave Entrance&#45;&gt;Misty Room</title>
-<path fill="none" stroke="#000000" d="M687.6763,-648.2022C694.9422,-639.4832 703.819,-628.8311 711.7741,-619.2849"/>
-<polygon fill="#000000" stroke="#000000" points="714.4709,-621.5159 718.184,-611.593 709.0933,-617.0346 714.4709,-621.5159"/>
+<path fill="none" stroke="#000000" d="M687.6763,-648.2022C696.9766,-637.0419 708.9163,-622.7143 718.184,-611.593"/>
 </g>
 <!-- chute -->
 <g id="node34" class="node">
@@ -420,8 +388,7 @@
 <!-- chute&#45;&gt;Cave Entrance -->
 <g id="edge33" class="edge">
 <title>chute&#45;&gt;Cave Entrance</title>
-<path fill="none" stroke="#000000" d="M717.6838,-721.6621C710.5814,-712.8454 701.6508,-701.759 693.6328,-691.8058"/>
-<polygon fill="#000000" stroke="#000000" points="696.1716,-689.3781 687.1726,-683.7862 690.7203,-693.7694 696.1716,-689.3781"/>
+<path fill="none" stroke="#000000" d="M717.6838,-721.6621C708.5928,-710.3767 696.5062,-695.3727 687.1726,-683.7862"/>
 </g>
 <!-- Cave E/W passage -->
 <g id="node37" class="node">
@@ -432,8 +399,7 @@
 <!-- Misty Room&#45;&gt;Cave E/W passage -->
 <g id="edge36" class="edge">
 <title>Misty Room&#45;&gt;Cave E/W passage</title>
-<path fill="none" stroke="#000000" d="M732.8449,-575.8314C732.8449,-568.131 732.8449,-558.9743 732.8449,-550.4166"/>
-<polygon fill="#000000" stroke="#000000" points="736.345,-550.4132 732.8449,-540.4133 729.345,-550.4133 736.345,-550.4132"/>
+<path fill="none" stroke="#000000" d="M732.8449,-575.8314C732.8449,-565 732.8449,-551.2876 732.8449,-540.4133"/>
 </g>
 <!-- gold bar -->
 <g id="node36" class="node">
@@ -444,8 +410,7 @@
 <!-- gold bar&#45;&gt;Misty Room -->
 <g id="edge35" class="edge">
 <title>gold bar&#45;&gt;Misty Room</title>
-<path fill="none" stroke="#000000" d="M779.3887,-648.937C771.902,-640.1003 762.6123,-629.1354 754.3059,-619.3311"/>
-<polygon fill="#000000" stroke="#000000" points="756.7557,-616.8081 747.621,-611.4407 751.4147,-621.333 756.7557,-616.8081"/>
+<path fill="none" stroke="#000000" d="M779.3887,-648.937C769.8058,-637.626 757.2688,-622.8282 747.621,-611.4407"/>
 </g>
 <!-- N/S/W Junction -->
 <g id="node38" class="node">
@@ -456,8 +421,7 @@
 <!-- Cave E/W passage&#45;&gt;N/S/W Junction -->
 <g id="edge37" class="edge">
 <title>Cave E/W passage&#45;&gt;N/S/W Junction</title>
-<path fill="none" stroke="#000000" d="M732.8449,-503.8314C732.8449,-496.131 732.8449,-486.9743 732.8449,-478.4166"/>
-<polygon fill="#000000" stroke="#000000" points="736.345,-478.4132 732.8449,-468.4133 729.345,-478.4133 736.345,-478.4132"/>
+<path fill="none" stroke="#000000" d="M732.8449,-503.8314C732.8449,-493 732.8449,-479.2876 732.8449,-468.4133"/>
 </g>
 <!-- North end of cave passage -->
 <g id="node39" class="node">
@@ -468,8 +432,7 @@
 <!-- N/S/W Junction&#45;&gt;North end of cave passage -->
 <g id="edge38" class="edge">
 <title>N/S/W Junction&#45;&gt;North end of cave passage</title>
-<path fill="none" stroke="#000000" d="M732.8449,-431.8314C732.8449,-424.131 732.8449,-414.9743 732.8449,-406.4166"/>
-<polygon fill="#000000" stroke="#000000" points="736.345,-406.4132 732.8449,-396.4133 729.345,-406.4133 736.345,-406.4132"/>
+<path fill="none" stroke="#000000" d="M732.8449,-431.8314C732.8449,-421 732.8449,-407.2876 732.8449,-396.4133"/>
 </g>
 <!-- Bedroom -->
 <g id="node40" class="node">
@@ -480,8 +443,7 @@
 <!-- North end of cave passage&#45;&gt;Bedroom -->
 <g id="edge39" class="edge">
 <title>North end of cave passage&#45;&gt;Bedroom</title>
-<path fill="none" stroke="#000000" d="M752.8673,-360.2022C763.3731,-350.8638 776.3736,-339.3078 787.6682,-329.2682"/>
-<polygon fill="#000000" stroke="#000000" points="790.0145,-331.8654 795.1633,-322.6058 785.3639,-326.6336 790.0145,-331.8654"/>
+<path fill="none" stroke="#000000" d="M752.8673,-360.2022C765.7975,-348.7088 782.5067,-333.8561 795.1633,-322.6058"/>
 </g>
 <!-- NE end of NE/SW cave passage -->
 <g id="node42" class="node">
@@ -492,8 +454,7 @@
 <!-- Bedroom&#45;&gt;NE end of NE/SW cave passage -->
 <g id="edge41" class="edge">
 <title>Bedroom&#45;&gt;NE end of NE/SW cave passage</title>
-<path fill="none" stroke="#000000" d="M813.8449,-287.8314C813.8449,-280.131 813.8449,-270.9743 813.8449,-262.4166"/>
-<polygon fill="#000000" stroke="#000000" points="817.345,-262.4132 813.8449,-252.4133 810.345,-262.4133 817.345,-262.4132"/>
+<path fill="none" stroke="#000000" d="M813.8449,-287.8314C813.8449,-277 813.8449,-263.2876 813.8449,-252.4133"/>
 </g>
 <!-- painting -->
 <g id="node41" class="node">
@@ -504,8 +465,7 @@
 <!-- painting&#45;&gt;Bedroom -->
 <g id="edge40" class="edge">
 <title>painting&#45;&gt;Bedroom</title>
-<path fill="none" stroke="#000000" d="M876.4647,-361.6621C865.6671,-352.0642 851.8436,-339.7767 839.9327,-329.1891"/>
-<polygon fill="#000000" stroke="#000000" points="842.2321,-326.5502 832.4327,-322.5225 837.5815,-331.7821 842.2321,-326.5502"/>
+<path fill="none" stroke="#000000" d="M876.4647,-361.6621C863.3019,-349.9618 845.6424,-334.2645 832.4327,-322.5225"/>
 </g>
 <!-- NE/SW&#45;E/W junction -->
 <g id="node43" class="node">
@@ -516,8 +476,7 @@
 <!-- NE end of NE/SW cave passage&#45;&gt;NE/SW&#45;E/W junction -->
 <g id="edge42" class="edge">
 <title>NE end of NE/SW cave passage&#45;&gt;NE/SW&#45;E/W junction</title>
-<path fill="none" stroke="#000000" d="M813.8449,-215.8314C813.8449,-208.131 813.8449,-198.9743 813.8449,-190.4166"/>
-<polygon fill="#000000" stroke="#000000" points="817.345,-190.4132 813.8449,-180.4133 810.345,-190.4133 817.345,-190.4132"/>
+<path fill="none" stroke="#000000" d="M813.8449,-215.8314C813.8449,-205 813.8449,-191.2876 813.8449,-180.4133"/>
 </g>
 <!-- East end of E/W cave passage -->
 <g id="node44" class="node">
@@ -528,8 +487,7 @@
 <!-- NE/SW&#45;E/W junction&#45;&gt;East end of E/W cave passage -->
 <g id="edge43" class="edge">
 <title>NE/SW&#45;E/W junction&#45;&gt;East end of E/W cave passage</title>
-<path fill="none" stroke="#000000" d="M783.2737,-144.937C765.8579,-135.2166 743.8286,-122.9211 725.0282,-112.4279"/>
-<polygon fill="#000000" stroke="#000000" points="726.5305,-109.2582 716.0927,-107.4407 723.1189,-115.3706 726.5305,-109.2582"/>
+<path fill="none" stroke="#000000" d="M783.2737,-144.937C763.008,-133.626 736.4954,-118.8282 716.0927,-107.4407"/>
 </g>
 <!-- West end of E/W cave passage -->
 <g id="node46" class="node">
@@ -540,8 +498,7 @@
 <!-- NE/SW&#45;E/W junction&#45;&gt;West end of E/W cave passage -->
 <g id="edge45" class="edge">
 <title>NE/SW&#45;E/W junction&#45;&gt;West end of E/W cave passage</title>
-<path fill="none" stroke="#000000" d="M844.4161,-144.937C861.8318,-135.2166 883.8612,-122.9211 902.6615,-112.4279"/>
-<polygon fill="#000000" stroke="#000000" points="904.5708,-115.3706 911.597,-107.4407 901.1592,-109.2582 904.5708,-115.3706"/>
+<path fill="none" stroke="#000000" d="M844.4161,-144.937C864.6817,-133.626 891.1943,-118.8282 911.597,-107.4407"/>
 </g>
 <!-- Horseshoe boulder room -->
 <g id="node45" class="node">
@@ -552,8 +509,7 @@
 <!-- East end of E/W cave passage&#45;&gt;Horseshoe boulder room -->
 <g id="edge44" class="edge">
 <title>East end of E/W cave passage&#45;&gt;Horseshoe boulder room</title>
-<path fill="none" stroke="#000000" d="M684.8449,-71.8314C684.8449,-64.131 684.8449,-54.9743 684.8449,-46.4166"/>
-<polygon fill="#000000" stroke="#000000" points="688.345,-46.4132 684.8449,-36.4133 681.345,-46.4133 688.345,-46.4132"/>
+<path fill="none" stroke="#000000" d="M684.8449,-71.8314C684.8449,-61 684.8449,-47.2876 684.8449,-36.4133"/>
 </g>
 <!-- Empty room -->
 <g id="node47" class="node">
@@ -564,8 +520,7 @@
 <!-- West end of E/W cave passage&#45;&gt;Empty room -->
 <g id="edge46" class="edge">
 <title>West end of E/W cave passage&#45;&gt;Empty room</title>
-<path fill="none" stroke="#000000" d="M942.8449,-71.8314C942.8449,-64.131 942.8449,-54.9743 942.8449,-46.4166"/>
-<polygon fill="#000000" stroke="#000000" points="946.345,-46.4132 942.8449,-36.4133 939.345,-46.4133 946.345,-46.4132"/>
+<path fill="none" stroke="#000000" d="M942.8449,-71.8314C942.8449,-61 942.8449,-47.2876 942.8449,-36.4133"/>
 </g>
 </g>
 </svg>
