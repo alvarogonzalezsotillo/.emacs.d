@@ -1,5 +1,5 @@
 * Grafo
-#+BEGIN_SRC dot :file ./dunnet.svg :exports results :cmd neato :cmdline -Tsvg
+#+BEGIN_SRC dot :file ./dunnet.svg :exports results :cmd dot :cmdline -Tsvg
 digraph{
   "shovel" -> "Dead end"
   "Dead end" -> "E/W Dirt road"
