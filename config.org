@@ -1669,8 +1669,7 @@ Actualmente desactivado
   (call-interactively #'use-ttf-set-default-font)
 #+END_SRC
 
-
-* Opciones Latex :noexport:
+* Opciones Latex para el PDF :noexport:
 # COLORES
 #+latex_header: \usepackage[usenames,dvipsnames]{color} % Required for custom colors
 

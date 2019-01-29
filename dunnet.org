@@ -1,22 +1,25 @@
-
+* Grafo
 #+BEGIN_SRC dot :file ./dunnet.svg :exports results :cmd dot :cmdline -Tsvg
 digraph{
-  "shovel" -> "Dead end"
+
+  edge[arrowhead="none"]
+
+  "shovel" -> "Dead end" [style="dotted"]
   "Dead end" -> "E/W Dirt road"
   "boulder" -> "E/W Dirt road"
   "E/W Dirt road" -> "Fork"
-  "cpu" -> "Fork"
+  "cpu" -> "Fork" [style="dotted"]
   "Fork" -> "SE/NW road"
-  "food" -> "SE/NW road"
+  "food" -> "SE/NW road" [style="dotted"]
   "SE/NW road" -> "Bear hangout"
-  "key" -> "Bear hangout"
+  "key" -> "Bear hangout" [style="dotted"]
   "Bear hangout" -> "Hidden area"
-  "bracelet" -> "Hidden area"
+  "bracelet" -> "Hidden area" [style="dotted"]
   "Fork" -> "NE/SW road"
   "NE/SW road" -> "Building front"
   "Building front" -> "Old Building hallway"
   "Old Building hallway" -> "Computer room"
-  "paper" -> "Computer room"
+  "paper" -> "Computer room" [style="dotted"]
   "Computer room" -> "Pockey"
   "Pockey" -> "Receiving room"
   "Receiving room" -> "Northbound Hallway"
@@ -24,13 +27,55 @@ digraph{
   "Northbound Hallway" -> "End of N/S Hallway"
   "End of N/S Hallway" -> "Weight room"
   "Weight room" -> "Maze button room"
-  "button" -> "Maze button room"
+  "button" -> "Maze button room" [style="dotted"]
   "Maze button room" -> "Maze"
-  "statuette" -> "Maze"
-  "floppy" -> "Maze"
+  "statuette" -> "Maze" [style="dotted"]
+  "floppy" -> "Maze" [style="dotted"]
   "Maze" -> "Reception area"
   "Reception area" -> "Health Club front"
-  "Lakefront North" -> "Lakefront North"
+  "Health Club front" -> "Lakefront North"
+  "Lakefront North" -> "Lakefront South"
+  "Lakefront South" -> "Cave Entrance" [taillabel="s"]
+  "chute" -> "Cave Entrance" [style="dotted"]
+  "Cave Entrance" -> "Misty Room" [taillabel="s"]
+  "gold bar" -> "Misty Room" [style="dotted"] 
+  "Misty Room" -> "Cave E/W passage" [taillabel="e"]
+  "Cave E/W passage" -> "N/S/W Junction" [taillabel="e"]
+  "Cave E/W passage" -> "???" [taillabel="w"]
+  "N/S/W Junction" -> "North end of cave passage" [taillabel="n"]
+  "N/S/W Junction" -> "???" [taillabel="s"]
+  "North end of cave passage" -> "Bedroom" [taillabel="d"]
+  "North end of cave passage" -> "???" [taillabel="w"]
+  "painting" -> "Bedroom" [style="dotted"]
+  "Bedroom" -> "NE end of NE/SW cave passage" [taillabel="d"]
+  "Bedroom" -> "???" [taillabel="s"]
+  "NE end of NE/SW cave passage" -> "NE/SW-E/W junction" [taillabel="sw"]
+  "NE/SW-E/W junction" -> "East end of E/W cave passage" [taillabel="e"]
+  "East end of E/W cave passage" -> "Horseshoe boulder room" [taillabel="u"]
+  "NE/SW-E/W junction" -> "West end of E/W cave passage" [taillabel="w"]
+  "West end of E/W cave passage" -> "Empty room" [taillabel="d"]
+  "Empty room" -> "Blue room" [taillabel="n"]
+  "Empty room" -> "Red room" [taillabel="e"]
+  "Blue room" -> "Yellow room" [taillabel="e"]
+  "Yellow room" -> "Red room" [taillabel="s"]
+  "towel" -> "Red room" [style="dotted"]
+  "Red room" -> "Long n/s hallway" [taillabel="d"]
+  "Long n/s hallway" -> "3/4 north" [taillabel="n"]
+  "3/4 north" -> "North end of long hallway" [taillabel="n"]
+  "North end of long hallway" -> "Stair landing" [taillabel="u"]
+  "box" -> "Stair landing" [style="dotted"]
+  "Stair landing" -> "Top of staircase" [taillabel="u"]
+  "Top of staircase" -> "NE crawlway" [taillabel="ne"]
+  "NE crawlway" -> "Small crawlspace" [taillabel="ne"]
+  "axe" -> "Small crawlspace" [style="dotted"]
+  "Small crawlspace" -> "N/S/W Junction" [taillabel="d"]
+
+
+  
+
+
+
+  
 }
 
 #+END_SRC
@@ -38,8 +83,68 @@ digraph{
 #+RESULTS:
 [[file:./dunnet.svg]]
 
-#+BEGIN_SRC sh :results drawer
-emacs -q --batch -l dunnet <<ENDOFGAME
+
+* Juego
+#+begin_src bash :results drawer
+
+set -x
+
+
+log(){
+  echo $* >> dunnet.log
+}
+
+clean_up(){
+  log Finalizando script
+  rm dunnet.in
+  kill $(jobs -p)
+}
+
+set_up_fifo(){
+  rm dunnet.in
+  mkfifo dunnet.in
+  sleep 30s > dunnet.in & #keep fifo open
+}
+
+set_up(){
+  rm dunnet.log
+  log "Comienza script"
+  trap clean_up EXIT
+}
+
+run_dunnet(){
+  local emacs=emacs-26.1
+  $emacs -q --batch -l dunnet < dunnet.in | tee dunnet.tee.log &
+  sleep 2
+}
+
+
+linea_a_linea(){
+  log "Entro en línea a línea"
+  while IFS='' read -r line || [[ -n "$line" ]]
+  do
+     log "Text read from file: $line"
+     if [[ $line == \#*  ]]
+     then
+        echo COMENTARIO: $line
+     else
+       echo TECLEO: $line 
+       echo $line > dunnet.in
+     fi
+     #sleep 0.0001
+     echo ""
+
+  done 
+}
+
+set_up
+
+set_up_fifo
+
+run_dunnet
+
+
+linea_a_linea <<ENDOFGAME
 take shovel
 east
 east
@@ -154,26 +259,80 @@ up
 take weight
 down
 put weight on button
-take life preserver
-take bracelet
-take paper
-take shovel
-take key
 
 nw
 up
 take floppy
 take statuette
 look statuette
+# TENGO QUE VOLVER A LA SAUNA A FUNDIR LA STATUETTE
+s
+# ESTOY EN Maze little twisty passages
+look
+up
+look
+# ESTOY EN Maze thirsty little passages, al south little twisty, al se twenty little
+se
+look
+# estoy en twenty little
+down
+look
+# estoy en daze of twisty little, twisty little cabbages al nw
+nw
+look
+# estoy en twisty little cabbages, reception area al nw
+ne
+# vuelvo a Weight room
+w
+s
+drop floppy
+e
+# estoy en la sauna, a fundir la estatua
+drop statuette
+turn dial clockwise
+turn dial clockwise
+turn dial clockwise
+take diamond
+turn dial counterclockwise
+turn dial counterclockwise
+turn dial counterclockwise
+turn dial counterclockwise
+w
+take floppy
+look
+north
+east
+down
+look
+
+
+# DESPUES DE ABRIR EL maze PILLO EL INVENTARIO
+take life preserver
+take bracelet
+take paper
+take shovel
+take key
+
+# ESTOY EN Maze button room
+nw
+up
+s
+up
 se
 down
 nw
 nw
+# DEBERÍA ESTAR EN reception area
+
+
 s
 s
 s
 s
+# PONGO TESOROS
 put bracelet on chute
+put diamond on chute
+
 s
 take gold bar
 e
@@ -198,6 +357,9 @@ d
 n
 e
 s
+n
+e
+s
 look towel
 take towel
 down
@@ -208,14 +370,44 @@ look box
 put key on box
 look
 
+# stair landing, box has exploded
+u
+u
+ne
+ne
+get axe
+look axe
+d
 
-
+#N/S/W Junction
+n
+look
+d
+sleep
+# HAY QUE IR A LA HERRADURA Y ENTERRAR ALGO
+d
+sw
+e
+u
+look
+dig
+look
+take platinum bar
+look platinum bar
 quit
+
 ENDOFGAME
+
+
+clean_up
+
+exit
+
+
 #+END_SRC
 
 #+RESULTS:
-:results:
+:RESULTS:
 
 Dead end
 You are at a dead end of a dirt road.  The road goes to the east.
@@ -223,54 +415,96 @@ In the distance you can see that it will eventually fork off.  The
 trees here are very tall royal palms, and they are spaced equidistant
 from each other.
 There is a shovel here.
->Taken.  
->E/W Dirt road
+>TECLEO: take shovel
+
+Taken.  
+>TECLEO: east
+
+E/W Dirt road
 You are on the continuation of a dirt road.  There are more trees on
 both sides of you.  The road continues to the east and west.
 There is a large boulder here.
->Fork
+>TECLEO: east
+
+Fork
 You are at a fork of two passages, one to the northeast, and one to the
 southeast.  The ground here seems very soft. You can also go back west.
->I think you found something.
->Fork
+>TECLEO: dig
+
+I think you found something.
+>TECLEO: look
+
+Fork
 You are at a fork of two passages, one to the northeast, and one to the
 southeast.  The ground here seems very soft. You can also go back west.
 There is a CPU card here.
->Taken.  
->SE/NW road
+>TECLEO: take cpu
+
+Taken.  
+>TECLEO: southeast
+
+SE/NW road
 You are on a southeast/northwest road.
 There is some food here.
->Taken.  
->Bear hangout
+>TECLEO: take food
+
+Taken.  
+>TECLEO: southeast
+
+Bear hangout
 You are standing at the end of a road.  A passage leads back to the
 northwest.
 There is a ferocious bear here!
->Done.
+>TECLEO: drop food
+
+Done.
 The bear takes the food and runs away with it. He left something behind.
->Bear hangout
+>TECLEO: look
+
+Bear hangout
 You are standing at the end of a road.  A passage leads back to the
 northwest.
 There is a shiny brass key here.
->Taken.  
->SE/NW road
->Fork
->Fork
+>TECLEO: take key
+
+Taken.  
+>TECLEO: northwest
+
+SE/NW road
+>TECLEO: northwest
+
+Fork
+>TECLEO: look
+
+Fork
 You are at a fork of two passages, one to the northeast, and one to the
 southeast.  The ground here seems very soft. You can also go back west.
->NE/SW road
+>TECLEO: northeast
+
+NE/SW road
 You are on a northeast/southwest road.
->NE/SW road
+>TECLEO: look
+
+NE/SW road
 You are on a northeast/southwest road.
->Building front
+>TECLEO: northeast
+
+Building front
 You are at the end of the road.  There is a building in front of you
 to the northeast, and the road leads back to the southwest.
->Old Building hallway
+>TECLEO: in
+
+Old Building hallway
 You are in the hallway of an old building.  There are rooms to the east
 and west, and doors leading out to the north and south.
->Mailroom
+>TECLEO: east
+
+Mailroom
 You are in a mailroom.  There are many bins where the mail is usually
 kept.  The exit is to the west.
->All of the bins are empty.  Looking closely you can see that there
+>TECLEO: look bin
+
+All of the bins are empty.  Looking closely you can see that there
 are names written at the bottom of each bin, but most of them are
 faded away so that you cannot read them.  You can only make out three
 names:
@@ -278,21 +512,32 @@ names:
                    Robert Toukmond
                    Thomas Stock
 
->Old Building hallway
->Computer room
+>TECLEO: west
+
+Old Building hallway
+>TECLEO: west
+
+Computer room
 You are in a computer room.  It seems like most of the equipment has
 been removed.  There is a VAX 11/780 in front of you, however, with
 one of the cabinets wide open.  A sign on the front of the machine
 says: This VAX is named ‘pokey’.  To type on the console, use the
 ‘type’ command.  The exit is to the east.
 The panel lights are steady and motionless.
->As you put the CPU board in the computer, it immediately springs to life.
+>TECLEO: insert cpu into vax
+
+As you put the CPU board in the computer, it immediately springs to life.
 The lights start flashing, and the fans seem to startup.
->
+>TECLEO: type
+
+
 
 UNIX System V, Release 2.2 (pokey)
 
-login: password: 
+login: TECLEO: toukmond
+password: 
+TECLEO: robert
+
 Welcome to Unix
 
 Please clean up your directories.  The filesystem is getting full.
@@ -302,7 +547,10 @@ directory, and deletes them after they are sent!  Be careful.
 
 Note: Restricted bourne shell in use.
 
-$ total 467
+
+$ TECLEO: ls
+
+total 467
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
@@ -319,16 +567,28 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
-$ $ total 4
+$ TECLEO: cd ..
+
+$ TECLEO: ls
+
+total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 toukmond
-$ $ total 4
+$ TECLEO: cd ..
+
+$ TECLEO: ls
+
+total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 usr
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 rooms
-$ $ total 16
+$ TECLEO: cd rooms
+
+$ TECLEO: ls
+
+total 16
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 computer-room
@@ -342,44 +602,92 @@ drwxr-xr-x  3 root     staff           512 Jan 1 1970 fork
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 e-w-dirt-road
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 dead-end
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 hidden-area
-$ $ total 4
+$ TECLEO: cd hidden-area
+
+$ TECLEO: ls
+
+total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  3 root     staff          2048 Jan 1 1970 description
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
-$ You are in a well-hidden area off to the side of a road.  Back to the
+$ TECLEO: cat description
+
+You are in a well-hidden area off to the side of a road.  Back to the
 northeast through the brush you can see the bear hangout.
-$ 
+$ TECLEO: exit
+
+
 You step back from the console.
 
->Old Building hallway
->Building front
->Building front
+>TECLEO: e
+
+Old Building hallway
+>TECLEO: s
+
+Building front
+>TECLEO: look
+
+Building front
 You are at the end of the road.  There is a building in front of you
 to the northeast, and the road leads back to the southwest.
->NE/SW road
->Fork
->SE/NW road
->Bear hangout
->Hidden area
+>TECLEO: sw
+
+NE/SW road
+>TECLEO: sw
+
+Fork
+>TECLEO: se
+
+SE/NW road
+>TECLEO: se
+
+Bear hangout
+>TECLEO: sw
+
+Hidden area
 There is an emerald bracelet here.
->Taken.  
->Bear hangout
->SE/NW road
->Fork
->NE/SW road
->Building front
->Old Building hallway
->Computer room
+>TECLEO: take bracelet
+
+Taken.  
+>TECLEO: ne
+
+Bear hangout
+>TECLEO: nw
+
+SE/NW road
+>TECLEO: nw
+
+Fork
+>TECLEO: ne
+
+NE/SW road
+>TECLEO: ne
+
+Building front
+>TECLEO: in
+
+Old Building hallway
+>TECLEO: w
+
+Computer room
 The panel lights are flashing in a seemingly organized pattern.
->Computer room
+>TECLEO: look
+
+Computer room
 You are in a computer room.  It seems like most of the equipment has
 been removed.  There is a VAX 11/780 in front of you, however, with
 one of the cabinets wide open.  A sign on the front of the machine
 says: This VAX is named ‘pokey’.  To type on the console, use the
 ‘type’ command.  The exit is to the east.
 The panel lights are flashing in a seemingly organized pattern.
->$ $ total 467
+>TECLEO: type
+
+$ TECLEO: cd /usr/toukmond
+
+$ TECLEO: ls
+
+total 467
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
@@ -397,34 +705,68 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
-$ $ 
+$ TECLEO: uncompress paper.o.Z
+
+$ TECLEO: exit
+
+
 You step back from the console.
 
->You currently have:
+>TECLEO: inventory
+
+You currently have:
 A lamp
 A shovel
 A brass key
 A bracelet
 A slip of paper
->The paper says: Don't forget to type ‘help’ for help.  Also, remember
+>TECLEO: look paper
+
+The paper says: Don't forget to type ‘help’ for help.  Also, remember
 this word: ‘worms’
->$ Connected to gamma. FTP ver 0.9 00:00:00 01/01/70
-Username: Guest login okay, send your user ident as password.
-Password: Guest login okay, user access restrictions apply.
-ftp> Possible commands are:
+>TECLEO: type
+
+$ TECLEO: ftp gamma
+
+Connected to gamma. FTP ver 0.9 00:00:00 01/01/70
+Username: TECLEO: anonymous
+Guest login okay, send your user ident as password.
+
+Password: TECLEO: toukmond@pockey
+Guest login okay, user access restrictions apply.
+
+ftp> TECLEO: help
+
+Possible commands are:
 send    quit    type   ascii  binary   help
-ftp> Type set to binary.
-ftp> Sending binary file for a bracelet, (0 bytes)
+ftp> TECLEO: type binary
+
+Type set to binary.
+ftp> TECLEO: send bracelet.o
+
+Sending binary file for a bracelet, (0 bytes)
 Transfer complete.
-ftp> Sending binary file for a slip of paper, (0 bytes)
+ftp> TECLEO: send paper.o
+
+Sending binary file for a slip of paper, (0 bytes)
 Transfer complete.
-ftp> Sending binary file for a shovel, (0 bytes)
+ftp> TECLEO: send shovel.o
+
+Sending binary file for a shovel, (0 bytes)
 Transfer complete.
-ftp> Sending binary file for a brass key, (0 bytes)
+ftp> TECLEO: send key.o
+
+Sending binary file for a brass key, (0 bytes)
 Transfer complete.
-ftp> Sending binary file for a lamp, (0 bytes)
+ftp> TECLEO: send lamp.o
+
+Sending binary file for a lamp, (0 bytes)
 Transfer complete.
-ftp> $ total 467
+ftp> TECLEO: quit
+
+$ TECLEO: ls
+
+total 467
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
@@ -437,8 +779,12 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
-$ Password: 
+$ TECLEO: rlogin gamma
+
+Password: TECLEO: worms
+
 You begin to feel strange for a moment, and you lose your items.
+
 You step back from the console.
 
 Receiving room
@@ -449,113 +795,399 @@ There is a slip of paper here.
 There is a shovel here.
 There is a shiny brass key here.
 There is a lamp nearby.
->Taken.  
->Taken.  
->Taken.  
->Taken.  
->Taken.  
->I see nothing special about that.
->The lamp is hand-crafted by Geppetto.
->It is a normal shovel with a price tag attached that says $19.99.
->I see nothing special about that.
->Northbound Hallway
+>TECLEO: take bracelet
+
+Taken.  
+>TECLEO: take paper
+
+Taken.  
+>TECLEO: take shovel
+
+Taken.  
+>TECLEO: take key
+
+Taken.  
+>TECLEO: take lamp
+
+Taken.  
+>TECLEO: look bracelet
+
+I see nothing special about that.
+>TECLEO: look lamp
+
+The lamp is hand-crafted by Geppetto.
+>TECLEO: look shovel
+
+It is a normal shovel with a price tag attached that says $19.99.
+>TECLEO: look key
+
+I see nothing special about that.
+>TECLEO: east
+
+Northbound Hallway
 You are at the south end of a hallway that leads to the north.  There
 are rooms to the east and west.
->Sauna
+>TECLEO: east
+
+Sauna
 You are in a sauna.  There is nothing in the room except for a dial
 on the wall.  A door leads out to west.
 It is normal room temperature in here.
->The dial points to a temperature scale which has long since faded away.
->The dial will not turn further in that direction.
->Sauna
+>TECLEO: look dial
+
+The dial points to a temperature scale which has long since faded away.
+>TECLEO: turn dial counterclockwise
+
+The dial will not turn further in that direction.
+>TECLEO: look
+
+Sauna
 You are in a sauna.  There is nothing in the room except for a dial
 on the wall.  A door leads out to west.
 It is normal room temperature in here.
->The dial will not turn further in that direction.
->Sauna
+>TECLEO: turn dial counterclockwise
+
+The dial will not turn further in that direction.
+>TECLEO: look
+
+Sauna
 You are in a sauna.  There is nothing in the room except for a dial
 on the wall.  A door leads out to west.
 It is normal room temperature in here.
->The dial will not turn further in that direction.
->Sauna
+>TECLEO: turn dial counterclockwise
+
+The dial will not turn further in that direction.
+>TECLEO: look
+
+Sauna
 You are in a sauna.  There is nothing in the room except for a dial
 on the wall.  A door leads out to west.
 It is normal room temperature in here.
->Northbound Hallway
->End of N/S Hallway
+>TECLEO: west
+
+Northbound Hallway
+>TECLEO: north
+
+End of N/S Hallway
 You are at the end of a north/south hallway.  You can go back to the south,
 or off to a room to the east.
->Weight room
+>TECLEO: east
+
+Weight room
 You are in an old weight room.  All of the equipment is either destroyed
 or completely broken.  There is a door out to the west, and there is a ladder
 leading down a hole in the floor.
 There is a 10 pound weight here.
 There is a life preserver here.
->Your load would be too heavy.
->Taken.  
->It says S. S. Minnow.
->Maze button room
+>TECLEO: take weight
+
+Your load would be too heavy.
+>TECLEO: take life preserver
+
+Taken.  
+>TECLEO: look life preserver
+
+It says S. S. Minnow.
+>TECLEO: down
+
+Maze button room
 You are in a maze of twisty little passages, all alike.
 There is a button on the ground here.
->I see nothing special about that.
->As you press the button, you notice a passageway open up, but
+>TECLEO: look button
+
+I see nothing special about that.
+>TECLEO: press button
+
+As you press the button, you notice a passageway open up, but
 as you release it, the passageway closes.
->>Done.
->Done.
->Done.
->Done.
->Done.
->Weight room
+>TECLEO:
+>
+TECLEO: drop life preserver
+
+Done.
+>TECLEO: drop bracelet
+
+Done.
+>TECLEO: drop paper
+
+Done.
+>TECLEO: drop shovel
+
+Done.
+>TECLEO: drop key
+
+Done.
+>TECLEO: up
+
+Weight room
 There is a 10 pound weight here.
->Taken.  
->Maze button room
+>TECLEO: take weight
+
+Taken.  
+>TECLEO: down
+
+Maze button room
 There is a life preserver here.
 There is an emerald bracelet here.
 There is a slip of paper here.
 There is a shovel here.
 There is a shiny brass key here.
->Done.
+>TECLEO: put weight on button
+
+Done.
 A passageway opens.
->Taken.  
->Taken.  
->Taken.  
->Taken.  
->Taken.  
->>Maze
+>TECLEO:
+
+>TECLEO: nw
+
+Maze
 You are in a maze of little twisty passages, all alike.
->Maze
+>TECLEO: up
+
+Maze
 You are in a maze of thirsty little passages, all alike.
 There is a wax statuette of Richard Stallman here.
 There is a floppy disk here.
->Taken.  
->Taken.  
->The statuette is of the likeness of Richard Stallman, the author of the
+>TECLEO: take floppy
+
+Taken.  
+>TECLEO: take statuette
+
+Taken.  
+>TECLEO: look statuette
+
+The statuette is of the likeness of Richard Stallman, the author of the
 famous EMACS editor.  You notice that he is not wearing any shoes.
->Maze
+>COMENTARIO: # TENGO QUE VOLVER A LA SAUNA A FUNDIR LA STATUETTE
+
+TECLEO: s
+
+Maze
+>COMENTARIO: # ESTOY EN Maze little twisty passages
+
+TECLEO: look
+
+Maze
+You are in a maze of little twisty passages, all alike.
+>TECLEO: up
+
+Maze
+>TECLEO: look
+
+Maze
+You are in a maze of thirsty little passages, all alike.
+>COMENTARIO: # ESTOY EN Maze thirsty little passages, al south little twisty, al se twenty little
+
+TECLEO: se
+
+Maze
 You are in a maze of twenty little passages, all alike.
->Maze
+>TECLEO: look
+
+Maze
+You are in a maze of twenty little passages, all alike.
+>COMENTARIO: # estoy en twenty little
+
+TECLEO: down
+
+Maze
 You are in a daze of twisty little passages, all alike.
->Maze
+>TECLEO: look
+
+Maze
+You are in a daze of twisty little passages, all alike.
+>COMENTARIO: # estoy en daze of twisty little, twisty little cabbages al nw
+
+TECLEO: nw
+
+Maze
 You are in a maze of twisty little cabbages, all alike.
->Reception area
+>TECLEO: look
+
+Maze
+You are in a maze of twisty little cabbages, all alike.
+>COMENTARIO: # estoy en twisty little cabbages, reception area al nw
+
+TECLEO: ne
+
+Weight room
+>COMENTARIO: # vuelvo a Weight room
+
+TECLEO: w
+
+End of N/S Hallway
+>TECLEO: s
+
+Northbound Hallway
+>TECLEO: drop floppy
+
+Done.
+>TECLEO: e
+
+Sauna
+It is normal room temperature in here.
+>COMENTARIO: # estoy en la sauna, a fundir la estatua
+
+TECLEO: drop statuette
+
+Done.
+>TECLEO: turn dial clockwise
+
+It is now luke warm in here.  You are perspiring.
+>TECLEO: turn dial clockwise
+
+It is pretty hot in here.  It is still very comfortable.
+>TECLEO: turn dial clockwise
+
+It is now very hot.  There is something very refreshing about this.
+You notice the wax on your statuette beginning to melt, until it completely
+melts off.  You are left with a beautiful diamond!
+>TECLEO: take diamond
+
+Taken.  
+>TECLEO: turn dial counterclockwise
+
+It is pretty hot in here.  It is still very comfortable.
+>TECLEO: turn dial counterclockwise
+
+It is now luke warm in here.  You are perspiring.
+>TECLEO: turn dial counterclockwise
+
+The temperature has returned to normal room temperature.
+>TECLEO: turn dial counterclockwise
+
+The dial will not turn further in that direction.
+>TECLEO: w
+
+Northbound Hallway
+There is a floppy disk here.
+>TECLEO: take floppy
+
+Taken.  
+>TECLEO: look
+
+Northbound Hallway
+You are at the south end of a hallway that leads to the north.  There
+are rooms to the east and west.
+>TECLEO: north
+
+End of N/S Hallway
+>TECLEO: east
+
+Weight room
+>TECLEO: down
+
+Maze button room
+There is a life preserver here.
+There is an emerald bracelet here.
+There is a slip of paper here.
+There is a shovel here.
+There is a shiny brass key here.
+There is a 10 pound weight here.
+>TECLEO: look
+
+Maze button room
+You are in a maze of twisty little passages, all alike.
+There is a button on the ground here.
+There is a life preserver here.
+There is an emerald bracelet here.
+There is a slip of paper here.
+There is a shovel here.
+There is a shiny brass key here.
+There is a 10 pound weight here.
+>TECLEO:
+>
+TECLEO:
+>
+COMENTARIO: # DESPUES DE ABRIR EL maze PILLO EL INVENTARIO
+
+TECLEO: take life preserver
+
+Taken.  
+>TECLEO: take bracelet
+
+Taken.  
+>TECLEO: take paper
+
+Taken.  
+>TECLEO: take shovel
+
+Taken.  
+>TECLEO: take key
+
+Taken.  
+>TECLEO:
+>
+COMENTARIO: # ESTOY EN Maze button room
+
+TECLEO: nw
+
+Maze
+>TECLEO: up
+
+Maze
+>TECLEO: s
+
+Maze
+>TECLEO: up
+
+Maze
+>TECLEO: se
+
+Maze
+>TECLEO: down
+
+Maze
+>TECLEO: nw
+
+Maze
+>TECLEO: nw
+
+Reception area
 You are in a reception area for a health and fitness center.  The place
 appears to have been recently ransacked, and nothing is left.  There is
 a door out to the south, and a crawlspace to the southeast.
->Health Club front
+>COMENTARIO: # DEBERÍA ESTAR EN reception area
+
+TECLEO:
+
+>TECLEO:
+>
+TECLEO: s
+
+Health Club front
 You are outside a large building to the north which used to be a health
 and fitness center.  A road leads to the south.
->Lakefront North
+>TECLEO: s
+
+Lakefront North
 You are at the north side of a lake.  On the other side you can see
 a road which leads to a cave.  The water appears very deep.
->Lakefront South
+>TECLEO: s
+
+Lakefront South
 You are at the south side of a lake.  A road goes to the south.
->Cave Entrance
+>TECLEO: s
+
+Cave Entrance
 The entrance to a cave is to the south.  To the north, a road leads
 towards a deep lake.  On the ground nearby there is a chute, with a sign
 that says ‘put treasures here for points’.
->You hear it slide down the chute and off into the distance.
+>COMENTARIO: # PONGO TESOROS
+
+TECLEO: put bracelet on chute
+
+You hear it slide down the chute and off into the distance.
 You have scored 10 out of a possible 90 points.
->As you enter the room you hear a rumbling noise.  You look back to see
+>TECLEO: put diamond on chute
+
+You hear it slide down the chute and off into the distance.
+You have scored 20 out of a possible 90 points.
+>TECLEO:
+
+>TECLEO: s
+
+As you enter the room you hear a rumbling noise.  You look back to see
 huge rocks sliding down from the ceiling, and blocking your way out.
 
 Misty Room
@@ -563,80 +1195,976 @@ You are in a misty, humid room carved into a mountain.
 To the north is the remains of a rockslide.  To the east, a small
 passage leads away into the darkness.
 There is a gold bar here.
->Taken.  
->Cave E/W passage
+>TECLEO: take gold bar
+
+Taken.  
+>TECLEO: e
+
+Cave E/W passage
 You are in an east/west passageway.  The walls here are made of
 multicolored rock and are quite beautiful.
->N/S/W Junction
+>TECLEO: e
+
+N/S/W Junction
 You are at the junction of two passages. One goes north/south, and
 the other goes west.
->North end of cave passage
+>TECLEO: n
+
+North end of cave passage
 You are at the north end of a north/south passageway.  There are stairs
 leading down from here.  There is also a door leading west.
->Bedroom
+>TECLEO: down
+
+Bedroom
 You are in what appears to be a worker's bedroom.  There is a queen-
 sized bed in the middle of the room, and a painting hanging on the
 wall.  A door leads to another room to the south, and stairways
 lead up and down.
->It is a velvet painting of Elvis Presley.  It seems to be nailed to the
+>TECLEO: look painting
+
+It is a velvet painting of Elvis Presley.  It seems to be nailed to the
 wall, and you cannot move it.
->NE end of NE/SW cave passage
+>TECLEO: down
+
+NE end of NE/SW cave passage
 You are at the northeast end of a northeast/southwest passageway.
 Stairs lead up out of sight.
->NE/SW-E/W junction
+>TECLEO: sw
+
+NE/SW-E/W junction
 You are at the junction of northeast/southwest and east/west passages.
->East end of E/W cave passage
+>TECLEO: e
+
+East end of E/W cave passage
 You are at the east end of an E/W passage.  There are stairs leading up
 to a room above.
->Horseshoe boulder room
+>TECLEO: up
+
+Horseshoe boulder room
 You are in a room which is bare, except for a horseshoe shaped boulder
 in the center.  Stairs lead down from here.
->It is just a boulder.  It cannot be moved.
->>>East end of E/W cave passage
->NE/SW-E/W junction
->NE/SW-E/W junction
+>TECLEO: look boulder
+
+It is just a boulder.  It cannot be moved.
+>TECLEO:
+
+>TECLEO:
+
+>TECLEO: d
+
+East end of E/W cave passage
+>TECLEO: w
+
+NE/SW-E/W junction
+>TECLEO: look
+
+NE/SW-E/W junction
 You are at the junction of northeast/southwest and east/west passages.
->West end of E/W cave passage
+>TECLEO: w
+
+West end of E/W cave passage
 You are at the west end of an E/W passage.  There is a hole on the ground
 which leads down out of sight.
->West end of E/W cave passage
+>TECLEO: look
+
+West end of E/W cave passage
 You are at the west end of an E/W passage.  There is a hole on the ground
 which leads down out of sight.
->Empty room
+>TECLEO: d
+
+Empty room
 You are in a room which is completely empty.  Doors lead out to the north
 and east.
->I don't understand that.
->Blue room
+>COMENTARIO: #empty room
+
+TECLEO: n
+
+Blue room
 You are in an empty room.  Interestingly enough, the stones in this
 room are painted blue.  Doors lead out to the east and south.
->Yellow room
+>TECLEO: e
+
+Yellow room
 You are in an empty room.  Interestingly enough, the stones in this
 room are painted yellow.  Doors lead out to the south and west.
->Red room
+>TECLEO: s
+
+Red room
 You are in an empty room.  Interestingly enough, the stones in this room
 are painted red.  Doors lead out to the west and north.
 There is a beach towel on the ground here.
->It has a picture of snoopy on it.
->Taken.  Taking the towel reveals a hole in the floor.
->Long n/s hallway
+>TECLEO: n
+
+Yellow room
+>TECLEO: e
+
+You can't go that way.
+>TECLEO: s
+
+Red room
+There is a beach towel on the ground here.
+>TECLEO: look towel
+
+It has a picture of snoopy on it.
+>TECLEO: take towel
+
+Taken.  Taking the towel reveals a hole in the floor.
+>TECLEO: down
+
+Long n/s hallway
 You are in the middle of a long north/south hallway.
->3/4 north
+>TECLEO: n
+
+3/4 north
 You are 3/4 of the way towards the north end of a long north/south hallway.
->North end of long hallway
+>TECLEO: n
+
+North end of long hallway
 You are at the north end of a long north/south hallway.  There are stairs
 leading upwards.
->Stair landing
+>TECLEO: u
+
+Stair landing
 You are at a landing in a stairwell which continues up and down.
 There is a box with a slit in it, bolted to the wall here.
->The box has a slit in the top of it, and on it, in sloppy handwriting, is
-written: ‘For key upgrade, put key in here.’
->As you drop the key, the box begins to shake.  Finally it explodes
-with a bang.  The key seems to have vanished!
->Stair landing
-You are at a landing in a stairwell which continues up and down.
->>>>
-You have scored 10 out of a possible 90 points.
-:end:
+>TECLEO: look box
 
-** otro apartado
-adsadfs
+The box has a slit in the top of it, and on it, in sloppy handwriting, is
+written: ‘For key upgrade, put key in here.’
+>TECLEO: put key on box
+
+As you drop the key, the box begins to shake.  Finally it explodes
+with a bang.  The key seems to have vanished!
+>TECLEO: look
+
+Stair landing
+You are at a landing in a stairwell which continues up and down.
+>TECLEO:
+
+>COMENTARIO: # stair landing, box has exploded
+
+TECLEO: u
+
+Up/down staircase
+You are at the continuation of an up/down staircase.
+>TECLEO: u
+
+Top of staircase.
+You are at the top of a staircase leading down.  A crawlway leads off
+to the northeast.
+>TECLEO: ne
+
+NE crawlway
+You are in a crawlway that leads northeast or southwest.
+>TECLEO: ne
+
+Small crawlspace
+You are in a small crawlspace.  There is a hole in the ground here, and
+a small passage back to the southwest.
+There is an axe here.
+>TECLEO: get axe
+
+Taken.  
+>TECLEO: look axe
+
+I see nothing special about that.
+>TECLEO: d
+
+N/S/W Junction
+>TECLEO:
+
+>COMENTARIO: #N/S/W Junction
+
+TECLEO: n
+
+North end of cave passage
+>TECLEO: look
+
+North end of cave passage
+You are at the north end of a north/south passageway.  There are stairs
+leading down from here.  There is also a door leading west.
+>TECLEO: d
+
+Bedroom
+>TECLEO: sleep
+
+As soon as you start to doze off you begin dreaming.  You see images of
+workers digging caves, slaving in the humid heat.  Then you see yourself
+as one of these workers.  While no one is looking, you leave the group
+and walk into a room.  The room is bare except for a horseshoe
+shaped piece of stone in the center.  You see yourself digging a hole in
+the ground, then putting some kind of treasure in it, and filling the hole
+with dirt again.  After this, you immediately wake up.
+>COMENTARIO: # HAY QUE IR A LA HERRADURA Y ENTERRAR ALGO
+
+TECLEO: d
+
+NE end of NE/SW cave passage
+>TECLEO: sw
+
+NE/SW-E/W junction
+>TECLEO: e
+
+East end of E/W cave passage
+>TECLEO: u
+
+Horseshoe boulder room
+>TECLEO: look
+
+Horseshoe boulder room
+You are in a room which is bare, except for a horseshoe shaped boulder
+in the center.  Stairs lead down from here.
+>TECLEO: dig
+
+I think you found something.
+>TECLEO: look
+
+Horseshoe boulder room
+You are in a room which is bare, except for a horseshoe shaped boulder
+in the center.  Stairs lead down from here.
+There is a platinum bar here.
+>TECLEO: take platinum bar
+
+Taken.  
+>TECLEO: look platinum bar
+
+I see nothing special about that.
+>TECLEO: quit
+
+
+TECLEO:
+
+You have scored 20 out of a possible 90 points.
+:END:
+
+* Hints
+
+
+
+
+** Getting Started
+
+***  How do I get into the building?
+
+Go northeast from the Building front.  (NE)
+
+If that doesn't work, it's because you don't have the key.
+
+The key is around somewhere.
+
+Have you seen the bear?
+
+To get to the bear, go (from the Building front) SW, SW, SE, and SE.
+
+***  What do I do about the bear?
+
+Look at him.  Ferocious, isn't he?
+
+He won't attack you if you don't bother him.
+
+Maybe he's just hungry.
+
+Throw him the food.  (THROW FOOD)
+
+***  How do I use the VAX?
+
+Use the TYPE command.  (Didn't you read the sign on the computer?)
+
+Oh, it doesn't work.  Maybe the computer is broken.
+
+There's a part missing from the cabinet.
+
+The missing part is not in the building.
+
+It is outside.
+
+Why do you think you have a shovel?
+
+Find a good place to dig.
+
+Try the fork in the road, where it's soft.  (DIG)
+
+Then PUT CARD IN VAX.
+
+***  How do I login on the VAX?
+
+If the panel lights are steady and motionless, see the previous question.
+
+You need a valid account name and password.
+
+Have you been in the mailroom?
+
+Look at the bins in the mailroom.  (LOOK BINS)
+
+Maybe one of those people has an account.
+
+The account name might be the person's last name.
+
+The password might be the person's first name.
+
+login: toukmond
+password: robert
+
+** pokey the VAX
+
+***  How do I login?
+
+See the questions about the VAX under Getting Started.
+
+***  Now that I've logged in, what do I do?
+
+You are using a restricted Bourne shell.  If you've never used Unix,
+and don't have any idea what that means, you probably aren't going to
+enjoy Dunnet very much.
+
+Use `ls' to list your files.
+
+The files with non-zero size are the commands you can use.
+
+The files that end in .o are object files.
+
+In fact, they're the objects in the game.
+
+Type `uncompress paper.o.Z', `exit', and READ PAPER.
+
+Try browsing through the filesystem.
+
+Try `cd /'.
+
+Try `cd /rooms'.
+
+Try `cd /rooms/fork' and `cat description'.
+
+Try looking in the other subdirectories of /rooms.
+
+Yes, you are inside the computer which is running the Dunnet universe.
+
+Try `cd /rooms/hidden-area', `ls', and `cat description'.
+
+Yes, you can get to the hidden area by going SW from the Bear hangout,
+and there is a bracelet there.  Why don't you go get it?
+
+***  Help!  I'm stuck at the '$' prompt.
+
+Lift your hands off the keyboard, stand up, and walk away from the
+computer.
+
+Oh, you meant "How do I get from the `$' prompt back to the `>'
+prompt?"  Type `exit'.
+
+***  After I've explored pokey, what do I do?
+
+This is a good place to save your game.  If you're at the `$' prompt,
+type `exit'.  At the `>' prompt, type SAVE FILENAME (where FILENAME is
+the name you want to give the save file).
+
+Did you read the message when you first logged in?
+
+Maybe you could connect to gamma.
+
+Try `rlogin gamma'.
+
+You need a password.  What could it be?
+
+Did you try `robert'?
+
+Did you read the slip of paper?
+
+The password is `worms'.
+
+** The Receiving Room and beyond
+
+***  How do I get to the Receiving room?
+
+If you haven't gotten to the computer room yet, see the questions
+under `Getting Started'.
+
+See the questions under `pokey the VAX'.
+
+***  Why do I keep tripping over grues?
+
+Because it's dark and you can't see where you're going.
+
+You need a lamp.
+
+You had one when you started the game.
+
+You need a way to move it from pokey to gamma.
+
+Have you tried FTP?
+
+On pokey, type `ftp gamma'.
+
+You need a username.  What could it be?
+
+`toukmond' won't work.
+
+Neither will any of the other names or words you've seen.
+
+What's the most common FTP username?
+
+Try `anonymous'.
+
+The password should be your mail address (toukmond@pokey).
+
+***  What is this worthless pile of protoplasm?
+
+Did you send something using FTP?
+
+What kind of file ends in .o?
+
+How do you transfer object files using FTP?
+
+Don't object files contain binary data?
+
+You didn't type `binary' before sending a file.
+
+***  Why doesn't the maze go anywhere?
+
+Did you try pressing the button? (PUSH BUTTON)
+
+The passageway closes as soon as you release the button.
+
+Maybe you could find some way to keep the button held down.
+
+You could try putting something on it.
+
+There's a ten pound weight in the weight room.
+
+Just DROP WEIGHT in the Maze button room.
+
+The new passage is to the northwest. (NW)
+
+***  How do I find my way around the maze?
+
+Make a map.
+
+Read the descriptions carefully.
+
+Each room in the maze has a different description.
+
+The last hint contains a complete map of the maze.
+
+                            N  S  E  W  NE  NW  SE  SW  UP  DOWN  You Move
+0 Weight room               .  .  .  *  .   .   .   .   .   1     Down
+1 Maze button room          .  .  1  1  1  (2)  1   1   0   1     NW
+2 little twisty             2  2  2  2  2   2   .   2   3   2     Up
+3 thirsty little            .  2  2  3  3   3   4   3   .   2     SE
+4 twenty little             .  .  .  2  .   .   .   .   .   5     Down
+5 daze of twisty little     .  .  .  .  .   6   4   .   .   .     NW
+6 twisty little cabbages    2  2  2  2  0   7   2   2   2   2     NE or NW
+7 Reception area            .  *  .  .  .   .   3   .   .   .
+
+***  Why does the building explode?
+
+It's because of something you did.
+
+Or more precisely, something you didn't do.
+
+Have you been in the sauna?
+
+You didn't turn the sauna off before leaving.
+
+***  What should I do at the lake?
+
+This is another good place to save your game.
+
+You need to get across it.
+
+You don't know how to swim.
+
+You need the life preserver from the weight room.
+
+You don't need to put it on, just carry it.
+
+Then go S from Lakefront North.
+
+** The cave and surrounding area
+
+*** What should I do at the chute?
+
+Read the sign.
+
+You should have two objects to put in the chute.
+
+The bracelet and the diamond should go in the chute.
+
+If you haven't found the diamond yet, it's not too late to go back and
+get it.
+
+If you can't find it, read "Where are all the treasures located?"
+under General Questions.
+
+***  How do I get past the rockslide?
+
+Have you tried digging?
+
+Maybe it would help if you had a better tool than a shovel.
+
+What about a pickaxe?
+
+Or perhaps some dynamite?
+
+Actually, there's no way to get past the rockslide.
+
+***  How do I get past the door with the combination lock?
+
+Go WEST from the North end of cave passage and enter the combination.
+
+Oh, you mean "What's the combination?"
+
+Don't continue until you've found the PC.
+
+The combination is stored on the floppy disk you found in the maze.
+
+See the question about the PC.
+
+***  What should I do in the bathroom?
+
+Aren't you toilet trained?
+
+Actually, if you use the urinal for its usual purpose, you'll destroy
+all the treasures you have deposited.
+
+However, you can put a treasure in the urinal, and then FLUSH it.
+This will deposit the treasure in the proper place.
+
+You should flush the gold and platinum bars down the urinal before
+leaving the cave.
+
+If you didn't put the bracelet and the diamond in the chute, you must
+flush them now.
+
+***  What should I do in the bedroom?
+
+What do you usually do in a bedroom?
+
+Why don't you take a nap?
+
+SLEEP
+
+Interesting dream, isn't it?
+
+Why don't you see if you can find the room described in the dream?
+
+***  What is this box with a slit?
+
+Have you examined it? (EXAMINE BOX)
+
+Why don't you follow the directions?
+
+PUT KEY IN BOX
+
+You'll find the upgraded key later in the game.
+
+It will be in the computer room when you return from gamma.
+
+*** What should I do with the PC?
+
+The sign says to type RESET.
+
+The computer won't boot.  Have you examined it?
+
+PUT DISK IN DRIVE
+(You found the floppy disk in the "thirsty little" room in the maze.)
+
+Now you can boot the computer with RESET.
+Just hit Enter when it asks for the time.
+
+Why don't you try a DIR?
+
+How about TYPE FOO.TXT
+
+Remember the combination shown.  It will change every time you play.
+
+Now type EXIT to return to the game.
+
+***  What should I do with the IBM 3090/600s?
+
+This is a good place to save your game.
+
+Have you examined it?
+
+There's nowhere for you to type.
+
+This is "gamma", the computer you used `rlogin' to access.
+
+What would happen if you disconnected the cable?
+
+You can't unplug it.
+
+There's more than one way to disconnect a cable.
+
+This problem calls for drastic measures.
+
+Have you found an axe?
+
+CUT CABLE
+
+** The Meadow and the town
+
+***  How do I get past the gate?
+
+Have you tried NW?
+
+Have you examined the gate?
+
+Why is it so large?
+
+It's not a pedestrian gate.
+
+The gate opens automatically if you are driving the bus.
+
+If you went in on the bus and then left on foot, you're stuck.
+I hope you have a saved game.
+
+***  How do I drive the bus?
+
+Just type IN to get in the bus.
+
+You must have your bus-driver's license, of course.
+(You should have picked it up in the Meadow.)
+
+Then just move normally (N, S, etc.).  Type OUT to get off the bus.
+
+***  Where can I deposit my treasures?
+
+Have you seen any likely spots?
+
+What about the mail drop at the Post Office?
+
+Once you get to the subway, there's a garbage disposal chute at the
+North End of N/S Tunnel.
+
+Either one will work fine.
+
+***  The Museum of Natural History
+
+****   What does the switch marked "BL" do?
+
+Why not try it?  (SWITCH SWITCH)
+
+It controls something elsewhere in the museum.
+
+Explore the museum before and after flipping the switch.
+
+It controls the black light in the Marine life area.
+
+***  I've explored the town and the museum.  Now what do I do?
+
+Have you been in the Marine Life Area in the museum?
+
+Have you flipped the switch in the Maintenance Room?  (SWITCH SWITCH)
+
+Have you been in the Marine Life Area after turning the switch on?
+
+Have you examined various objects under the black light?
+
+Have you examined the dinosaur bone from the lobby in the black light?
+
+The writing on the bone suggests that an explosion at Fourth St. and
+Vermont might be useful.
+
+Do you know where you can get a bomb?
+
+Maybe you can make one.
+
+Do you know what you get when you mix glycerine and nitric acid?
+
+Nitroglycerine is a powerful explosive.
+
+It's also very unstable.  It tends to explode when jarred.
+
+Get the glycerine (from the Classroom), the nitric acid (from the
+Maintenance Room), and the jar (from the Marine Life Area).  Then go
+to Fourth St. and Vermont.
+
+PUT ACID IN JAR
+
+PUT GLYCERINE IN JAR
+
+DROP JAR
+
+BOARD TRAIN
+
+***  Is the subway important?
+
+Don't continue until you're in the subway.
+See the previous question if you can't find it.
+
+Have you explored it?
+
+There's an amethyst at the bottom of the stairs.
+
+There's also another computer room down there.
+
+See the first question under The End Game.
+
+** The End Game
+
+***  How do I get to the endgame?
+
+Don't continue unless you have scored all 90 points.
+
+Don't continue unless you have been in the subway.
+
+Did you see the computer room in the subway?
+
+Do you know the name of that computer?
+
+Type `rlogin endgame' on pokey.
+
+***  The endgame questions (spoilers)
+
+****   How many corners are there in town?
+
+twenty-four
+
+****   How many megabytes of memory on the CPU board for the Vax?
+
+2 (you must type the number, not the word `two')
+
+****   How many places can you put treasures for points?
+
+four
+
+****   How many pounds did the weight weigh?
+
+ten
+
+****   Name either of the two objects you found by digging.
+
+The CPU card for the VAX or the platinum bar
+
+****   What cartoon character is on the towel?
+
+Snoopy
+
+****   What is one of the other last names in the mailroom?"
+
+The other names are Collier and Stock.
+
+****   What is the last name of the author of EMACS?
+
+Give yourself fourty lashes with a nine-track tape.
+
+It's Stallman.  Richard Stallman.
+
+****   What is the name of the bus company serving the town?
+
+mobytours
+
+****   What is the nearest whole dollar to the price of the shovel?
+
+twenty
+
+****   What is your login name on the 'endgame' machine?
+
+toukmond
+
+****   What is your password on pokey?
+
+robert
+
+****   What network protocol is used between pokey and gamma?
+
+TCP/IP
+
+****   What password did you use during anonymous ftp to gamma?
+
+You'll have to remember this.  It's whatever you typed.
+This hint file suggested "toukmond@pokey", but you didn't have to use that.
+
+****   What street runs right over the subway stop?
+
+Fourth (Vermont is an avenue.)
+
+****   What type of bear was hiding your key?
+
+grizzly
+
+****   Which street in town is named after a U.S. state?
+
+Vermont
+
+** General Questions
+
+***  What is the object of the game?
+
+Have you tried HELP?
+
+Dunnet is your standard "collect the treasures and bring them to the
+treasure room" game.
+
+***  How do I find out what my score is?
+
+Why are you so concerned about grades, anyway?
+
+Type SCORE.  (This only works at the `>' prompt, not when you're using
+one of the computers.)
+
+***  Where are all the treasures located?
+
+****   Where is the bracelet?
+
+See the questions under "pokey the VAX".
+
+The bracelet is in a hidden area SW of the Bear hangout.
+
+****   Where is the diamond?
+
+Don't read this until you've gotten to Lakefront North.
+
+The diamond is hidden in one of the objects you should have collected
+by now.
+
+It's in the statue of RMS.
+
+There is a way to get the diamond out of the statue.
+
+What is the statue made of?
+
+What happens to wax when it gets hot?
+
+Take the statue into the sauna and turn up the heat until it melts.
+TURN DIAL CLOCKWISE (three times)
+
+****   Where is the gold bar?
+
+The gold bar is in the Misty Room at the cave entrance.
+
+****   Where is the platinum bar?
+
+Don't read this until you've explored the cave.
+
+See the question about the bedroom under "The cave and surrounding area".
+
+It's buried in the Horseshoe boulder room.
+
+****   Where is the silver bar?
+
+It's in the Meadow north of the old building.
+
+****   Where is the jewel-encrusted egg?
+
+It's at the intersection of Main and Sycamore.
+
+****   Where are the valuable coins?
+
+They're at the intersection of Fifth and Oaktree.
+
+****   Where is the ruby?
+
+It's in the Marine life area at the Museum of Natural History.
+
+****   Where is the amethyst?
+
+It's at the Bottom of subway stairs.
+
+***  Where can I put treasures for points?
+
+In the chute at the Cave Entrance
+
+In the urinal in the Bathroom (don't forget to flush)
+
+In the mail drop at the Post Office
+
+In the garbage disposal at the North End of N/S Tunnel (in the subway)
+
+This hint is here just to avoid giving away the number of places where
+you can put treasures.
+
+You'll need to know that there are four such places to win the endgame.
+
+** Miscellaneous
+
+***  How all the points are scored
+
+****   In the regular game
+
+****     What objects are worth points?
+
+You get ten points for each object you deliver to the treasure area.
+
+The nine objects are:
+
+A bracelet
+
+A diamond
+
+A gold bar
+
+A platinum bar
+
+A silver bar
+
+A jewel-encrusted egg
+
+Some valuable coins
+
+A ruby
+
+An amethyst
+
+****     Where can objects be sent to the treasure area?
+
+This question is answered under General Questions.
+
+****   In the endgame
+
+You get ten points for each object you deliver to the endgame treasure room.
+
+There are the nine objects from the regular game.
+
+There is a $100 bill already in the Endgame treasure room.
+
+The Mona Lisa is in the Winner's room north of the Endgame treasure room.
+
+***  For your amusement
+
+Don't read this until you've solved the game.
+
+Have you tried the following things?
+
+Note:  Many of these activities can be hazardous to your health.
+       Save your game first.
+
+Shaking a tree?
+
+Shaking the bear?
+
+Going to the hidden area without feeding the bear?
+
+Taking the floppy disk into the sauna & turning up the heat?
+
+Turning the dial in the sauna clockwise four times?
+
+Leaving the health club with the sauna going full blast?
+
+Driving the bus into the hole created by the explosion?
+
+P*SSing in the urinal and then flushing it (after scoring some points)?
+
+Going EAST at Fifth and Oaktree (with or without the bus)?
+
+***  Who wrote these hints, and is this hints file copyrighted?
+
+This hints file is Copyright 1994 by Christopher J. Madsen.
+Permission is granted to distribute verbatim or modified copies of
+this hints file, provided that this copyright notice remains intact.
+You can reach me at .
+
+I'd also like to thank the author of Dunnet, Ron Schnell
+, without whom this hints file would be
+unnecessary, and the author of Emacs, Richard Stallman
+, since without him I'd have to use "vi".
+
+***  How can I contact the author?
+
+My email address is ac608@yfn.ysu.edu.  I'd love to hear about
+suggested hints.  I even accept suggestions for revising the hints I
+already wrote.
+
+The author of Dunnet is Ron Schnell .
+
+Return to Ron's FAQ page 
