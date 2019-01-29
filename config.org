@@ -1186,22 +1186,25 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 ** Abrir proyecto en ventana nueva con neotree
 #+begin_src emacs-lisp
 
-  (defun abrir-proyecto--selecciona-proyecto()
+  (defun abrir-proyecto--selecciona-proyecto ()
     (helm :sources (helm-build-sync-source "Selecciona un proyecto"
                      :candidates projectile-known-projects
                      :fuzzy-match t)
           :buffer "*Selección de proyecto*"))
+
+  (defun abrir-proyecto--seleccionado (proyecto)
+    (let ((frame (make-frame)))
+      (select-frame-set-input-focus frame)
+      (message (concat "El proyecto seleccionado es:" proyecto ))
+      (toggle-frame-maximized)
+      (dired proyecto)
+      (run-at-time "2" nil
+                 (lambda() (magit-status)))))
+
   (defun abrir-proyecto()
     (interactive)
 
-    (let ( (proyecto (abrir-proyecto--selecciona-proyecto) )
-           (frame (make-frame)))
-
-      (select-frame-set-input-focus frame)
-      (message (concat "El proyecto seleccionado es:" proyecto ))
-      (dired proyecto)
-      (neotree-project-root-dir-or-current-dir)
-      (magit-status)))
+    (abrir-proyecto--seleccionado (abrir-proyecto--selecciona-proyecto) ))
 #+end_src
 
 ** Convierto el buffer actual a una frame nueva
@@ -1656,8 +1659,9 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 
 * usettf
 
+Actualmente desactivado
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC lisp
   (setq use-ttf-default-ttf-fonts '("/.emacs.d/fonts/SourceCodeVariable-Roman.ttf"
                                     "/.emacs.d/fonts/NotoSansMono-Regular.ttf"))
   (setq use-ttf-default-ttf-font-name "Source Code Variable")
@@ -1665,8 +1669,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
   (call-interactively #'use-ttf-set-default-font)
 #+END_SRC
 
-#+RESULTS:
-: [Install fonts process still running, please call ’use-ttf-set-default-font’ after a while.]
 
 * Opciones Latex :noexport:
 # COLORES
