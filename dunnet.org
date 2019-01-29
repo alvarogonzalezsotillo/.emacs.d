@@ -41,14 +41,15 @@ digraph{
   "gold bar" -> "Misty Room" [style="dotted"] 
   "Misty Room" -> "Cave E/W passage" [taillabel="e"]
   "Cave E/W passage" -> "N/S/W Junction" [taillabel="e"]
-  "Cave E/W passage" -> "???" [taillabel="w"]
   "N/S/W Junction" -> "North end of cave passage" [taillabel="n"]
-  "N/S/W Junction" -> "???" [taillabel="s"]
+  "N/S/W Junction" -> "South end of cave passage" [taillabel="s"]
+  "South end of cave passage" -> "Bathroom" [taillabel="d"]
   "North end of cave passage" -> "Bedroom" [taillabel="d"]
   "North end of cave passage" -> "???" [taillabel="w"]
   "painting" -> "Bedroom" [style="dotted"]
   "Bedroom" -> "NE end of NE/SW cave passage" [taillabel="d"]
-  "Bedroom" -> "???" [taillabel="s"]
+  "Bedroom" -> "Bathroom" [taillabel="s"]
+  "urinal" -> "Bathroom" [style="dotted"]
   "NE end of NE/SW cave passage" -> "NE/SW-E/W junction" [taillabel="sw"]
   "NE/SW-E/W junction" -> "East end of E/W cave passage" [taillabel="e"]
   "East end of E/W cave passage" -> "Horseshoe boulder room" [taillabel="u"]
@@ -85,329 +86,362 @@ digraph{
 
 
 * Juego
-#+begin_src bash :results drawer
 
-set -x
-
-
-log(){
-  echo $* >> dunnet.log
-}
-
-clean_up(){
-  log Finalizando script
-  rm dunnet.in
-  kill $(jobs -p)
-}
-
-set_up_fifo(){
-  rm dunnet.in
-  mkfifo dunnet.in
-  sleep 30s > dunnet.in & #keep fifo open
-}
-
-set_up(){
-  rm dunnet.log
-  log "Comienza script"
-  trap clean_up EXIT
-}
-
-run_dunnet(){
-  local emacs=emacs-26.1
-  $emacs -q --batch -l dunnet < dunnet.in | tee dunnet.tee.log &
-  sleep 2
-}
+** combinación
+#+begin_src bash :results value code
+for c in $(seq 0 999)
+do
+  printf "%03d\n" $c
+  echo w
+done
+#+end_src
 
 
-linea_a_linea(){
-  log "Entro en línea a línea"
-  while IFS='' read -r line || [[ -n "$line" ]]
-  do
-     log "Text read from file: $line"
-     if [[ $line == \#*  ]]
-     then
-        echo COMENTARIO: $line
-     else
-       echo TECLEO: $line 
-       echo $line > dunnet.in
-     fi
-     #sleep 0.0001
-     echo ""
+** Juego
 
-  done 
-}
+#+begin_src bash :results value code
+  log(){
+    echo $* >> dunnet.log
+  }
 
-set_up
+  clean_up(){
+    log Finalizando script
+    rm dunnet.in
+    kill $(jobs -p)
+  }
 
-set_up_fifo
+  set_up_fifo(){
+    rm dunnet.in
+    mkfifo dunnet.in
+    sleep 30s > dunnet.in & #keep fifo open
+  }
 
-run_dunnet
+  set_up(){
+    rm dunnet.log
+    log "Comienza script"
+    trap clean_up EXIT
+  }
 
+  run_dunnet(){
+    unalias emacs
 
-linea_a_linea <<ENDOFGAME
-take shovel
-east
-east
-dig
-look
-take cpu
-southeast
-take food
-southeast
-drop food
-look
-take key
-northwest
-northwest
-look
-northeast
-look
-northeast
-in
-east
-look bin
-west
-west
-insert cpu into vax
-type
-toukmond
-robert
-ls
-cd ..
-ls
-cd ..
-ls
-cd rooms
-ls
-cd hidden-area
-ls
-cat description
-exit
-e
-s
-look
-sw
-sw
-se
-se
-sw
-take bracelet
-ne
-nw
-nw
-ne
-ne
-in
-w
-look
-type
-cd /usr/toukmond
-ls
-uncompress paper.o.Z
-exit
-inventory
-look paper
-type
-ftp gamma
-anonymous
-toukmond@pockey
-help
-type binary
-send bracelet.o
-send paper.o
-send shovel.o
-send key.o
-send lamp.o
-quit
-ls
-rlogin gamma
-worms
-take bracelet
-take paper
-take shovel
-take key
-take lamp
-look bracelet
-look lamp
-look shovel
-look key
-east
-east
-look dial
-turn dial counterclockwise
-look
-turn dial counterclockwise
-look
-turn dial counterclockwise
-look
-west
-north
-east
-take weight
-take life preserver
-look life preserver
-down
-look button
-press button
+    emacs -q --batch -l dunnet < dunnet.in | tee dunnet.tee.log &
 
-drop life preserver
-drop bracelet
-drop paper
-drop shovel
-drop key
-up
-take weight
-down
-put weight on button
-
-nw
-up
-take floppy
-take statuette
-look statuette
-# TENGO QUE VOLVER A LA SAUNA A FUNDIR LA STATUETTE
-s
-# ESTOY EN Maze little twisty passages
-look
-up
-look
-# ESTOY EN Maze thirsty little passages, al south little twisty, al se twenty little
-se
-look
-# estoy en twenty little
-down
-look
-# estoy en daze of twisty little, twisty little cabbages al nw
-nw
-look
-# estoy en twisty little cabbages, reception area al nw
-ne
-# vuelvo a Weight room
-w
-s
-drop floppy
-e
-# estoy en la sauna, a fundir la estatua
-drop statuette
-turn dial clockwise
-turn dial clockwise
-turn dial clockwise
-take diamond
-turn dial counterclockwise
-turn dial counterclockwise
-turn dial counterclockwise
-turn dial counterclockwise
-w
-take floppy
-look
-north
-east
-down
-look
+    if [[ $OSTYPE == linux-gnu ]]
+    then
+      log "Linux de escritorio detectado, espera corta a emacs"
+      sleep 2
+    else 
+      log "Linux de escritorio no detectado, espera larga a emacs (termux)"
+      sleep 10
+    fi
+  }
 
 
-# DESPUES DE ABRIR EL maze PILLO EL INVENTARIO
-take life preserver
-take bracelet
-take paper
-take shovel
-take key
+  linea_a_linea(){
+    log "Entro en líne a línea"
+    while IFS='' read -r line || [[ -n "$line" ]]
+    do
+       log "Text read from file: $line"
+       if [[ $line == \#*  ]]
+       then
+          echo COMENTARIO: $line
+       else
+         echo TECLEO: $line 
+         echo $line > dunnet.in
+       fi
+       #sleep 0.0001
+       echo ""
 
-# ESTOY EN Maze button room
-nw
-up
-s
-up
-se
-down
-nw
-nw
-# DEBERÍA ESTAR EN reception area
+    done 
+  }
 
+  set_up
 
-s
-s
-s
-s
-# PONGO TESOROS
-put bracelet on chute
-put diamond on chute
+  set_up_fifo
 
-s
-take gold bar
-e
-e
-n
-down
-look painting
-down
-sw
-e
-up
-look boulder
+  run_dunnet
 
 
-d
-w
-look
-w
-look
-d
-#empty room
-n
-e
-s
-n
-e
-s
-look towel
-take towel
-down
-n
-n
-u
-look box
-put key on box
-look
+  linea_a_linea <<ENDOFGAME
+  take shovel
+  east
+  east
+  dig
+  look
+  take cpu
+  southeast
+  take food
+  southeast
+  drop food
+  look
+  take key
+  northwest
+  northwest
+  look
+  northeast
+  look
+  northeast
+  in
+  east
+  look bin
+  west
+  west
+  insert cpu into vax
+  type
+  toukmond
+  robert
+  ls
+  cd ..
+  ls
+  cd ..
+  ls
+  cd rooms
+  ls
+  cd hidden-area
+  ls
+  cat description
+  exit
+  e
+  s
+  look
+  sw
+  sw
+  se
+  se
+  sw
+  take bracelet
+  ne
+  nw
+  nw
+  ne
+  ne
+  in
+  w
+  look
+  type
+  cd /usr/toukmond
+  ls
+  uncompress paper.o.Z
+  exit
+  inventory
+  look paper
+  type
+  ftp gamma
+  anonymous
+  toukmond@pockey
+  help
+  type binary
+  send bracelet.o
+  send paper.o
+  send shovel.o
+  send key.o
+  send lamp.o
+  quit
+  ls
+  rlogin gamma
+  worms
+  take bracelet
+  take paper
+  take shovel
+  take key
+  take lamp
+  look bracelet
+  look lamp
+  look shovel
+  look key
+  east
+  east
+  look dial
+  turn dial counterclockwise
+  look
+  turn dial counterclockwise
+  look
+  turn dial counterclockwise
+  look
+  west
+  north
+  east
+  take weight
+  take life preserver
+  look life preserver
+  down
+  look button
+  press button
 
-# stair landing, box has exploded
-u
-u
-ne
-ne
-get axe
-look axe
-d
+  drop life preserver
+  drop bracelet
+  drop paper
+  drop shovel
+  drop key
+  up
+  take weight
+  down
+  put weight on button
 
-#N/S/W Junction
-n
-look
-d
-sleep
-# HAY QUE IR A LA HERRADURA Y ENTERRAR ALGO
-d
-sw
-e
-u
-look
-dig
-look
-take platinum bar
-look platinum bar
-quit
+  nw
+  up
+  take floppy
+  take statuette
+  look statuette
+  # TENGO QUE VOLVER A LA SAUNA A FUNDIR LA STATUETTE
+  s
+  # ESTOY EN Maze little twisty passages
+  look
+  up
+  look
+  # ESTOY EN Maze thirsty little passages, al south little twisty, al se twenty little
+  se
+  look
+  # estoy en twenty little
+  down
+  look
+  # estoy en daze of twisty little, twisty little cabbages al nw
+  nw
+  look
+  # estoy en twisty little cabbages, reception area al nw
+  ne
+  # vuelvo a Weight room
+  w
+  s
+  drop floppy
+  e
+  # estoy en la sauna, a fundir la estatua
+  drop statuette
+  turn dial clockwise
+  turn dial clockwise
+  turn dial clockwise
+  take diamond
+  turn dial counterclockwise
+  turn dial counterclockwise
+  turn dial counterclockwise
+  turn dial counterclockwise
+  w
+  take floppy
+  look
+  north
+  east
+  down
+  look
 
-ENDOFGAME
+
+  # DESPUES DE ABRIR EL maze PILLO EL INVENTARIO
+  take life preserver
+  take bracelet
+  take paper
+  take shovel
+  take key
+
+  # ESTOY EN Maze button room
+  nw
+  up
+  s
+  up
+  se
+  down
+  nw
+  nw
+  # DEBERÍA ESTAR EN reception area
 
 
-clean_up
+  s
+  s
+  s
+  s
+  # PONGO TESOROS
+  put bracelet on chute
+  put diamond on chute
 
-exit
+  s
+  take gold bar
+  e
+  e
+  n
+  down
+  look painting
+  down
+  sw
+  e
+  up
+  look boulder
+
+
+  d
+  w
+  look
+  w
+  look
+  d
+  #empty room
+  n
+  e
+  s
+  n
+  e
+  s
+  look towel
+  take towel
+  down
+  n
+  n
+  u
+  look box
+  put key on box
+  look
+
+  # stair landing, box has exploded
+  u
+  u
+  ne
+  ne
+  get axe
+  look axe
+  d
+
+  #N/S/W Junction
+  n
+  look
+  d
+  sleep
+  # HAY QUE IR A LA HERRADURA Y ENTERRAR ALGO
+  d
+  sw
+  e
+  u
+  look
+  dig
+  look
+  take platinum bar
+  look platinum bar
+
+  # vuelvo a la habitación, creo que hay un baño
+  d
+  w
+  ne
+  u
+  s
+  
+  # no sé que hacer con el urinal, lo he mirado en las pistas
+  put gold into urinal
+  flush urinal
+  put platinum into urinal
+  flush urinal  
+
+
+  quit
+
+  ENDOFGAME
+
+
+  clean_up
+
+  exit
 
 
 #+END_SRC
 
 #+RESULTS:
-:RESULTS:
+#+begin_src bash
 
 Dead end
 You are at a dead end of a dirt road.  The road goes to the east.
@@ -417,9 +451,9 @@ from each other.
 There is a shovel here.
 >TECLEO: take shovel
 
+TECLEO: east
 Taken.  
->TECLEO: east
-
+>
 E/W Dirt road
 You are on the continuation of a dirt road.  There are more trees on
 both sides of you.  The road continues to the east and west.
@@ -535,8 +569,9 @@ The lights start flashing, and the fans seem to startup.
 UNIX System V, Release 2.2 (pokey)
 
 login: TECLEO: toukmond
-password: 
-TECLEO: robert
+
+password: TECLEO: robert
+
 
 Welcome to Unix
 
@@ -546,7 +581,6 @@ The current version of ftp can only send files from your home
 directory, and deletes them after they are sent!  Be careful.
 
 Note: Restricted bourne shell in use.
-
 
 $ TECLEO: ls
 
@@ -562,13 +596,13 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
--rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 TECLEO: cd ..
+cat
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o.Z
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
-$ TECLEO: cd ..
-
+$ 
 $ TECLEO: ls
 
 total 4
@@ -699,14 +733,14 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
--rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 TECLEO: uncompress paper.o.Z
+cat
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o.Z
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
-$ TECLEO: uncompress paper.o.Z
-
+$ 
 $ TECLEO: exit
 
 
@@ -730,11 +764,11 @@ $ TECLEO: ftp gamma
 
 Connected to gamma. FTP ver 0.9 00:00:00 01/01/70
 Username: TECLEO: anonymous
+
 Guest login okay, send your user ident as password.
-
 Password: TECLEO: toukmond@pockey
-Guest login okay, user access restrictions apply.
 
+Guest login okay, user access restrictions apply.
 ftp> TECLEO: help
 
 Possible commands are:
@@ -783,8 +817,8 @@ $ TECLEO: rlogin gamma
 
 Password: TECLEO: worms
 
-You begin to feel strange for a moment, and you lose your items.
 
+You begin to feel strange for a moment, and you lose your items.
 You step back from the console.
 
 Receiving room
@@ -901,8 +935,8 @@ I see nothing special about that.
 As you press the button, you notice a passageway open up, but
 as you release it, the passageway closes.
 >TECLEO:
->
-TECLEO: drop life preserver
+
+>TECLEO: drop life preserver
 
 Done.
 >TECLEO: drop bracelet
@@ -1096,10 +1130,10 @@ There is a shovel here.
 There is a shiny brass key here.
 There is a 10 pound weight here.
 >TECLEO:
->
-TECLEO:
->
-COMENTARIO: # DESPUES DE ABRIR EL maze PILLO EL INVENTARIO
+
+>TECLEO:
+
+>COMENTARIO: # DESPUES DE ABRIR EL maze PILLO EL INVENTARIO
 
 TECLEO: take life preserver
 
@@ -1117,8 +1151,8 @@ Taken.
 
 Taken.  
 >TECLEO:
->
-COMENTARIO: # ESTOY EN Maze button room
+
+>COMENTARIO: # ESTOY EN Maze button room
 
 TECLEO: nw
 
@@ -1152,8 +1186,8 @@ a door out to the south, and a crawlspace to the southeast.
 TECLEO:
 
 >TECLEO:
->
-TECLEO: s
+
+>TECLEO: s
 
 Health Club front
 You are outside a large building to the north which used to be a health
@@ -1429,14 +1463,59 @@ Taken.
 >TECLEO: look platinum bar
 
 I see nothing special about that.
+>TECLEO:
+
+>COMENTARIO: # vuelvo a la habitación, creo que hay un baño
+
+TECLEO: d
+
+East end of E/W cave passage
+>TECLEO: w
+
+NE/SW-E/W junction
+>TECLEO: ne
+
+NE end of NE/SW cave passage
+>TECLEO: u
+
+Bedroom
+>TECLEO: s
+
+Bathroom
+You are in a bathroom built for workers in the cave.  There is a
+urinal hanging on the wall, and some exposed pipes on the opposite
+wall where a sink used to be.  To the north is a bedroom.
+>TECLEO:
+
+>COMENTARIO: # no sé que hacer con el urinal, voy a otra habitación que no he visto
+
+TECLEO: put gold into urinal
+
+You hear it plop down in some water below.
+>TECLEO: flush urinal
+
+Whoooosh!!
+You have scored 30 out of a possible 90 points.
+>TECLEO: put platinum into urinal
+
+You hear it plop down in some water below.
+>TECLEO: flush urinal
+
+Whoooosh!!
+You have scored 40 out of a possible 90 points.
+>TECLEO:
+
+>TECLEO:
+
 >TECLEO: quit
 
 
 TECLEO:
 
-You have scored 20 out of a possible 90 points.
-:END:
+You have scored 40 out of a possible 90 points.
+#+end_src
 
+  
 * Hints
 
 
