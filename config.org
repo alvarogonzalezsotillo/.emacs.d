@@ -193,6 +193,8 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | tablist                        |                                                                |
 | transmission                   |                                                                |
 | transpose-frame                |                                                                |
+| treemacs                       |                                                                |
+| treemacs-projectile            |                                                                |
 | use-package                    |                                                                |
 | use-ttf                        | Instala la fuente por defecto en todos los sistemas            |
 | vim-empty-lines-mode           |                                                                |
@@ -1192,11 +1194,18 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
                      :fuzzy-match t)
           :buffer "*Selección de proyecto*"))
 
+  (defun abrir-proyecto--selecciona-frame ()
+    ;(selected-frame)
+    (let ( (frame (make-frame)) )
+      (select-frame-set-input-focus frame)
+      (toggle-frame-maximized)
+      frame))
+
+
   (defun abrir-proyecto--seleccionado (proyecto)
-    (let ((frame (make-frame)))
+    (let ((frame (abrir-proyecto--selecciona-frame)))
       (select-frame-set-input-focus frame)
       (message (concat "El proyecto seleccionado es:" proyecto ))
-      (toggle-frame-maximized)
       (dired proyecto)
       (run-at-time "2" nil
                  (lambda() (magit-status)))))
