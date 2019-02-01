@@ -70,13 +70,10 @@ digraph{
   "NE crawlway" -> "Small crawlspace" [taillabel="ne"]
   "axe" -> "Small crawlspace" [style="dotted"]
   "Small crawlspace" -> "N/S/W Junction" [taillabel="d"]
-
-
-  
-
-
-
-  
+  "Long n/s hallway" -> "3/4 south" [taillabel="s"]
+  "3/4 south" -> "South end of long hallway"[taillabel="s"]
+  "South end of long hallway" -> "PC area" [taillabel="s"]  
+  "pc" -> "PC area" [style="dotted"]
 }
 
 #+END_SRC
@@ -171,273 +168,285 @@ done
 
 
   linea_a_linea <<ENDOFGAME
-  take shovel
-  east
-  east
-  dig
-  look
-  take cpu
-  southeast
-  take food
-  southeast
-  drop food
-  look
-  take key
-  northwest
-  northwest
-  look
-  northeast
-  look
-  northeast
-  in
-  east
-  look bin
-  west
-  west
-  insert cpu into vax
-  type
-  toukmond
-  robert
-  ls
-  cd ..
-  ls
-  cd ..
-  ls
-  cd rooms
-  ls
-  cd hidden-area
-  ls
-  cat description
-  exit
-  e
-  s
-  look
-  sw
-  sw
-  se
-  se
-  sw
-  take bracelet
-  ne
-  nw
-  nw
-  ne
-  ne
-  in
-  w
-  look
-  type
-  cd /usr/toukmond
-  ls
-  uncompress paper.o.Z
-  exit
-  inventory
-  look paper
-  type
-  ftp gamma
-  anonymous
-  toukmond@pockey
-  help
-  type binary
-  send bracelet.o
-  send paper.o
-  send shovel.o
-  send key.o
-  send lamp.o
-  quit
-  ls
-  rlogin gamma
-  worms
-  take bracelet
-  take paper
-  take shovel
-  take key
-  take lamp
-  look bracelet
-  look lamp
-  look shovel
-  look key
-  east
-  east
-  look dial
-  turn dial counterclockwise
-  look
-  turn dial counterclockwise
-  look
-  turn dial counterclockwise
-  look
-  west
-  north
-  east
-  take weight
-  take life preserver
-  look life preserver
-  down
-  look button
-  press button
+take shovel
+east
+east
+dig
+look
+take cpu
+southeast
+take food
+southeast
+drop food
+look
+take key
+northwest
+northwest
+look
+northeast
+look
+northeast
+in
+east
+look bin
+west
+west
+insert cpu into vax
+type
+toukmond
+robert
+ls
+cd ..
+ls
+cd ..
+ls
+cd rooms
+ls
+cd hidden-area
+ls
+cat description
+exit
+e
+s
+look
+sw
+sw
+se
+se
+sw
+take bracelet
+ne
+nw
+nw
+ne
+ne
+in
+w
+look
+type
+cd /usr/toukmond
+ls
+uncompress paper.o.Z
+exit
+inventory
+look paper
+type
+ftp gamma
+anonymous
+toukmond@pockey
+help
+type binary
+send bracelet.o
+send paper.o
+send shovel.o
+send key.o
+send lamp.o
+quit
+ls
+rlogin gamma
+worms
+take bracelet
+take paper
+take shovel
+take key
+take lamp
+look bracelet
+look lamp
+look shovel
+look key
+east
+east
+look dial
+turn dial counterclockwise
+look
+turn dial counterclockwise
+look
+turn dial counterclockwise
+look
+west
+north
+east
+take weight
+take life preserver
+look life preserver
+down
+look button
+press button
 
-  drop life preserver
-  drop bracelet
-  drop paper
-  drop shovel
-  drop key
-  up
-  take weight
-  down
-  put weight on button
+drop life preserver
+drop bracelet
+drop paper
+drop shovel
+drop key
+up
+take weight
+down
+put weight on button
 
-  nw
-  up
-  take floppy
-  take statuette
-  look statuette
-  # TENGO QUE VOLVER A LA SAUNA A FUNDIR LA STATUETTE
-  s
-  # ESTOY EN Maze little twisty passages
-  look
-  up
-  look
-  # ESTOY EN Maze thirsty little passages, al south little twisty, al se twenty little
-  se
-  look
-  # estoy en twenty little
-  down
-  look
-  # estoy en daze of twisty little, twisty little cabbages al nw
-  nw
-  look
-  # estoy en twisty little cabbages, reception area al nw
-  ne
-  # vuelvo a Weight room
-  w
-  s
-  drop floppy
-  e
-  # estoy en la sauna, a fundir la estatua
-  drop statuette
-  turn dial clockwise
-  turn dial clockwise
-  turn dial clockwise
-  take diamond
-  turn dial counterclockwise
-  turn dial counterclockwise
-  turn dial counterclockwise
-  turn dial counterclockwise
-  w
-  take floppy
-  look
-  north
-  east
-  down
-  look
-
-
-  # DESPUES DE ABRIR EL maze PILLO EL INVENTARIO
-  take life preserver
-  take bracelet
-  take paper
-  take shovel
-  take key
-
-  # ESTOY EN Maze button room
-  nw
-  up
-  s
-  up
-  se
-  down
-  nw
-  nw
-  # DEBERÍA ESTAR EN reception area
+nw
+up
+take floppy
+take statuette
+look statuette
+# TENGO QUE VOLVER A LA SAUNA A FUNDIR LA STATUETTE
+s
+# ESTOY EN Maze little twisty passages
+look
+up
+look
+# ESTOY EN Maze thirsty little passages, al south little twisty, al se twenty little
+se
+look
+# estoy en twenty little
+down
+look
+# estoy en daze of twisty little, twisty little cabbages al nw
+nw
+look
+# estoy en twisty little cabbages, reception area al nw
+ne
+# vuelvo a Weight room
+w
+s
+drop floppy
+e
+# estoy en la sauna, a fundir la estatua
+drop statuette
+turn dial clockwise
+turn dial clockwise
+turn dial clockwise
+take diamond
+turn dial counterclockwise
+turn dial counterclockwise
+turn dial counterclockwise
+turn dial counterclockwise
+w
+take floppy
+look
+north
+east
+down
+look
 
 
-  s
-  s
-  s
-  s
-  # PONGO TESOROS
-  put bracelet on chute
-  put diamond on chute
+# DESPUES DE ABRIR EL maze PILLO EL INVENTARIO
+take life preserver
+take bracelet
+take paper
+take shovel
+take key
 
-  s
-  take gold bar
-  e
-  e
-  n
-  down
-  look painting
-  down
-  sw
-  e
-  up
-  look boulder
+# ESTOY EN Maze button room
+nw
+up
+s
+up
+se
+down
+nw
+nw
+# DEBERÍA ESTAR EN reception area
 
 
-  d
-  w
-  look
-  w
-  look
-  d
-  #empty room
-  n
-  e
-  s
-  n
-  e
-  s
-  look towel
-  take towel
-  down
-  n
-  n
-  u
-  look box
-  put key on box
-  look
+s
+s
+s
+s
+# PONGO TESOROS
+put bracelet on chute
+put diamond on chute
 
-  # stair landing, box has exploded
-  u
-  u
-  ne
-  ne
-  get axe
-  look axe
-  d
-
-  #N/S/W Junction
-  n
-  look
-  d
-  sleep
-  # HAY QUE IR A LA HERRADURA Y ENTERRAR ALGO
-  d
-  sw
-  e
-  u
-  look
-  dig
-  look
-  take platinum bar
-  look platinum bar
-
-  # vuelvo a la habitación, creo que hay un baño
-  d
-  w
-  ne
-  u
-  s
-  
-  # no sé que hacer con el urinal, lo he mirado en las pistas
-  put gold into urinal
-  flush urinal
-  put platinum into urinal
-  flush urinal  
+s
+take gold bar
+e
+e
+n
+down
+look painting
+down
+sw
+e
+up
+look boulder
 
 
-  quit
+d
+w
+look
+w
+look
+d
+#empty room
+n
+e
+s
+n
+e
+s
+look towel
+take towel
+down
+n
+n
+u
+look box
+put key on box
+look
 
-  ENDOFGAME
+# stair landing, box has exploded
+u
+u
+ne
+ne
+get axe
+look axe
+d
+
+#N/S/W Junction
+n
+look
+d
+sleep
+# HAY QUE IR A LA HERRADURA Y ENTERRAR ALGO
+d
+sw
+e
+u
+look
+dig
+look
+take platinum bar
+look platinum bar
+
+# vuelvo a la habitación, creo que hay un baño
+d
+w
+ne
+u
+s
+
+# no sé que hacer con el urinal, lo he mirado en las pistas
+put gold into urinal
+flush urinal
+put platinum into urinal
+flush urinal  
+
+# voy a mirar lo que me falta: long ns hallway
+n
+d
+sw
+w
+d
+e
+d
+look
+s
+s
+s
+
+quit
+
+ENDOFGAME
 
 
   clean_up
@@ -457,14 +466,14 @@ trees here are very tall royal palms, and they are spaced equidistant
 from each other.
 There is a shovel here.
 >TECLEO: take shovel
-TECLEO: east
 Taken.  
->E/W Dirt road
+>TECLEO: east
+TECLEO: east
+E/W Dirt road
 You are on the continuation of a dirt road.  There are more trees on
 both sides of you.  The road continues to the east and west.
 There is a large boulder here.
->TECLEO: east
-Fork
+>Fork
 You are at a fork of two passages, one to the northeast, and one to the
 southeast.  The ground here seems very soft. You can also go back west.
 >TECLEO: dig
@@ -520,11 +529,75 @@ Old Building hallway
 You are in the hallway of an old building.  There are rooms to the east
 and west, and doors leading out to the north and south.
 >TECLEO: east
+TECLEO: look bin
+TECLEO: west
+TECLEO: west
+TECLEO: insert cpu into vax
+TECLEO: type
+TECLEO: toukmond
+TECLEO: robert
+TECLEO: ls
+TECLEO: cd ..
+TECLEO: ls
+TECLEO: cd ..
+TECLEO: ls
+TECLEO: cd rooms
+TECLEO: ls
+TECLEO: cd hidden-area
+TECLEO: ls
+TECLEO: cat description
+TECLEO: exit
+TECLEO: e
+TECLEO: s
+TECLEO: look
+TECLEO: sw
+TECLEO: sw
+TECLEO: se
+TECLEO: se
+TECLEO: sw
+TECLEO: take bracelet
+TECLEO: ne
+TECLEO: nw
+TECLEO: nw
+TECLEO: ne
+TECLEO: ne
+TECLEO: in
+TECLEO: w
+TECLEO: look
+TECLEO: type
+TECLEO: cd /usr/toukmond
+TECLEO: ls
+TECLEO: uncompress paper.o.Z
+TECLEO: exit
+TECLEO: inventory
+TECLEO: look paper
+TECLEO: type
+TECLEO: ftp gamma
+TECLEO: anonymous
+TECLEO: toukmond@pockey
+TECLEO: help
+TECLEO: type binary
+TECLEO: send bracelet.o
+TECLEO: send paper.o
+TECLEO: send shovel.o
+TECLEO: send key.o
+TECLEO: send lamp.o
+TECLEO: quit
+TECLEO: ls
+TECLEO: rlogin gamma
+TECLEO: worms
+TECLEO: take bracelet
+TECLEO: take paper
+TECLEO: take shovel
+TECLEO: take key
+TECLEO: take lamp
+TECLEO: look bracelet
+TECLEO: look lamp
+TECLEO: look shovel
 Mailroom
 You are in a mailroom.  There are many bins where the mail is usually
 kept.  The exit is to the west.
->TECLEO: look bin
-All of the bins are empty.  Looking closely you can see that there
+>All of the bins are empty.  Looking closely you can see that there
 are names written at the bottom of each bin, but most of them are
 faded away so that you cannot read them.  You can only make out three
 names:
@@ -532,27 +605,22 @@ names:
                    Robert Toukmond
                    Thomas Stock
 
->TECLEO: west
-Old Building hallway
->TECLEO: west
-Computer room
+>Old Building hallway
+>Computer room
 You are in a computer room.  It seems like most of the equipment has
 been removed.  There is a VAX 11/780 in front of you, however, with
 one of the cabinets wide open.  A sign on the front of the machine
 says: This VAX is named ‘pokey’.  To type on the console, use the
 ‘type’ command.  The exit is to the east.
 The panel lights are steady and motionless.
->TECLEO: insert cpu into vax
-As you put the CPU board in the computer, it immediately springs to life.
+>As you put the CPU board in the computer, it immediately springs to life.
 The lights start flashing, and the fans seem to startup.
->TECLEO: type
+>TECLEO: look key
 
 
 UNIX System V, Release 2.2 (pokey)
 
-login: TECLEO: toukmond
-password: TECLEO: robert
-
+login: password: 
 Welcome to Unix
 
 Please clean up your directories.  The filesystem is getting full.
@@ -562,8 +630,7 @@ directory, and deletes them after they are sent!  Be careful.
 
 Note: Restricted bourne shell in use.
 
-$ TECLEO: ls
-total 467
+$ total 467
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
@@ -580,22 +647,17 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
-TECLEO: cd ..
-$ $ TECLEO: ls
-total 4
+$ TECLEO: east
+$ total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 toukmond
-$ TECLEO: cd ..
-$ TECLEO: ls
-total 4
+$ $ total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 usr
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 rooms
-$ TECLEO: cd rooms
-$ TECLEO: ls
-total 16
+$ $ total 16
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 computer-room
@@ -609,68 +671,47 @@ drwxr-xr-x  3 root     staff           512 Jan 1 1970 fork
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 e-w-dirt-road
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 dead-end
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 hidden-area
-$ TECLEO: cd hidden-area
-$ TECLEO: ls
-total 4
+$ $ total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  3 root     staff          2048 Jan 1 1970 description
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
-$ TECLEO: cat description
+$ TECLEO: east
 You are in a well-hidden area off to the side of a road.  Back to the
 northeast through the brush you can see the bear hangout.
-$ TECLEO: exit
-
+$ 
 You step back from the console.
 
->TECLEO: e
-Old Building hallway
->TECLEO: s
-Building front
->TECLEO: look
-Building front
+>Old Building hallway
+>Building front
+>Building front
 You are at the end of the road.  There is a building in front of you
 to the northeast, and the road leads back to the southwest.
->TECLEO: sw
-NE/SW road
->TECLEO: sw
-Fork
->TECLEO: se
-SE/NW road
->TECLEO: se
-Bear hangout
->TECLEO: sw
+>NE/SW road
+>Fork
+>SE/NW road
+>Bear hangout
+>TECLEO: look dial
 Hidden area
 There is an emerald bracelet here.
->TECLEO: take bracelet
-Taken.  
->TECLEO: ne
-Bear hangout
->TECLEO: nw
-SE/NW road
->TECLEO: nw
-Fork
->TECLEO: ne
-NE/SW road
->TECLEO: ne
-Building front
->TECLEO: in
-Old Building hallway
->TECLEO: w
-Computer room
+>Taken.  
+>Bear hangout
+>SE/NW road
+>Fork
+>NE/SW road
+>Building front
+>Old Building hallway
+>Computer room
 The panel lights are flashing in a seemingly organized pattern.
->TECLEO: look
-TECLEO: type
-Computer room
+>Computer room
 You are in a computer room.  It seems like most of the equipment has
 been removed.  There is a VAX 11/780 in front of you, however, with
 one of the cabinets wide open.  A sign on the front of the machine
 says: This VAX is named ‘pokey’.  To type on the console, use the
 ‘type’ command.  The exit is to the east.
 The panel lights are flashing in a seemingly organized pattern.
->$ TECLEO: cd /usr/toukmond
-$ TECLEO: ls
-total 467
+>TECLEO: turn dial counterclockwise
+$ $ total 467
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
@@ -688,51 +729,37 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
-$ TECLEO: uncompress paper.o.Z
-TECLEO: exit
-$ 
+$ $ 
 You step back from the console.
 
->TECLEO: inventory
+>TECLEO: look
 You currently have:
 A lamp
 A shovel
 A brass key
 A bracelet
 A slip of paper
->TECLEO: look paper
-The paper says: Don't forget to type ‘help’ for help.  Also, remember
+>The paper says: Don't forget to type ‘help’ for help.  Also, remember
 this word: ‘worms’
->TECLEO: type
-$ TECLEO: ftp gamma
-Connected to gamma. FTP ver 0.9 00:00:00 01/01/70
-Username: TECLEO: anonymous
-Guest login okay, send your user ident as password.
-Password: TECLEO: toukmond@pockey
-Guest login okay, user access restrictions apply.
-ftp> TECLEO: help
-Possible commands are:
+>$ Connected to gamma. FTP ver 0.9 00:00:00 01/01/70
+Username: Guest login okay, send your user ident as password.
+Password: Guest login okay, user access restrictions apply.
+ftp> Possible commands are:
 send    quit    type   ascii  binary   help
-ftp> TECLEO: type binary
-Type set to binary.
-ftp> TECLEO: send bracelet.o
-Sending binary file for a bracelet, (0 bytes)
+ftp> Type set to binary.
+ftp> Sending binary file for a braceletTECLEO: turn dial counterclockwise
+, (0 bytes)
 Transfer complete.
-ftp> TECLEO: send paper.o
-Sending binary file for a slip of paper, (0 bytes)
+ftp> Sending binary file for a slip of paper, (0 bytes)
 Transfer complete.
-ftp> TECLEO: send shovel.o
-Sending binary file for a shovel, (0 bytes)
+ftp> Sending binary file for a shovel, (0 bytes)
 Transfer complete.
-ftp> TECLEO: send key.o
-Sending binary file for a brass key, (0 bytes)
+ftp> Sending binary file for a brass key, (0 bytes)
 Transfer complete.
-ftp> TECLEO: send lamp.o
-Sending binary file for a lamp, (0 bytes)
+ftp> Sending TECLEO: look
+binary file for a lamp, (0 bytes)
 Transfer complete.
-ftp> TECLEO: quit
-$ TECLEO: ls
-total 467
+ftp> $ total 467
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
@@ -745,9 +772,7 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
-$ TECLEO: rlogin gamma
-Password: TECLEO: worms
-
+$ Password: 
 You begin to feel strange for a moment, and you lose your items.
 You step back from the console.
 
@@ -759,58 +784,42 @@ There is a slip of paper here.
 There is a shovel here.
 There is a shiny brass key here.
 There is a lamp nearby.
->TECLEO: take bracelet
+>TECLEO: turn dial counterclockwise
 Taken.  
->TECLEO: take paper
-Taken.  
->TECLEO: take shovel
-Taken.  
->TECLEO: take key
-Taken.  
->TECLEO: take lamp
-Taken.  
->TECLEO: look bracelet
+>Taken.  
+>Taken.  
+>Taken.  
+>Taken.  
+>I see nothing special about that.
+>The lamp is hand-crafted by Geppetto.
+>It is a normal shovel with a price tag attached that says $19.99.
+>TECLEO: look
 I see nothing special about that.
->TECLEO: look lamp
-The lamp is hand-crafted by Geppetto.
->TECLEO: look shovel
-It is a normal shovel with a price tag attached that says $19.99.
->TECLEO: look key
-I see nothing special about that.
->TECLEO: east
-Northbound Hallway
+>Northbound Hallway
 You are at the south end of a hallway that leads to the north.  There
 are rooms to the east and west.
->TECLEO: east
-Sauna
+>Sauna
 You are in a sauna.  There is nothing in the room except for a dial
 on the wall.  A door leads out to west.
 It is normal room temperature in here.
->TECLEO: look dial
-The dial points to a temperature scale which has long since faded away.
->TECLEO: turn dial counterclockwise
-The dial will not turn further in that direction.
->TECLEO: look
-Sauna
-You are in a sauna.  There is nothing in the room except for a dial
-on the wall.  A door leads out to west.
-It is normal room temperature in here.
->TECLEO: turn dial counterclockwise
-The dial will not turn further in that direction.
->TECLEO: look
-Sauna
-You are in a sauna.  There is nothing in the room except for a dial
-on the wall.  A door leads out to west.
-It is normal room temperature in here.
->TECLEO: turn dial counterclockwise
-The dial will not turn further in that direction.
->TECLEO: look
-Sauna
+>The dial points to a temperature scale which has long since faded away.
+>The dial will not turn further in that direction.
+>Sauna
 You are in a sauna.  There is nothing in the room except for a dial
 on the wall.  A door leads out to west.
 It is normal room temperature in here.
 >TECLEO: west
-Northbound Hallway
+The dial will not turn further in that direction.
+>Sauna
+You are in a sauna.  There is nothing in the room except for a dial
+on the wall.  A door leads out to west.
+It is normal room temperature in here.
+>The dial will not turn further in that direction.
+>Sauna
+You are in a sauna.  There is nothing in the room except for a dial
+on the wall.  A door leads out to west.
+It is normal room temperature in here.
+>Northbound Hallway
 >TECLEO: north
 End of N/S Hallway
 You are at the end of a north/south hallway.  You can go back to the south,
@@ -866,14 +875,14 @@ A passageway opens.
 >TECLEO:
 >TECLEO: nw
 Maze
-TECLEO: up
-TECLEO: take floppy
 You are in a maze of little twisty passages, all alike.
->Maze
+>TECLEO: up
+Maze
 You are in a maze of thirsty little passages, all alike.
 There is a wax statuette of Richard Stallman here.
 There is a floppy disk here.
->Taken.  
+>TECLEO: take floppy
+Taken.  
 >TECLEO: take statuette
 Taken.  
 >TECLEO: look statuette
@@ -1249,6 +1258,38 @@ You hear it plop down in some water below.
 Whoooosh!!
 You have scored 40 out of a possible 90 points.
 >TECLEO:
+>COMENTARIO: # voy a mirar lo que me falta: long ns hallway
+TECLEO: n
+Bedroom
+>TECLEO: d
+NE end of NE/SW cave passage
+>TECLEO: sw
+NE/SW-E/W junction
+>TECLEO: w
+West end of E/W cave passage
+>TECLEO: d
+Empty room
+>TECLEO: e
+Red room
+There is a hole in the floor here.
+>TECLEO: d
+Long n/s hallway
+>TECLEO: look
+Long n/s hallway
+You are in the middle of a long north/south hallway.
+>TECLEO: s
+3/4 south
+You are 3/4 of the way towards the south end of a long north/south hallway.
+>TECLEO: s
+South end of long hallway
+You are at the south end of a long north/south hallway.  There is a hole
+to the south.
+>TECLEO: s
+PC area
+You have reached a dead end.  There is a PC on the floor here.  Above
+it is a sign that reads:
+          Type the ‘reset’ command to type on the PC.
+A hole leads north.
 >TECLEO:
 >TECLEO: quit
 
