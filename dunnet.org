@@ -131,7 +131,10 @@ done
       local msg=$(last_pc_output_line)
       #The combination is XXX.
       echo msg es $msg
-      combination=${msg:19:3}
+      if [[ $msg == "The combination is"* ]]
+      then
+        combination=${msg:19:3}
+      fi
       echo combination es $combination
     }
 
@@ -476,11 +479,14 @@ insert floppy into pc
 >dir
 >type foo.txt
 >exit
+# Dentro del bucle la combinación es: $combination
+# Así que tengo que hacer otro bucle, porque la variable ya está sustituida
 ENDOFGAME
 
 echo aqui tengo la combinación: $combination
 linea_a_linea <<ENDOFGAME
-  look
+look
+quit
 ENDOFGAME
 
 
@@ -555,8 +561,8 @@ You are on a northeast/southwest road.
 >TECLEO: look
 NE/SW road
 You are on a northeast/southwest road.
->TECLEO: northeast
-Building front
+TECLEO: northeast
+>Building front
 You are at the end of the road.  There is a building in front of you
 to the northeast, and the road leads back to the southwest.
 >TECLEO: in
@@ -622,10 +628,10 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o.Z
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
+TECLEO: cd ..
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
-$ TECLEO: cd ..
-$ TECLEO: ls
+$ $ TECLEO: ls
 total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
@@ -883,29 +889,29 @@ As you press the button, you notice a passageway open up, but
 as you release it, the passageway closes.
 >TECLEO:
 >TECLEO: drop life preserver
+TECLEO: drop bracelet
+TECLEO: drop paper
+TECLEO: drop shovel
+TECLEO: drop key
+TECLEO: up
 Done.
->TECLEO: drop bracelet
-Done.
->TECLEO: drop paper
-Done.
->TECLEO: drop shovel
-Done.
->TECLEO: drop key
-Done.
->TECLEO: up
-Weight room
-There is a 10 pound weight here.
+>Done.
 >TECLEO: take weight
-TECLEO: down
-TECLEO: put weight on button
-Taken.  
->Maze button room
+Done.
+>Done.
+>Done.
+>Weight room
+There is a 10 pound weight here.
+>Taken.  
+>TECLEO: down
+Maze button room
 There is a life preserver here.
 There is an emerald bracelet here.
 There is a slip of paper here.
 There is a shovel here.
 There is a shiny brass key here.
->Done.
+>TECLEO: put weight on button
+Done.
 A passageway opens.
 >TECLEO:
 >TECLEO: nw
@@ -967,10 +973,10 @@ Northbound Hallway
 >TECLEO: drop floppy
 Done.
 >TECLEO: e
-Sauna
+SaunaCOMENTARIO: # estoy en la sauna, a fundir la estatua
+
 It is normal room temperature in here.
->COMENTARIO: # estoy en la sauna, a fundir la estatua
-TECLEO: drop statuette
+>TECLEO: drop statuette
 Done.
 >TECLEO: turn dial clockwise
 It is now luke warm in here.  You are perspiring.
@@ -1332,14 +1338,14 @@ Done.
 >TECLEO:
 >COMENTARIO: # me pongo a teclear en el pc
 ES UNA ORDEN PARA EL PC: reset
-Current time is 14:10:08
-Enter new time: msg es >>Current time is 14:10:08 Enter new time:
-combination es 4:1
-LA RESPUESTA DEL PC ES: >>Current time is 14:10:08 Enter new time: -- 4:1
+Current time is 17:21:45
+Enter new time: msg es >>Current time is 17:21:45 Enter new time:
+combination es
+LA RESPUESTA DEL PC ES: >>Current time is 17:21:45 Enter new time: --
 ES UNA ORDEN PARA EL PC:
-A> msg es >>Current time is 14:10:08 Enter new time: A>
-combination es 4:1
-LA RESPUESTA DEL PC ES: >>Current time is 14:10:08 Enter new time: A> -- 4:1
+A> msg es >>Current time is 17:21:45 Enter new time: A>
+combination es
+LA RESPUESTA DEL PC ES: >>Current time is 17:21:45 Enter new time: A> --
 ES UNA ORDEN PARA EL PC: dir
 
  Volume in drive A is FOO
@@ -1356,25 +1362,27 @@ combination es
 LA RESPUESTA DEL PC ES: A> --
 ES UNA ORDEN PARA EL PC: type foo.txt
 
-The combination is 856.
-A> msg es The combination is 856. A>
-combination es 856
-LA RESPUESTA DEL PC ES: The combination is 856. A> -- 856
+The combination is 245.
+A> msg es The combination is 245. A>
+combination es 245
+LA RESPUESTA DEL PC ES: The combination is 245. A> -- 245
 ES UNA ORDEN PARA EL PC: exit
 
 You power down the machine and step back.
 
 >msg es >
-combination es
-LA RESPUESTA DEL PC ES: > --
-aqui tengo la combinación:
+combination es 245
+LA RESPUESTA DEL PC ES: > -- 245
+COMENTARIO: # Dentro del bucle la combinación es:
+aqui tengo la combinación: 245
 TECLEO: look
 PC area
 You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->
+>TECLEO: quit
+
 #+end_src
 
   
