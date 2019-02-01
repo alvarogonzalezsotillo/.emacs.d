@@ -6,7 +6,7 @@ digraph{
 
   "shovel" -> "Dead end" [style="dotted"]
   "Dead end" -> "E/W Dirt road"
-  "boulder" -> "E/W Dirt road"
+  "boulder" -> "E/W Dirt road" [style="dotted"]
   "E/W Dirt road" -> "Fork"
   "cpu" -> "Fork" [style="dotted"]
   "Fork" -> "SE/NW road"
@@ -31,6 +31,7 @@ digraph{
   "Maze button room" -> "Maze"
   "statuette" -> "Maze" [style="dotted"]
   "floppy" -> "Maze" [style="dotted"]
+  "Maze" -> "Maze" [taillabel="lot of directions"]
   "Maze" -> "Reception area"
   "Reception area" -> "Health Club front"
   "Health Club front" -> "Lakefront North"
