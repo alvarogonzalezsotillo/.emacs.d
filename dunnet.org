@@ -66,7 +66,8 @@ digraph{
   "3/4 north" -> "North end of long hallway" [taillabel="n"]
   "North end of long hallway" -> "Stair landing" [taillabel="u"]
   "box" -> "Stair landing" [style="dotted"]
-  "Stair landing" -> "Top of staircase" [taillabel="u"]
+  "Stair landing" -> "Up/down staircase" [taillabel="u"]
+  "Up/down staircase" -> "Top of staircase" [taillabel="u"]
   "Top of staircase" -> "NE crawlway" [taillabel="ne"]
   "NE crawlway" -> "Small crawlspace" [taillabel="ne"]
   "axe" -> "Small crawlspace" [style="dotted"]
@@ -98,104 +99,107 @@ done
 ** Juego
 
 #+begin_src bash :results value code
-    log(){
-      echo $* >> dunnet.log
-    }
+log(){
+  echo $* >> dunnet.log
+}
 
-    clean_up(){
-      log Finalizando script
-      rm dunnet.in
-      kill $(jobs -p)
-    }
+clean_up(){
+  log Finalizando script
+  rm dunnet.in
+  kill $(jobs -p)
+}
 
-    set_up_fifo(){
-      rm dunnet.in
-      mkfifo dunnet.in
-      sleep 30s > dunnet.in & #keep fifo open
-    }
+set_up_fifo(){
+  rm dunnet.in
+  mkfifo dunnet.in
+  sleep 10m > dunnet.in & #keep fifo open
+}
 
-    send_to_fifo(){
-      echo "$*" > dunnet.in
-    }
+send_to_fifo(){
+  printf "%s\n" "$*" > dunnet.in
+}
 
-    set_up(){
-      rm dunnet.log
-      log "Comienza script"
-      trap clean_up EXIT
-    }
+set_up(){
+  rm dunnet.log
+  log "Comienza script"
+  trap clean_up EXIT
+}
 
-    last_pc_output_line(){
-      tail -n 2 dunnet.tee.log | head -n 2
-    }
+last_pc_output_line(){
+  tail -n 2 dunnet.tee.log | head -n 2
+}
 
-    get_pc_combination(){
-      local msg=$(last_pc_output_line)
-      #The combination is XXX.
-      echo msg es $msg
-      if [[ $msg == "The combination is"* ]]
-      then
-        combination=${msg:19:3}
-      fi
-      echo combination es $combination
-    }
-
-    run_dunnet(){
-      unalias emacs
-
-      emacs -q --batch -l dunnet < dunnet.in | tee dunnet.tee.log &
-
-      if [[ $OSTYPE == linux-gnu ]]
-      then
-        log "Linux de escritorio detectado, espera corta a emacs"
-        #sleep 2
-      else 
-        log "Linux de escritorio no detectado, espera larga a emacs (termux)"
-        #sleep 10
-      fi
-    }
-
-    wait_until_dunnet_start(){
-      local pattern="Dead end"
-      log "Esperando a que dunnet empiece... " $pattern
-      (tail -f dunnet.tee.log &) | grep -q "$pattern"
-      log "Dunnet ha empezado"
-    }
+get_pc_combination(){
+  local msg=$(last_pc_output_line)
+  #The combination is XXX.
+  echo msg es $msg
+  if [[ $msg == "The combination is"* ]]
+  then
+    echo Voy a leer la combinacion: $msg
+    combination=${msg:19:3}
+  fi
+  log combination es $combination
+}
 
 
-    linea_a_linea(){
-      log "Entro en línea a línea"
-      while IFS='' read -r line || [[ -n "$line" ]]
-      do
-         log "Text read from file: $line"
-         if [[ $line == \>* ]]
-         then  
-            local ordenalpc=${line:1}
-            echo ES UNA ORDEN PARA EL PC: $ordenalpc
-            send_to_fifo "$ordenalpc"
-            sleep 5s
-            get_pc_combination
-            echo LA RESPUESTA DEL PC ES: $(last_pc_output_line) -- $combination
-         elif [[ $line == \#* ]]
-         then
-            echo COMENTARIO: $line 
-         else
-           echo TECLEO: $line 
-           send_to_fifo $line
-         fi
-         log "(small wait until next line)"
-      done 
-    }
+wait_until_dunnet_start(){
+  local pattern="Dead end"
+  log "Esperando a que dunnet empiece... " $pattern
+  (tail -f dunnet.tee.log &) | grep -q "$pattern"
+  log "Dunnet ha empezado"
+}
 
-    set_up
 
-    set_up_fifo
+run_dunnet(){
+  unalias emacs
 
-    run_dunnet
+  emacs -q --batch -l dunnet < dunnet.in | tee dunnet.tee.log &
 
+  if [[ $OSTYPE == linux-gnu ]]
+  then
+    log "Linux de escritorio detectado, espera corta a emacs"
     wait_until_dunnet_start
 
+  else 
+    log "Linux de escritorio no detectado, espera larga a emacs (termux)"
+    sleep 10
+  fi
+}
 
-    linea_a_linea <<ENDOFGAME
+
+linea_a_linea(){
+  log "Entro en línea a línea"
+  while IFS='' read -r line || [[ -n "$line" ]]
+  do
+     log "Text read from file: $line"
+     if [[ $line == \>* ]]
+     then  
+        local ordenalpc=${line:1}
+        echo ES UNA ORDEN PARA EL PC: $ordenalpc
+        send_to_fifo "$ordenalpc"
+        sleep 5s
+        get_pc_combination
+     elif [[ $line == \#* ]]
+     then
+        echo COMENTARIO: $line 
+     else
+       echo TECLEO: $line 
+       send_to_fifo $line
+     fi
+     log "(small wait until next line)"
+  done 
+}
+
+set_up
+
+set_up_fifo
+
+run_dunnet
+
+
+
+
+linea_a_linea <<ENDOFGAME
 take shovel
 east
 east
@@ -474,26 +478,47 @@ s
 look pc
 insert floppy into pc
 
+ENDOFGAME
+
+linea_a_linea <<ENDOFGAME
 # me pongo a teclear en el pc
 >reset
 >
->dir
+#>dir
 >type foo.txt
 >exit
+
+look
 # Dentro del bucle la combinación es: $combination
 # Así que tengo que hacer otro bucle, porque la variable ya está sustituida
+look
 ENDOFGAME
 
 echo aqui tengo la combinación: $combination
 linea_a_linea <<ENDOFGAME
 look
+n
+n
+n
+look
+n
+n
+u
+u
+u
+ne
+ne
+d
+n
+w
+$combination
 quit
 ENDOFGAME
 
 
-    clean_up
+      clean_up
 
-    exit
+      exit
 
 
 #+END_SRC
@@ -528,11 +553,11 @@ There is a CPU card here.
 >TECLEO: take cpu
 Taken.  
 >TECLEO: southeast
+TECLEO: take food
 SE/NW road
 You are on a southeast/northwest road.
 There is some food here.
->TECLEO: take food
-Taken.  
+>Taken.  
 >TECLEO: southeast
 Bear hangout
 You are standing at the end of a road.  A passage leads back to the
@@ -562,16 +587,16 @@ You are on a northeast/southwest road.
 >TECLEO: look
 NE/SW road
 You are on a northeast/southwest road.
-TECLEO: northeast
->Building front
+>TECLEO: northeast
+Building front
 You are at the end of the road.  There is a building in front of you
 to the northeast, and the road leads back to the southwest.
 >TECLEO: in
+TECLEO: east
 Old Building hallway
 You are in the hallway of an old building.  There are rooms to the east
 and west, and doors leading out to the north and south.
->TECLEO: east
-Mailroom
+>Mailroom
 You are in a mailroom.  There are many bins where the mail is usually
 kept.  The exit is to the west.
 >TECLEO: look bin
@@ -622,14 +647,14 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
--rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwdTECLEO: cd ..
+
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o.Z
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
-TECLEO: cd ..
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
 $ $ TECLEO: ls
@@ -694,9 +719,9 @@ Bear hangout
 Hidden area
 There is an emerald bracelet here.
 >TECLEO: take bracelet
+TECLEO: ne
 Taken.  
->TECLEO: ne
-Bear hangout
+>Bear hangout
 >TECLEO: nw
 SE/NW road
 >TECLEO: nw
@@ -825,9 +850,9 @@ I see nothing special about that.
 >TECLEO: look lamp
 The lamp is hand-crafted by Geppetto.
 >TECLEO: look shovel
-It is a normal shovel with a price tag attached that says $19.99.
->TECLEO: look key
-I see nothing special about that.
+It is a normal shovel with a price tag attached that says $19.99.TECLEO: look key
+
+>I see nothing special about that.
 >TECLEO: east
 Northbound Hallway
 You are at the south end of a hallway that leads to the north.  There
@@ -863,11 +888,11 @@ It is normal room temperature in here.
 >TECLEO: west
 Northbound Hallway
 >TECLEO: north
+TECLEO: east
 End of N/S Hallway
 You are at the end of a north/south hallway.  You can go back to the south,
 or off to a room to the east.
->TECLEO: east
-Weight room
+>Weight room
 You are in an old weight room.  All of the equipment is either destroyed
 or completely broken.  There is a door out to the west, and there is a ladder
 leading down a hole in the floor.
@@ -890,20 +915,20 @@ As you press the button, you notice a passageway open up, but
 as you release it, the passageway closes.
 >TECLEO:
 >TECLEO: drop life preserver
-TECLEO: drop bracelet
+Done.
+>TECLEO: drop bracelet
 TECLEO: drop paper
-TECLEO: drop shovel
-TECLEO: drop key
-TECLEO: up
 Done.
 >Done.
->TECLEO: take weight
+>TECLEO: drop shovel
 Done.
->Done.
->Done.
->Weight room
+>TECLEO: drop key
+Done.
+>TECLEO: up
+Weight room
 There is a 10 pound weight here.
->Taken.  
+>TECLEO: take weight
+Taken.  
 >TECLEO: down
 Maze button room
 There is a life preserver here.
@@ -968,16 +993,16 @@ TECLEO: ne
 Weight room
 >COMENTARIO: # vuelvo a Weight room
 TECLEO: w
+TECLEO: s
 End of N/S Hallway
->TECLEO: s
-Northbound Hallway
+>Northbound Hallway
 >TECLEO: drop floppy
 Done.
 >TECLEO: e
-SaunaCOMENTARIO: # estoy en la sauna, a fundir la estatua
-
+Sauna
 It is normal room temperature in here.
->TECLEO: drop statuette
+>COMENTARIO: # estoy en la sauna, a fundir la estatua
+TECLEO: drop statuette
 Done.
 >TECLEO: turn dial clockwise
 It is now luke warm in here.  You are perspiring.
@@ -988,9 +1013,9 @@ It is now very hot.  There is something very refreshing about this.
 You notice the wax on your statuette beginning to melt, until it completely
 melts off.  You are left with a beautiful diamond!
 >TECLEO: take diamond
+TECLEO: turn dial counterclockwise
 Taken.  
->TECLEO: turn dial counterclockwise
-It is pretty hot in here.  It is still very comfortable.
+>It is pretty hot in here.  It is still very comfortable.
 >TECLEO: turn dial counterclockwise
 It is now luke warm in here.  You are perspiring.
 >TECLEO: turn dial counterclockwise
@@ -1090,6 +1115,7 @@ You hear it slide down the chute and off into the distance.
 You have scored 20 out of a possible 90 points.
 >TECLEO:
 >TECLEO: s
+TECLEO: take gold bar
 As you enter the room you hear a rumbling noise.  You look back to see
 huge rocks sliding down from the ceiling, and blocking your way out.
 
@@ -1098,8 +1124,7 @@ You are in a misty, humid room carved into a mountain.
 To the north is the remains of a rockslide.  To the east, a small
 passage leads away into the darkness.
 There is a gold bar here.
->TECLEO: take gold bar
-Taken.  
+>Taken.  
 >TECLEO: e
 Cave E/W passage
 You are in an east/west passageway.  The walls here are made of
@@ -1225,9 +1250,9 @@ You are in a small crawlspace.  There is a hole in the ground here, and
 a small passage back to the southwest.
 There is an axe here.
 >TECLEO: get axe
+TECLEO: look axe
 Taken.  
->TECLEO: look axe
-I see nothing special about that.
+>I see nothing special about that.
 >TECLEO: d
 N/S/W Junction
 >TECLEO:
@@ -1278,8 +1303,8 @@ TECLEO: d
 East end of E/W cave passage
 >TECLEO: w
 NE/SW-E/W junction
->TECLEO: ne
-NE end of NE/SW cave passage
+TECLEO: ne
+>NE end of NE/SW cave passage
 >TECLEO: u
 Bedroom
 >TECLEO: s
@@ -1320,10 +1345,10 @@ Long n/s hallway
 Long n/s hallway
 You are in the middle of a long north/south hallway.
 >TECLEO: s
-3/4 south
+3/4 southTECLEO: s
+
 You are 3/4 of the way towards the south end of a long north/south hallway.
->TECLEO: s
-South end of long hallway
+>South end of long hallway
 You are at the south end of a long north/south hallway.  There is a hole
 to the south.
 >TECLEO: s
@@ -1339,52 +1364,85 @@ Done.
 >TECLEO:
 >COMENTARIO: # me pongo a teclear en el pc
 ES UNA ORDEN PARA EL PC: reset
-Current time is 17:21:45
-Enter new time: msg es >>Current time is 17:21:45 Enter new time:
-combination es
-LA RESPUESTA DEL PC ES: >>Current time is 17:21:45 Enter new time: --
+Current time is 18:57:06
+Enter new time: msg es >>Current time is 18:57:06 Enter new time:
 ES UNA ORDEN PARA EL PC:
-A> msg es >>Current time is 17:21:45 Enter new time: A>
-combination es
-LA RESPUESTA DEL PC ES: >>Current time is 17:21:45 Enter new time: A> --
-ES UNA ORDEN PARA EL PC: dir
-
- Volume in drive A is FOO
- Volume Serial Number is 1A16-08C9
- Directory of A:\
-
-COMMAND  COM     47845 04-09-91   2:00a
-FOO      TXT        40 01-20-93   1:01a
-        2 file(s)      47845 bytes
-                     1065280 bytes free
-
-A> msg es A>
-combination es
-LA RESPUESTA DEL PC ES: A> --
+A> msg es >>Current time is 18:57:06 Enter new time: A>
+COMENTARIO: #>dir
 ES UNA ORDEN PARA EL PC: type foo.txt
 
-The combination is 245.
-A> msg es The combination is 245. A>
-combination es 245
-LA RESPUESTA DEL PC ES: The combination is 245. A> -- 245
+The combination is 308.
+A> msg es The combination is 308. A>
+Voy a leer la combinacion: The combination is 308. A>
 ES UNA ORDEN PARA EL PC: exit
 
 You power down the machine and step back.
 
 >msg es >
-combination es 245
-LA RESPUESTA DEL PC ES: > -- 245
-COMENTARIO: # Dentro del bucle la combinación es:
-aqui tengo la combinación: 245
-TECLEO: look
+TECLEO:
+>TECLEO: look
 PC area
 You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
+>COMENTARIO: # Dentro del bucle la combinación es:
+COMENTARIO: # Así que tengo que hacer otro bucle, porque la variable ya está sustituida
+TECLEO: look
+aqui tengo la combinación: 308
+TECLEO: look
+TECLEO: n
+PC area
+You have reached a dead end.  There is a PC on the floor here.  Above
+it is a sign that reads:
+          Type the ‘reset’ command to type on the PC.
+A hole leads north.
+>PC area
+You have reached a dead end.  There is a PC on the floor here.  Above
+it is a sign that reads:
+          Type the ‘reset’ command to type on the PC.
+A hole leads north.
+>South end of long hallway
+>TECLEO: n
+3/4 south
+>TECLEO: n
+TECLEO: look
+TECLEO: n
+Long n/s hallway
+>Long n/s hallway
+You are in the middle of a long north/south hallway.
+>3/4 north
+>TECLEO: n
+North end of long hallway
+>TECLEO: u
+Stair landing
+>TECLEO: u
+Up/down staircase
+>TECLEO: u
+Top of staircase.
+>TECLEO: ne
+NE crawlway
+>TECLEO: ne
+Small crawlspace
+>TECLEO: d
+N/S/W Junction
+>TECLEO: n
+North end of cave passage
+>TECLEO: w
+You must type a 3 digit combination code to enter this room.
+Enter it here: TECLEO: 308
+Gamma computing center
+You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
+away in here.  There is an ethernet cable coming out of one of the units,
+and going through the ceiling.  There is no console here on which you
+could type.
 >TECLEO: quit
 
+You have scored 40 out of a possible 90 points.
 #+end_src
+
+
+
 
   
 * Hints
