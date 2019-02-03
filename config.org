@@ -236,8 +236,24 @@ Por último, el paquete =ob-scala= es un paquete local bajado de [[https://githu
   :defer 1
   :config
     (with-eval-after-load 'flycheck
-    (add-hook 'flycheck-mode-hook #'turn-on-flycheck-inline))
+      (add-hook 'flycheck-mode-hook #'turn-on-flycheck-inline))
 )
+#+end_src
+
+** Paquete =treemacs=
+#+begin_src emacs-lisp
+
+  (defun hacer-treemacs-resizable ()
+    (if treemacs--width-is-locked
+        (treemacs-toggle-fixed-width)))
+
+  (use-package treemacs
+    :ensure t
+    :defer 1
+    :config
+      (add-hook 'treemacs-mode-hook #'hacer-treemacs-resizable)
+      (setq treemacs--persist-kv-regex "^ ?- \\(?:\\sw\\|\\s_\\|\\s.\\)+ :: \\(?:/\\|\\sw\\|\\s_\\|\\s.\\|[[:space:]]\\)+$")
+  )
 #+end_src
 
 
@@ -670,6 +686,28 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
       (setq ahs-default-range 'ahs-range-display))
 #+end_src
 
+** Paquete =swiper= y =swoop=
+
+=swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Ahora estoy valorando si me quedo con =swiper= o =swoop=. Lo siguiente es para hacer que también aparezca en una /child frame/.
+
+#+begin_src lisp
+(use-package swiper
+  :ensure t
+  :defer 1
+  :after (helm)
+  :config
+    )
+
+
+(use-package swoop
+  :ensure t
+  :defer 1
+  :after (helm)
+  :config
+
+#+end_src
+
+
 
 ** Paquete =helm=
 =helm= es un sistema para seleccionar una opción entre varias posibilidades, que se puede usar para casi todo
@@ -716,25 +754,9 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 #+begin_src lisp
 (setq helm-display-function 'helm-display-buffer-in-own-frame
       helm-display-buffer-width 120)
-#+end_src
 
-=swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Ahora estoy valorando si me quedo con =swiper= o =swoop=. Lo siguiente es para hacer que también aparezca en una /child frame/.
-
-#+begin_src lisp
-(use-package swiper
-  :ensure t
-  :defer 1
-  :after (helm)
-  :config
-    (setq swiper-helm-display-function helm-display-function))
-
-
-(use-package swoop
-  :ensure t
-  :defer 1
-  :after (helm)
-  :config
-    (setq helm-swoop-split-window-function helm-display-function))
+(setq swiper-helm-display-function helm-display-function)
+(setq helm-swoop-split-window-function helm-display-function)
 #+end_src
 
 
@@ -1153,7 +1175,8 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
       (define-key map (kbd "M-y") 'helm-show-kill-ring)
       (define-key map (kbd "C-x r b") 'helm-filtered-bookmarks)
 
-      (define-key map (kbd "<f8>") 'neotree-project-root-dir-or-current-dir)
+      ;(define-key map (kbd "<f8>") 'neotree-project-root-dir-or-current-dir)
+      (define-key map (kbd "<f8>") 'treemacs)
       (define-key map (kbd "C-<f8>") 'ibuffer-sidebar-toggle-sidebar)
 
       (define-key map (kbd "C-x o") 'switch-window)
@@ -1194,18 +1217,11 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
                      :fuzzy-match t)
           :buffer "*Selección de proyecto*"))
 
-  (defun abrir-proyecto--selecciona-frame ()
-    ;(selected-frame)
-    (let ( (frame (make-frame)) )
-      (select-frame-set-input-focus frame)
-      (toggle-frame-maximized)
-      frame))
-
-
   (defun abrir-proyecto--seleccionado (proyecto)
     (let ((frame (abrir-proyecto--selecciona-frame)))
       (select-frame-set-input-focus frame)
       (message (concat "El proyecto seleccionado es:" proyecto ))
+      (toggle-frame-maximized)
       (dired proyecto)
       (run-at-time "2" nil
                  (lambda() (magit-status)))))

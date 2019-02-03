@@ -6,7 +6,7 @@ digraph{
 
   "shovel" -> "Dead end" [style="dotted"]
   "Dead end" -> "E/W Dirt road"
-  "boulder" -> "E/W Dirt road"
+  "boulder" -> "E/W Dirt road" [style="dotted"]
   "E/W Dirt road" -> "Fork"
   "cpu" -> "Fork" [style="dotted"]
   "Fork" -> "SE/NW road"
@@ -20,6 +20,7 @@ digraph{
   "Building front" -> "Old Building hallway"
   "Old Building hallway" -> "Computer room"
   "paper" -> "Computer room" [style="dotted"]
+  "shiny brass key" -> "Computer room" [style="dotted"]
   "Computer room" -> "Pockey"
   "Pockey" -> "Receiving room"
   "Receiving room" -> "Northbound Hallway"
@@ -46,7 +47,7 @@ digraph{
   "N/S/W Junction" -> "South end of cave passage" [taillabel="s"]
   "South end of cave passage" -> "Bathroom" [taillabel="d"]
   "North end of cave passage" -> "Bedroom" [taillabel="d"]
-  "North end of cave passage" -> "???" [taillabel="w"]
+  "North end of cave passage" -> "Gamma Computing Center" [taillabel="w"]
   "painting" -> "Bedroom" [style="dotted"]
   "Bedroom" -> "NE end of NE/SW cave passage" [taillabel="d"]
   "Bedroom" -> "Bathroom" [taillabel="s"]
@@ -66,21 +67,16 @@ digraph{
   "3/4 north" -> "North end of long hallway" [taillabel="n"]
   "North end of long hallway" -> "Stair landing" [taillabel="u"]
   "box" -> "Stair landing" [style="dotted"]
-  "Stair landing" -> "Top of staircase" [taillabel="u"]
+  "Stair landing" -> "Up/down staircase" [taillabel="u"]
+  "Up/down staircase" -> "Top of staircase" [taillabel="u"]
   "Top of staircase" -> "NE crawlway" [taillabel="ne"]
   "NE crawlway" -> "Small crawlspace" [taillabel="ne"]
   "axe" -> "Small crawlspace" [style="dotted"]
   "Small crawlspace" -> "N/S/W Junction" [taillabel="d"]
   "Long n/s hallway" -> "3/4 south" [taillabel="s"]
-  "3/4 south" -> "South end of long hallway" [taillabel="s"]
-  "South end of long hallway" -> "PC area" [taillabel="s"]
+  "3/4 south" -> "South end of long hallway"[taillabel="s"]
+  "South end of long hallway" -> "PC area" [taillabel="s"]  
   "pc" -> "PC area" [style="dotted"]
-
-  
-
-
-
-  
 }
 
 #+END_SRC
@@ -104,77 +100,107 @@ done
 ** Juego
 
 #+begin_src bash :results value code
-  log(){
-    echo $* >> dunnet.log
-  }
+log(){
+  echo $* >> dunnet.log
+}
 
-  clean_up(){
-    log Finalizando script
-    rm dunnet.in
-    kill $(jobs -p)
-  }
+clean_up(){
+  log Finalizando script
+  rm dunnet.in
+  kill $(jobs -p)
+}
 
-  set_up_fifo(){
-    rm dunnet.in
-    mkfifo dunnet.in
-    sleep 30s > dunnet.in & #keep fifo open
-  }
+set_up_fifo(){
+  rm dunnet.in
+  mkfifo dunnet.in
+  sleep 10m > dunnet.in & #keep fifo open
+}
 
-  set_up(){
-    rm dunnet.log
-    log "Comienza script"
-    trap clean_up EXIT
-  }
+send_to_fifo(){
+  printf "%s\n" "$*" > dunnet.in
+}
 
-  run_dunnet(){
-    unalias emacs
+set_up(){
+  echo > dunnet.log
+  log "Comienza script"
+  trap clean_up EXIT
+}
 
-    emacs -q --batch -l dunnet < dunnet.in | tee dunnet.tee.log &
+last_pc_output_line(){
+  tail -n 2 dunnet.tee.log | head -n 2
+}
 
-    if [[ $OSTYPE == linux-gnu ]]
-    then
-      log "Linux de escritorio detectado, espera corta a emacs"
-      #sleep 2
-    else 
-      log "Linux de escritorio no detectado, espera larga a emacs (termux)"
-      #sleep 10
-    fi
-  }
-
-  wait_until_dunnet_start(){
-    local pattern="Dead end"
-    log "Esperando a que dunnet empiece... " $pattern
-    (tail -f dunnet.tee.log &) | grep -q "$pattern"
-    log "Dunnet ha empezado"
-  }
+get_pc_combination(){
+  local msg=$(last_pc_output_line)
+  #The combination is XXX.
+  echo msg es $msg
+  if [[ $msg == "The combination is"* ]]
+  then
+    echo Voy a leer la combinacion: $msg
+    combination=${msg:19:3}
+  fi
+  log combination es $combination
+}
 
 
-  linea_a_linea(){
-    log "Entro en línea a línea"
-    while IFS='' read -r line || [[ -n "$line" ]]
-    do
-       log "Text read from file: $line"
-       if [[ $line == \#*  ]]
-       then
-          echo COMENTARIO: $line
-       else
-         echo TECLEO: $line 
-         echo $line > dunnet.in
-       fi
-       log "(small wait until next line)"
-    done 
-  }
-
-  set_up
-
-  set_up_fifo
-
-  run_dunnet
-
-  wait_until_dunnet_start
+wait_until_dunnet_start(){
+  local pattern="Dead end"
+  log "Esperando a que dunnet empiece... " $pattern
+  (tail -f dunnet.tee.log &) | grep -q "$pattern"
+  log "Dunnet ha empezado"
+}
 
 
-  linea_a_linea <<ENDOFGAME
+run_dunnet(){
+  unalias emacs
+
+  emacs -q --batch -l dunnet < dunnet.in | tee dunnet.tee.log &
+
+  if [[ $OSTYPE == linux-gnu ]]
+  then
+    log "Linux de escritorio detectado, espera corta a emacs"
+    wait_until_dunnet_start
+
+  else 
+    log "Linux de escritorio no detectado, espera larga a emacs (termux)"
+    sleep 10
+  fi
+}
+
+
+linea_a_linea(){
+  log "Entro en línea a línea"
+  while IFS='' read -r line || [[ -n "$line" ]]
+  do
+     log "Text read from file: $line"
+     if [[ $line == \>* ]]
+     then  
+        local ordenalpc=${line:1}
+        echo ES UNA ORDEN PARA EL PC: $ordenalpc
+        send_to_fifo "$ordenalpc"
+        sleep 5s
+        get_pc_combination
+     elif [[ $line == \#* ]]
+     then
+        echo COMENTARIO: $line 
+     else
+       echo TECLEO: $line 
+       send_to_fifo $line
+     fi
+     log "(small wait until next line)"
+  done 
+}
+
+set_up
+
+set_up_fifo
+
+run_dunnet
+
+
+
+
+linea_a_linea <<ENDOFGAME
 take shovel
 east
 east
@@ -438,7 +464,7 @@ flush urinal
 put platinum into urinal
 flush urinal  
 
-# voy a donde estaba la toalla, he visto que no he explorado Long n/s hallway
+# voy a mirar lo que me falta: long ns hallway
 n
 d
 sw
@@ -446,25 +472,72 @@ w
 d
 e
 d
-look 
+look
 s
 s
 s
-look pc  
-insert floppy into pc
 look pc
-reset
-
-dir
-
-quit
+insert floppy into pc
 
 ENDOFGAME
 
+linea_a_linea <<ENDOFGAME
+# me pongo a teclear en el pc
+>reset
+>
+#>dir
+>type foo.txt
+>exit
 
-  clean_up
+look
+# Dentro del bucle la combinación es: $combination
+# Así que tengo que hacer otro bucle, porque la variable ya está sustituida
+look
+ENDOFGAME
 
-  exit
+echo aqui tengo la combinación: $combination
+linea_a_linea <<ENDOFGAME
+look
+n
+n
+n
+look
+n
+n
+u
+u
+u
+ne
+ne
+d
+n
+w
+$combination
+look ibm
+cut cable with axe
+ls 
+exit
+look
+take key
+e
+look
+n
+take silver bar
+take license
+take lamp
+w
+put silver into mail drop
+n
+n
+n
+n
+quit
+ENDOFGAME
+
+
+      clean_up
+
+      exit
 
 
 #+END_SRC
@@ -497,70 +570,56 @@ You are at a fork of two passages, one to the northeast, and one to the
 southeast.  The ground here seems very soft. You can also go back west.
 There is a CPU card here.
 >TECLEO: take cpu
-TECLEO: southeast
-TECLEO: take food
-TECLEO: southeast
-TECLEO: drop food
-TECLEO: look
-TECLEO: take key
-TECLEO: northwest
-TECLEO: northwest
-TECLEO: look
-TECLEO: northeast
-TECLEO: look
-TECLEO: northeast
-TECLEO: in
-TECLEO: east
-TECLEO: look bin
-TECLEO: west
-TECLEO: west
-TECLEO: insert cpu into vax
-TECLEO: type
-TECLEO: toukmond
-TECLEO: robert
-TECLEO: ls
-TECLEO: cd ..
-TECLEO: ls
-TECLEO: cd ..
-TECLEO: ls
 Taken.  
->SE/NW roadTECLEO: cd rooms
-
+>TECLEO: southeast
+SE/NW road
 You are on a southeast/northwest road.
 There is some food here.
->Taken.  
->Bear hangout
+>TECLEO: take food
+Taken.  
+>TECLEO: southeast
+TECLEO: drop food
+TECLEO: look
+Bear hangout
 You are standing at the end of a road.  A passage leads back to the
 northwest.
 There is a ferocious bear here!
 >Done.
-TECLEO: ls
 The bear takes the food and runs away with it. He left something behind.
 >Bear hangout
 You are standing at the end of a road.  A passage leads back to the
 northwest.
 There is a shiny brass key here.
->Taken.  
->SE/NW road
->Fork
->Fork
+>TECLEO: take key
+Taken.  
+>TECLEO: northwest
+SE/NW road
+>TECLEO: northwest
+Fork
+>TECLEO: look
+Fork
 You are at a fork of two passages, one to the northeast, and one to the
 southeast.  The ground here seems very soft. You can also go back west.
->NE/SW road
+>TECLEO: northeast
+NE/SW road
 You are on a northeast/southwest road.
->NE/SW road
+>TECLEO: look
+NE/SW road
 You are on a northeast/southwest road.
->Building front
+>TECLEO: northeast
+Building front
 You are at the end of the road.  There is a building in front of you
 to the northeast, and the road leads back to the southwest.
->TECLEO: cd hidden-area
+>TECLEO: in
+TECLEO: east
 Old Building hallway
 You are in the hallway of an old building.  There are rooms to the east
 and west, and doors leading out to the north and south.
 >Mailroom
 You are in a mailroom.  There are many bins where the mail is usually
 kept.  The exit is to the west.
->All of the bins are empty.  Looking closely you can see that there
+>TECLEO: look bin
+All of the bins are empty.  Looking closely you can see that there
 are names written at the bottom of each bin, but most of them are
 faded away so that you cannot read them.  You can only make out three
 names:
@@ -568,8 +627,11 @@ names:
                    Robert Toukmond
                    Thomas Stock
 
->Old Building hallway
->Computer room
+>TECLEO: west
+Old Building hallway
+>TECLEO: west
+TECLEO: insert cpu into vax
+Computer room
 You are in a computer room.  It seems like most of the equipment has
 been removed.  There is a VAX 11/780 in front of you, however, with
 one of the cabinets wide open.  A sign on the front of the machine
@@ -578,11 +640,14 @@ says: This VAX is named ‘pokey’.  To type on the console, use the
 The panel lights are steady and motionless.
 >As you put the CPU board in the computer, it immediately springs to life.
 The lights start flashing, and the fans seem to startup.
->
+>TECLEO: type
+
 
 UNIX System V, Release 2.2 (pokey)
 
-login: password: 
+login: TECLEO: toukmond
+password: TECLEO: robert
+
 Welcome to Unix
 
 Please clean up your directories.  The filesystem is getting full.
@@ -592,13 +657,14 @@ directory, and deletes them after they are sent!  Be careful.
 
 Note: Restricted bourne shell in use.
 
-$ total 467
+$ TECLEO: ls
+total 467
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
--rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 TECLEO: ls
-ls
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ftp
--rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echoTECLEO: cd ..
+
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
@@ -608,24 +674,28 @@ ls
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o.Z
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
--rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 TECLEO: ls
+shovel.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
 $ $ total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 toukmond
-$ $ total 4
+$ TECLEO: cd ..
+$ TECLEO: ls
+total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 usr
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 rooms
-$ $ total 16
+$ TECLEO: cd rooms
+$ TECLEO: ls
+total 16
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 computer-room
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 mailroom
-drwxr-xr-x  3 root     staff           512 Jan 1 1970 old-building-hallwayTECLEO: cat description
-
+drwxr-xr-x  3 root     staff           512 Jan 1 1970 old-building-hallway
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 building-front
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 ne-sw-road
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 bear-hangout
@@ -634,12 +704,15 @@ drwxr-xr-x  3 root     staff           512 Jan 1 1970 fork
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 e-w-dirt-road
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 dead-end
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 hidden-area
-$ $ total 4
+$ TECLEO: cd hidden-area
+$ TECLEO: ls
+total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  3 root     staff          2048 Jan 1 1970 description
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
-$ You are in a well-hidden area off to the side of a road.  Back to the
+$ TECLEO: cat description
+You are in a well-hidden area off to the side of a road.  Back to the
 northeast through the brush you can see the bear hangout.
 $ TECLEO: exit
 
@@ -709,9 +782,9 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
--rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
-$ TECLEO: uncompress paper.o.Z
-$ TECLEO: exit
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.TECLEO: uncompress paper.o.Z
+o
+$ $ TECLEO: exit
 
 You step back from the console.
 
@@ -799,8 +872,8 @@ The lamp is hand-crafted by Geppetto.
 It is a normal shovel with a price tag attached that says $19.99.
 >TECLEO: look key
 I see nothing special about that.
->TECLEO: east
-Northbound Hallway
+TECLEO: east
+>Northbound Hallway
 You are at the south end of a hallway that leads to the north.  There
 are rooms to the east and west.
 >TECLEO: east
@@ -827,12 +900,12 @@ It is normal room temperature in here.
 >TECLEO: turn dial counterclockwise
 The dial will not turn further in that direction.
 >TECLEO: look
+TECLEO: west
 Sauna
 You are in a sauna.  There is nothing in the room except for a dial
 on the wall.  A door leads out to west.
 It is normal room temperature in here.
->TECLEO: west
-Northbound Hallway
+>Northbound Hallway
 >TECLEO: north
 End of N/S Hallway
 You are at the end of a north/south hallway.  You can go back to the south,
@@ -847,29 +920,29 @@ There is a life preserver here.
 >TECLEO: take weight
 Your load would be too heavy.
 >TECLEO: take life preserver
-TECLEO: look life preserver
 Taken.  
->TECLEO: down
-TECLEO: look button
-TECLEO: press button
-TECLEO:
-TECLEO: drop life preserver
-TECLEO: drop bracelet
-TECLEO: drop paper
-TECLEO: drop shovel
+>TECLEO: look life preserver
 It says S. S. Minnow.
->Maze button room
+>TECLEO: down
+Maze button room
 You are in a maze of twisty little passages, all alike.
 There is a button on the ground here.
->I see nothing special about that.
->As you press the button, you notice a passageway open up, but
+>TECLEO: look button
+I see nothing special about that.
+>TECLEO: press button
+As you press the button, you notice a passageway open up, but
 as you release it, the passageway closes.
->>Done.
->Done.
->TECLEO: drop key
+>TECLEO:
+>TECLEO: drop life preserver
+Done.
+>TECLEO: drop bracelet
+TECLEO: drop paper
 Done.
 >Done.
->Done.
+>TECLEO: drop shovel
+Done.
+>TECLEO: drop key
+Done.
 >TECLEO: up
 Weight room
 There is a 10 pound weight here.
@@ -887,10 +960,10 @@ Done.
 A passageway opens.
 >TECLEO:
 >TECLEO: nw
+TECLEO: up
 Maze
 You are in a maze of little twisty passages, all alike.
->TECLEO: up
-Maze
+>Maze
 You are in a maze of thirsty little passages, all alike.
 There is a wax statuette of Richard Stallman here.
 There is a floppy disk here.
@@ -939,11 +1012,11 @@ TECLEO: ne
 Weight room
 >COMENTARIO: # vuelvo a Weight room
 TECLEO: w
+TECLEO: s
+TECLEO: drop floppy
 End of N/S Hallway
->TECLEO: s
-Northbound Hallway
->TECLEO: drop floppy
-Done.
+>Northbound Hallway
+>Done.
 >TECLEO: e
 Sauna
 It is normal room temperature in here.
@@ -1003,9 +1076,9 @@ There is a 10 pound weight here.
 >TECLEO:
 >COMENTARIO: # DESPUES DE ABRIR EL maze PILLO EL INVENTARIO
 TECLEO: take life preserver
+TECLEO: take bracelet
 Taken.  
->TECLEO: take bracelet
-Taken.  
+>Taken.  
 >TECLEO: take paper
 Taken.  
 >TECLEO: take shovel
@@ -1017,9 +1090,9 @@ Taken.
 TECLEO: nw
 Maze
 >TECLEO: up
+TECLEO: s
 Maze
->TECLEO: s
-Maze
+>Maze
 >TECLEO: up
 Maze
 >TECLEO: se
@@ -1039,16 +1112,16 @@ TECLEO:
 >TECLEO: s
 Health Club front
 You are outside a large building to the north which used to be a health
-and fitness center.  A road leads to the south.TECLEO: s
-
->Lakefront North
+and fitness center.  A road leads to the south.
+>TECLEO: s
+Lakefront North
 You are at the north side of a lake.  On the other side you can see
 a road which leads to a cave.  The water appears very deep.
 >TECLEO: s
+TECLEO: s
 Lakefront South
 You are at the south side of a lake.  A road goes to the south.
->TECLEO: s
-Cave Entrance
+>Cave Entrance
 The entrance to a cave is to the south.  To the north, a road leads
 towards a deep lake.  On the ground nearby there is a chute, with a sign
 that says ‘put treasures here for points’.
@@ -1080,17 +1153,17 @@ N/S/W Junction
 You are at the junction of two passages. One goes north/south, and
 the other goes west.
 >TECLEO: n
+TECLEO: down
+TECLEO: look painting
 North end of cave passage
 You are at the north end of a north/south passageway.  There are stairs
 leading down from here.  There is also a door leading west.
->TECLEO: down
-Bedroom
+>Bedroom
 You are in what appears to be a worker's bedroom.  There is a queen-
 sized bed in the middle of the room, and a painting hanging on the
 wall.  A door leads to another room to the south, and stairways
 lead up and down.
->TECLEO: look painting
-It is a velvet painting of Elvis Presley.  It seems to be nailed to the
+>It is a velvet painting of Elvis Presley.  It seems to be nailed to the
 wall, and you cannot move it.
 >TECLEO: down
 NE end of NE/SW cave passage
@@ -1116,10 +1189,10 @@ East end of E/W cave passage
 >TECLEO: w
 NE/SW-E/W junction
 >TECLEO: look
+TECLEO: w
 NE/SW-E/W junction
 You are at the junction of northeast/southwest and east/west passages.
->TECLEO: w
-West end of E/W cave passage
+>West end of E/W cave passage
 You are at the west end of an E/W passage.  There is a hole on the ground
 which leads down out of sight.
 >TECLEO: look
@@ -1184,14 +1257,14 @@ TECLEO: u
 Up/down staircase
 You are at the continuation of an up/down staircase.
 >TECLEO: u
+TECLEO: ne
 Top of staircase.
 You are at the top of a staircase leading down.  A crawlway leads off
 to the northeast.
 >TECLEO: ne
 NE crawlway
 You are in a crawlway that leads northeast or southwest.
->TECLEO: ne
-Small crawlspace
+>Small crawlspace
 You are in a small crawlspace.  There is a hole in the ground here, and
 a small passage back to the southwest.
 There is an axe here.
@@ -1268,11 +1341,11 @@ You have scored 30 out of a possible 90 points.
 >TECLEO: put platinum into urinal
 You hear it plop down in some water below.
 >TECLEO: flush urinal
-Whoooosh!!
+TECLEO:
+Whoooosh!!COMENTARIO: # voy a mirar lo que me falta: long ns hallway
+
 You have scored 40 out of a possible 90 points.
->TECLEO:
->COMENTARIO: # voy a donde estaba la toalla, he visto que no he explorado Long n/s hallway
-TECLEO: n
+>>TECLEO: n
 Bedroom
 >TECLEO: d
 NE end of NE/SW cave passage
@@ -1298,27 +1371,183 @@ South end of long hallway
 You are at the south end of a long north/south hallway.  There is a hole
 to the south.
 >TECLEO: s
+TECLEO: look pc
 PC area
 You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->TECLEO: look pc
-It is a personal computer that has only one floppy disk drive.
+>It is a personal computer that has only one floppy disk drive.
 >TECLEO: insert floppy into pc
 Done.
->TECLEO: look pc
-It is a personal computer that has only one floppy disk drive.
->TECLEO: reset
+>TECLEO:
+>COMENTARIO: # me pongo a teclear en el pc
+ES UNA ORDEN PARA EL PC: reset
+Current time is 19:43:20
+Enter new time: msg es >>Current time is 19:43:20 Enter new time:
+ES UNA ORDEN PARA EL PC:
+A> msg es >>Current time is 19:43:20 Enter new time: A>
+COMENTARIO: #>dir
+ES UNA ORDEN PARA EL PC: type foo.txt
+
+The combination is 296.
+A> msg es The combination is 296. A>
+Voy a leer la combinacion: The combination is 296. A>
+ES UNA ORDEN PARA EL PC: exit
+
+You power down the machine and step back.
+
+>msg es >
 TECLEO:
-TECLEO: dir
-TECLEO:
-TECLEO: quit
-TECLEO:
+>TECLEO: look
+PC area
+You have reached a dead end.  There is a PC on the floor here.  Above
+it is a sign that reads:
+          Type the ‘reset’ command to type on the PC.
+A hole leads north.
+>COMENTARIO: # Dentro del bucle la combinación es:
+COMENTARIO: # Así que tengo que hacer otro bucle, porque la variable ya está sustituida
+TECLEO: look
+PC area
+You have reached a dead end.  There is a PC on the floor here.  Above
+it is a sign that reads:
+          Type the ‘reset’ command to type on the PC.
+A hole leads north.
+>aqui tengo la combinación: 296
+TECLEO: look
+PC area
+You have reached a dead end.  There is a PC on the floor here.  Above
+it is a sign that reads:
+          Type the ‘reset’ command to type on the PC.
+A hole leads north.
+>TECLEO: n
+South end of long hallway
+>TECLEO: n
+3/4 south
+>TECLEO: n
+Long n/s hallway
+>TECLEO: look
+Long n/s hallway
+You are in the middle of a long north/south hallway.
+>TECLEO: n
+3/4 north
+>TECLEO: n
+North end of long hallway
+>TECLEO: u
+Stair landing
+>TECLEO: u
+Up/down staircase
+>TECLEO: u
+Top of staircase.
+>TECLEO: ne
+NE crawlway
+>TECLEO: ne
+Small crawlspace
+>TECLEO: d
+N/S/W Junction
+>TECLEO: n
+TECLEO: w
+North end of cave passage
+>You must type a 3 digit combination code to enter this room.
+Enter it here: TECLEO: 296
+Gamma computing center
+You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
+away in here.  There is an ethernet cable coming out of one of the units,
+and going through the ceiling.  There is no console here on which you
+could type.
+>TECLEO: look ibm
+I see nothing special about that.
+>TECLEO: cut cable with axe
+As you break the ethernet cable, everything starts to blur.  You collapse
+for a moment, then straighten yourself up.
+
+Connection closed.
+$ TECLEO: ls
+total 467
+drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
+drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ftp
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
+$ TECLEO: exit
+
+You step back from the console.
+
+Computer room
+The panel lights are flashing in a seemingly organized pattern.
+There is a shiny brass key here.
+>TECLEO: look
+Computer room
+You are in a computer room.  It seems like most of the equipment has
+been removed.  There is a VAX 11/780 in front of you, however, with
+one of the cabinets wide open.  A sign on the front of the machine
+says: This VAX is named ‘pokey’.  To type on the console, use the
+‘type’ command.  The exit is to the east.
+The panel lights are flashing in a seemingly organized pattern.
+There is a shiny brass key here.
+>TECLEO: take key
+Taken.  
+>TECLEO: e
+Old Building hallway
+>TECLEO: look
+Old Building hallway
+You are in the hallway of an old building.  There are rooms to the east
+and west, and doors leading out to the north and south.
+>TECLEO: n
+Meadow
+You are in a meadow in the back of an old building.  A small path leads
+to the west, and a door leads to the south.
+There is a lamp nearby.
+There is a bus driver's license here.
+There is a silver bar here.
+>TECLEO: take silver bar
+Taken.  
+>TECLEO: take license
+Taken.  
+>TECLEO: take lamp
+Taken.  
+>TECLEO: w
+Post office
+You are near the remains of a post office.  There is a mail drop on the
+face of the building, but you cannot see where it leads.  A path leads
+back to the east, and a road leads to the north.
+>TECLEO: put silver into mail drop
+TECLEO: n
+You hear it slide down the chute and off into the distance.
+You have scored 50 out of a possible 90 points.
+>Main-Maple intersection
+You are at the intersection of Main Street and Maple Ave.  Main street
+runs north and south, and Maple Ave runs east off into the distance.
+If you look north and east you can see many intersections, but all of
+the buildings that used to stand here are gone.  Nothing remains except
+street signs.
+There is a road to the northwest leading to a gate that guards a building.
+>TECLEO: n
+Main-Oaktree intersection
+You are at the intersection of Main Street and the west end of Oaktree Ave.
+>TECLEO: n
+Main-Vermont intersection
+You are at the intersection of Main Street and the west end of Vermont Ave.
+>TECLEO: n
+Main-Sycamore intersection
+You are at the north end of Main Street at the west end of Sycamore Ave.
+>TECLEO: quit
+
+You have scored 50 out of a possible 90 points.
 #+end_src
 
+
+
+
   
-0* Hints
+* Hints
 
 
 
