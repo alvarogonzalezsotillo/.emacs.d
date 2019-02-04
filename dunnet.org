@@ -77,12 +77,46 @@ digraph{
   "3/4 south" -> "South end of long hallway"[taillabel="s"]
   "South end of long hallway" -> "PC area" [taillabel="s"]  
   "pc" -> "PC area" [style="dotted"]
+
+  "Old Building hallway" -> "Meadow" [taillabel="n"]
+  "silver bar" -> "Meadow" [style="dotted"]
+  "license" -> "Meadow" [style="dotted"]
+  "lamp" -> "Meadow" [style="dotted"]
+
+  "Meadow" -> "Post office" [taillabel="w"]    
+  "mail drop" -> "Post office" [style="dotted"]
+  "Post office" -> "Main-Maple intersection" [taillabel="n"]    
+  "Main-Maple intersection" -> "Main-Oaktree intersection"  [taillabel="n"]    
+  "Main-Oaktree intersection" -> "Main-Vermont intersection" [taillabel="n"]    
+  "Main-Vermont intersection" -> "Main-Sycamore intersection"  [taillabel="n"]    
+  "Main-Sycamore intersection" -> "First-Sycamore intersection"   [taillabel="e"]    
+  "First-Sycamore intersection" -> "Second-Sycamore intersection"   [taillabel="e"]    
+  "Second-Sycamore intersection" -> "Third-Sycamore intersection"   [taillabel="e"]    
+  "Third-Sycamore intersection" -> "Fourth-Sycamore intersection"   [taillabel="e"]    
+  "Fourth-Sycamore intersection" -> "Fifth-Sycamore intersection"   [taillabel="e"]    
+
+  "Fifth-Sycamore intersection" -> "Fifth-Vermont intersection" [taillabel="s"]    
+  "bus" -> "Fifth-Sycamore intersection" [style="dotted"]
+
+  "Fifth-Vermont intersection" -> "Fifth-Oaktree intersection" [taillabel="s"]
+  "Fifth-Oaktree intersection" -> "???" [taillabel="w"]   
+  "coins" -> "Fifth-Oaktree intersection" [style="dotted"]
+  "Fifth-Oaktree intersection" -> "Fifth-Maple intersection" [taillabel="s"]    
+
+  "Fifth-Maple intersection" -> "Fourth-Maple intersection" [taillabel="w"] 
+  "Fourth-Maple intersection" -> "Third-Maple intersection" [taillabel="w"] 
+  "Third-Maple intersection" -> "Second-Maple intersection" [taillabel="w"] 
+  "Second-Maple intersection" -> "First-Maple intersection" [taillabel="w"] 
+  "First-Maple intersection" -> "Main-Maple intersection" [taillabel="w"] 
+ 
 }
 
 #+END_SRC
 
 #+RESULTS:
 [[file:./dunnet.svg]]
+
+
 
 
 * Juego
@@ -535,6 +569,20 @@ n
 n
 n
 n
+e
+e
+e
+e
+e
+s
+s
+s
+w
+w
+w
+w
+w
+w
 quit
 ENDOFGAME
 
@@ -667,8 +715,7 @@ drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ftp
--rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 TECLEO: cd ..
-echo
+-rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
@@ -677,11 +724,12 @@ echo
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o.Z
-TECLEO: ls
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
-$ $ total 4
+$ TECLEO: cd ..
+$ TECLEO: ls
+total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 toukmond
@@ -708,8 +756,8 @@ drwxr-xr-x  3 root     staff           512 Jan 1 1970 fork
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 e-w-dirt-road
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 dead-end
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 hidden-area
-TECLEO: cd hidden-area
-$ $ TECLEO: ls
+$ TECLEO: cd hidden-area
+$ TECLEO: ls
 total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
@@ -804,36 +852,34 @@ The paper says: Don't forget to type ‘help’ for help.  Also, remember
 this word: ‘worms’
 >TECLEO: type
 $ TECLEO: ftp gamma
-TECLEO: anonymous
-TECLEO: toukmond@pockey
-TECLEO: help
-TECLEO: type binary
-TECLEO: send bracelet.o
-TECLEO: send paper.o
 Connected to gamma. FTP ver 0.9 00:00:00 01/01/70
-Username: Guest login okay, send your user ident as password.
-Password: Guest login okay, user access restrictions apply.
-ftp> Possible commands are:
+Username: TECLEO: anonymous
+Guest login okay, send your user ident as password.
+Password: TECLEO: toukmond@pockey
+Guest login okay, user access restrictions apply.
+ftp> TECLEO: help
+Possible commands are:
 send    quit    type   ascii  binary   help
-ftp> Type set to binary.
-ftp> Sending binary file for a bracelet, (0 bytes)
+ftp> TECLEO: type binary
+Type set to binary.
+ftp> TECLEO: send bracelet.o
+Sending binary file for a bracelet, (0 bytes)
 Transfer complete.
-ftp> Sending binary file for a slip of paper, (0 bytes)
+ftp> TECLEO: send paper.o
+Sending binary file for a slip of paper, (0 bytes)
 Transfer complete.
 ftp> TECLEO: send shovel.o
-TECLEO: send key.o
-TECLEO: send lamp.o
-TECLEO: quit
-TECLEO: ls
-TECLEO: rlogin gamma
-TECLEO: worms
 Sending binary file for a shovel, (0 bytes)
 Transfer complete.
-ftp> Sending binary file for a brass key, (0 bytes)
+ftp> TECLEO: send key.o
+Sending binary file for a brass key, (0 bytes)
 Transfer complete.
-ftp> Sending binary file for a lamp, (0 bytes)
+ftp> TECLEO: send lamp.o
+Sending binary file for a lamp, (0 bytes)
 Transfer complete.
-ftp> $ total 467
+ftp> TECLEO: quit
+$ TECLEO: ls
+total 467
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
@@ -846,7 +892,9 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
-$ Password: 
+$ TECLEO: rlogin gamma
+Password: TECLEO: worms
+
 You begin to feel strange for a moment, and you lose your items.
 You step back from the console.
 
@@ -865,44 +913,44 @@ Taken.
 >TECLEO: take shovel
 Taken.  
 >TECLEO: take key
-TECLEO: take lamp
-TECLEO: look bracelet
-TECLEO: look lamp
-TECLEO: look shovel
-TECLEO: look key
-TECLEO: east
-TECLEO: east
-TECLEO: look dial
-TECLEO: turn dial counterclockwise
-TECLEO: look
-TECLEO: turn dial counterclockwise
-TECLEO: look
-TECLEO: turn dial counterclockwise
 Taken.  
->Taken.  
->I see nothing special about that.
->The lamp is hand-crafted by Geppetto.
->It is a normal shovel with a price tag attached that says $19.99.
->I see nothing special about that.
->Northbound Hallway
+>TECLEO: take lamp
+Taken.  
+>TECLEO: look bracelet
+I see nothing special about that.
+>TECLEO: look lamp
+The lamp is hand-crafted by Geppetto.
+>TECLEO: look shovel
+It is a normal shovel with a price tag attached that says $19.99.
+>TECLEO: look key
+I see nothing special about that.
+>TECLEO: east
+Northbound Hallway
 You are at the south end of a hallway that leads to the north.  There
 are rooms to the east and west.
->Sauna
+>TECLEO: east
+Sauna
 You are in a sauna.  There is nothing in the room except for a dial
 on the wall.  A door leads out to west.
 It is normal room temperature in here.
->The dial points to a temperature scale which has long since faded away.
->The dial will not turn further in that direction.
->Sauna
+>TECLEO: look dial
+The dial points to a temperature scale which has long since faded away.
+>TECLEO: turn dial counterclockwise
+The dial will not turn further in that direction.
+>TECLEO: look
+Sauna
 You are in a sauna.  There is nothing in the room except for a dial
 on the wall.  A door leads out to west.
 It is normal room temperature in here.
->The dial will not turn further in that direction.
->Sauna
+>TECLEO: turn dial counterclockwise
+The dial will not turn further in that direction.
+>TECLEO: look
+Sauna
 You are in a sauna.  There is nothing in the room except for a dial
 on the wall.  A door leads out to west.
 It is normal room temperature in here.
->The dial will not turn further in that direction.
+>TECLEO: turn dial counterclockwise
+The dial will not turn further in that direction.
 >TECLEO: look
 Sauna
 You are in a sauna.  There is nothing in the room except for a dial
@@ -1059,11 +1107,6 @@ End of N/S Hallway
 >TECLEO: east
 Weight room
 >TECLEO: down
-TECLEO: look
-TECLEO:
-TECLEO:
-COMENTARIO: # DESPUES DE ABRIR EL maze PILLO EL INVENTARIO
-TECLEO: take life preserver
 Maze button room
 There is a life preserver here.
 There is an emerald bracelet here.
@@ -1071,7 +1114,8 @@ There is a slip of paper here.
 There is a shovel here.
 There is a shiny brass key here.
 There is a 10 pound weight here.
->Maze button room
+>TECLEO: look
+Maze button room
 You are in a maze of twisty little passages, all alike.
 There is a button on the ground here.
 There is a life preserver here.
@@ -1080,9 +1124,13 @@ There is a slip of paper here.
 There is a shovel here.
 There is a shiny brass key here.
 There is a 10 pound weight here.
->>>TECLEO: take bracelet
+>TECLEO:
+>TECLEO:
+>COMENTARIO: # DESPUES DE ABRIR EL maze PILLO EL INVENTARIO
+TECLEO: take life preserver
 Taken.  
->Taken.  
+>TECLEO: take bracelet
+Taken.  
 >TECLEO: take paper
 Taken.  
 >TECLEO: take shovel
@@ -1211,18 +1259,18 @@ and east.
 TECLEO: n
 Blue room
 You are in an empty room.  Interestingly enough, the stones in this
-room are painted blue.  Doors lead out to the east and south.TECLEO: e
-
->Yellow room
-TECLEO: s
+room are painted blue.  Doors lead out to the east and south.
+>TECLEO: e
+Yellow room
 You are in an empty room.  Interestingly enough, the stones in this
 room are painted yellow.  Doors lead out to the south and west.
->Red room
+>TECLEO: s
+Red room
 You are in an empty room.  Interestingly enough, the stones in this room
 are painted red.  Doors lead out to the west and north.
-TECLEO: n
 There is a beach towel on the ground here.
->Yellow room
+>TECLEO: n
+Yellow room
 >TECLEO: e
 You can't go that way.
 >TECLEO: s
@@ -1245,9 +1293,9 @@ leading upwards.
 >TECLEO: u
 Stair landing
 You are at a landing in a stairwell which continues up and down.
-There is a box with a slit in it, bolted to the wall here.TECLEO: look box
-
->The box has a slit in the top of it, and on it, in sloppy handwriting, is
+There is a box with a slit in it, bolted to the wall here.
+>TECLEO: look box
+The box has a slit in the top of it, and on it, in sloppy handwriting, is
 written: ‘For key upgrade, put key in here.’
 >TECLEO: put key on box
 As you drop the key, the box begins to shake.  Finally it explodes
@@ -1354,9 +1402,9 @@ Bedroom
 >TECLEO: d
 NE end of NE/SW cave passage
 >TECLEO: sw
-NE/SW-E/W junctionTECLEO: w
-
->West end of E/W cave passage
+NE/SW-E/W junction
+>TECLEO: w
+West end of E/W cave passage
 >TECLEO: d
 Empty room
 >TECLEO: e
@@ -1387,16 +1435,16 @@ Done.
 >TECLEO:
 >COMENTARIO: # me pongo a teclear en el pc
 ES UNA ORDEN PARA EL PC: reset
-Current time is 20:00:43
-Enter new time: msg es >>Current time is 20:00:43 Enter new time:
+Current time is 19:02:02
+Enter new time: msg es >>Current time is 19:02:02 Enter new time:
 ES UNA ORDEN PARA EL PC:
-A> msg es >>Current time is 20:00:43 Enter new time: A>
+A> msg es >>Current time is 19:02:02 Enter new time: A>
 COMENTARIO: #>dir
 ES UNA ORDEN PARA EL PC: type foo.txt
 
-The combination is 854.
-A> msg es The combination is 854. A>
-Voy a leer la combinacion: The combination is 854. A>
+The combination is 946.
+A> msg es The combination is 946. A>
+Voy a leer la combinacion: The combination is 946. A>
 ES UNA ORDEN PARA EL PC: exit
 
 You power down the machine and step back.
@@ -1417,15 +1465,15 @@ You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->aqui tengo la combinación: 854
+>aqui tengo la combinación: 946
 TECLEO: look
 PC area
-TECLEO: n
 You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->South end of long hallway
+>TECLEO: n
+South end of long hallway
 >TECLEO: n
 3/4 south
 >TECLEO: n
@@ -1453,7 +1501,7 @@ N/S/W Junction
 North end of cave passage
 >TECLEO: w
 You must type a 3 digit combination code to enter this room.
-Enter it here: TECLEO: 854
+Enter it here: TECLEO: 946
 Gamma computing center
 You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
 away in here.  There is an ethernet cable coming out of one of the units,
@@ -1467,7 +1515,6 @@ for a moment, then straighten yourself up.
 
 Connection closed.
 $ TECLEO: ls
-TECLEO: exit
 total 467
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
@@ -1481,7 +1528,8 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
-$ 
+$ TECLEO: exit
+
 You step back from the console.
 
 Computer room
@@ -1542,10 +1590,54 @@ You are at the intersection of Main Street and the west end of Vermont Ave.
 >TECLEO: n
 Main-Sycamore intersection
 You are at the north end of Main Street at the west end of Sycamore Ave.
+>TECLEO: e
+First-Sycamore intersection
+You are at the north end of First Street at Sycamore Ave.
+>TECLEO: e
+Second-Sycamore intersection
+You are at the north end of Second Street at Sycamore Ave.
+There is a jewel-encrusted egg here.
+>TECLEO: e
+Third-Sycamore intersection
+You are at the north end of Third Street at Sycamore Ave.
+>TECLEO: e
+Fourth-Sycamore intersection
+You are at the north end of Fourth Street at Sycamore Ave.
+>TECLEO: e
+Fifth-Sycamore intersection
+You are at the north end of Fifth Street and the east end of Sycamore Ave.
+There is a bus here.
+>TECLEO: s
+Fifth-Vermont intersection
+You are at the intersection of Fifth Street and the east end of Vermont Ave.
+>TECLEO: s
+Fifth-Oaktree intersection
+You are at the intersection of Fifth Street and the east end of Oaktree Ave.
+There is a cliff off to the east.
+There are some valuable coins here.
+>TECLEO: s
+Fifth-Maple intersection
+You are at the south end of Fifth Street at the east end of Maple Ave.
+>TECLEO: w
+Fourth-Maple intersection
+You are at the south end of Fourth Street at Maple Ave.
+>TECLEO: w
+Third-Maple intersection
+You are at the south end of Third Street at Maple Ave.
+>TECLEO: w
+Second-Maple intersection
+You are at the south end of Second Street at Maple Ave.
+>TECLEO: w
+First-Maple intersection
+You are at the south end of First Street at Maple Ave.
+>TECLEO: w
+Main-Maple intersection
+>TECLEO: w
+You can't go that way.
 >TECLEO: quit
 
 You have scored 50 out of a possible 90 points.
-Main-Sycamore intersection
+Main-Maple intersection
 >
 #+end_src
 

@@ -252,7 +252,7 @@ Por último, el paquete =ob-scala= es un paquete local bajado de [[https://githu
     :defer 1
     :config
       (add-hook 'treemacs-mode-hook #'hacer-treemacs-resizable)
-      (setq treemacs--persist-kv-regex "^ ?- \\(?:\\sw\\|\\s_\\|\\s.\\)+ :: \\(?:/\\|\\sw\\|\\s_\\|\\s.\\|[[:space:]]\\)+$")
+      ;(setq treemacs--persist-kv-regex "^ ?- \\(?:\\sw\\|\\s_\\|\\s.\\)+ :: \\(?:/\\|\\sw\\|\\s_\\|\\s.\\|[[:space:]]\\)+$")
   )
 #+end_src
 
