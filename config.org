@@ -241,6 +241,8 @@ Por último, el paquete =ob-scala= es un paquete local bajado de [[https://githu
 #+end_src
 
 ** Paquete =treemacs=
+Estoy usando =treemacs= en vez de =neotree=.
+
 #+begin_src emacs-lisp
 
   (defun hacer-treemacs-resizable ()
@@ -252,6 +254,8 @@ Por último, el paquete =ob-scala= es un paquete local bajado de [[https://githu
     :defer 1
     :config
       (add-hook 'treemacs-mode-hook #'hacer-treemacs-resizable)
+      (treemacs-git-mode nil)
+      (treemacs-silent-refresh t)
       ;(setq treemacs--persist-kv-regex "^ ?- \\(?:\\sw\\|\\s_\\|\\s.\\)+ :: \\(?:/\\|\\sw\\|\\s_\\|\\s.\\|[[:space:]]\\)+$")
   )
 #+end_src
@@ -470,8 +474,6 @@ En =neotree=, quiero ver todos los ficheros, y no me importa el ancho fijo de la
       (setq neo-show-hidden-files t)
       (setq neo-window-fixed-size nil)
       (setq neo-hidden-regexp-list (quote ("\\.pyc$" "~$" "^#.*#$" "\\.elc$"))))
-
-
 #+end_src
 
 
