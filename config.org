@@ -254,9 +254,9 @@ Estoy usando =treemacs= en vez de =neotree=.
     :defer 1
     :config
       (add-hook 'treemacs-mode-hook #'hacer-treemacs-resizable)
-      (treemacs-git-mode nil)
+      (treemacs--tear-down-git-mode)
       (treemacs-silent-refresh t)
-      ;(setq treemacs--persist-kv-regex "^ ?- \\(?:\\sw\\|\\s_\\|\\s.\\)+ :: \\(?:/\\|\\sw\\|\\s_\\|\\s.\\|[[:space:]]\\)+$")
+      (setq treemacs--persist-kv-regex "^ ?- \\(?:\\sw\\|\\s_\\|\\s.\\)+ :: \\(?:/\\|\\sw\\|\\s_\\|\\s.\\|[[:space:]]\\)+$")
   )
 #+end_src
 
@@ -1148,7 +1148,7 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
       (define-key map (kbd "C-f") 'helm-swoop)
       (define-key map (kbd "C-S-f") 'helm-multi-swoop-all)
       (define-key map (kbd "C-<f5>") 'reveal-y-pdf)
-      (define-key map (kbd "<backtab>") 'psw-switch-buffer)
+      ;define-key map (kbd "<backtab>") 'psw-switch-buffer)
       (define-key map (kbd "M-I") 'popup-imenu)
       (define-key map (kbd "<f7>") 'imenu-list-smart-toggle)
 
