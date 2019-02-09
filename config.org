@@ -177,7 +177,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | popup-complete                 |                                                                |
 | popup-imenu                    |                                                                |
 | popup-switcher                 |                                                                |
-| popwin                         |                                                                |
 | prettier-js                    |                                                                |
 | quickrun                       | Ejecuta el buffer actual con el intérprete/compilador adecuado |
 | rectangle-utils                |                                                                |
@@ -251,7 +250,8 @@ Por último, el paquete =ob-scala= es un paquete local bajado de [[https://githu
     :ensure t
     :defer 1
     :config
-      (add-hook 'treemacs-mode-hook #'hacer-treemacs-resizable)
+    (add-hook 'treemacs-mode-hook #'hacer-treemacs-resizable)
+    (treemacs-git-mode nil)
       ;(setq treemacs--persist-kv-regex "^ ?- \\(?:\\sw\\|\\s_\\|\\s.\\)+ :: \\(?:/\\|\\sw\\|\\s_\\|\\s.\\|[[:space:]]\\)+$")
   )
 #+end_src
@@ -922,8 +922,8 @@ Utilizo =smartscan= para localizar ocurrencias de símbolos.
     (global-smartscan-mode 1))
 #+end_src
 
-Algunas ventanas tienen menor /importancia/ que otras, ya que tienden a ser temporales (por ejemplo, las ventanas de ayuda). Con =popwin=, estas ventanas ocupan menos espacio en pantalla y desaparecen con =C-g=
-#+begin_src emacs-lisp
+Algunas ventanas tienen menor /importancia/ que otras, ya que tienden a ser temporales (por ejemplo, las ventanas de ayuda). Con =popwin=, estas ventanas ocupan menos espacio en pantalla y desaparecen con =C-g=. Actualmente lo he quitado.
+#+begin_src lisp
 (use-package popwin
   :ensure t
   :defer 1
