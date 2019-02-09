@@ -108,7 +108,37 @@ digraph{
   "Third-Maple intersection" -> "Second-Maple intersection" [taillabel="w"] 
   "Second-Maple intersection" -> "First-Maple intersection" [taillabel="w"] 
   "First-Maple intersection" -> "Main-Maple intersection" [taillabel="w"] 
+
+ "First-Maple intersection" -> "First-Oaktree intersection" [taillabel="n"]
+
+ "First-Oaktree intersection" -> "First-Vermont intersection" [taillabel="n"]
+ "First-Vermont intersection" -> "First-Sycamore intersection" [taillabel="n"]
  
+ "Second-Sycamore intersection" -> "Second-Vermont intersection" [taillabel="s"]
+ "Second-Vermont intersection" -> "Second-Oaktree intersection" [taillabel="s"]
+
+ "Second-Oaktree intersection" -> "Second-Maple intersection" [taillabel="s"]
+
+ "Main-Maple intersection" -> "???" [taillabel="nw"]
+
+ "Main-Oaktree intersection" -> "First-Oaktree intersection" [taillabel="e"]
+
+ "First-Oaktree intersection" -> "Second-Oaktree intersection" [taillabel="e"]
+
+ "Second-Oaktree intersection" -> "Third-Oaktree intersection" [taillabel="e"]
+
+ "Third-Oaktree intersection" -> "Fourth-Oaktree intersection" [taillabel="e"]
+
+ "Fourth-Oaktree intersection" -> "Fifth-Oaktree intersection" [taillabel="e"]
+
+ "Main-Vermont intersection" -> "First-Vermont intersection" [taillabel="e"]
+
+ "First-Vermont intersection" -> "Second-Vermont intersection" [taillabel="e"]
+
+ "Second-Vermont intersection" -> "Third-Vermont intersection" [taillabel="e"]
+ "jewel egg" ->                   "Third-Vermont intersection" [style="dotted"y]
+ 
+
 }
 
 #+END_SRC
@@ -129,6 +159,7 @@ do
   echo w
 done
 #+end_src
+
 
 
 ** Juego
@@ -566,23 +597,14 @@ take lamp
 w
 put silver into mail drop
 n
+
+# estoy en las calles: main-maple
 n
 n
-n
 e
 e
 e
-e
-e
-s
-s
-s
-w
-w
-w
-w
-w
-w
+look
 quit
 ENDOFGAME
 
@@ -726,9 +748,9 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o.Z
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
--rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
-$ TECLEO: cd ..
-$ TECLEO: ls
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 TECLEO: cd ..
+key.o
+$ $ TECLEO: ls
 total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
@@ -1435,16 +1457,16 @@ Done.
 >TECLEO:
 >COMENTARIO: # me pongo a teclear en el pc
 ES UNA ORDEN PARA EL PC: reset
-Current time is 19:02:02
-Enter new time: msg es >>Current time is 19:02:02 Enter new time:
+Current time is 14:04:12
+Enter new time: msg es >>Current time is 14:04:12 Enter new time:
 ES UNA ORDEN PARA EL PC:
-A> msg es >>Current time is 19:02:02 Enter new time: A>
+A> msg es >>Current time is 14:04:12 Enter new time: A>
 COMENTARIO: #>dir
 ES UNA ORDEN PARA EL PC: type foo.txt
 
-The combination is 946.
-A> msg es The combination is 946. A>
-Voy a leer la combinacion: The combination is 946. A>
+The combination is 275.
+A> msg es The combination is 275. A>
+Voy a leer la combinacion: The combination is 275. A>
 ES UNA ORDEN PARA EL PC: exit
 
 You power down the machine and step back.
@@ -1465,7 +1487,7 @@ You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->aqui tengo la combinación: 946
+>aqui tengo la combinación: 275
 TECLEO: look
 PC area
 You have reached a dead end.  There is a PC on the floor here.  Above
@@ -1501,7 +1523,7 @@ N/S/W Junction
 North end of cave passage
 >TECLEO: w
 You must type a 3 digit combination code to enter this room.
-Enter it here: TECLEO: 946
+Enter it here: TECLEO: 275
 Gamma computing center
 You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
 away in here.  There is an ethernet cable coming out of one of the units,
@@ -1581,63 +1603,33 @@ If you look north and east you can see many intersections, but all of
 the buildings that used to stand here are gone.  Nothing remains except
 street signs.
 There is a road to the northwest leading to a gate that guards a building.
->TECLEO: n
+>TECLEO:
+>COMENTARIO: # estoy en las calles: main-maple
+TECLEO: n
 Main-Oaktree intersection
 You are at the intersection of Main Street and the west end of Oaktree Ave.
 >TECLEO: n
 Main-Vermont intersection
 You are at the intersection of Main Street and the west end of Vermont Ave.
->TECLEO: n
-Main-Sycamore intersection
-You are at the north end of Main Street at the west end of Sycamore Ave.
 >TECLEO: e
-First-Sycamore intersection
-You are at the north end of First Street at Sycamore Ave.
+First-Vermont intersection
+You are at the intersection of First Street and Vermont Ave.
 >TECLEO: e
-Second-Sycamore intersection
-You are at the north end of Second Street at Sycamore Ave.
+Second-Vermont intersection
+You are at the intersection of Second Street and Vermont Ave.
+>TECLEO: e
+Third-Vermont intersection
+You are at the intersection of Third Street and Vermont Ave.
 There is a jewel-encrusted egg here.
->TECLEO: e
-Third-Sycamore intersection
-You are at the north end of Third Street at Sycamore Ave.
->TECLEO: e
-Fourth-Sycamore intersection
-You are at the north end of Fourth Street at Sycamore Ave.
->TECLEO: e
-Fifth-Sycamore intersection
-You are at the north end of Fifth Street and the east end of Sycamore Ave.
-There is a bus here.
->TECLEO: s
-Fifth-Vermont intersection
-You are at the intersection of Fifth Street and the east end of Vermont Ave.
->TECLEO: s
-Fifth-Oaktree intersection
-You are at the intersection of Fifth Street and the east end of Oaktree Ave.
-There is a cliff off to the east.
-There are some valuable coins here.
->TECLEO: s
-Fifth-Maple intersection
-You are at the south end of Fifth Street at the east end of Maple Ave.
->TECLEO: w
-Fourth-Maple intersection
-You are at the south end of Fourth Street at Maple Ave.
->TECLEO: w
-Third-Maple intersection
-You are at the south end of Third Street at Maple Ave.
->TECLEO: w
-Second-Maple intersection
-You are at the south end of Second Street at Maple Ave.
->TECLEO: w
-First-Maple intersection
-You are at the south end of First Street at Maple Ave.
->TECLEO: w
-Main-Maple intersection
->TECLEO: w
-You can't go that way.
+>TECLEO: look
+Third-Vermont intersection
+You are at the intersection of Third Street and Vermont Ave.
+There is a jewel-encrusted egg here.
 >TECLEO: quit
 
 You have scored 50 out of a possible 90 points.
-Main-Maple intersection
+Third-Vermont intersection
+There is a jewel-encrusted egg here.
 >
 #+end_src
 
