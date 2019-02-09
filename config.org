@@ -204,6 +204,11 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | wgrep-helm                     |                                                                |
 | which-key                      | Pistas acerca de los atajos de teclado                         |
 | yafolding                      | /Folding/ de secciones basado en la indentación                |
+| cargo                          |                                                                |
+| flycheck-rust                  |                                                                |
+| ob-rust                        |                                                                |
+| rust-mode                      |                                                                |
+| racer                          |                                                                |
 |--------------------------------+----------------------------------------------------------------|
 
 *** Carga de paquetes sin configuración adicional
@@ -227,6 +232,39 @@ Por último, el paquete =ob-scala= es un paquete local bajado de [[https://githu
 (add-to-list 'load-path "~/.emacs.d/mis-paquetes")
 (require 'ob-scala)
 #+end_src
+
+** rust
+#+begin_src emacs-lisp
+(use-package rust-mode
+  :ensure t
+  :defer 1
+  :config
+)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package flycheck-rust
+  :ensure t
+  :defer 1
+  :config
+  (with-eval-after-load 'rust-mode
+    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
+)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package cargo
+  :ensure t
+  :defer 1
+  :config
+    (add-hook 'rust-mode-hook 'cargo-minor-mode)
+)
+#+end_src
+
+
+
+
 
 ** Paquete =flycheck-inline=
 #+begin_src emacs-lisp
@@ -1202,8 +1240,7 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
 #+end_src
 
-#+RESULTS:
-: t
+
 
 * Utilidades
 
