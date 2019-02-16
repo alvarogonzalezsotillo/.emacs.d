@@ -202,10 +202,9 @@ get_pc_combination(){
   echo msg es $msg
   if [[ $msg == "The combination is"* ]]
   then
-    echo Voy a leer la combinacion: $msg
     combination=${msg:19:3}
+    echo Voy a leer la combinacion: $msg : $combination
   fi
-  log combination es $combination
 }
 
 get_egg(){
@@ -236,29 +235,18 @@ start_dunnet(){
 
   emacs --no-init-file --batch --eval "$lisp" < dunnet.in | tee dunnet.tee.log &
 
-  if [[ $OSTYPE == linux-gnu ]]
-  then
-    log "Linux de escritorio detectado, espera corta a emacs"
-    wait_until_dunnet_start
-
-  else 
-    log "Linux de escritorio no detectado, espera larga a emacs (termux)"
-    wait_until_dunnet_start
-  fi
+  wait_until_dunnet_start
 }
 
 
 linea_a_linea(){
-  log "Entro en línea a línea"
   while IFS='' read -r line || [[ -n "$line" ]]
   do
-     log "Text read from file: $line"
      if [[ $line == \>* ]]
      then  
         local ordenalpc=${line:1}
         echo ES UNA ORDEN PARA EL PC: $ordenalpc
         send_to_fifo "$ordenalpc"
-        #sleep 5s
         get_pc_combination
      elif [[ $line == \#* ]]
      then
@@ -616,6 +604,7 @@ e
 e
 
 #empiezo en rejilla, nnnnn w sssss w nnnnn .....
+#el huevo estará en algún sitio, se recogerá automáticamente cuando se vea
 n
 n
 n
@@ -648,9 +637,18 @@ n
 n
 n
 n
+w
+s
+s
+s
+w
+w
 n
 n
 n
+n
+n
+
 
 
 quit
@@ -1505,16 +1503,16 @@ Done.
 >TECLEO:
 >COMENTARIO: # me pongo a teclear en el pc
 ES UNA ORDEN PARA EL PC: reset
-Current time is 20:01:01
-Enter new time: msg es >>Current time is 20:01:01 Enter new time:
+Current time is 10:25:05
+Enter new time: msg es >>Current time is 10:25:05 Enter new time:
 ES UNA ORDEN PARA EL PC:
-A> msg es >>Current time is 20:01:01 Enter new time: A>
+A> msg es >>Current time is 10:25:05 Enter new time: A>
 COMENTARIO: #>dir
 ES UNA ORDEN PARA EL PC: type foo.txt
 
-The combination is 238.
-A> msg es The combination is 238. A>
-Voy a leer la combinacion: The combination is 238. A>
+The combination is 598.
+A> msg es The combination is 598. A>
+Voy a leer la combinacion: The combination is 598. A>
 ES UNA ORDEN PARA EL PC: exit
 
 You power down the machine and step back.
@@ -1535,7 +1533,7 @@ You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->aqui tengo la combinación: 238
+>aqui tengo la combinación: 598
 TECLEO: look
 PC area
 You have reached a dead end.  There is a PC on the floor here.  Above
@@ -1571,7 +1569,7 @@ N/S/W Junction
 North end of cave passage
 >TECLEO: w
 You must type a 3 digit combination code to enter this room.
-Enter it here: TECLEO: 238
+Enter it here: TECLEO: 598
 Gamma computing center
 You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
 away in here.  There is an ethernet cable coming out of one of the units,
@@ -1670,6 +1668,7 @@ Fifth-Maple intersection
 You are at the south end of Fifth Street at the east end of Maple Ave.
 >TECLEO:
 >COMENTARIO: #empiezo en rejilla, nnnnn w sssss w nnnnn .....
+COMENTARIO: #el huevo estará en algún sitio, se recogerá automáticamente cuando se vea
 TECLEO: n
 Fifth-Oaktree intersection
 You are at the intersection of Fifth Street and the east end of Oaktree Ave.
@@ -1725,6 +1724,10 @@ You can't go that way.
 >TECLEO: w
 Second-Sycamore intersection
 You are at the north end of Second Street at Sycamore Ave.
+There is a jewel-encrusted egg here.
+>There is a jewel-encrusted egg here.
+He encontrado el huevo enjoyado
+Taken.  
 >TECLEO: s
 Second-Vermont intersection
 You are at the intersection of Second Street and Vermont Ave.
@@ -1752,18 +1755,38 @@ First-Sycamore intersection
 You are at the north end of First Street at Sycamore Ave.
 >TECLEO: n
 You can't go that way.
+>TECLEO: w
+Main-Sycamore intersection
+You are at the north end of Main Street at the west end of Sycamore Ave.
+>TECLEO: s
+Main-Vermont intersection
+You are at the intersection of Main Street and the west end of Vermont Ave.
+>TECLEO: s
+Main-Oaktree intersection
+You are at the intersection of Main Street and the west end of Oaktree Ave.
+>TECLEO: s
+Main-Maple intersection
+>TECLEO: w
+You can't go that way.
+>TECLEO: w
+You can't go that way.
+>TECLEO: n
+Main-Oaktree intersection
+>TECLEO: n
+Main-Vermont intersection
+>TECLEO: n
+Main-Sycamore intersection
 >TECLEO: n
 You can't go that way.
 >TECLEO: n
 You can't go that way.
->TECLEO: n
-You can't go that way.
+>TECLEO:
 >TECLEO:
 >TECLEO:
 >TECLEO: quit
 
 You have scored 50 out of a possible 90 points.
-First-Sycamore intersection
+Main-Sycamore intersection
 >
 #+end_src
 

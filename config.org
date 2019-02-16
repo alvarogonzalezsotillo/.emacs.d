@@ -292,7 +292,7 @@ Estoy usando =treemacs= en vez de =neotree=.
     :config
       (add-hook 'treemacs-mode-hook #'hacer-treemacs-resizable)
       (treemacs--tear-down-git-mode)
-      (treemacs-silent-refresh t)
+      (setq treemacs-silent-refresh t)
       (setq treemacs--persist-kv-regex "^ ?- \\(?:\\sw\\|\\s_\\|\\s.\\)+ :: \\(?:/\\|\\sw\\|\\s_\\|\\s.\\|[[:space:]]\\)+$")
   )
 #+end_src
