@@ -1,9 +1,6 @@
 #+STARTUP: showeverything
 
 
-commit gh-pages correcto: 	9d7b21b3ec4ddbe781008af43432ae590664865f
-ultimo gh-pages correcto: 24d33a287d33276a06dfc68b0eb8b7d9fac0c9df
-
 * Moodle
 
 

@@ -292,7 +292,7 @@ Estoy usando =treemacs= en vez de =neotree=.
     :config
       (add-hook 'treemacs-mode-hook #'hacer-treemacs-resizable)
       (treemacs--tear-down-git-mode)
-      (treemacs-silent-refresh t)
+      (setq treemacs-silent-refresh t)
       (setq treemacs--persist-kv-regex "^ ?- \\(?:\\sw\\|\\s_\\|\\s.\\)+ :: \\(?:/\\|\\sw\\|\\s_\\|\\s.\\|[[:space:]]\\)+$")
   )
 #+end_src
@@ -369,7 +369,7 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 
 ** Paquete =yasnippet=
 Plantillas para introducción rápida de partes del texto. =yasnippet= interfiere con otros modos en su uso del tabulador, así que cambio su combinación.
-#+begin_src lisp
+#+begin_src emacs-lisp
 (use-package yasnippet
   :ensure t
   :config 

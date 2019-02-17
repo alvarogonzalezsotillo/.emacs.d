@@ -2,7 +2,7 @@
 #+BEGIN_SRC dot :file ./dunnet.svg :exports results :cmd dot :cmdline -Tsvg
 digraph{
 
-  edge[arrowhead="none"]
+  //edge[arrowhead="none"]
 
   "shovel" -> "Dead end" [style="dotted"]
   "Dead end" -> "E/W Dirt road"
@@ -136,8 +136,9 @@ digraph{
  "First-Vermont intersection" -> "Second-Vermont intersection" [taillabel="e"]
 
  "Second-Vermont intersection" -> "Third-Vermont intersection" [taillabel="e"]
- "jewel egg" ->                   "Third-Vermont intersection" [style="dotted"y]
- 
+ "jewel egg" ->                   "Third-Vermont intersection" [style="dotted"]
+ "Third-Vermont intersection" -> "Fourth-Vermont intersection" [taillabel="e"]
+ "Fourth-Vermont intersection" -> "Fifth-Vermont intersection" [taillabel="e"]
 
 }
 
@@ -191,20 +192,27 @@ set_up(){
   trap clean_up EXIT
 }
 
-last_pc_output_line(){
+last_output_line(){
   tail -n 2 dunnet.tee.log | head -n 2
 }
 
 get_pc_combination(){
-  local msg=$(last_pc_output_line)
+  local msg=$(last_output_line)
   #The combination is XXX.
   echo msg es $msg
   if [[ $msg == "The combination is"* ]]
   then
-    echo Voy a leer la combinacion: $msg
     combination=${msg:19:3}
+    echo Voy a leer la combinacion: $msg : $combination
   fi
-  log combination es $combination
+}
+
+get_egg(){
+  if last_output_line | grep -i "egg"
+  then
+    echo He encontrado el huevo enjoyado
+    send_to_fifo "take egg"
+  fi
 }
 
 
@@ -227,29 +235,18 @@ start_dunnet(){
 
   emacs --no-init-file --batch --eval "$lisp" < dunnet.in | tee dunnet.tee.log &
 
-  if [[ $OSTYPE == linux-gnu ]]
-  then
-    log "Linux de escritorio detectado, espera corta a emacs"
-    wait_until_dunnet_start
-
-  else 
-    log "Linux de escritorio no detectado, espera larga a emacs (termux)"
-    wait_until_dunnet_start
-  fi
+  wait_until_dunnet_start
 }
 
 
 linea_a_linea(){
-  log "Entro en línea a línea"
   while IFS='' read -r line || [[ -n "$line" ]]
   do
-     log "Text read from file: $line"
      if [[ $line == \>* ]]
      then  
         local ordenalpc=${line:1}
         echo ES UNA ORDEN PARA EL PC: $ordenalpc
         send_to_fifo "$ordenalpc"
-        #sleep 5s
         get_pc_combination
      elif [[ $line == \#* ]]
      then
@@ -257,6 +254,7 @@ linea_a_linea(){
      else
        echo TECLEO: $line 
        send_to_fifo $line
+       get_egg
      fi
      log "(small wait until next line)"
   done 
@@ -599,12 +597,60 @@ put silver into mail drop
 n
 
 # estoy en las calles: main-maple
+e
+e
+e
+e
+e
+
+#empiezo en rejilla, nnnnn w sssss w nnnnn .....
+#el huevo estará en algún sitio, se recogerá automáticamente cuando se vea
 n
 n
-e
-e
-e
-look
+n
+n
+n
+n
+w
+s
+s
+s
+s
+s
+s
+w
+n
+n
+n
+n
+n
+n
+w
+s
+s
+s
+s
+s
+s
+w
+n
+n
+n
+n
+w
+s
+s
+s
+w
+w
+n
+n
+n
+n
+n
+
+
+
 quit
 ENDOFGAME
 
@@ -748,9 +794,9 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o.Z
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
--rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 TECLEO: cd ..
-key.o
-$ $ TECLEO: ls
+-rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
+$ TECLEO: cd ..
+$ TECLEO: ls
 total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
@@ -1457,16 +1503,16 @@ Done.
 >TECLEO:
 >COMENTARIO: # me pongo a teclear en el pc
 ES UNA ORDEN PARA EL PC: reset
-Current time is 14:04:12
-Enter new time: msg es >>Current time is 14:04:12 Enter new time:
+Current time is 10:25:05
+Enter new time: msg es >>Current time is 10:25:05 Enter new time:
 ES UNA ORDEN PARA EL PC:
-A> msg es >>Current time is 14:04:12 Enter new time: A>
+A> msg es >>Current time is 10:25:05 Enter new time: A>
 COMENTARIO: #>dir
 ES UNA ORDEN PARA EL PC: type foo.txt
 
-The combination is 275.
-A> msg es The combination is 275. A>
-Voy a leer la combinacion: The combination is 275. A>
+The combination is 598.
+A> msg es The combination is 598. A>
+Voy a leer la combinacion: The combination is 598. A>
 ES UNA ORDEN PARA EL PC: exit
 
 You power down the machine and step back.
@@ -1487,7 +1533,7 @@ You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->aqui tengo la combinación: 275
+>aqui tengo la combinación: 598
 TECLEO: look
 PC area
 You have reached a dead end.  There is a PC on the floor here.  Above
@@ -1523,7 +1569,7 @@ N/S/W Junction
 North end of cave passage
 >TECLEO: w
 You must type a 3 digit combination code to enter this room.
-Enter it here: TECLEO: 275
+Enter it here: TECLEO: 598
 Gamma computing center
 You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
 away in here.  There is an ethernet cable coming out of one of the units,
@@ -1605,31 +1651,142 @@ street signs.
 There is a road to the northwest leading to a gate that guards a building.
 >TECLEO:
 >COMENTARIO: # estoy en las calles: main-maple
+TECLEO: e
+First-Maple intersection
+You are at the south end of First Street at Maple Ave.
+>TECLEO: e
+Second-Maple intersection
+You are at the south end of Second Street at Maple Ave.
+>TECLEO: e
+Third-Maple intersection
+You are at the south end of Third Street at Maple Ave.
+>TECLEO: e
+Fourth-Maple intersection
+You are at the south end of Fourth Street at Maple Ave.
+>TECLEO: e
+Fifth-Maple intersection
+You are at the south end of Fifth Street at the east end of Maple Ave.
+>TECLEO:
+>COMENTARIO: #empiezo en rejilla, nnnnn w sssss w nnnnn .....
+COMENTARIO: #el huevo estará en algún sitio, se recogerá automáticamente cuando se vea
 TECLEO: n
-Main-Oaktree intersection
-You are at the intersection of Main Street and the west end of Oaktree Ave.
+Fifth-Oaktree intersection
+You are at the intersection of Fifth Street and the east end of Oaktree Ave.
+There is a cliff off to the east.
+There are some valuable coins here.
 >TECLEO: n
-Main-Vermont intersection
-You are at the intersection of Main Street and the west end of Vermont Ave.
->TECLEO: e
-First-Vermont intersection
-You are at the intersection of First Street and Vermont Ave.
->TECLEO: e
+Fifth-Vermont intersection
+You are at the intersection of Fifth Street and the east end of Vermont Ave.
+>TECLEO: n
+Fifth-Sycamore intersection
+You are at the north end of Fifth Street and the east end of Sycamore Ave.
+There is a bus here.
+>TECLEO: n
+You can't go that way.
+>TECLEO: n
+You can't go that way.
+>TECLEO: n
+You can't go that way.
+>TECLEO: w
+Fourth-Sycamore intersection
+You are at the north end of Fourth Street at Sycamore Ave.
+>TECLEO: s
+Fourth-Vermont intersection
+You are at the intersection of Fourth Street and Vermont Ave.
+>TECLEO: s
+Fourth-Oaktree intersection
+You are at the intersection of Fourth Street and Oaktree Ave.
+>TECLEO: s
+Fourth-Maple intersection
+>TECLEO: s
+You can't go that way.
+>TECLEO: s
+You can't go that way.
+>TECLEO: s
+You can't go that way.
+>TECLEO: w
+Third-Maple intersection
+>TECLEO: n
+Third-Oaktree intersection
+You are at the intersection of Third Street and Oaktree Ave.
+>TECLEO: n
+Third-Vermont intersection
+You are at the intersection of Third Street and Vermont Ave.
+>TECLEO: n
+Third-Sycamore intersection
+You are at the north end of Third Street at Sycamore Ave.
+>TECLEO: n
+You can't go that way.
+>TECLEO: n
+You can't go that way.
+>TECLEO: n
+You can't go that way.
+>TECLEO: w
+Second-Sycamore intersection
+You are at the north end of Second Street at Sycamore Ave.
+There is a jewel-encrusted egg here.
+>There is a jewel-encrusted egg here.
+He encontrado el huevo enjoyado
+Taken.  
+>TECLEO: s
 Second-Vermont intersection
 You are at the intersection of Second Street and Vermont Ave.
->TECLEO: e
-Third-Vermont intersection
-You are at the intersection of Third Street and Vermont Ave.
-There is a jewel-encrusted egg here.
->TECLEO: look
-Third-Vermont intersection
-You are at the intersection of Third Street and Vermont Ave.
-There is a jewel-encrusted egg here.
+>TECLEO: s
+Second-Oaktree intersection
+You are at the intersection of Second Street and Oaktree Ave.
+>TECLEO: s
+Second-Maple intersection
+>TECLEO: s
+You can't go that way.
+>TECLEO: s
+You can't go that way.
+>TECLEO: s
+You can't go that way.
+>TECLEO: w
+First-Maple intersection
+>TECLEO: n
+First-Oaktree intersection
+You are at the intersection of First Street and Oaktree Ave.
+>TECLEO: n
+First-Vermont intersection
+You are at the intersection of First Street and Vermont Ave.
+>TECLEO: n
+First-Sycamore intersection
+You are at the north end of First Street at Sycamore Ave.
+>TECLEO: n
+You can't go that way.
+>TECLEO: w
+Main-Sycamore intersection
+You are at the north end of Main Street at the west end of Sycamore Ave.
+>TECLEO: s
+Main-Vermont intersection
+You are at the intersection of Main Street and the west end of Vermont Ave.
+>TECLEO: s
+Main-Oaktree intersection
+You are at the intersection of Main Street and the west end of Oaktree Ave.
+>TECLEO: s
+Main-Maple intersection
+>TECLEO: w
+You can't go that way.
+>TECLEO: w
+You can't go that way.
+>TECLEO: n
+Main-Oaktree intersection
+>TECLEO: n
+Main-Vermont intersection
+>TECLEO: n
+Main-Sycamore intersection
+>TECLEO: n
+You can't go that way.
+>TECLEO: n
+You can't go that way.
+>TECLEO:
+>TECLEO:
+>TECLEO:
 >TECLEO: quit
 
 You have scored 50 out of a possible 90 points.
-Third-Vermont intersection
-There is a jewel-encrusted egg here.
+Main-Sycamore intersection
 >
 #+end_src
 
