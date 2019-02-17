@@ -9,29 +9,28 @@ coordenadas_desde_orden([X,Y,Z],O) :-
     Z is O mod 3.
 
 
-%% aplica_a_todos(F,[E|L]) :-
-%%     call(F,E),
-%%     aplica_a_todos(F,L).
+aplica_a_todos(F,[E|L]) :-
+    call(F,E),
+    aplica_a_todos(F,L).
 
-%% aplica_a_todos(_,[]) :-
+aplica_a_todos(_,[]) :-
+    true.
+
+%aplica_a_todos(F,L) :-   maplist(F,L).
+
+%% distintos(A,B) :-
+%%     A \= B.
+
+%% todos_distintos([]) :-
 %%     true.
-aplica_a_todos(F,L) :-
-    maplist(F,L).
+%% todos_distintos([_]) :-
+%%     true.
 
-distintos(A,B) :-
-    A \= B.
+%% todos_distintos([A|L]) :-
+%%     todos_distintos(L),
+%%     aplica_a_todos(distintos(A),L).
 
-todos_distintos([]) :-
-    true.
-
-todos_distintos([_]) :-
-    true.
-
-%todos_distintos([A|L]) :-
-%todos_distintos(L),
-%aplica_a_todos(distintos(A),L).
-todos_distintos(A) :-
-    all_distinct(A).
+todos_distintos(A) :- all_distinct(A).
 
 
 color(C) :-
