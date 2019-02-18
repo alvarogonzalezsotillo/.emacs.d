@@ -120,14 +120,17 @@ caras_de_cubo(CUBO) :-
     caraYZ(CUBO,2,CARAYZ2),
     colores_de_celdas_distintos(CARAYZ2).
 
-    
-contar([E|L],E,X) :-
-    contar(L,E,X1),
-    X is X1+1.
+
 
 contar([EE|L],E,X) :-
-    EE \= E,
+    dif(EE, E),
     contar(L,E,X).
+
+
+contar([E|L],P,X) :-
+   E = P,
+   contar(L,P,X1),
+   X is X1+1.
 
 contar([],_,0).
 
