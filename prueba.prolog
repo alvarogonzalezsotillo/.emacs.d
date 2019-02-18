@@ -34,7 +34,7 @@ todos_distintos(A) :- all_distinct(A).
 
 
 color(C) :-
-    C in 0..9.
+    C in 0..8.
 
 coordenada(X) :-
     X in 0..2 .
@@ -146,6 +146,27 @@ aristas(CUBO,ARISTAS) :-
     include(arista,CUBO,ARISTAS).
 
 
+limita_esquinas_y_aristas(CUBO,COLOR,E,A) :-
+    %% aristas(CUBO,ARISTAS),
+    %% colores_de_celdas(ARISTAS,CA),
+    %% contar(CA,COLOR,A),
+    esquinas(CUBO,ESQUINAS),
+    colores_de_celdas(ESQUINAS,CE),
+    contar(CE,COLOR,E).
+    
+datos_esquinas_aristas(CUBO) :-
+    %% limita_esquinas_y_aristas(CUBO,0,1,1),
+    %% limita_esquinas_y_aristas(CUBO,1,1,1),
+    %% limita_esquinas_y_aristas(CUBO,2,0,3),
+    %% limita_esquinas_y_aristas(CUBO,3,1,1),
+    %% limita_esquinas_y_aristas(CUBO,4,1,1),
+    %% limita_esquinas_y_aristas(CUBO,5,1,1),
+    %% limita_esquinas_y_aristas(CUBO,6,0,3),
+    %% limita_esquinas_y_aristas(CUBO,7,1,1),
+    limita_esquinas_y_aristas(CUBO,8,2,0).
+   
+    
+    
 
 instancia_valores(L) :-
     aplica_a_todos(indomain,L).
