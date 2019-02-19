@@ -56,9 +56,6 @@ color_de_celda(CELDA,COLOR) :-
 colores_de_celdas(CELDAS,COLORES) :-
     maplist(color_de_celda,CELDAS,COLORES).
 
-colores_de_celdas_distintos(CELDAS) :-
-    colores_de_celdas(CELDAS,COLORES),
-    todos_distintos(COLORES).
 
 secuencia(MIN,MAX,L) :-
     MIN #< MAX,
@@ -104,6 +101,9 @@ caraXZ(CUBO,Y,CARA) :-
 caraYZ(CUBO,X,CARA) :-
     include(coordenadas_de_celdaX(X),CUBO,CARA).
 
+colores_de_celdas_distintos(CELDAS) :-
+    colores_de_celdas(CELDAS,COLORES),
+    todos_distintos(COLORES).
 
 restricciones_caras_de_cubo(CUBO) :-
     caraXY(CUBO,0,CARAXY0),
@@ -150,25 +150,27 @@ aristas(CUBO,ARISTAS) :-
 
 
 limita_esquinas_y_aristas(CUBO,COLOR,E,A) :-
-    %% aristas(CUBO,ARISTAS),
-    %% colores_de_celdas(ARISTAS,CA),
-    %% contar(CA,COLOR,A),
+    aristas(CUBO,ARISTAS),
+    colores_de_celdas(ARISTAS,CA),
+    contar(CA,COLOR,A),
     esquinas(CUBO,ESQUINAS),
     colores_de_celdas(ESQUINAS,CE),
     contar(CE,COLOR,E).
     
 datos_esquinas_aristas(CUBO) :-
-    %% limita_esquinas_y_aristas(CUBO,0,1,1),
-    %% limita_esquinas_y_aristas(CUBO,1,1,1),
-    %% limita_esquinas_y_aristas(CUBO,2,0,3),
-    %% limita_esquinas_y_aristas(CUBO,3,1,1),
-    %% limita_esquinas_y_aristas(CUBO,4,1,1),
-    %% limita_esquinas_y_aristas(CUBO,5,1,1),
-    %% limita_esquinas_y_aristas(CUBO,6,0,3),
-    %% limita_esquinas_y_aristas(CUBO,7,1,1),
+    limita_esquinas_y_aristas(CUBO,0,1,1),
+    limita_esquinas_y_aristas(CUBO,1,1,1),
+    limita_esquinas_y_aristas(CUBO,2,0,3),
+    limita_esquinas_y_aristas(CUBO,3,1,1),
+    limita_esquinas_y_aristas(CUBO,4,1,1),
+    limita_esquinas_y_aristas(CUBO,5,1,1),
+    limita_esquinas_y_aristas(CUBO,6,0,3),
+    limita_esquinas_y_aristas(CUBO,7,1,1),
     limita_esquinas_y_aristas(CUBO,8,2,0).
    
-    
+
+
+
     
 
 instancia_valores(L) :-
@@ -176,28 +178,21 @@ instancia_valores(L) :-
 
 %% | color    | vértices | aristas | indice |
 %% |----------+----------+---------+--------|
-%% | blanco   |        1 |       1 |0
-%% | azul     |        1 |       1 |1
-%% | rosa     |        0 |       3 |2
-%% | morado   |        1 |       1 |3
-%% | amarillo |        1 |       1 |4
-%% | negro    |        1 |       1 |5
-%% | rojo     |        0 |       3 |6
-%% | naranja  |        1 |       1 |7
-%% | verde    |        2 |       2 |8
+%% | blanco   |        1 |       1 |      0 |
+%% | azul     |        1 |       1 |      1 |
+%% | rosa     |        0 |       3 |      2 |
+%% | morado   |        1 |       1 |      3 |
+%% | amarillo |        1 |       1 |      4 |
+%% | negro    |        1 |       1 |      5 |
+%% | rojo     |        0 |       3 |      6 |
+%% | naranja  |        1 |       1 |      7 |
+%% | verde    |        2 |       2 |      8 |
 
 %% |          | azul   |         |
 %% | amarillo | negro  | naranja |
 %% |          | morado |         |
 %% |          | blanco |         |
 
-restricciones_color_blanco(CUBO,COLORESARISTAS,COLORESESQUINAS,X) :-
-    aristas(CUBO,ARISTAS),
-    colores_de_celdas(ARISTAS,COLORESARISTAS),
-    contar(COLORESARISTAS,1,X),
-    esquinas(CUBO,ESQUINAS),
-    colores_de_celdas(ESQUINAS,COLORESESQUINAS).
-    %contar(COLORESESQUINAS,0,1).
 
 % PRUEBAS
 ?- not(todos_distintos([1,2,3,1])).
@@ -205,3 +200,4 @@ restricciones_color_blanco(CUBO,COLORESARISTAS,COLORESESQUINAS,X) :-
 ?- contar([3,8,4,8,3,8,9],3,2).
 ?- coordenadas([0,0,0]).
 ?- cubo(CUBO), restricciones_caras_de_cubo(CUBO), aristas(CUBO,ARISTAS),colores_de_celdas(CUBO,COLORES), colores_de_celdas(ARISTAS,COLORESARISTAS), label(COLORES), contar(COLORESARISTAS,0,X), X #> 0.
+?- cubo(CUBO), restricciones_caras_de_cubo(CUBO), datos_esquinas_aristas(CUBO), colores_de_celdas(CUBO,COLORES), label(COLORES).
