@@ -70,8 +70,9 @@ secuencia(A,A,L) :-
     L = [A].
 
 cubo(L) :-
-    secuencia(0,26,S),
-    maplist(coordenadas_desde_orden,COORS,S),
+    secuencia(0,26,SEQ),
+    include(dif(12), SEQ, SEQSINCENTRO),
+    maplist(coordenadas_desde_orden,COORS,SEQSINCENTRO),
     maplist(coordenadas_de_celda,L,COORS),
     aplica_a_todos(celda,L).
 
@@ -104,7 +105,7 @@ caraYZ(CUBO,X,CARA) :-
     include(coordenadas_de_celdaX(X),CUBO,CARA).
 
 
-caras_de_cubo(CUBO) :-
+restricciones_caras_de_cubo(CUBO) :-
     caraXY(CUBO,0,CARAXY0),
     colores_de_celdas_distintos(CARAXY0),
     caraXY(CUBO,2,CARAXY2),
@@ -121,13 +122,14 @@ caras_de_cubo(CUBO) :-
     colores_de_celdas_distintos(CARAYZ2).
 
     
-contar([E|L],E,X) :-
-    contar(L,E,X1),
+contar([E|L],PATRON,X) :-
+    E == PATRON,
+    contar(L,PATRON,X1),
     X is X1+1.
 
-contar([EE|L],E,X) :-
-    EE \= E,
-    contar(L,E,X).
+contar([E|L],PATRON,X) :-
+    not(E == patron),
+    contar(L,PATRON,X).
 
 contar([],_,0).
 
@@ -148,12 +150,36 @@ aristas(CUBO,ARISTAS) :-
 
 
 instancia_valores(L) :-
-    aplica_a_todos(indomain,L).
+    label(L).
 
+%% | color    | vértices | aristas | indice |
+%% |----------+----------+---------+--------|
+%% | blanco   |        1 |       1 |0
+%% | azul     |        1 |       1 |1
+%% | rosa     |        0 |       3 |2
+%% | morado   |        1 |       1 |3
+%% | amarillo |        1 |       1 |4
+%% | negro    |        1 |       1 |5
+%% | rojo     |        0 |       3 |6
+%% | naranja  |        1 |       1 |7
+%% | verde    |        2 |       2 |8
 
+%% |          | azul   |         |
+%% | amarillo | negro  | naranja |
+%% |          | morado |         |
+%% |          | blanco |         |
+
+restricciones_color_blanco(CUBO,COLORESARISTAS,COLORESESQUINAS,X) :-
+    aristas(CUBO,ARISTAS),
+    colores_de_celdas(ARISTAS,COLORESARISTAS),
+    contar(COLORESARISTAS,1,X),
+    esquinas(CUBO,ESQUINAS),
+    colores_de_celdas(ESQUINAS,COLORESESQUINAS).
+    %contar(COLORESESQUINAS,0,1).
 
 % PRUEBAS
 ?- not(todos_distintos([1,2,3,1])).
 ?- coordenadas_desde_orden([1,1,1],13).
 ?- contar([3,8,4,8,3,8,9],3,2).
 ?- coordenadas([0,0,0]).
+?- cubo(CUBO), restricciones_caras_de_cubo(CUBO), aristas(CUBO,ARISTAS),colores_de_celdas(CUBO,COLORES), colores_de_celdas(ARISTAS,COLORESARISTAS), label(COLORES), contar(COLORESARISTAS,0,X), X #> 0.
