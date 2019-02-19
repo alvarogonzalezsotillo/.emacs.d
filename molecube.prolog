@@ -215,6 +215,7 @@ instancia_valores(L) :-
 %% |          | blanco |         | z = 1, y =2  |
 
 
+
 % PRUEBAS
 ?- not(todos_distintos([1,2,3,1])).
 ?- coordenadas_desde_orden([1,1,1],13).
