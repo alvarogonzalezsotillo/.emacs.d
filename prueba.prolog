@@ -68,7 +68,7 @@ secuencia(A,A,L) :-
 
 cubo(L) :-
     secuencia(0,26,SEQ),
-    include(dif(12), SEQ, SEQSINCENTRO),
+    include(dif(13), SEQ, SEQSINCENTRO),
     maplist(coordenadas_desde_orden,COORS,SEQSINCENTRO),
     maplist(coordenadas_de_celda,L,COORS),
     aplica_a_todos(celda,L).
@@ -169,9 +169,28 @@ datos_esquinas_aristas(CUBO) :-
     limita_esquinas_y_aristas(CUBO,8,2,0).
    
 
+celda_desde_coordenadas(CUBO,COORDENADAS,CELDA) :-
+    include(=([COORDENADAS,_]),CUBO,[CELDA]).
+
+color_en_coordenadas(CUBO,COORDENADAS,COLOR) :-
+    celda_desde_coordenadas(CUBO,COORDENADAS,CELDA),
+    CELDA = [_,COLOR].
+
+colores_centrales_de_caras(CUBO) :-
+    % Los centros de las caras tienen dos coordenadas a 1
+    color_en_coordenadas(CUBO,[0,1,1], 4),
+    color_en_coordenadas(CUBO,[1,1,2], 1),
+    color_en_coordenadas(CUBO,[1,0,1], 5),
+    color_en_coordenadas(CUBO,[1,1,0], 3),
+    color_en_coordenadas(CUBO,[1,2,1], 0),
+    color_en_coordenadas(CUBO,[2,1,1], 7).
 
 
-    
+cubo_con_restricciones(CUBO) :-
+    cubo(CUBO),
+    restricciones_caras_de_cubo(CUBO),
+    colores_centrales_de_caras(CUBO),
+    datos_esquinas_aristas(CUBO).
 
 instancia_valores(L) :-
     label(L).
@@ -188,10 +207,12 @@ instancia_valores(L) :-
 %% | naranja  |        1 |       1 |      7 |
 %% | verde    |        2 |       2 |      8 |
 
-%% |          | azul   |         |
-%% | amarillo | negro  | naranja |
-%% |          | morado |         |
-%% |          | blanco |         |
+%% | x=0, y=1 | x=1    | x=2,y=1 |              |
+%% |----------+--------+---------+--------------|
+%% |          | azul   |         | z = 2, y=1   |
+%% | amarillo | negro  | naranja | z = 1        |
+%% |          | morado |         | z = 0, y = 1 |
+%% |          | blanco |         | z = 1, y =2  |
 
 
 % PRUEBAS
@@ -199,5 +220,3 @@ instancia_valores(L) :-
 ?- coordenadas_desde_orden([1,1,1],13).
 ?- contar([3,8,4,8,3,8,9],3,2).
 ?- coordenadas([0,0,0]).
-?- cubo(CUBO), restricciones_caras_de_cubo(CUBO), aristas(CUBO,ARISTAS),colores_de_celdas(CUBO,COLORES), colores_de_celdas(ARISTAS,COLORESARISTAS), label(COLORES), contar(COLORESARISTAS,0,X), X #> 0.
-?- cubo(CUBO), restricciones_caras_de_cubo(CUBO), datos_esquinas_aristas(CUBO), colores_de_celdas(CUBO,COLORES), label(COLORES).
