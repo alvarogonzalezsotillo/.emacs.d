@@ -209,12 +209,12 @@ cubo_con_restricciones(CUBO) :-
 
 color_a_nombre(0, white).
 color_a_nombre(1, blue).
-color_a_nombre(2, pink).
-color_a_nombre(3, darkblue).
+color_a_nombre(2, mediumvioletred ). %pink
+color_a_nombre(3, navy). %darkblue
 color_a_nombre(4, yellow).
 color_a_nombre(5, black).
-color_a_nombre(6, red).
-color_a_nombre(7, orange).
+color_a_nombre(6, crimson). %red
+color_a_nombre(7, orangered).
 color_a_nombre(8, green).
 
 imprime_celda(CELDA) :-
