@@ -213,7 +213,7 @@ color_a_nombre(2, mediumvioletred ). %pink
 color_a_nombre(3, navy). %darkblue
 color_a_nombre(4, yellow).
 color_a_nombre(5, black).
-color_a_nombre(6, crimson). %red
+color_a_nombre(6, red).
 color_a_nombre(7, orangered).
 color_a_nombre(8, green).
 
