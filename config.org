@@ -1719,6 +1719,10 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
 - Elfeed
 - Zoom-frm
+- org-re-reveal
+- ob-ammonite
+- greader
+
 
 * usettf
 

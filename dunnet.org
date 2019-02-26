@@ -693,17 +693,24 @@ look skeleton
 e
 e
 take acid
+push switch
 n
 take glycerine
 w
 get jar
 take ruby
+look jar
+look ruby
+look coins
+look bone
+look egg
 s
 w
 look
 # Estoy en la entrada del museo otra vez
 inventory
 mix acid and glycerine
+
 
 
 
@@ -1561,16 +1568,16 @@ Done.
 >TECLEO:
 >COMENTARIO: # me pongo a teclear en el pc
 ES UNA ORDEN PARA EL PC: reset
-Current time is 14:00:40
-Enter new time: msg es >>Current time is 14:00:40 Enter new time:
+Current time is 21:48:03
+Enter new time: msg es >>Current time is 21:48:03 Enter new time:
 ES UNA ORDEN PARA EL PC:
-A> msg es >>Current time is 14:00:40 Enter new time: A>
+A> msg es >>Current time is 21:48:03 Enter new time: A>
 COMENTARIO: #>dir
 ES UNA ORDEN PARA EL PC: type foo.txt
 
-The combination is 338.
-A> msg es The combination is 338. A>
-Voy a leer la combinacion: The combination is 338. A> : 338
+The combination is 324.
+A> msg es The combination is 324. A>
+Voy a leer la combinacion: The combination is 324. A> : 324
 ES UNA ORDEN PARA EL PC: exit
 
 You power down the machine and step back.
@@ -1591,7 +1598,7 @@ You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->aqui tengo la combinación: 338
+>aqui tengo la combinación: 324
 TECLEO: look
 PC area
 You have reached a dead end.  There is a PC on the floor here.  Above
@@ -1627,7 +1634,7 @@ N/S/W Junction
 North end of cave passage
 >TECLEO: w
 You must type a 3 digit combination code to enter this room.
-Enter it here: TECLEO: 338
+Enter it here: TECLEO: 324
 Gamma computing center
 You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
 away in here.  There is an ethernet cable coming out of one of the units,
@@ -1776,10 +1783,6 @@ Third-Maple intersection
 >TECLEO: n
 Third-Oaktree intersection
 You are at the intersection of Third Street and Oaktree Ave.
-There is a jewel-encrusted egg here.
->There is a jewel-encrusted egg here.
-He encontrado el huevo enjoyado
-Taken.  
 >TECLEO: n
 Third-Vermont intersection
 You are at the intersection of Third Street and Vermont Ave.
@@ -1801,8 +1804,12 @@ You are at the intersection of Second Street and Vermont Ave.
 >TECLEO: s
 Second-Oaktree intersection
 You are at the intersection of Second Street and Oaktree Ave.
->TECLEO: s
-Second-Maple intersection
+There is a jewel-encrusted egg here.
+>There is a jewel-encrusted egg here.
+He encontrado el huevo enjoyado
+TECLEO: s
+Taken.  
+>Second-Maple intersection
 >TECLEO: s
 You can't go that way.
 >TECLEO: s
@@ -1941,6 +1948,8 @@ switch on the wall labeled ‘BL’.  There are doors to the west and north.
 There is a packet of nitric acid here.
 >TECLEO: take acid
 Taken.  
+>TECLEO: push switch
+The button is now in the on position.
 >TECLEO: n
 Classroom
 You are in a classroom where school children were taught about natural
@@ -1956,13 +1965,29 @@ You are in the marine life area.  The room is filled with fish tanks,
 which are filled with dead fish that have apparently died due to
 starvation.  Doors lead out to the south and east.
 There is a glass jar here.
+The room is lit by a black light, causing the fish, and some of
+your objects, to give off an eerie glow.
 There is a valuable ruby here.
 >TECLEO: get jar
 Taken.  
 >TECLEO: take ruby
 Taken.  
->TECLEO: s
-Geological display
+>TECLEO: look jar
+It is a plain glass jar.
+>TECLEO: look ruby
+I see nothing special about that.
+>TECLEO: look coins
+They are old coins from the 19th century.
+>TECLEO: look bone
+In this light you can see some writing on the bone.  It says:
+For an explosive time, go to Fourth St. and Vermont.
+>TECLEO: look egg
+It is a valuable Fabrege egg.
+>>It is a valuable Fabrege egg.
+He encontrado el huevo enjoyado
+TECLEO: s
+I do not see that here.
+>Geological display
 >TECLEO: w
 Museum lobby
 >TECLEO: look
@@ -1985,6 +2010,7 @@ A glass jar
 A ruby
 >TECLEO: mix acid and glycerine
 I don't understand that.
+>TECLEO:
 >TECLEO:
 >TECLEO:
 >TECLEO:
