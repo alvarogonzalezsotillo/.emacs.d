@@ -217,31 +217,40 @@ color_a_nombre(6, red).
 color_a_nombre(7, orangered).
 color_a_nombre(8, green).
 
-imprime_celda(CELDA) :-
+imprime_celda_x3d(CELDA) :-
     [[X,Y,Z],C] = CELDA,
     color_a_nombre(C,N),
     format("
-      <transform translation='~d ~d ~d'>    
-        <shape>
-          <appearance>
-            <material diffuseColor='~a'>
-            </material>
-          </appearance>
-          <sphere></sphere>
-        </shape>
-      </transform>
+        <transform translation='~d ~d ~d'>    
+          <shape>
+            <appearance>
+              <material diffuseColor='~a'>
+              </material>
+            </appearance>
+            <sphere></sphere>
+          </shape>
+        </transform>
     ", [(X-1)*2,(Y-1)*2,(Z-1)*2,N]).
 
-imprime_solucion(CUBO) :-
+imprime_solucion_x3d(CUBO) :-
     write("
-	 <x3d height='500px' style='border:none; display:block; width:100%'> 
-	   <scene>
+      <x3d height='500px' style='border:none; display:block; width:100%'> 
+        <scene>
     "),
-    aplica_a_todos(imprime_celda,CUBO),
+    aplica_a_todos(imprime_celda_x3d,CUBO),
     write("
-           </scene>
-         </x3d> 
+        </scene>
+      </x3d> 
     ").
+
+imprime_celda(CELDA) :-
+    [[X,Y,Z],C] = CELDA,
+    color_a_nombre(C,N),
+    format("~d,~d,~d:~a ", [X, Y, Z, N]).
+
+imprime_solucion(CUBO) :-
+    write("\nSolucion: "),
+    aplica_a_todos(imprime_celda,CUBO).
 
 % PRUEBAS
 ?- not(todos_distintos([1,2,3,1])).
@@ -249,6 +258,29 @@ imprime_solucion(CUBO) :-
 ?- contar([3,8,4,8,3,8,9],3,2).
 ?- coordenadas([0,0,0]).
 ?- findall(CUBO, cubo_con_restricciones(CUBO),SOLUCIONES),
+   aplica_a_todos(imprime_solucion_x3d,SOLUCIONES),
    aplica_a_todos(imprime_solucion,SOLUCIONES),
    length(SOLUCIONES,X),
    format("Número de soluciones:~d",X).
+
+
+%
+%  2
+%
+%      5
+%
+%          8     11
+%
+%  1
+%
+%      4
+%
+%          7      10
+%
+%  0
+%
+%      3
+%
+%          6      9     
+%
+
