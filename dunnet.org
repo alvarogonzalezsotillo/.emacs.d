@@ -709,7 +709,39 @@ w
 look
 # Estoy en la entrada del museo otra vez
 inventory
-mix acid and glycerine
+# Voy a fourth and vermont
+s 
+se 
+n
+n
+e
+e
+e
+e
+put acid in jar
+put glycerine in jar
+drop jar
+in
+n
+n
+put coins in garbage
+put ruby in garbage
+put egg in garbage
+up
+# Si entro a la puerta, vuelvo a la clase
+down
+down
+take amethyst
+up
+put amethyst in garbage
+down
+ne
+# Encuentro otro ordenador: endgame
+# Voy a pokey a ver si hago ssh
+sw
+up
+up
+w
 
 
 
@@ -1568,16 +1600,16 @@ Done.
 >TECLEO:
 >COMENTARIO: # me pongo a teclear en el pc
 ES UNA ORDEN PARA EL PC: reset
-Current time is 21:48:03
-Enter new time: msg es >>Current time is 21:48:03 Enter new time:
+Current time is 08:59:11
+Enter new time: msg es >>Current time is 08:59:11 Enter new time:
 ES UNA ORDEN PARA EL PC:
-A> msg es >>Current time is 21:48:03 Enter new time: A>
+A> msg es >>Current time is 08:59:11 Enter new time: A>
 COMENTARIO: #>dir
 ES UNA ORDEN PARA EL PC: type foo.txt
 
-The combination is 324.
-A> msg es The combination is 324. A>
-Voy a leer la combinacion: The combination is 324. A> : 324
+The combination is 751.
+A> msg es The combination is 751. A>
+Voy a leer la combinacion: The combination is 751. A> : 751
 ES UNA ORDEN PARA EL PC: exit
 
 You power down the machine and step back.
@@ -1598,7 +1630,7 @@ You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->aqui tengo la combinación: 324
+>aqui tengo la combinación: 751
 TECLEO: look
 PC area
 You have reached a dead end.  There is a PC on the floor here.  Above
@@ -1634,7 +1666,7 @@ N/S/W Junction
 North end of cave passage
 >TECLEO: w
 You must type a 3 digit combination code to enter this room.
-Enter it here: TECLEO: 324
+Enter it here: TECLEO: 751
 Gamma computing center
 You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
 away in here.  There is an ethernet cable coming out of one of the units,
@@ -1804,12 +1836,8 @@ You are at the intersection of Second Street and Vermont Ave.
 >TECLEO: s
 Second-Oaktree intersection
 You are at the intersection of Second Street and Oaktree Ave.
-There is a jewel-encrusted egg here.
->There is a jewel-encrusted egg here.
-He encontrado el huevo enjoyado
-TECLEO: s
-Taken.  
->Second-Maple intersection
+>TECLEO: s
+Second-Maple intersection
 >TECLEO: s
 You can't go that way.
 >TECLEO: s
@@ -1824,6 +1852,10 @@ You are at the intersection of First Street and Oaktree Ave.
 >TECLEO: n
 First-Vermont intersection
 You are at the intersection of First Street and Vermont Ave.
+There is a jewel-encrusted egg here.
+>There is a jewel-encrusted egg here.
+He encontrado el huevo enjoyado
+Taken.  
 >TECLEO: n
 First-Sycamore intersection
 You are at the north end of First Street at Sycamore Ave.
@@ -1985,9 +2017,9 @@ For an explosive time, go to Fourth St. and Vermont.
 It is a valuable Fabrege egg.
 >>It is a valuable Fabrege egg.
 He encontrado el huevo enjoyado
-TECLEO: s
 I do not see that here.
->Geological display
+>TECLEO: s
+Geological display
 >TECLEO: w
 Museum lobby
 >TECLEO: look
@@ -2008,8 +2040,99 @@ Some nitric acid
 Some glycerine
 A glass jar
 A ruby
->TECLEO: mix acid and glycerine
-I don't understand that.
+>COMENTARIO: # Voy a fourth and vermont
+TECLEO: s
+Museum entrance
+There is a bus here.
+>TECLEO: se
+Main-Maple intersection
+>TECLEO: n
+Main-Oaktree intersection
+>TECLEO: n
+Main-Vermont intersection
+>TECLEO: e
+First-Vermont intersection
+>TECLEO: e
+Second-Vermont intersection
+>TECLEO: e
+Third-Vermont intersection
+>TECLEO: e
+Fourth-Vermont intersection
+>TECLEO: put acid in jar
+Done.
+>TECLEO: put glycerine in jar
+Done.
+>TECLEO: drop jar
+Done.
+As the jar impacts the ground it explodes into many pieces.
+The explosion causes a hole to open up in the ground, which you fall
+through.
+Vermont station
+You are at the Vermont St. subway station.  A train is sitting here waiting.
+>TECLEO: in
+As you board the train it immediately leaves the station.  It is a very
+bumpy ride.  It is shaking from side to side, and up and down.  You
+sit down in one of the chairs in order to be more comfortable.
+
+Finally the train comes to a sudden stop, and the doors open, and some
+force throws you out.  The train speeds away.
+
+Museum station
+You are at the Museum subway stop.  A passage leads off to the north.
+>TECLEO: n
+N/S tunnel
+You are in a north/south tunnel.
+>TECLEO: n
+North end of N/S tunnel
+You are at the north end of a north/south tunnel.  Stairs lead up and
+down from here.  There is a garbage disposal here.
+>TECLEO: put coins in garbage
+You hear it slide down the chute and off into the distance.
+You have scored 60 out of a possible 90 points.
+>TECLEO: put ruby in garbage
+You hear it slide down the chute and off into the distance.
+You have scored 70 out of a possible 90 points.
+>TECLEO: put egg in garbage
+You hear it slide down the chute and off into the distance.
+You have scored 80 out of a possible 90 points.
+>TECLEO: up
+Top of subway stairs
+You are at the top of some stairs near the subway station.  There is
+a door to the west.
+>COMENTARIO: # Si entro a la puerta, vuelvo a la clase
+TECLEO: down
+North end of N/S tunnel
+>TECLEO: down
+Bottom of subway stairs
+You are at the bottom of some stairs near the subway station.  There is
+a room to the northeast.
+There is a valuable amethyst here.
+>TECLEO: take amethyst
+Taken.  
+>TECLEO: up
+North end of N/S tunnel
+>TECLEO: put amethyst in garbage
+You hear it slide down the chute and off into the distance.
+You have scored 90 out of a possible 90 points.
+>TECLEO: down
+Bottom of subway stairs
+>TECLEO: ne
+Endgame computer room
+You are in another computer room.  There is a computer in here larger
+than you have ever seen.  It has no manufacturers name on it, but it
+does have a sign that says: This machine's name is ‘endgame’.  The
+exit is to the southwest.  There is no console here on which you could
+type.
+>COMENTARIO: # Encuentro otro ordenador: endgame
+COMENTARIO: # Voy a pokey a ver si hago ssh
+TECLEO: sw
+Bottom of subway stairs
+>TECLEO: up
+North end of N/S tunnel
+>TECLEO: up
+Top of subway stairs
+>TECLEO: w
+Classroom
 >TECLEO:
 >TECLEO:
 >TECLEO:
@@ -2018,8 +2141,8 @@ I don't understand that.
 >TECLEO:
 >TECLEO: quit
 
-You have scored 50 out of a possible 90 points.
-Museum lobby
+You have scored 90 out of a possible 90 points.
+Classroom
 >
 #+end_src
 
