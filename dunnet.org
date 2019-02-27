@@ -99,7 +99,7 @@ digraph{
   "bus" -> "Fifth-Sycamore intersection" [style="dotted"]
 
   "Fifth-Vermont intersection" -> "Fifth-Oaktree intersection" [taillabel="s"]
-  "Fifth-Oaktree intersection" -> "???" [taillabel="w"]   
+  "Fifth-Oaktree intersection" -> "Cliff" [taillabel="w"]   
   "coins" -> "Fifth-Oaktree intersection" [style="dotted"]
   "Fifth-Oaktree intersection" -> "Fifth-Maple intersection" [taillabel="s"]    
 
@@ -119,7 +119,7 @@ digraph{
 
  "Second-Oaktree intersection" -> "Second-Maple intersection" [taillabel="s"]
 
- "Main-Maple intersection" -> "???" [taillabel="nw"]
+ "Main-Maple intersection" -> "Museum entrance" [taillabel="nw"]
 
  "Main-Oaktree intersection" -> "First-Oaktree intersection" [taillabel="e"]
 
@@ -140,6 +140,7 @@ digraph{
  "Third-Vermont intersection" -> "Fourth-Vermont intersection" [taillabel="e"]
  "Fourth-Vermont intersection" -> "Fifth-Vermont intersection" [taillabel="e"]
 
+ "Museum entrance" -> "Museum lobby" [taillabel="n"]
 }
 
 #+END_SRC
@@ -602,10 +603,34 @@ e
 e
 e
 e
+# he recorrido Maple
 
 #empiezo en rejilla, nnnnn w sssss w nnnnn .....
 #el huevo estará en algún sitio, se recogerá automáticamente cuando se vea
 n
+take coins
+
+# miro el barranco
+look cliff
+
+
+
+
+
+n
+n
+# he llegado a sycamore con la quinta
+
+w
+
+s
+s
+s
+s
+s
+s
+w
+n
 n
 n
 n
@@ -623,20 +648,6 @@ n
 n
 n
 n
-n
-n
-w
-s
-s
-s
-s
-s
-s
-w
-n
-n
-n
-n
 w
 s
 s
@@ -648,6 +659,92 @@ n
 n
 n
 n
+# Estoy en main-sycamore, voy al inicio
+s
+s
+s
+
+# He recorrido todas las calles, ya debo tener en el huevo
+# voy a por el autobús, a ver si entro por la reja de main-maple
+e
+e
+e
+e
+e
+n
+n
+n
+in
+s
+s
+s
+w
+w
+w
+w
+w
+
+# contra la valla
+nw
+out
+n
+take bone
+look skeleton
+e
+e
+take acid
+push switch
+n
+take glycerine
+w
+get jar
+take ruby
+look jar
+look ruby
+look coins
+look bone
+look egg
+s
+w
+look
+# Estoy en la entrada del museo otra vez
+inventory
+# Voy a fourth and vermont
+s 
+se 
+n
+n
+e
+e
+e
+e
+put acid in jar
+put glycerine in jar
+drop jar
+in
+n
+n
+put coins in garbage
+put ruby in garbage
+put egg in garbage
+up
+# Si entro a la puerta, vuelvo a la clase
+down
+down
+take amethyst
+up
+put amethyst in garbage
+down
+ne
+# Encuentro otro ordenador: endgame
+# Voy a pokey a ver si hago ssh
+sw
+up
+up
+w
+
+
+
 
 
 
@@ -1503,16 +1600,16 @@ Done.
 >TECLEO:
 >COMENTARIO: # me pongo a teclear en el pc
 ES UNA ORDEN PARA EL PC: reset
-Current time is 10:25:05
-Enter new time: msg es >>Current time is 10:25:05 Enter new time:
+Current time is 08:59:11
+Enter new time: msg es >>Current time is 08:59:11 Enter new time:
 ES UNA ORDEN PARA EL PC:
-A> msg es >>Current time is 10:25:05 Enter new time: A>
+A> msg es >>Current time is 08:59:11 Enter new time: A>
 COMENTARIO: #>dir
 ES UNA ORDEN PARA EL PC: type foo.txt
 
-The combination is 598.
-A> msg es The combination is 598. A>
-Voy a leer la combinacion: The combination is 598. A>
+The combination is 751.
+A> msg es The combination is 751. A>
+Voy a leer la combinacion: The combination is 751. A> : 751
 ES UNA ORDEN PARA EL PC: exit
 
 You power down the machine and step back.
@@ -1533,7 +1630,7 @@ You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->aqui tengo la combinación: 598
+>aqui tengo la combinación: 751
 TECLEO: look
 PC area
 You have reached a dead end.  There is a PC on the floor here.  Above
@@ -1569,7 +1666,7 @@ N/S/W Junction
 North end of cave passage
 >TECLEO: w
 You must type a 3 digit combination code to enter this room.
-Enter it here: TECLEO: 598
+Enter it here: TECLEO: 751
 Gamma computing center
 You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
 away in here.  There is an ethernet cable coming out of one of the units,
@@ -1666,7 +1763,8 @@ You are at the south end of Fourth Street at Maple Ave.
 >TECLEO: e
 Fifth-Maple intersection
 You are at the south end of Fifth Street at the east end of Maple Ave.
->TECLEO:
+>COMENTARIO: # he recorrido Maple
+TECLEO:
 >COMENTARIO: #empiezo en rejilla, nnnnn w sssss w nnnnn .....
 COMENTARIO: #el huevo estará en algún sitio, se recogerá automáticamente cuando se vea
 TECLEO: n
@@ -1674,6 +1772,17 @@ Fifth-Oaktree intersection
 You are at the intersection of Fifth Street and the east end of Oaktree Ave.
 There is a cliff off to the east.
 There are some valuable coins here.
+>TECLEO: take coins
+Taken.  
+>TECLEO:
+>COMENTARIO: # miro el barranco
+TECLEO: look cliff
+It is a HIGH cliff.
+>TECLEO:
+>TECLEO:
+>TECLEO:
+>TECLEO:
+>TECLEO:
 >TECLEO: n
 Fifth-Vermont intersection
 You are at the intersection of Fifth Street and the east end of Vermont Ave.
@@ -1681,15 +1790,12 @@ You are at the intersection of Fifth Street and the east end of Vermont Ave.
 Fifth-Sycamore intersection
 You are at the north end of Fifth Street and the east end of Sycamore Ave.
 There is a bus here.
->TECLEO: n
-You can't go that way.
->TECLEO: n
-You can't go that way.
->TECLEO: n
-You can't go that way.
+>COMENTARIO: # he llegado a sycamore con la quinta
+TECLEO:
 >TECLEO: w
 Fourth-Sycamore intersection
 You are at the north end of Fourth Street at Sycamore Ave.
+>TECLEO:
 >TECLEO: s
 Fourth-Vermont intersection
 You are at the intersection of Fourth Street and Vermont Ave.
@@ -1724,10 +1830,6 @@ You can't go that way.
 >TECLEO: w
 Second-Sycamore intersection
 You are at the north end of Second Street at Sycamore Ave.
-There is a jewel-encrusted egg here.
->There is a jewel-encrusted egg here.
-He encontrado el huevo enjoyado
-Taken.  
 >TECLEO: s
 Second-Vermont intersection
 You are at the intersection of Second Street and Vermont Ave.
@@ -1750,6 +1852,10 @@ You are at the intersection of First Street and Oaktree Ave.
 >TECLEO: n
 First-Vermont intersection
 You are at the intersection of First Street and Vermont Ave.
+There is a jewel-encrusted egg here.
+>There is a jewel-encrusted egg here.
+He encontrado el huevo enjoyado
+Taken.  
 >TECLEO: n
 First-Sycamore intersection
 You are at the north end of First Street at Sycamore Ave.
@@ -1780,13 +1886,263 @@ Main-Sycamore intersection
 You can't go that way.
 >TECLEO: n
 You can't go that way.
+>COMENTARIO: # Estoy en main-sycamore, voy al inicio
+TECLEO: s
+Main-Vermont intersection
+>TECLEO: s
+Main-Oaktree intersection
+>TECLEO: s
+Main-Maple intersection
+>TECLEO:
+>COMENTARIO: # He recorrido todas las calles, ya debo tener en el huevo
+COMENTARIO: # voy a por el autobús, a ver si entro por la reja de main-maple
+TECLEO: e
+First-Maple intersection
+>TECLEO: e
+Second-Maple intersection
+>TECLEO: e
+Third-Maple intersection
+>TECLEO: e
+Fourth-Maple intersection
+>TECLEO: e
+Fifth-Maple intersection
+>TECLEO: n
+Fifth-Oaktree intersection
+>TECLEO: n
+Fifth-Vermont intersection
+>TECLEO: n
+Fifth-Sycamore intersection
+There is a bus here.
+>TECLEO: in
+You board the bus and get in the driver's seat.
+>TECLEO: s
+The bus lurches ahead and comes to a screeching halt.
+Fifth-Vermont intersection
+You are on the bus.
+>TECLEO: s
+The bus lurches ahead and comes to a screeching halt.
+Fifth-Oaktree intersection
+You are on the bus.
+>TECLEO: s
+The bus lurches ahead and comes to a screeching halt.
+Fifth-Maple intersection
+You are on the bus.
+>TECLEO: w
+The bus lurches ahead and comes to a screeching halt.
+Fourth-Maple intersection
+You are on the bus.
+>TECLEO: w
+The bus lurches ahead and comes to a screeching halt.
+Third-Maple intersection
+You are on the bus.
+>TECLEO: w
+The bus lurches ahead and comes to a screeching halt.
+Second-Maple intersection
+You are on the bus.
+>TECLEO: w
+The bus lurches ahead and comes to a screeching halt.
+First-Maple intersection
+You are on the bus.
+>TECLEO: w
+The bus lurches ahead and comes to a screeching halt.
+Main-Maple intersection
+You are on the bus.
+>TECLEO:
+>COMENTARIO: # contra la valla
+TECLEO: nw
+As the bus approaches, the gate opens and you drive through.
+Museum entrance
+You are in front of the Museum of Natural History.  A door leads into
+the building to the north, and a road leads to the southeast.
+You are on the bus.
+>TECLEO: out
+You hop off the bus.
+>TECLEO: n
+Museum lobby
+You are in the main lobby for the Museum of Natural History.  In the center
+of the room is the huge skeleton of a dinosaur.  Doors lead out to the
+south and east.
+There is a dinosaur bone here.
+>TECLEO: take bone
+Taken.  
+>TECLEO: look skeleton
+Unfortunately you do not know enough about dinosaurs to tell very much about
+it.  It is very big, though.
+>TECLEO: e
+Geological display
+You are in the geological display.  All of the objects that used to
+be on display are missing.  There are rooms to the east, west, and
+north.
+>TECLEO: e
+Maintenance room
+You are in some sort of maintenance room for the museum.  There is a
+switch on the wall labeled ‘BL’.  There are doors to the west and north.
+There is a packet of nitric acid here.
+>TECLEO: take acid
+Taken.  
+>TECLEO: push switch
+The button is now in the on position.
+>TECLEO: n
+Classroom
+You are in a classroom where school children were taught about natural
+history.  On the blackboard is written, ‘No children allowed downstairs.’
+There is a door to the east with an ‘exit’ sign on it.  There is another
+door to the west.
+There is a packet of glycerine here.
+>TECLEO: take glycerine
+Taken.  
+>TECLEO: w
+Marine life area
+You are in the marine life area.  The room is filled with fish tanks,
+which are filled with dead fish that have apparently died due to
+starvation.  Doors lead out to the south and east.
+There is a glass jar here.
+The room is lit by a black light, causing the fish, and some of
+your objects, to give off an eerie glow.
+There is a valuable ruby here.
+>TECLEO: get jar
+Taken.  
+>TECLEO: take ruby
+Taken.  
+>TECLEO: look jar
+It is a plain glass jar.
+>TECLEO: look ruby
+I see nothing special about that.
+>TECLEO: look coins
+They are old coins from the 19th century.
+>TECLEO: look bone
+In this light you can see some writing on the bone.  It says:
+For an explosive time, go to Fourth St. and Vermont.
+>TECLEO: look egg
+It is a valuable Fabrege egg.
+>>It is a valuable Fabrege egg.
+He encontrado el huevo enjoyado
+I do not see that here.
+>TECLEO: s
+Geological display
+>TECLEO: w
+Museum lobby
+>TECLEO: look
+Museum lobby
+You are in the main lobby for the Museum of Natural History.  In the center
+of the room is the huge skeleton of a dinosaur.  Doors lead out to the
+south and east.
+>COMENTARIO: # Estoy en la entrada del museo otra vez
+TECLEO: inventory
+You currently have:
+A brass key
+A license
+A lamp
+Some valuable coins
+A valuable egg
+A bone
+Some nitric acid
+Some glycerine
+A glass jar
+A ruby
+>COMENTARIO: # Voy a fourth and vermont
+TECLEO: s
+Museum entrance
+There is a bus here.
+>TECLEO: se
+Main-Maple intersection
+>TECLEO: n
+Main-Oaktree intersection
+>TECLEO: n
+Main-Vermont intersection
+>TECLEO: e
+First-Vermont intersection
+>TECLEO: e
+Second-Vermont intersection
+>TECLEO: e
+Third-Vermont intersection
+>TECLEO: e
+Fourth-Vermont intersection
+>TECLEO: put acid in jar
+Done.
+>TECLEO: put glycerine in jar
+Done.
+>TECLEO: drop jar
+Done.
+As the jar impacts the ground it explodes into many pieces.
+The explosion causes a hole to open up in the ground, which you fall
+through.
+Vermont station
+You are at the Vermont St. subway station.  A train is sitting here waiting.
+>TECLEO: in
+As you board the train it immediately leaves the station.  It is a very
+bumpy ride.  It is shaking from side to side, and up and down.  You
+sit down in one of the chairs in order to be more comfortable.
+
+Finally the train comes to a sudden stop, and the doors open, and some
+force throws you out.  The train speeds away.
+
+Museum station
+You are at the Museum subway stop.  A passage leads off to the north.
+>TECLEO: n
+N/S tunnel
+You are in a north/south tunnel.
+>TECLEO: n
+North end of N/S tunnel
+You are at the north end of a north/south tunnel.  Stairs lead up and
+down from here.  There is a garbage disposal here.
+>TECLEO: put coins in garbage
+You hear it slide down the chute and off into the distance.
+You have scored 60 out of a possible 90 points.
+>TECLEO: put ruby in garbage
+You hear it slide down the chute and off into the distance.
+You have scored 70 out of a possible 90 points.
+>TECLEO: put egg in garbage
+You hear it slide down the chute and off into the distance.
+You have scored 80 out of a possible 90 points.
+>TECLEO: up
+Top of subway stairs
+You are at the top of some stairs near the subway station.  There is
+a door to the west.
+>COMENTARIO: # Si entro a la puerta, vuelvo a la clase
+TECLEO: down
+North end of N/S tunnel
+>TECLEO: down
+Bottom of subway stairs
+You are at the bottom of some stairs near the subway station.  There is
+a room to the northeast.
+There is a valuable amethyst here.
+>TECLEO: take amethyst
+Taken.  
+>TECLEO: up
+North end of N/S tunnel
+>TECLEO: put amethyst in garbage
+You hear it slide down the chute and off into the distance.
+You have scored 90 out of a possible 90 points.
+>TECLEO: down
+Bottom of subway stairs
+>TECLEO: ne
+Endgame computer room
+You are in another computer room.  There is a computer in here larger
+than you have ever seen.  It has no manufacturers name on it, but it
+does have a sign that says: This machine's name is ‘endgame’.  The
+exit is to the southwest.  There is no console here on which you could
+type.
+>COMENTARIO: # Encuentro otro ordenador: endgame
+COMENTARIO: # Voy a pokey a ver si hago ssh
+TECLEO: sw
+Bottom of subway stairs
+>TECLEO: up
+North end of N/S tunnel
+>TECLEO: up
+Top of subway stairs
+>TECLEO: w
+Classroom
+>TECLEO:
+>TECLEO:
+>TECLEO:
 >TECLEO:
 >TECLEO:
 >TECLEO:
 >TECLEO: quit
 
-You have scored 50 out of a possible 90 points.
-Main-Sycamore intersection
+You have scored 90 out of a possible 90 points.
+Classroom
 >
 #+end_src
 
@@ -2185,7 +2541,7 @@ You must have your bus-driver's license, of course.
 Then just move normally (N, S, etc.).  Type OUT to get off the bus.
 
 ***  Where can I deposit my treasures?
-
+    
 Have you seen any likely spots?
 
 What about the mail drop at the Post Office?
