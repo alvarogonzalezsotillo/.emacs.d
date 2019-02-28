@@ -742,6 +742,48 @@ sw
 up
 up
 w
+w
+s
+w
+s
+se
+s
+e
+s
+w
+type
+ssh endgame
+take bracelet
+take diamond
+take gold
+take platinum
+take coins
+take ruby
+take egg
+take amethyst
+n
+n
+# What is your login name on the ‘endgame’ machine?
+# What type of bear was hiding your key?
+# How many corners are there in town (excluding the one with the Post Office)?
+# What is the last name of the author of EMACS?
+# Excluding the endgame, how many places are there where you can put treasures for points?
+# What is the nearest whole dollar to the price of the shovel?
+# Which street in town is named after a U.S. state?
+# What network protocol is used between pokey and gamma?
+# How many pounds did the weight weigh?
+# What cartoon character is on the towel?
+# What is the name of the bus company serving the town?
+# What password did you use during anonymous ftp to gamma?
+# Name either of the two objects you found by digging.
+# Give either of the two last names in the mailroom, other than your own.
+# What is your password on the machine called ‘pokey’?
+# How many megabytes of memory is on the CPU board for the Vax?
+# Name the STREET which runs right over the subway stop.
+
+
+
+
 
 
 
@@ -1023,10 +1065,10 @@ Guest login okay, send your user ident as password.
 Password: TECLEO: toukmond@pockey
 Guest login okay, user access restrictions apply.
 ftp> TECLEO: help
+TECLEO: type binary
 Possible commands are:
 send    quit    type   ascii  binary   help
-ftp> TECLEO: type binary
-Type set to binary.
+ftp> Type set to binary.
 ftp> TECLEO: send bracelet.o
 Sending binary file for a bracelet, (0 bytes)
 Transfer complete.
@@ -1600,16 +1642,16 @@ Done.
 >TECLEO:
 >COMENTARIO: # me pongo a teclear en el pc
 ES UNA ORDEN PARA EL PC: reset
-Current time is 08:59:11
-Enter new time: msg es >>Current time is 08:59:11 Enter new time:
+Current time is 18:09:56
+Enter new time: msg es >>Current time is 18:09:56 Enter new time:
 ES UNA ORDEN PARA EL PC:
-A> msg es >>Current time is 08:59:11 Enter new time: A>
+A> msg es >>Current time is 18:09:56 Enter new time: A>
 COMENTARIO: #>dir
 ES UNA ORDEN PARA EL PC: type foo.txt
 
-The combination is 751.
-A> msg es The combination is 751. A>
-Voy a leer la combinacion: The combination is 751. A> : 751
+The combination is 209.
+A> msg es The combination is 209. A>
+Voy a leer la combinacion: The combination is 209. A> : 209
 ES UNA ORDEN PARA EL PC: exit
 
 You power down the machine and step back.
@@ -1630,7 +1672,7 @@ You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->aqui tengo la combinación: 751
+>aqui tengo la combinación: 209
 TECLEO: look
 PC area
 You have reached a dead end.  There is a PC on the floor here.  Above
@@ -1666,7 +1708,7 @@ N/S/W Junction
 North end of cave passage
 >TECLEO: w
 You must type a 3 digit combination code to enter this room.
-Enter it here: TECLEO: 751
+Enter it here: TECLEO: 209
 Gamma computing center
 You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
 away in here.  There is an ethernet cable coming out of one of the units,
@@ -1852,10 +1894,6 @@ You are at the intersection of First Street and Oaktree Ave.
 >TECLEO: n
 First-Vermont intersection
 You are at the intersection of First Street and Vermont Ave.
-There is a jewel-encrusted egg here.
->There is a jewel-encrusted egg here.
-He encontrado el huevo enjoyado
-Taken.  
 >TECLEO: n
 First-Sycamore intersection
 You are at the north end of First Street at Sycamore Ave.
@@ -1867,6 +1905,10 @@ You are at the north end of Main Street at the west end of Sycamore Ave.
 >TECLEO: s
 Main-Vermont intersection
 You are at the intersection of Main Street and the west end of Vermont Ave.
+There is a jewel-encrusted egg here.
+>There is a jewel-encrusted egg here.
+He encontrado el huevo enjoyado
+Taken.  
 >TECLEO: s
 Main-Oaktree intersection
 You are at the intersection of Main Street and the west end of Oaktree Ave.
@@ -2133,6 +2175,93 @@ North end of N/S tunnel
 Top of subway stairs
 >TECLEO: w
 Classroom
+>TECLEO: w
+Marine life area
+The room is lit by a black light, causing the fish, and some of
+your objects, to give off an eerie glow.
+>TECLEO: s
+Geological display
+>TECLEO: w
+Museum lobby
+>TECLEO: s
+Museum entrance
+There is a bus here.
+>TECLEO: se
+Main-Maple intersection
+>TECLEO: s
+Post office
+>TECLEO: e
+Meadow
+>TECLEO: s
+Old Building hallway
+>TECLEO: w
+Computer room
+The panel lights are flashing in a seemingly organized pattern.
+>TECLEO: type
+$ TECLEO: ssh endgame
+You have scored 90 out of a possible 90 points.
+
+Welcome to the endgame.  You are a truly noble adventurer.
+
+You step back from the console.
+
+Treasure room
+You are in the treasure room.  A door leads out to the north.
+There is an emerald bracelet here.
+There is a shimmering diamond here.
+There is a gold bar here.
+There is a platinum bar here.
+There is a silver bar here.
+There are some valuable coins here.
+There is a valuable ruby here.
+There is a jewel-encrusted egg here.
+There is a valuable amethyst here.
+>TECLEO: take bracelet
+Taken.  
+>TECLEO: take diamond
+Taken.  
+>TECLEO: take gold
+Taken.  
+>TECLEO: take platinum
+Taken.  
+>TECLEO: take coins
+Taken.  
+>TECLEO: take ruby
+Taken.  
+>TECLEO: take egg
+Your load would be too heavy.
+>TECLEO: take amethyst
+Your load would be too heavy.
+>TECLEO: n
+Endgame N/S hallway
+You are in a north/south hallway.
+>TECLEO: n
+Question room 1
+You have reached a question room.  You must answer a question correctly in
+order to get by.  Use the ‘answer’ command to answer the question.
+Your question is:
+What is your password on the machine called ‘pokey’?
+>COMENTARIO: # What is your login name on the ‘endgame’ machine?
+COMENTARIO: # What type of bear was hiding your key?
+COMENTARIO: # How many corners are there in town (excluding the one with the Post Office)?
+COMENTARIO: # What is the last name of the author of EMACS?
+COMENTARIO: # Excluding the endgame, how many places are there where you can put treasures for points?
+COMENTARIO: # What is the nearest whole dollar to the price of the shovel?
+COMENTARIO: # Which street in town is named after a U.S. state?
+COMENTARIO: # What network protocol is used between pokey and gamma?
+COMENTARIO: # How many pounds did the weight weigh?
+COMENTARIO: # What cartoon character is on the towel?
+COMENTARIO: # What is the name of the bus company serving the town?
+COMENTARIO: # What password did you use during anonymous ftp to gamma?
+COMENTARIO: # Name either of the two objects you found by digging.
+COMENTARIO: # Give either of the two last names in the mailroom, other than your own.
+COMENTARIO: # What is your password on the machine called ‘pokey’?
+COMENTARIO: # How many megabytes of memory is on the CPU board for the Vax?
+COMENTARIO: # Name the STREET which runs right over the subway stop.
+TECLEO:
+>TECLEO:
+>TECLEO:
+>TECLEO:
 >TECLEO:
 >TECLEO:
 >TECLEO:
@@ -2141,8 +2270,10 @@ Classroom
 >TECLEO:
 >TECLEO: quit
 
-You have scored 90 out of a possible 90 points.
-Classroom
+You have scored 10 endgame points out of a possible 110.
+Question room 1
+Your question is:
+What is your password on the machine called ‘pokey’?
 >
 #+end_src
 
