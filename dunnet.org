@@ -764,7 +764,7 @@ take amethyst
 n
 n
 # What is your login name on the ‘endgame’ machine?
-# What type of bear was hiding your key?
+# What type of bear was hiding your key? -> ferocious
 # How many corners are there in town (excluding the one with the Post Office)?
 # What is the last name of the author of EMACS?
 # Excluding the endgame, how many places are there where you can put treasures for points?
@@ -772,7 +772,7 @@ n
 # Which street in town is named after a U.S. state?
 # What network protocol is used between pokey and gamma?
 # How many pounds did the weight weigh?
-# What cartoon character is on the towel?
+# What cartoon character is on the towel? -> snoopy
 # What is the name of the bus company serving the town?
 # What password did you use during anonymous ftp to gamma?
 # Name either of the two objects you found by digging.
