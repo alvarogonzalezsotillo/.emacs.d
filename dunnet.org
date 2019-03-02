@@ -270,11 +270,13 @@ start_dunnet
 
 linea_a_linea <<ENDOFGAME
 take shovel
+look shovel
 east
 east
 dig
 look
 take cpu
+look cpu
 southeast
 take food
 southeast
@@ -368,6 +370,7 @@ west
 north
 east
 take weight
+look weight
 take life preserver
 look life preserver
 down
@@ -674,6 +677,7 @@ e
 n
 n
 n
+look bus
 in
 s
 s
@@ -763,23 +767,23 @@ take egg
 take amethyst
 n
 n
-# What is your login name on the ‘endgame’ machine?
+# What is your login name on the ‘endgame’ machine? -> toukmond
 # What type of bear was hiding your key? -> ferocious
-# How many corners are there in town (excluding the one with the Post Office)?
-# What is the last name of the author of EMACS?
-# Excluding the endgame, how many places are there where you can put treasures for points?
-# What is the nearest whole dollar to the price of the shovel?
-# Which street in town is named after a U.S. state?
-# What network protocol is used between pokey and gamma?
-# How many pounds did the weight weigh?
+# How many corners are there in town (excluding the one with the Post Office)? -> 24
+# What is the last name of the author of EMACS? -> stallman
+# Excluding the endgame, how many places are there where you can put treasures for points? -> 4
+# What is the nearest whole dollar to the price of the shovel? -> 20
+# Which street in town is named after a U.S. state? -> Vermont
+# What network protocol is used between pokey and gamma? -> ftp
+# How many pounds did the weight weigh? -> 10
 # What cartoon character is on the towel? -> snoopy
-# What is the name of the bus company serving the town?
-# What password did you use during anonymous ftp to gamma?
-# Name either of the two objects you found by digging.
-# Give either of the two last names in the mailroom, other than your own.
-# What is your password on the machine called ‘pokey’?
-# How many megabytes of memory is on the CPU board for the Vax?
-# Name the STREET which runs right over the subway stop.
+# What is the name of the bus company serving the town? -> mobytours
+# What password did you use during anonymous ftp to gamma? -> worms
+# Name either of the two objects you found by digging. -> cpu, plantinum bar 
+# Give either of the two last names in the mailroom, other than your own. -> Collier, Stock
+# What is your password on the machine called ‘pokey’? -> robert
+# How many megabytes of memory is on the CPU board for the Vax? -> 2
+# Name the STREET which runs right over the subway stop. -> Vermont
 
 
 
@@ -812,6 +816,8 @@ from each other.
 There is a shovel here.
 >TECLEO: take shovel
 Taken.  
+>TECLEO: look shovel
+It is a normal shovel with a price tag attached that says $19.99.
 >TECLEO: east
 E/W Dirt road
 You are on the continuation of a dirt road.  There are more trees on
@@ -830,6 +836,9 @@ southeast.  The ground here seems very soft. You can also go back west.
 There is a CPU card here.
 >TECLEO: take cpu
 Taken.  
+>TECLEO: look cpu
+The CPU board has a VAX chip on it.  It seems to have
+2 Megabytes of RAM onboard.
 >TECLEO: southeast
 SE/NW road
 You are on a southeast/northwest road.
@@ -1065,10 +1074,10 @@ Guest login okay, send your user ident as password.
 Password: TECLEO: toukmond@pockey
 Guest login okay, user access restrictions apply.
 ftp> TECLEO: help
-TECLEO: type binary
 Possible commands are:
 send    quit    type   ascii  binary   help
-ftp> Type set to binary.
+ftp> TECLEO: type binary
+Type set to binary.
 ftp> TECLEO: send bracelet.o
 Sending binary file for a bracelet, (0 bytes)
 Transfer complete.
@@ -1178,6 +1187,8 @@ There is a 10 pound weight here.
 There is a life preserver here.
 >TECLEO: take weight
 Your load would be too heavy.
+>TECLEO: look weight
+You observe that the weight is heavy.
 >TECLEO: take life preserver
 Taken.  
 >TECLEO: look life preserver
@@ -1642,16 +1653,16 @@ Done.
 >TECLEO:
 >COMENTARIO: # me pongo a teclear en el pc
 ES UNA ORDEN PARA EL PC: reset
-Current time is 18:09:56
-Enter new time: msg es >>Current time is 18:09:56 Enter new time:
+Current time is 13:47:45
+Enter new time: msg es >>Current time is 13:47:45 Enter new time:
 ES UNA ORDEN PARA EL PC:
-A> msg es >>Current time is 18:09:56 Enter new time: A>
+A> msg es >>Current time is 13:47:45 Enter new time: A>
 COMENTARIO: #>dir
 ES UNA ORDEN PARA EL PC: type foo.txt
 
-The combination is 209.
-A> msg es The combination is 209. A>
-Voy a leer la combinacion: The combination is 209. A> : 209
+The combination is 646.
+A> msg es The combination is 646. A>
+Voy a leer la combinacion: The combination is 646. A> : 646
 ES UNA ORDEN PARA EL PC: exit
 
 You power down the machine and step back.
@@ -1672,7 +1683,7 @@ You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->aqui tengo la combinación: 209
+>aqui tengo la combinación: 646
 TECLEO: look
 PC area
 You have reached a dead end.  There is a PC on the floor here.  Above
@@ -1708,7 +1719,7 @@ N/S/W Junction
 North end of cave passage
 >TECLEO: w
 You must type a 3 digit combination code to enter this room.
-Enter it here: TECLEO: 209
+Enter it here: TECLEO: 646
 Gamma computing center
 You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
 away in here.  There is an ethernet cable coming out of one of the units,
@@ -1799,6 +1810,10 @@ You are at the south end of Second Street at Maple Ave.
 >TECLEO: e
 Third-Maple intersection
 You are at the south end of Third Street at Maple Ave.
+There is a jewel-encrusted egg here.
+>There is a jewel-encrusted egg here.
+He encontrado el huevo enjoyado
+Taken.  
 >TECLEO: e
 Fourth-Maple intersection
 You are at the south end of Fourth Street at Maple Ave.
@@ -1905,10 +1920,6 @@ You are at the north end of Main Street at the west end of Sycamore Ave.
 >TECLEO: s
 Main-Vermont intersection
 You are at the intersection of Main Street and the west end of Vermont Ave.
-There is a jewel-encrusted egg here.
->There is a jewel-encrusted egg here.
-He encontrado el huevo enjoyado
-Taken.  
 >TECLEO: s
 Main-Oaktree intersection
 You are at the intersection of Main Street and the west end of Oaktree Ave.
@@ -1955,6 +1966,8 @@ Fifth-Vermont intersection
 >TECLEO: n
 Fifth-Sycamore intersection
 There is a bus here.
+>TECLEO: look bus
+It is a 35 passenger bus with the company name ‘mobytours’ on it.
 >TECLEO: in
 You board the bus and get in the driver's seat.
 >TECLEO: s
@@ -2075,8 +2088,8 @@ You currently have:
 A brass key
 A license
 A lamp
-Some valuable coins
 A valuable egg
+Some valuable coins
 A bone
 Some nitric acid
 Some glycerine
@@ -2240,22 +2253,22 @@ Question room 1
 You have reached a question room.  You must answer a question correctly in
 order to get by.  Use the ‘answer’ command to answer the question.
 Your question is:
-What is your password on the machine called ‘pokey’?
->COMENTARIO: # What is your login name on the ‘endgame’ machine?
-COMENTARIO: # What type of bear was hiding your key?
-COMENTARIO: # How many corners are there in town (excluding the one with the Post Office)?
-COMENTARIO: # What is the last name of the author of EMACS?
-COMENTARIO: # Excluding the endgame, how many places are there where you can put treasures for points?
-COMENTARIO: # What is the nearest whole dollar to the price of the shovel?
-COMENTARIO: # Which street in town is named after a U.S. state?
-COMENTARIO: # What network protocol is used between pokey and gamma?
-COMENTARIO: # How many pounds did the weight weigh?
-COMENTARIO: # What cartoon character is on the towel?
-COMENTARIO: # What is the name of the bus company serving the town?
-COMENTARIO: # What password did you use during anonymous ftp to gamma?
-COMENTARIO: # Name either of the two objects you found by digging.
-COMENTARIO: # Give either of the two last names in the mailroom, other than your own.
-COMENTARIO: # What is your password on the machine called ‘pokey’?
+What type of bear was hiding your key?
+>COMENTARIO: # What is your login name on the ‘endgame’ machine? -> toukmond
+COMENTARIO: # What type of bear was hiding your key? -> ferocious
+COMENTARIO: # How many corners are there in town (excluding the one with the Post Office)? -> 24
+COMENTARIO: # What is the last name of the author of EMACS? -> stallman
+COMENTARIO: # Excluding the endgame, how many places are there where you can put treasures for points? -> 4
+COMENTARIO: # What is the nearest whole dollar to the price of the shovel? -> 20
+COMENTARIO: # Which street in town is named after a U.S. state? -> Vermont
+COMENTARIO: # What network protocol is used between pokey and gamma? -> ftp
+COMENTARIO: # How many pounds did the weight weigh? -> 10
+COMENTARIO: # What cartoon character is on the towel? -> snoopy
+COMENTARIO: # What is the name of the bus company serving the town? -> mobytours
+COMENTARIO: # What password did you use during anonymous ftp to gamma? -> worms
+COMENTARIO: # Name either of the two objects you found by digging. -> cpu, plantinum bar
+COMENTARIO: # Give either of the two last names in the mailroom, other than your own. -> Collier, Stock
+COMENTARIO: # What is your password on the machine called ‘pokey’? -> robert
 COMENTARIO: # How many megabytes of memory is on the CPU board for the Vax?
 COMENTARIO: # Name the STREET which runs right over the subway stop.
 TECLEO:
@@ -2273,7 +2286,7 @@ TECLEO:
 You have scored 10 endgame points out of a possible 110.
 Question room 1
 Your question is:
-What is your password on the machine called ‘pokey’?
+What type of bear was hiding your key?
 >
 #+end_src
 
