@@ -107,6 +107,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 #+tblname: mis-paquetes
 #+caption: Tabla =mis-paquetes=
 #+ATTR_LATEX: :environment longtable :align |l|p{10cm}|
+#+NAME: mis-paquetes
 |--------------------------------+----------------------------------------------------------------|
 | 2048-game                      |                                                                |
 | adaptive-wrap                  | Indentación visual de las líneas respecto a su prefijo         |

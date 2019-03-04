@@ -216,6 +216,100 @@ get_egg(){
   fi
 }
 
+responde_pregunta(){
+  local pregunta=$(last_output_line)
+  
+# What is your login name on the ‘endgame’ machine? -> toukmond
+# What type of bear was hiding your key? -> grizzly
+# How many corners are there in town (excluding the one with the Post Office)? -> 24
+# What is the last name of the author of EMACS? -> stallman
+# Excluding the endgame, how many places are there where you can put treasures for points? -> 4
+# What is the nearest whole dollar to the price of the shovel? -> 20
+# Which street in town is named after a U.S. state? -> Vermont
+# What network protocol is used between pokey and gamma? -> ftp
+# How many pounds did the weight weigh? -> 10
+# What cartoon character is on the towel? -> snoopy
+# What is the name of the bus company serving the town? -> mobytours
+# What password did you use during anonymous ftp to gamma? -> worms
+# Name either of the two objects you found by digging. -> cpu, plantinum bar 
+# Give either of the two last names in the mailroom, other than your own. -> Collier, Stock
+# What is your password on the machine called ‘pokey’? -> robert
+# How many megabytes of memory is on the CPU board for the Vax? -> 2
+# Name the STREET which runs right over the subway stop. -> Vermont
+  if [[ $pregunta == "What is your login name on the ‘endgame’ machine?"*  ]]
+  then
+     send_to_fifo "answer" "toukmond"
+  fi
+  if [[ $pregunta == "What type of bear was hiding your key?"* ]]
+  then
+     send_to_fifo "answer" "grizzly"
+  fi
+
+  if [[ $pregunta == "How many corners are there in town (excluding the one with the Post Office)?"* ]]
+  then
+     send_to_fifo "answer" "24"
+  fi
+
+  if [[ $pregunta == "What is the last name of the author of EMACS?"* ]]
+  then
+     send_to_fifo "answer" "Stallman"
+  fi
+
+  if [[ $pregunta == "treasures for points?"* ]]
+  then
+     send_to_fifo "answer" "4"
+  fi
+  if [[ $pregunta == "What is the nearest whole dollar to the price of the shovel?"* ]]
+  then
+     send_to_fifo "answer" "20"
+  fi
+  if [[ $pregunta == "Which street in town is named after a U.S. state?"* ]]
+  then
+     send_to_fifo "answer" "Vermont"
+  fi
+  if [[ $pregunta == "What network protocol is used between pokey and gamma?"* ]]
+  then
+     send_to_fifo "answer" "tcp"
+  fi
+  if [[ $pregunta == "How many pounds did the weight weigh?"* ]]
+  then
+     send_to_fifo "answer" "10"
+  fi
+  if [[ $pregunta == "What cartoon character is on the towel?"* ]]
+  then
+     send_to_fifo "answer" "snoopy"
+  fi
+  if [[ $pregunta == "What is the name of the bus company serving the town?"* ]]
+  then
+     send_to_fifo "answer" "mobytours"
+  fi
+  if [[ $pregunta == "What password did you use during anonymous ftp to gamma?"* ]]
+  then
+     send_to_fifo "answer" "toukmond@pockey"
+  fi
+  if [[ $pregunta == "Name either of the two objects you found by digging."* ]]
+  then
+     send_to_fifo "answer" "cpu"
+  fi
+  if [[ $pregunta == "Give either of the two last names in the mailroom, other than your own."* ]]
+  then
+     send_to_fifo "answer" "Collier"
+  fi
+  if [[ $pregunta == "What is your password on the machine called ‘pokey’?"* ]]
+  then
+     send_to_fifo "answer" "robert"
+  fi
+  if [[ $pregunta == "How many megabytes of memory is on the CPU board for the Vax?"* ]]
+  then
+     send_to_fifo "answer" "2"
+  fi
+  if [[ $pregunta == "Name the STREET which runs right over the subway stop."* ]]
+  then
+     send_to_fifo "answer" "fourth"
+  fi
+
+
+}
 
 wait_until_dunnet_start(){
   local pattern="Dead end"
@@ -256,6 +350,7 @@ linea_a_linea(){
        echo TECLEO: $line 
        send_to_fifo $line
        get_egg
+       responde_pregunta
      fi
      log "(small wait until next line)"
   done 
@@ -270,14 +365,17 @@ start_dunnet
 
 linea_a_linea <<ENDOFGAME
 take shovel
+look shovel
 east
 east
 dig
 look
 take cpu
+look cpu
 southeast
 take food
 southeast
+look bear
 drop food
 look
 take key
@@ -368,6 +466,7 @@ west
 north
 east
 take weight
+look weight
 take life preserver
 look life preserver
 down
@@ -674,6 +773,7 @@ e
 n
 n
 n
+look bus
 in
 s
 s
@@ -742,6 +842,68 @@ sw
 up
 up
 w
+w
+s
+w
+s
+se
+s
+e
+s
+w
+type
+ssh endgame
+take bracelet
+take diamond
+take gold
+take platinum
+take coins
+take ruby
+take egg
+take amethyst
+n
+n
+# What is your login name on the ‘endgame’ machine? -> toukmond
+# What type of bear was hiding your key? -> ferocious
+# How many corners are there in town (excluding the one with the Post Office)? -> 24
+# What is the last name of the author of EMACS? -> stallman
+# Excluding the endgame, how many places are there where you can put treasures for points? -> 4
+# What is the nearest whole dollar to the price of the shovel? -> 20
+# Which street in town is named after a U.S. state? -> Vermont
+# What network protocol is used between pokey and gamma? -> ftp
+# How many pounds did the weight weigh? -> 10
+# What cartoon character is on the towel? -> snoopy
+# What is the name of the bus company serving the town? -> mobytours
+# What password did you use during anonymous ftp to gamma? -> worms
+# Name either of the two objects you found by digging. -> cpu, plantinum bar 
+# Give either of the two last names in the mailroom, other than your own. -> Collier, Stock
+# What is your password on the machine called ‘pokey’? -> robert
+# How many megabytes of memory is on the CPU board for the Vax? -> 2
+# Name the STREET which runs right over the subway stop. -> Vermont
+
+# Ya he respondido una pregunta
+n
+
+# Ya he respondido 2 preguntas
+n
+get bill
+n
+look Mona Lisa
+take Mona Lisa
+s
+s
+s
+s
+s
+s
+look
+n
+look
+n
+n
+n
+look
+drop bill
 
 
 
@@ -770,6 +932,8 @@ from each other.
 There is a shovel here.
 >TECLEO: take shovel
 Taken.  
+>TECLEO: look shovel
+It is a normal shovel with a price tag attached that says $19.99.
 >TECLEO: east
 E/W Dirt road
 You are on the continuation of a dirt road.  There are more trees on
@@ -788,6 +952,9 @@ southeast.  The ground here seems very soft. You can also go back west.
 There is a CPU card here.
 >TECLEO: take cpu
 Taken.  
+>TECLEO: look cpu
+The CPU board has a VAX chip on it.  It seems to have
+2 Megabytes of RAM onboard.
 >TECLEO: southeast
 SE/NW road
 You are on a southeast/northwest road.
@@ -799,6 +966,8 @@ Bear hangout
 You are standing at the end of a road.  A passage leads back to the
 northwest.
 There is a ferocious bear here!
+>TECLEO: look bear
+It looks like a grizzly to me.
 >TECLEO: drop food
 Done.
 The bear takes the food and runs away with it. He left something behind.
@@ -1136,6 +1305,8 @@ There is a 10 pound weight here.
 There is a life preserver here.
 >TECLEO: take weight
 Your load would be too heavy.
+>TECLEO: look weight
+You observe that the weight is heavy.
 >TECLEO: take life preserver
 Taken.  
 >TECLEO: look life preserver
@@ -1600,16 +1771,16 @@ Done.
 >TECLEO:
 >COMENTARIO: # me pongo a teclear en el pc
 ES UNA ORDEN PARA EL PC: reset
-Current time is 08:59:11
-Enter new time: msg es >>Current time is 08:59:11 Enter new time:
+Current time is 17:07:23
+Enter new time: msg es >>Current time is 17:07:23 Enter new time:
 ES UNA ORDEN PARA EL PC:
-A> msg es >>Current time is 08:59:11 Enter new time: A>
+A> msg es >>Current time is 17:07:23 Enter new time: A>
 COMENTARIO: #>dir
 ES UNA ORDEN PARA EL PC: type foo.txt
 
-The combination is 751.
-A> msg es The combination is 751. A>
-Voy a leer la combinacion: The combination is 751. A> : 751
+The combination is 948.
+A> msg es The combination is 948. A>
+Voy a leer la combinacion: The combination is 948. A> : 948
 ES UNA ORDEN PARA EL PC: exit
 
 You power down the machine and step back.
@@ -1630,7 +1801,7 @@ You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->aqui tengo la combinación: 751
+>aqui tengo la combinación: 948
 TECLEO: look
 PC area
 You have reached a dead end.  There is a PC on the floor here.  Above
@@ -1666,7 +1837,7 @@ N/S/W Junction
 North end of cave passage
 >TECLEO: w
 You must type a 3 digit combination code to enter this room.
-Enter it here: TECLEO: 751
+Enter it here: TECLEO: 948
 Gamma computing center
 You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
 away in here.  There is an ethernet cable coming out of one of the units,
@@ -1852,10 +2023,6 @@ You are at the intersection of First Street and Oaktree Ave.
 >TECLEO: n
 First-Vermont intersection
 You are at the intersection of First Street and Vermont Ave.
-There is a jewel-encrusted egg here.
->There is a jewel-encrusted egg here.
-He encontrado el huevo enjoyado
-Taken.  
 >TECLEO: n
 First-Sycamore intersection
 You are at the north end of First Street at Sycamore Ave.
@@ -1870,6 +2037,10 @@ You are at the intersection of Main Street and the west end of Vermont Ave.
 >TECLEO: s
 Main-Oaktree intersection
 You are at the intersection of Main Street and the west end of Oaktree Ave.
+There is a jewel-encrusted egg here.
+>There is a jewel-encrusted egg here.
+He encontrado el huevo enjoyado
+Taken.  
 >TECLEO: s
 Main-Maple intersection
 >TECLEO: w
@@ -1913,6 +2084,8 @@ Fifth-Vermont intersection
 >TECLEO: n
 Fifth-Sycamore intersection
 There is a bus here.
+>TECLEO: look bus
+It is a 35 passenger bus with the company name ‘mobytours’ on it.
 >TECLEO: in
 You board the bus and get in the driver's seat.
 >TECLEO: s
@@ -2133,6 +2306,187 @@ North end of N/S tunnel
 Top of subway stairs
 >TECLEO: w
 Classroom
+>TECLEO: w
+Marine life area
+The room is lit by a black light, causing the fish, and some of
+your objects, to give off an eerie glow.
+>TECLEO: s
+Geological display
+>TECLEO: w
+Museum lobby
+>TECLEO: s
+Museum entrance
+There is a bus here.
+>TECLEO: se
+Main-Maple intersection
+>TECLEO: s
+Post office
+>TECLEO: e
+Meadow
+>TECLEO: s
+Old Building hallway
+>TECLEO: w
+Computer room
+The panel lights are flashing in a seemingly organized pattern.
+>TECLEO: type
+$ TECLEO: ssh endgame
+You have scored 90 out of a possible 90 points.
+
+Welcome to the endgame.  You are a truly noble adventurer.
+
+You step back from the console.
+
+Treasure room
+You are in the treasure room.  A door leads out to the north.
+There is an emerald bracelet here.
+There is a shimmering diamond here.
+There is a gold bar here.
+There is a platinum bar here.
+There is a silver bar here.
+There are some valuable coins here.
+There is a valuable ruby here.
+There is a jewel-encrusted egg here.
+There is a valuable amethyst here.
+>TECLEO: take bracelet
+Taken.  
+>TECLEO: take diamond
+Taken.  
+>TECLEO: take gold
+Taken.  
+>TECLEO: take platinum
+Taken.  
+>TECLEO: take coins
+Taken.  
+>TECLEO: take ruby
+Taken.  
+>TECLEO: take egg
+Your load would be too heavy.
+>TECLEO: take amethyst
+Your load would be too heavy.
+>TECLEO: n
+Endgame N/S hallway
+You are in a north/south hallway.
+>TECLEO: n
+Question room 1
+You have reached a question room.  You must answer a question correctly in
+order to get by.  Use the ‘answer’ command to answer the question.
+Your question is:
+What is the name of the bus company serving the town?
+>Correct.
+Endgame N/S hallway
+You are in a north/south hallway.
+>COMENTARIO: # What is your login name on the ‘endgame’ machine? -> toukmond
+COMENTARIO: # What type of bear was hiding your key? -> ferocious
+COMENTARIO: # How many corners are there in town (excluding the one with the Post Office)? -> 24
+COMENTARIO: # What is the last name of the author of EMACS? -> stallman
+COMENTARIO: # Excluding the endgame, how many places are there where you can put treasures for points? -> 4
+COMENTARIO: # What is the nearest whole dollar to the price of the shovel? -> 20
+COMENTARIO: # Which street in town is named after a U.S. state? -> Vermont
+COMENTARIO: # What network protocol is used between pokey and gamma? -> ftp
+COMENTARIO: # How many pounds did the weight weigh? -> 10
+COMENTARIO: # What cartoon character is on the towel? -> snoopy
+COMENTARIO: # What is the name of the bus company serving the town? -> mobytours
+COMENTARIO: # What password did you use during anonymous ftp to gamma? -> worms
+COMENTARIO: # Name either of the two objects you found by digging. -> cpu, plantinum bar
+COMENTARIO: # Give either of the two last names in the mailroom, other than your own. -> Collier, Stock
+COMENTARIO: # What is your password on the machine called ‘pokey’? -> robert
+COMENTARIO: # How many megabytes of memory is on the CPU board for the Vax? -> 2
+COMENTARIO: # Name the STREET which runs right over the subway stop. -> Vermont
+TECLEO:
+>COMENTARIO: # Ya he respondido una pregunta
+TECLEO: n
+Question room 2
+You are in a second question room.
+Your question is:
+Give either of the two last names in the mailroom, other than your own.
+>Correct.
+Endgame N/S hallway
+You are in a north/south hallway.
+>TECLEO:
+>COMENTARIO: # Ya he respondido 2 preguntas
+TECLEO: n
+Question room 3
+You are in a third question room.
+Your question is:
+What cartoon character is on the towel?
+>Correct.
+Endgame treasure room
+You are in the endgame treasure room.  A door leads out to the north, and
+a hallway leads to the south.
+There is a 100 dollar bill here.
+>TECLEO: get bill
+Taken.  
+>TECLEO: n
+Winner's room
+You are in the winner's room.  A door leads back to the south.
+The Mona Lisa is here.
+>TECLEO: look Mona Lisa
+I see nothing special about that.
+>TECLEO: take Mona Lisa
+Your load would be too heavy.
+>TECLEO: s
+Endgame treasure room
+>TECLEO: s
+Question room 3
+Your question is:
+How many pounds did the weight weigh?
+>Correct.
+Endgame N/S hallway
+>TECLEO: s
+Question room 2
+Your question is:
+How many corners are there in town (excluding the one with the Post Office)?
+>Correct.
+Endgame N/S hallway
+>TECLEO: s
+Question room 1
+Your question is:
+What is your password on the machine called ‘pokey’?
+>Correct.
+Endgame N/S hallway
+>TECLEO: s
+Treasure room
+You are in the treasure room.  A door leads out to the north.
+There is a silver bar here.
+There is a jewel-encrusted egg here.
+There is a valuable amethyst here.
+>TECLEO: s
+You can't go that way.
+>TECLEO: look
+Treasure room
+You are in the treasure room.  A door leads out to the north.
+There is a silver bar here.
+There is a jewel-encrusted egg here.
+There is a valuable amethyst here.
+>TECLEO: n
+Endgame N/S hallway
+>TECLEO: look
+Endgame N/S hallway
+You are in a north/south hallway.
+>TECLEO: n
+Question room 1
+Your question is:
+Which street in town is named after a U.S. state?
+>Correct.
+Endgame N/S hallway
+>TECLEO: n
+Question room 2
+Your question is:
+What is your login name on the ‘endgame’ machine?
+>Correct.
+Endgame N/S hallway
+>TECLEO: n
+Question room 3
+Your question is:
+Name either of the two objects you found by digging.
+>Correct.
+Endgame treasure room
+>TECLEO: look
+Endgame treasure room
+You are in the endgame treasure room.  A door leads out to the north, and
+a hallway leads to the south.
+>TECLEO: drop bill
+Done.
 >TECLEO:
 >TECLEO:
 >TECLEO:
@@ -2141,8 +2495,9 @@ Classroom
 >TECLEO:
 >TECLEO: quit
 
-You have scored 90 out of a possible 90 points.
-Classroom
+You have scored 10 endgame points out of a possible 110.
+Endgame treasure room
+There is a 100 dollar bill here.
 >
 #+end_src
 
