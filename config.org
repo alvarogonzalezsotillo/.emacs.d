@@ -203,7 +203,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | web-mode                       |                                                                |
 | wgrep                          |                                                                |
 | wgrep-helm                     |                                                                |
-| which-key                      | Pistas acerca de los atajos de teclado                         |
 | yafolding                      | /Folding/ de secciones basado en la indentación                |
 | cargo                          |                                                                |
 | flycheck-rust                  |                                                                |
@@ -708,16 +707,18 @@ Añadir XeLatex
 
 ** Paquete =which-key=
 
-Ayuda interactiva de teclado
+Ayuda interactiva de teclado. En el popup-type por defecto entra en conflicto con treemacs.
 #+begin_src emacs-lisp
 (use-package which-key
   :ensure t
   :config
-    (which-key-mode t))
+    (which-key-mode t)
+    (setq which-key-idle-delay 3.0)
+    (which-key-popup-type (quote frame)))
 #+end_src
 
 
-** Paquete =auto-highlight-symbol=
+** TODO Paquete =auto-highlight-symbol=
 Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en todo el buffer, para que se pueda navegar por todas las ocurrencias del fichero, pero ralentizaba bastante. Ahora uso =smartscan=.
 #+begin_src emacs-lisp
   (use-package auto-highlight-symbol
