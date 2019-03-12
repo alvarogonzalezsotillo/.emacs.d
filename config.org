@@ -714,7 +714,7 @@ Ayuda interactiva de teclado. En el popup-type por defecto entra en conflicto co
   :config
     (which-key-mode t)
     (setq which-key-idle-delay 3.0)
-    (which-key-popup-type (quote frame)))
+    (setq which-key-popup-type (quote frame)))
 #+end_src
 
 
