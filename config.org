@@ -718,7 +718,7 @@ Ayuda interactiva de teclado. En el popup-type por defecto entra en conflicto co
 #+end_src
 
 
-** TODO Paquete =auto-highlight-symbol=
+** Paquete =auto-highlight-symbol=
 Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en todo el buffer, para que se pueda navegar por todas las ocurrencias del fichero, pero ralentizaba bastante. Ahora uso =smartscan=.
 #+begin_src emacs-lisp
   (use-package auto-highlight-symbol
