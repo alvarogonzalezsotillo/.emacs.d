@@ -812,6 +812,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   :ensure t
   :config
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (setq projectile-switch-project-action 'projectile-dired)
     (projectile-mode 1))
 #+end_src
 

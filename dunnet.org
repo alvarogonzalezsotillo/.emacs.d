@@ -153,16 +153,6 @@ digraph{
 
 * Juego
 
-** combinación
-#+begin_src bash :results value code
-for c in $(seq 0 999)
-do
-  printf "%03d\n" $c
-  echo w
-done
-#+end_src
-
-
 
 ** Juego
 
@@ -184,6 +174,7 @@ set_up_fifo(){
 }
 
 send_to_fifo(){
+  log "Enviando a dunnet: $*" 
   printf "%s\n" "$*" > dunnet.in
 }
 
@@ -200,18 +191,18 @@ last_output_line(){
 get_pc_combination(){
   local msg=$(last_output_line)
   #The combination is XXX.
-  echo msg es $msg
+  log msg es $msg
   if [[ $msg == "The combination is"* ]]
   then
     combination=${msg:19:3}
-    echo Voy a leer la combinacion: $msg : $combination
+    log Voy a leer la combinacion: $msg : $combination
   fi
 }
 
 get_egg(){
   if last_output_line | grep -i "egg"
   then
-    echo He encontrado el huevo enjoyado
+    log He encontrado el huevo enjoyado
     send_to_fifo "take egg"
   fi
 }
@@ -219,23 +210,6 @@ get_egg(){
 responde_pregunta(){
   local pregunta=$(last_output_line)
   
-# What is your login name on the ‘endgame’ machine? -> toukmond
-# What type of bear was hiding your key? -> grizzly
-# How many corners are there in town (excluding the one with the Post Office)? -> 24
-# What is the last name of the author of EMACS? -> stallman
-# Excluding the endgame, how many places are there where you can put treasures for points? -> 4
-# What is the nearest whole dollar to the price of the shovel? -> 20
-# Which street in town is named after a U.S. state? -> Vermont
-# What network protocol is used between pokey and gamma? -> ftp
-# How many pounds did the weight weigh? -> 10
-# What cartoon character is on the towel? -> snoopy
-# What is the name of the bus company serving the town? -> mobytours
-# What password did you use during anonymous ftp to gamma? -> worms
-# Name either of the two objects you found by digging. -> cpu, plantinum bar 
-# Give either of the two last names in the mailroom, other than your own. -> Collier, Stock
-# What is your password on the machine called ‘pokey’? -> robert
-# How many megabytes of memory is on the CPU board for the Vax? -> 2
-# Name the STREET which runs right over the subway stop. -> Vermont
   if [[ $pregunta == "What is your login name on the ‘endgame’ machine?"*  ]]
   then
      send_to_fifo "answer" "toukmond"
@@ -333,20 +307,30 @@ start_dunnet(){
   wait_until_dunnet_start
 }
 
+computer_colors(){
+  echo -e "\e[37m\e[40m"
+}
+
+normal_colors(){
+  echo -e "\e[30m\e[47m"
+}
 
 linea_a_linea(){
   while IFS='' read -r line || [[ -n "$line" ]]
   do
      if [[ $line == \>* ]]
      then  
+        computer_colors
         local ordenalpc=${line:1}
         echo ES UNA ORDEN PARA EL PC: $ordenalpc
         send_to_fifo "$ordenalpc"
         get_pc_combination
      elif [[ $line == \#* ]]
      then
+        normal_colors
         echo COMENTARIO: $line 
      else
+       normal_colors
        echo TECLEO: $line 
        send_to_fifo $line
        get_egg
@@ -933,81 +917,105 @@ In the distance you can see that it will eventually fork off.  The
 trees here are very tall royal palms, and they are spaced equidistant
 from each other.
 There is a shovel here.
->TECLEO: take shovel
+>[30m[47m
+TECLEO: take shovel
 Taken.  
->TECLEO: look shovel
+>[30m[47m
+TECLEO: look shovel
 It is a normal shovel with a price tag attached that says $19.99.
->TECLEO: east
+>[30m[47m
+TECLEO: east
 E/W Dirt road
 You are on the continuation of a dirt road.  There are more trees on
 both sides of you.  The road continues to the east and west.
 There is a large boulder here.
->TECLEO: east
+>[30m[47m
+TECLEO: east
 Fork
 You are at a fork of two passages, one to the northeast, and one to the
 southeast.  The ground here seems very soft. You can also go back west.
->TECLEO: dig
+>[30m[47m
+TECLEO: dig
 I think you found something.
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Fork
 You are at a fork of two passages, one to the northeast, and one to the
 southeast.  The ground here seems very soft. You can also go back west.
 There is a CPU card here.
->TECLEO: take cpu
+>[30m[47m
+TECLEO: take cpu
 Taken.  
->TECLEO: look cpu
+>[30m[47m
+TECLEO: look cpu
 The CPU board has a VAX chip on it.  It seems to have
 2 Megabytes of RAM onboard.
->TECLEO: southeast
+>[30m[47m
+TECLEO: southeast
 SE/NW road
 You are on a southeast/northwest road.
 There is some food here.
->TECLEO: take food
+>[30m[47m
+TECLEO: take food
 Taken.  
->TECLEO: southeast
+>[30m[47m
+TECLEO: southeast
 Bear hangout
 You are standing at the end of a road.  A passage leads back to the
 northwest.
 There is a ferocious bear here!
->TECLEO: look bear
+>[30m[47m
+TECLEO: look bear
 It looks like a grizzly to me.
->TECLEO: drop food
+>[30m[47m
+TECLEO: drop food
 Done.
 The bear takes the food and runs away with it. He left something behind.
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Bear hangout
 You are standing at the end of a road.  A passage leads back to the
 northwest.
 There is a shiny brass key here.
->TECLEO: take key
+>[30m[47m
+TECLEO: take key
 Taken.  
->TECLEO: northwest
+>[30m[47m
+TECLEO: northwest
 SE/NW road
->TECLEO: northwest
+>[30m[47m
+TECLEO: northwest
 Fork
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Fork
 You are at a fork of two passages, one to the northeast, and one to the
 southeast.  The ground here seems very soft. You can also go back west.
->TECLEO: northeast
+>[30m[47m
+TECLEO: northeast
 NE/SW road
 You are on a northeast/southwest road.
->TECLEO: look
+>[30m[47m
+TECLEO: look
 NE/SW road
 You are on a northeast/southwest road.
->TECLEO: northeast
+>[30m[47m
+TECLEO: northeast
 Building front
 You are at the end of the road.  There is a building in front of you
 to the northeast, and the road leads back to the southwest.
->TECLEO: in
+>[30m[47m
+TECLEO: in
 Old Building hallway
 You are in the hallway of an old building.  There are rooms to the east
 and west, and doors leading out to the north and south.
->TECLEO: east
+>[30m[47m
+TECLEO: east
 Mailroom
 You are in a mailroom.  There are many bins where the mail is usually
 kept.  The exit is to the west.
->TECLEO: look bin
+>[30m[47m
+TECLEO: look bin
 All of the bins are empty.  Looking closely you can see that there
 are names written at the bottom of each bin, but most of them are
 faded away so that you cannot read them.  You can only make out three
@@ -1016,9 +1024,11 @@ names:
                    Robert Toukmond
                    Thomas Stock
 
->TECLEO: west
+>[30m[47m
+TECLEO: west
 Old Building hallway
->TECLEO: west
+>[30m[47m
+TECLEO: west
 Computer room
 You are in a computer room.  It seems like most of the equipment has
 been removed.  There is a VAX 11/780 in front of you, however, with
@@ -1026,16 +1036,20 @@ one of the cabinets wide open.  A sign on the front of the machine
 says: This VAX is named ‘pokey’.  To type on the console, use the
 ‘type’ command.  The exit is to the east.
 The panel lights are steady and motionless.
->TECLEO: insert cpu into vax
+>[30m[47m
+TECLEO: insert cpu into vax
 As you put the CPU board in the computer, it immediately springs to life.
 The lights start flashing, and the fans seem to startup.
->TECLEO: type
+>[30m[47m
+TECLEO: type
 
 
 UNIX System V, Release 2.2 (pokey)
 
-login: TECLEO: toukmond
-password: TECLEO: robert
+login: [30m[47m
+TECLEO: toukmond
+password: [30m[47m
+TECLEO: robert
 
 Welcome to Unix
 
@@ -1046,7 +1060,8 @@ directory, and deletes them after they are sent!  Be careful.
 
 Note: Restricted bourne shell in use.
 
-$ TECLEO: ls
+$ [30m[47m
+TECLEO: ls
 total 467
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
@@ -1064,21 +1079,27 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
-$ TECLEO: cd ..
-$ TECLEO: ls
+$ [30m[47m
+TECLEO: cd ..
+$ [30m[47m
+TECLEO: ls
 total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 toukmond
-$ TECLEO: cd ..
-$ TECLEO: ls
+$ [30m[47m
+TECLEO: cd ..
+$ [30m[47m
+TECLEO: ls
 total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 usr
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 rooms
-$ TECLEO: cd rooms
-$ TECLEO: ls
+$ [30m[47m
+TECLEO: cd rooms
+$ [30m[47m
+TECLEO: ls
 total 16
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
@@ -1093,57 +1114,78 @@ drwxr-xr-x  3 root     staff           512 Jan 1 1970 fork
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 e-w-dirt-road
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 dead-end
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 hidden-area
-$ TECLEO: cd hidden-area
-$ TECLEO: ls
+$ [30m[47m
+TECLEO: cd hidden-area
+$ [30m[47m
+TECLEO: ls
 total 4
 drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  3 root     staff          2048 Jan 1 1970 description
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
-$ TECLEO: cat description
+$ [30m[47m
+TECLEO: cat description
 You are in a well-hidden area off to the side of a road.  Back to the
 northeast through the brush you can see the bear hangout.
-$ TECLEO: exit
+$ [30m[47m
+TECLEO: exit
 
 You step back from the console.
 
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Old Building hallway
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Building front
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Building front
 You are at the end of the road.  There is a building in front of you
 to the northeast, and the road leads back to the southwest.
->TECLEO: sw
+>[30m[47m
+TECLEO: sw
 NE/SW road
->TECLEO: sw
+>[30m[47m
+TECLEO: sw
 Fork
->TECLEO: se
+>[30m[47m
+TECLEO: se
 SE/NW road
->TECLEO: se
+>[30m[47m
+TECLEO: se
 Bear hangout
->TECLEO: sw
+>[30m[47m
+TECLEO: sw
 Hidden area
 There is an emerald bracelet here.
->TECLEO: take bracelet
+>[30m[47m
+TECLEO: take bracelet
 Taken.  
->TECLEO: ne
+>[30m[47m
+TECLEO: ne
 Bear hangout
->TECLEO: nw
+>[30m[47m
+TECLEO: nw
 SE/NW road
->TECLEO: nw
+>[30m[47m
+TECLEO: nw
 Fork
->TECLEO: ne
+>[30m[47m
+TECLEO: ne
 NE/SW road
->TECLEO: ne
+>[30m[47m
+TECLEO: ne
 Building front
->TECLEO: in
+>[30m[47m
+TECLEO: in
 Old Building hallway
->TECLEO: w
+>[30m[47m
+TECLEO: w
 Computer room
 The panel lights are flashing in a seemingly organized pattern.
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Computer room
 You are in a computer room.  It seems like most of the equipment has
 been removed.  There is a VAX 11/780 in front of you, however, with
@@ -1151,9 +1193,12 @@ one of the cabinets wide open.  A sign on the front of the machine
 says: This VAX is named ‘pokey’.  To type on the console, use the
 ‘type’ command.  The exit is to the east.
 The panel lights are flashing in a seemingly organized pattern.
->TECLEO: type
-$ TECLEO: cd /usr/toukmond
-$ TECLEO: ls
+>[30m[47m
+TECLEO: type
+$ [30m[47m
+TECLEO: cd /usr/toukmond
+$ [30m[47m
+TECLEO: ls
 total 467
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
@@ -1172,50 +1217,67 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
 -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
-$ TECLEO: uncompress paper.o.Z
-$ TECLEO: exit
+$ [30m[47m
+TECLEO: uncompress paper.o.Z
+$ [30m[47m
+TECLEO: exit
 
 You step back from the console.
 
->TECLEO: inventory
+>[30m[47m
+TECLEO: inventory
 You currently have:
 A lamp
 A shovel
 A brass key
 A bracelet
 A slip of paper
->TECLEO: look paper
+>[30m[47m
+TECLEO: look paper
 The paper says: Don't forget to type ‘help’ for help.  Also, remember
 this word: ‘worms’
->TECLEO: type
-$ TECLEO: ftp gamma
+>[30m[47m
+TECLEO: type
+$ [30m[47m
+TECLEO: ftp gamma
 Connected to gamma. FTP ver 0.9 00:00:00 01/01/70
-Username: TECLEO: anonymous
+Username: [30m[47m
+TECLEO: anonymous
 Guest login okay, send your user ident as password.
-Password: TECLEO: toukmond@pockey
+Password: [30m[47m
+TECLEO: toukmond@pockey
 Guest login okay, user access restrictions apply.
-ftp> TECLEO: help
+ftp> [30m[47m
+TECLEO: help
 Possible commands are:
 send    quit    type   ascii  binary   help
-ftp> TECLEO: type binary
+ftp> [30m[47m
+TECLEO: type binary
 Type set to binary.
-ftp> TECLEO: send bracelet.o
+ftp> [30m[47m
+TECLEO: send bracelet.o
 Sending binary file for a bracelet, (0 bytes)
 Transfer complete.
-ftp> TECLEO: send paper.o
+ftp> [30m[47m
+TECLEO: send paper.o
 Sending binary file for a slip of paper, (0 bytes)
 Transfer complete.
-ftp> TECLEO: send shovel.o
+ftp> [30m[47m
+TECLEO: send shovel.o
 Sending binary file for a shovel, (0 bytes)
 Transfer complete.
-ftp> TECLEO: send key.o
+ftp> [30m[47m
+TECLEO: send key.o
 Sending binary file for a brass key, (0 bytes)
 Transfer complete.
-ftp> TECLEO: send lamp.o
+ftp> [30m[47m
+TECLEO: send lamp.o
 Sending binary file for a lamp, (0 bytes)
 Transfer complete.
-ftp> TECLEO: quit
-$ TECLEO: ls
+ftp> [30m[47m
+TECLEO: quit
+$ [30m[47m
+TECLEO: ls
 total 467
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
@@ -1229,8 +1291,10 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
-$ TECLEO: rlogin gamma
-Password: TECLEO: worms
+$ [30m[47m
+TECLEO: rlogin gamma
+Password: [30m[47m
+TECLEO: worms
 
 You begin to feel strange for a moment, and you lose your items.
 You step back from the console.
@@ -1243,209 +1307,291 @@ There is a slip of paper here.
 There is a shovel here.
 There is a shiny brass key here.
 There is a lamp nearby.
->TECLEO: take bracelet
+>[30m[47m
+TECLEO: take bracelet
 Taken.  
->TECLEO: take paper
+>[30m[47m
+TECLEO: take paper
 Taken.  
->TECLEO: take shovel
+>[30m[47m
+TECLEO: take shovel
 Taken.  
->TECLEO: take key
+>[30m[47m
+TECLEO: take key
 Taken.  
->TECLEO: take lamp
+>[30m[47m
+TECLEO: take lamp
 Taken.  
->TECLEO: look bracelet
+>[30m[47m
+TECLEO: look bracelet
 I see nothing special about that.
->TECLEO: look lamp
+>[30m[47m
+TECLEO: look lamp
 The lamp is hand-crafted by Geppetto.
->TECLEO: look shovel
+>[30m[47m
+TECLEO: look shovel
 It is a normal shovel with a price tag attached that says $19.99.
->TECLEO: look key
+>[30m[47m
+TECLEO: look key
 I see nothing special about that.
->TECLEO: east
+>[30m[47m
+TECLEO: east
 Northbound Hallway
 You are at the south end of a hallway that leads to the north.  There
 are rooms to the east and west.
->TECLEO: east
+>[30m[47m
+TECLEO: east
 Sauna
 You are in a sauna.  There is nothing in the room except for a dial
 on the wall.  A door leads out to west.
 It is normal room temperature in here.
->TECLEO: look dial
+>[30m[47m
+TECLEO: look dial
 The dial points to a temperature scale which has long since faded away.
->TECLEO: turn dial counterclockwise
+>[30m[47m
+TECLEO: turn dial counterclockwise
 The dial will not turn further in that direction.
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Sauna
 You are in a sauna.  There is nothing in the room except for a dial
 on the wall.  A door leads out to west.
 It is normal room temperature in here.
->TECLEO: turn dial counterclockwise
+>[30m[47m
+TECLEO: turn dial counterclockwise
 The dial will not turn further in that direction.
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Sauna
 You are in a sauna.  There is nothing in the room except for a dial
 on the wall.  A door leads out to west.
 It is normal room temperature in here.
->TECLEO: turn dial counterclockwise
+>[30m[47m
+TECLEO: turn dial counterclockwise
 The dial will not turn further in that direction.
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Sauna
 You are in a sauna.  There is nothing in the room except for a dial
 on the wall.  A door leads out to west.
 It is normal room temperature in here.
->TECLEO: west
+>[30m[47m
+TECLEO: west
 Northbound Hallway
->TECLEO: north
+>[30m[47m
+TECLEO: north
 End of N/S Hallway
 You are at the end of a north/south hallway.  You can go back to the south,
 or off to a room to the east.
->TECLEO: east
+>[30m[47m
+TECLEO: east
 Weight room
 You are in an old weight room.  All of the equipment is either destroyed
 or completely broken.  There is a door out to the west, and there is a ladder
 leading down a hole in the floor.
 There is a 10 pound weight here.
 There is a life preserver here.
->TECLEO: take weight
+>[30m[47m
+TECLEO: take weight
 Your load would be too heavy.
->TECLEO: look weight
+>[30m[47m
+TECLEO: look weight
 You observe that the weight is heavy.
->TECLEO: take life preserver
+>[30m[47m
+TECLEO: take life preserver
 Taken.  
->TECLEO: look life preserver
+>[30m[47m
+TECLEO: look life preserver
 It says S. S. Minnow.
->TECLEO: down
+>[30m[47m
+TECLEO: down
 Maze button room
 You are in a maze of twisty little passages, all alike.
 There is a button on the ground here.
->TECLEO: look button
+>[30m[47m
+TECLEO: look button
 I see nothing special about that.
->TECLEO: press button
+>[30m[47m
+TECLEO: press button
 As you press the button, you notice a passageway open up, but
 as you release it, the passageway closes.
->TECLEO:
->TECLEO: drop life preserver
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO: drop life preserver
 Done.
->TECLEO: drop bracelet
+>[30m[47m
+TECLEO: drop bracelet
 Done.
->TECLEO: drop paper
+>[30m[47m
+TECLEO: drop paper
 Done.
->TECLEO: drop shovel
+>[30m[47m
+TECLEO: drop shovel
 Done.
->TECLEO: drop key
+>[30m[47m
+TECLEO: drop key
 Done.
->TECLEO: up
+>[30m[47m
+TECLEO: up
 Weight room
 There is a 10 pound weight here.
->TECLEO: take weight
+>[30m[47m
+TECLEO: take weight
 Taken.  
->TECLEO: down
+>[30m[47m
+TECLEO: down
 Maze button room
 There is a life preserver here.
 There is an emerald bracelet here.
 There is a slip of paper here.
 There is a shovel here.
 There is a shiny brass key here.
->TECLEO: put weight on button
+>[30m[47m
+TECLEO: put weight on button
 Done.
 A passageway opens.
->TECLEO:
->TECLEO: nw
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO: nw
 Maze
 You are in a maze of little twisty passages, all alike.
->TECLEO: up
+>[30m[47m
+TECLEO: up
 Maze
 You are in a maze of thirsty little passages, all alike.
 There is a wax statuette of Richard Stallman here.
 There is a floppy disk here.
->TECLEO: take floppy
+>[30m[47m
+TECLEO: take floppy
 Taken.  
->TECLEO: take statuette
+>[30m[47m
+TECLEO: take statuette
 Taken.  
->TECLEO: look statuette
+>[30m[47m
+TECLEO: look statuette
 The statuette is of the likeness of Richard Stallman, the author of the
 famous EMACS editor.  You notice that he is not wearing any shoes.
->COMENTARIO: # TENGO QUE VOLVER A LA SAUNA A FUNDIR LA STATUETTE
+>[30m[47m
+COMENTARIO: # TENGO QUE VOLVER A LA SAUNA A FUNDIR LA STATUETTE
+[30m[47m
 TECLEO: s
 Maze
->COMENTARIO: # ESTOY EN Maze little twisty passages
+>[30m[47m
+COMENTARIO: # ESTOY EN Maze little twisty passages
+[30m[47m
 TECLEO: look
 Maze
 You are in a maze of little twisty passages, all alike.
->TECLEO: up
+>[30m[47m
+TECLEO: up
 Maze
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Maze
 You are in a maze of thirsty little passages, all alike.
->COMENTARIO: # ESTOY EN Maze thirsty little passages, al south little twisty, al se twenty little
+>[30m[47m
+COMENTARIO: # ESTOY EN Maze thirsty little passages, al south little twisty, al se twenty little
+[30m[47m
 TECLEO: se
 Maze
 You are in a maze of twenty little passages, all alike.
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Maze
 You are in a maze of twenty little passages, all alike.
->COMENTARIO: # estoy en twenty little
+>[30m[47m
+COMENTARIO: # estoy en twenty little
+[30m[47m
 TECLEO: down
 Maze
 You are in a daze of twisty little passages, all alike.
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Maze
 You are in a daze of twisty little passages, all alike.
->COMENTARIO: # estoy en daze of twisty little, twisty little cabbages al nw
+>[30m[47m
+COMENTARIO: # estoy en daze of twisty little, twisty little cabbages al nw
+[30m[47m
 TECLEO: nw
 Maze
 You are in a maze of twisty little cabbages, all alike.
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Maze
 You are in a maze of twisty little cabbages, all alike.
->COMENTARIO: # estoy en twisty little cabbages, reception area al nw
+>[30m[47m
+COMENTARIO: # estoy en twisty little cabbages, reception area al nw
+[30m[47m
 TECLEO: ne
 Weight room
->COMENTARIO: # vuelvo a Weight room
+>[30m[47m
+COMENTARIO: # vuelvo a Weight room
+[30m[47m
 TECLEO: w
 End of N/S Hallway
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Northbound Hallway
->TECLEO: drop floppy
+>[30m[47m
+TECLEO: drop floppy
 Done.
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Sauna
 It is normal room temperature in here.
->COMENTARIO: # estoy en la sauna, a fundir la estatua
+>[30m[47m
+COMENTARIO: # estoy en la sauna, a fundir la estatua
+[30m[47m
 TECLEO: drop statuette
 Done.
->TECLEO: turn dial clockwise
+>[30m[47m
+TECLEO: turn dial clockwise
 It is now luke warm in here.  You are perspiring.
->TECLEO: turn dial clockwise
+>[30m[47m
+TECLEO: turn dial clockwise
 It is pretty hot in here.  It is still very comfortable.
->TECLEO: turn dial clockwise
+>[30m[47m
+TECLEO: turn dial clockwise
 It is now very hot.  There is something very refreshing about this.
 You notice the wax on your statuette beginning to melt, until it completely
 melts off.  You are left with a beautiful diamond!
->TECLEO: take diamond
+>[30m[47m
+TECLEO: take diamond
 Taken.  
->TECLEO: turn dial counterclockwise
+>[30m[47m
+TECLEO: turn dial counterclockwise
 It is pretty hot in here.  It is still very comfortable.
->TECLEO: turn dial counterclockwise
+>[30m[47m
+TECLEO: turn dial counterclockwise
 It is now luke warm in here.  You are perspiring.
->TECLEO: turn dial counterclockwise
+>[30m[47m
+TECLEO: turn dial counterclockwise
 The temperature has returned to normal room temperature.
->TECLEO: turn dial counterclockwise
+>[30m[47m
+TECLEO: turn dial counterclockwise
 The dial will not turn further in that direction.
->TECLEO: w
+>[30m[47m
+TECLEO: w
 Northbound Hallway
 There is a floppy disk here.
->TECLEO: take floppy
+>[30m[47m
+TECLEO: take floppy
 Taken.  
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Northbound Hallway
 You are at the south end of a hallway that leads to the north.  There
 are rooms to the east and west.
->TECLEO: north
+>[30m[47m
+TECLEO: north
 End of N/S Hallway
->TECLEO: east
+>[30m[47m
+TECLEO: east
 Weight room
->TECLEO: down
+>[30m[47m
+TECLEO: down
 Maze button room
 There is a life preserver here.
 There is an emerald bracelet here.
@@ -1453,7 +1599,8 @@ There is a slip of paper here.
 There is a shovel here.
 There is a shiny brass key here.
 There is a 10 pound weight here.
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Maze button room
 You are in a maze of twisty little passages, all alike.
 There is a button on the ground here.
@@ -1463,68 +1610,98 @@ There is a slip of paper here.
 There is a shovel here.
 There is a shiny brass key here.
 There is a 10 pound weight here.
->TECLEO:
->TECLEO:
->COMENTARIO: # DESPUES DE ABRIR EL maze PILLO EL INVENTARIO
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO:
+>[30m[47m
+COMENTARIO: # DESPUES DE ABRIR EL maze PILLO EL INVENTARIO
+[30m[47m
 TECLEO: take life preserver
 Taken.  
->TECLEO: take bracelet
+>[30m[47m
+TECLEO: take bracelet
 Taken.  
->TECLEO: take paper
+>[30m[47m
+TECLEO: take paper
 Taken.  
->TECLEO: take shovel
+>[30m[47m
+TECLEO: take shovel
 Taken.  
->TECLEO: take key
+>[30m[47m
+TECLEO: take key
 Taken.  
->TECLEO:
->COMENTARIO: # ESTOY EN Maze button room
+>[30m[47m
+TECLEO:
+>[30m[47m
+COMENTARIO: # ESTOY EN Maze button room
+[30m[47m
 TECLEO: nw
 Maze
->TECLEO: up
+>[30m[47m
+TECLEO: up
 Maze
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Maze
->TECLEO: up
+>[30m[47m
+TECLEO: up
 Maze
->TECLEO: se
+>[30m[47m
+TECLEO: se
 Maze
->TECLEO: down
+>[30m[47m
+TECLEO: down
 Maze
->TECLEO: nw
+>[30m[47m
+TECLEO: nw
 Maze
->TECLEO: nw
+>[30m[47m
+TECLEO: nw
 Reception area
 You are in a reception area for a health and fitness center.  The place
 appears to have been recently ransacked, and nothing is left.  There is
 a door out to the south, and a crawlspace to the southeast.
->COMENTARIO: # DEBERÍA ESTAR EN reception area
+>[30m[47m
+COMENTARIO: # DEBERÍA ESTAR EN reception area
+[30m[47m
 TECLEO:
->TECLEO:
->TECLEO: s
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO: s
 Health Club front
 You are outside a large building to the north which used to be a health
 and fitness center.  A road leads to the south.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Lakefront North
 You are at the north side of a lake.  On the other side you can see
 a road which leads to a cave.  The water appears very deep.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Lakefront South
 You are at the south side of a lake.  A road goes to the south.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Cave Entrance
 The entrance to a cave is to the south.  To the north, a road leads
 towards a deep lake.  On the ground nearby there is a chute, with a sign
 that says ‘put treasures here for points’.
->COMENTARIO: # PONGO TESOROS
+>[30m[47m
+COMENTARIO: # PONGO TESOROS
+[30m[47m
 TECLEO: put bracelet on chute
 You hear it slide down the chute and off into the distance.
 You have scored 10 out of a possible 90 points.
->TECLEO: put diamond on chute
+>[30m[47m
+TECLEO: put diamond on chute
 You hear it slide down the chute and off into the distance.
 You have scored 20 out of a possible 90 points.
->TECLEO:
->TECLEO: s
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO: s
 As you enter the room you hear a rumbling noise.  You look back to see
 huge rocks sliding down from the ceiling, and blocking your way out.
 
@@ -1533,149 +1710,199 @@ You are in a misty, humid room carved into a mountain.
 To the north is the remains of a rockslide.  To the east, a small
 passage leads away into the darkness.
 There is a gold bar here.
->TECLEO: take gold bar
+>[30m[47m
+TECLEO: take gold bar
 Taken.  
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Cave E/W passage
 You are in an east/west passageway.  The walls here are made of
 multicolored rock and are quite beautiful.
->TECLEO: e
+>[30m[47m
+TECLEO: e
 N/S/W Junction
 You are at the junction of two passages. One goes north/south, and
 the other goes west.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 North end of cave passage
 You are at the north end of a north/south passageway.  There are stairs
 leading down from here.  There is also a door leading west.
->TECLEO: down
+>[30m[47m
+TECLEO: down
 Bedroom
 You are in what appears to be a worker's bedroom.  There is a queen-
 sized bed in the middle of the room, and a painting hanging on the
 wall.  A door leads to another room to the south, and stairways
 lead up and down.
->TECLEO: look painting
+>[30m[47m
+TECLEO: look painting
 It is a velvet painting of Elvis Presley.  It seems to be nailed to the
 wall, and you cannot move it.
->TECLEO: down
+>[30m[47m
+TECLEO: down
 NE end of NE/SW cave passage
 You are at the northeast end of a northeast/southwest passageway.
 Stairs lead up out of sight.
->TECLEO: sw
+>[30m[47m
+TECLEO: sw
 NE/SW-E/W junction
 You are at the junction of northeast/southwest and east/west passages.
->TECLEO: e
+>[30m[47m
+TECLEO: e
 East end of E/W cave passage
 You are at the east end of an E/W passage.  There are stairs leading up
 to a room above.
->TECLEO: up
+>[30m[47m
+TECLEO: up
 Horseshoe boulder room
 You are in a room which is bare, except for a horseshoe shaped boulder
 in the center.  Stairs lead down from here.
->TECLEO: look boulder
+>[30m[47m
+TECLEO: look boulder
 It is just a boulder.  It cannot be moved.
->TECLEO:
->TECLEO:
->TECLEO: d
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO: d
 East end of E/W cave passage
->TECLEO: w
+>[30m[47m
+TECLEO: w
 NE/SW-E/W junction
->TECLEO: look
+>[30m[47m
+TECLEO: look
 NE/SW-E/W junction
 You are at the junction of northeast/southwest and east/west passages.
->TECLEO: w
+>[30m[47m
+TECLEO: w
 West end of E/W cave passage
 You are at the west end of an E/W passage.  There is a hole on the ground
 which leads down out of sight.
->TECLEO: look
+>[30m[47m
+TECLEO: look
 West end of E/W cave passage
 You are at the west end of an E/W passage.  There is a hole on the ground
 which leads down out of sight.
->TECLEO: d
+>[30m[47m
+TECLEO: d
 Empty room
 You are in a room which is completely empty.  Doors lead out to the north
 and east.
->COMENTARIO: #empty room
+>[30m[47m
+COMENTARIO: #empty room
+[30m[47m
 TECLEO: n
 Blue room
 You are in an empty room.  Interestingly enough, the stones in this
 room are painted blue.  Doors lead out to the east and south.
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Yellow room
 You are in an empty room.  Interestingly enough, the stones in this
 room are painted yellow.  Doors lead out to the south and west.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Red room
 You are in an empty room.  Interestingly enough, the stones in this room
 are painted red.  Doors lead out to the west and north.
 There is a beach towel on the ground here.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Yellow room
->TECLEO: e
+>[30m[47m
+TECLEO: e
 You can't go that way.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Red room
 There is a beach towel on the ground here.
->TECLEO: look towel
+>[30m[47m
+TECLEO: look towel
 It has a picture of snoopy on it.
->TECLEO: take towel
+>[30m[47m
+TECLEO: take towel
 Taken.  Taking the towel reveals a hole in the floor.
->TECLEO: down
+>[30m[47m
+TECLEO: down
 Long n/s hallway
 You are in the middle of a long north/south hallway.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 3/4 north
 You are 3/4 of the way towards the north end of a long north/south hallway.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 North end of long hallway
 You are at the north end of a long north/south hallway.  There are stairs
 leading upwards.
->TECLEO: u
+>[30m[47m
+TECLEO: u
 Stair landing
 You are at a landing in a stairwell which continues up and down.
 There is a box with a slit in it, bolted to the wall here.
->TECLEO: look box
+>[30m[47m
+TECLEO: look box
 The box has a slit in the top of it, and on it, in sloppy handwriting, is
 written: ‘For key upgrade, put key in here.’
->TECLEO: put key on box
+>[30m[47m
+TECLEO: put key on box
 As you drop the key, the box begins to shake.  Finally it explodes
 with a bang.  The key seems to have vanished!
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Stair landing
 You are at a landing in a stairwell which continues up and down.
->TECLEO:
->COMENTARIO: # stair landing, box has exploded
+>[30m[47m
+TECLEO:
+>[30m[47m
+COMENTARIO: # stair landing, box has exploded
+[30m[47m
 TECLEO: u
 Up/down staircase
 You are at the continuation of an up/down staircase.
->TECLEO: u
+>[30m[47m
+TECLEO: u
 Top of staircase.
 You are at the top of a staircase leading down.  A crawlway leads off
 to the northeast.
->TECLEO: ne
+>[30m[47m
+TECLEO: ne
 NE crawlway
 You are in a crawlway that leads northeast or southwest.
->TECLEO: ne
+>[30m[47m
+TECLEO: ne
 Small crawlspace
 You are in a small crawlspace.  There is a hole in the ground here, and
 a small passage back to the southwest.
 There is an axe here.
->TECLEO: get axe
+>[30m[47m
+TECLEO: get axe
 Taken.  
->TECLEO: look axe
+>[30m[47m
+TECLEO: look axe
 I see nothing special about that.
->TECLEO: d
+>[30m[47m
+TECLEO: d
 N/S/W Junction
->TECLEO:
->COMENTARIO: #N/S/W Junction
+>[30m[47m
+TECLEO:
+>[30m[47m
+COMENTARIO: #N/S/W Junction
+[30m[47m
 TECLEO: n
 North end of cave passage
->TECLEO: look
+>[30m[47m
+TECLEO: look
+[30m[47m
+TECLEO: d
 North end of cave passage
 You are at the north end of a north/south passageway.  There are stairs
 leading down from here.  There is also a door leading west.
->TECLEO: d
-Bedroom
->TECLEO: sleep
+>Bedroom
+>[30m[47m
+TECLEO: sleep
 As soon as you start to doze off you begin dreaming.  You see images of
 workers digging caves, slaving in the humid heat.  Then you see yourself
 as one of these workers.  While no one is looking, you leave the group
@@ -1683,177 +1910,241 @@ and walk into a room.  The room is bare except for a horseshoe
 shaped piece of stone in the center.  You see yourself digging a hole in
 the ground, then putting some kind of treasure in it, and filling the hole
 with dirt again.  After this, you immediately wake up.
->COMENTARIO: # HAY QUE IR A LA HERRADURA Y ENTERRAR ALGO
+>[30m[47m
+COMENTARIO: # HAY QUE IR A LA HERRADURA Y ENTERRAR ALGO
+[30m[47m
 TECLEO: d
 NE end of NE/SW cave passage
->TECLEO: sw
+>[30m[47m
+TECLEO: sw
 NE/SW-E/W junction
->TECLEO: e
+>[30m[47m
+TECLEO: e
 East end of E/W cave passage
->TECLEO: u
+>[30m[47m
+TECLEO: u
 Horseshoe boulder room
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Horseshoe boulder room
 You are in a room which is bare, except for a horseshoe shaped boulder
 in the center.  Stairs lead down from here.
->TECLEO: dig
+>[30m[47m
+TECLEO: dig
 I think you found something.
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Horseshoe boulder room
 You are in a room which is bare, except for a horseshoe shaped boulder
 in the center.  Stairs lead down from here.
 There is a platinum bar here.
->TECLEO: take platinum bar
+>[30m[47m
+TECLEO: take platinum bar
 Taken.  
->TECLEO: look platinum bar
+>[30m[47m
+TECLEO: look platinum bar
 I see nothing special about that.
->TECLEO:
->COMENTARIO: # vuelvo a la habitación, creo que hay un baño
+>[30m[47m
+TECLEO:
+>[30m[47m
+COMENTARIO: # vuelvo a la habitación, creo que hay un baño
+[30m[47m
 TECLEO: d
 East end of E/W cave passage
->TECLEO: w
+>[30m[47m
+TECLEO: w
 NE/SW-E/W junction
->TECLEO: ne
+>[30m[47m
+TECLEO: ne
 NE end of NE/SW cave passage
->TECLEO: u
+>[30m[47m
+TECLEO: u
 Bedroom
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Bathroom
 You are in a bathroom built for workers in the cave.  There is a
 urinal hanging on the wall, and some exposed pipes on the opposite
 wall where a sink used to be.  To the north is a bedroom.
->TECLEO:
->COMENTARIO: # no sé que hacer con el urinal, lo he mirado en las pistas
+>[30m[47m
+TECLEO:
+>[30m[47m
+COMENTARIO: # no sé que hacer con el urinal, lo he mirado en las pistas
+[30m[47m
 TECLEO: put gold into urinal
 You hear it plop down in some water below.
->TECLEO: flush urinal
+>[30m[47m
+TECLEO: flush urinal
 Whoooosh!!
 You have scored 30 out of a possible 90 points.
->TECLEO: put platinum into urinal
+>[30m[47m
+TECLEO: put platinum into urinal
 You hear it plop down in some water below.
->TECLEO: flush urinal
+>[30m[47m
+TECLEO: flush urinal
 Whoooosh!!
 You have scored 40 out of a possible 90 points.
->TECLEO:
->COMENTARIO: # voy a mirar lo que me falta: long ns hallway
+>[30m[47m
+TECLEO:
+>[30m[47m
+COMENTARIO: # voy a mirar lo que me falta: long ns hallway
+[30m[47m
 TECLEO: n
 Bedroom
->TECLEO: d
+>[30m[47m
+TECLEO: d
 NE end of NE/SW cave passage
->TECLEO: sw
+>[30m[47m
+TECLEO: sw
 NE/SW-E/W junction
->TECLEO: w
+>[30m[47m
+TECLEO: w
 West end of E/W cave passage
->TECLEO: d
+>[30m[47m
+TECLEO: d
 Empty room
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Red room
 There is a hole in the floor here.
->TECLEO: d
+>[30m[47m
+TECLEO: d
 Long n/s hallway
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Long n/s hallway
 You are in the middle of a long north/south hallway.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 3/4 south
 You are 3/4 of the way towards the south end of a long north/south hallway.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 South end of long hallway
 You are at the south end of a long north/south hallway.  There is a hole
 to the south.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 PC area
 You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->TECLEO: look pc
+>[30m[47m
+TECLEO: look pc
 It is a personal computer that has only one floppy disk drive.
->TECLEO: insert floppy into pc
+>[30m[47m
+TECLEO: insert floppy into pc
 Done.
->TECLEO:
->COMENTARIO: # me pongo a teclear en el pc
+>[30m[47m
+TECLEO:
+>[30m[47m
+COMENTARIO: # me pongo a teclear en el pc
+[37m[40m
 ES UNA ORDEN PARA EL PC: reset
-Current time is 21:35:21
-Enter new time: msg es >>Current time is 21:35:21 Enter new time:
+Current time is 22:54:18
+Enter new time: [37m[40m
 ES UNA ORDEN PARA EL PC:
-A> msg es >>Current time is 21:35:21 Enter new time: A>
+A> [30m[47m
 COMENTARIO: #>dir
+[37m[40m
 ES UNA ORDEN PARA EL PC: type foo.txt
 
-The combination is 618.
-A> msg es The combination is 618. A>
-Voy a leer la combinacion: The combination is 618. A> : 618
+The combination is 482.
+A> [37m[40m
 ES UNA ORDEN PARA EL PC: exit
 
 You power down the machine and step back.
 
->msg es >
+>[30m[47m
 TECLEO:
->TECLEO: look
+>[30m[47m
+TECLEO: look
 PC area
 You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->COMENTARIO: # Dentro del bucle la combinación es:
+>[30m[47m
+COMENTARIO: # Dentro del bucle la combinación es:
+[30m[47m
 COMENTARIO: # Así que tengo que hacer otro bucle, porque la variable ya está sustituida
+[30m[47m
 TECLEO: look
 PC area
 You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->aqui tengo la combinación: 618
+>aqui tengo la combinación: 482
+[30m[47m
 TECLEO: look
 PC area
 You have reached a dead end.  There is a PC on the floor here.  Above
 it is a sign that reads:
           Type the ‘reset’ command to type on the PC.
 A hole leads north.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 South end of long hallway
->TECLEO: n
+>[30m[47m
+TECLEO: n
 3/4 south
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Long n/s hallway
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Long n/s hallway
 You are in the middle of a long north/south hallway.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 3/4 north
->TECLEO: n
+>[30m[47m
+TECLEO: n
 North end of long hallway
->TECLEO: u
+>[30m[47m
+TECLEO: u
 Stair landing
->TECLEO: u
+>[30m[47m
+TECLEO: u
 Up/down staircase
->TECLEO: u
+>[30m[47m
+TECLEO: u
 Top of staircase.
->TECLEO: ne
+>[30m[47m
+TECLEO: ne
 NE crawlway
->TECLEO: ne
+>[30m[47m
+TECLEO: ne
 Small crawlspace
->TECLEO: d
+>[30m[47m
+TECLEO: d
 N/S/W Junction
->TECLEO: n
+>[30m[47m
+TECLEO: n
 North end of cave passage
->TECLEO: w
+>[30m[47m
+TECLEO: w
 You must type a 3 digit combination code to enter this room.
-Enter it here: TECLEO: 618
+Enter it here: [30m[47m
+TECLEO: 482
 Gamma computing center
 You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
 away in here.  There is an ethernet cable coming out of one of the units,
 and going through the ceiling.  There is no console here on which you
 could type.
->TECLEO: look ibm
+>[30m[47m
+TECLEO: look ibm
 I see nothing special about that.
->TECLEO: cut cable with axe
+>[30m[47m
+TECLEO: cut cable with axe
 As you break the ethernet cable, everything starts to blur.  You collapse
 for a moment, then straighten yourself up.
 
 Connection closed.
-$ TECLEO: ls
+$ [30m[47m
+TECLEO: ls
 total 467
 drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
 drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
@@ -1867,14 +2158,16 @@ drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
 -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
-$ TECLEO: exit
+$ [30m[47m
+TECLEO: exit
 
 You step back from the console.
 
 Computer room
 The panel lights are flashing in a seemingly organized pattern.
 There is a shiny brass key here.
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Computer room
 You are in a computer room.  It seems like most of the equipment has
 been removed.  There is a VAX 11/780 in front of you, however, with
@@ -1883,36 +2176,46 @@ says: This VAX is named ‘pokey’.  To type on the console, use the
 ‘type’ command.  The exit is to the east.
 The panel lights are flashing in a seemingly organized pattern.
 There is a shiny brass key here.
->TECLEO: take key
+>[30m[47m
+TECLEO: take key
 Taken.  
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Old Building hallway
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Old Building hallway
 You are in the hallway of an old building.  There are rooms to the east
 and west, and doors leading out to the north and south.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Meadow
 You are in a meadow in the back of an old building.  A small path leads
 to the west, and a door leads to the south.
 There is a lamp nearby.
 There is a bus driver's license here.
 There is a silver bar here.
->TECLEO: take silver bar
+>[30m[47m
+TECLEO: take silver bar
 Taken.  
->TECLEO: take license
+>[30m[47m
+TECLEO: take license
 Taken.  
->TECLEO: take lamp
+>[30m[47m
+TECLEO: take lamp
 Taken.  
->TECLEO: w
+>[30m[47m
+TECLEO: w
 Post office
 You are near the remains of a post office.  There is a mail drop on the
 face of the building, but you cannot see where it leads.  A path leads
 back to the east, and a road leads to the north.
->TECLEO: put silver into mail drop
+>[30m[47m
+TECLEO: put silver into mail drop
 You hear it slide down the chute and off into the distance.
 You have scored 50 out of a possible 90 points.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Main-Maple intersection
 You are at the intersection of Main Street and Maple Ave.  Main street
 runs north and south, and Maple Ave runs east off into the distance.
@@ -1920,254 +2223,355 @@ If you look north and east you can see many intersections, but all of
 the buildings that used to stand here are gone.  Nothing remains except
 street signs.
 There is a road to the northwest leading to a gate that guards a building.
->TECLEO:
->COMENTARIO: # estoy en las calles: main-maple
+>[30m[47m
+TECLEO:
+>[30m[47m
+COMENTARIO: # estoy en las calles: main-maple
+[30m[47m
 TECLEO: e
 First-Maple intersection
 You are at the south end of First Street at Maple Ave.
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Second-Maple intersection
 You are at the south end of Second Street at Maple Ave.
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Third-Maple intersection
 You are at the south end of Third Street at Maple Ave.
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Fourth-Maple intersection
 You are at the south end of Fourth Street at Maple Ave.
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Fifth-Maple intersection
 You are at the south end of Fifth Street at the east end of Maple Ave.
->COMENTARIO: # he recorrido Maple
+>[30m[47m
+COMENTARIO: # he recorrido Maple
+[30m[47m
 TECLEO:
->COMENTARIO: #empiezo en rejilla, nnnnn w sssss w nnnnn .....
+>[30m[47m
+COMENTARIO: #empiezo en rejilla, nnnnn w sssss w nnnnn .....
+[30m[47m
 COMENTARIO: #el huevo estará en algún sitio, se recogerá automáticamente cuando se vea
+[30m[47m
 TECLEO: n
 Fifth-Oaktree intersection
 You are at the intersection of Fifth Street and the east end of Oaktree Ave.
 There is a cliff off to the east.
 There are some valuable coins here.
->TECLEO: take coins
+>[30m[47m
+TECLEO: take coins
 Taken.  
->TECLEO:
->COMENTARIO: # miro el barranco
+>[30m[47m
+TECLEO:
+>[30m[47m
+COMENTARIO: # miro el barranco
+[30m[47m
 TECLEO: look cliff
 It is a HIGH cliff.
->TECLEO:
->TECLEO:
->TECLEO:
->TECLEO:
->TECLEO:
->TECLEO: n
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO: n
 Fifth-Vermont intersection
 You are at the intersection of Fifth Street and the east end of Vermont Ave.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Fifth-Sycamore intersection
 You are at the north end of Fifth Street and the east end of Sycamore Ave.
 There is a bus here.
->COMENTARIO: # he llegado a sycamore con la quinta
+>[30m[47m
+COMENTARIO: # he llegado a sycamore con la quinta
+[30m[47m
 TECLEO:
->TECLEO: w
+>[30m[47m
+TECLEO: w
 Fourth-Sycamore intersection
 You are at the north end of Fourth Street at Sycamore Ave.
->TECLEO:
->TECLEO: s
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO: s
 Fourth-Vermont intersection
 You are at the intersection of Fourth Street and Vermont Ave.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Fourth-Oaktree intersection
 You are at the intersection of Fourth Street and Oaktree Ave.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Fourth-Maple intersection
->TECLEO: s
+>[30m[47m
+TECLEO: s
 You can't go that way.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 You can't go that way.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 You can't go that way.
->TECLEO: w
+>[30m[47m
+TECLEO: w
 Third-Maple intersection
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Third-Oaktree intersection
 You are at the intersection of Third Street and Oaktree Ave.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Third-Vermont intersection
 You are at the intersection of Third Street and Vermont Ave.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Third-Sycamore intersection
 You are at the north end of Third Street at Sycamore Ave.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 You can't go that way.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 You can't go that way.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 You can't go that way.
->TECLEO: w
+>[30m[47m
+TECLEO: w
 Second-Sycamore intersection
 You are at the north end of Second Street at Sycamore Ave.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Second-Vermont intersection
 You are at the intersection of Second Street and Vermont Ave.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Second-Oaktree intersection
 You are at the intersection of Second Street and Oaktree Ave.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Second-Maple intersection
->TECLEO: s
+>[30m[47m
+TECLEO: s
 You can't go that way.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 You can't go that way.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 You can't go that way.
->TECLEO: w
+>[30m[47m
+TECLEO: w
 First-Maple intersection
->TECLEO: n
+>[30m[47m
+TECLEO: n
 First-Oaktree intersection
 You are at the intersection of First Street and Oaktree Ave.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 First-Vermont intersection
 You are at the intersection of First Street and Vermont Ave.
->TECLEO: n
-First-Sycamore intersection
-You are at the north end of First Street at Sycamore Ave.
->TECLEO: n
-You can't go that way.
->TECLEO: w
-Main-Sycamore intersection
-You are at the north end of Main Street at the west end of Sycamore Ave.
->TECLEO: s
-Main-Vermont intersection
-You are at the intersection of Main Street and the west end of Vermont Ave.
 There is a jewel-encrusted egg here.
 >There is a jewel-encrusted egg here.
-He encontrado el huevo enjoyado
 Taken.  
->TECLEO: s
-Main-Oaktree intersection
-You are at the intersection of Main Street and the west end of Oaktree Ave.
->TECLEO: s
-Main-Maple intersection
->TECLEO: w
+>[30m[47m
+TECLEO: n
+First-Sycamore intersection
+You are at the north end of First Street at Sycamore Ave.
+>[30m[47m
+TECLEO: n
 You can't go that way.
->TECLEO: w
-You can't go that way.
->TECLEO: n
-Main-Oaktree intersection
->TECLEO: n
-Main-Vermont intersection
->TECLEO: n
+>[30m[47m
+TECLEO: w
 Main-Sycamore intersection
->TECLEO: n
-You can't go that way.
->TECLEO: n
-You can't go that way.
->COMENTARIO: # Estoy en main-sycamore, voy al inicio
+You are at the north end of Main Street at the west end of Sycamore Ave.
+>[30m[47m
 TECLEO: s
 Main-Vermont intersection
->TECLEO: s
+You are at the intersection of Main Street and the west end of Vermont Ave.
+>[30m[47m
+TECLEO: s
 Main-Oaktree intersection
->TECLEO: s
+You are at the intersection of Main Street and the west end of Oaktree Ave.
+>[30m[47m
+TECLEO: s
 Main-Maple intersection
->TECLEO:
->COMENTARIO: # He recorrido todas las calles, ya debo tener en el huevo
+>[30m[47m
+TECLEO: w
+You can't go that way.
+>[30m[47m
+TECLEO: w
+You can't go that way.
+>[30m[47m
+TECLEO: n
+Main-Oaktree intersection
+>[30m[47m
+TECLEO: n
+Main-Vermont intersection
+>[30m[47m
+TECLEO: n
+Main-Sycamore intersection
+>[30m[47m
+TECLEO: n
+You can't go that way.
+>[30m[47m
+TECLEO: n
+You can't go that way.
+>[30m[47m
+COMENTARIO: # Estoy en main-sycamore, voy al inicio
+[30m[47m
+TECLEO: s
+Main-Vermont intersection
+>[30m[47m
+TECLEO: s
+Main-Oaktree intersection
+>[30m[47m
+TECLEO: s
+Main-Maple intersection
+>[30m[47m
+TECLEO:
+>[30m[47m
+COMENTARIO: # He recorrido todas las calles, ya debo tener en el huevo
+[30m[47m
 COMENTARIO: # voy a por el autobús, a ver si entro por la reja de main-maple
+[30m[47m
 TECLEO: e
 First-Maple intersection
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Second-Maple intersection
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Third-Maple intersection
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Fourth-Maple intersection
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Fifth-Maple intersection
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Fifth-Oaktree intersection
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Fifth-Vermont intersection
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Fifth-Sycamore intersection
 There is a bus here.
->TECLEO: look bus
+>[30m[47m
+TECLEO: look bus
 It is a 35 passenger bus with the company name ‘mobytours’ on it.
->TECLEO: in
+>[30m[47m
+TECLEO: in
 You board the bus and get in the driver's seat.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 The bus lurches ahead and comes to a screeching halt.
 Fifth-Vermont intersection
 You are on the bus.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 The bus lurches ahead and comes to a screeching halt.
 Fifth-Oaktree intersection
 You are on the bus.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 The bus lurches ahead and comes to a screeching halt.
 Fifth-Maple intersection
 You are on the bus.
->TECLEO: w
+>[30m[47m
+TECLEO: w
 The bus lurches ahead and comes to a screeching halt.
 Fourth-Maple intersection
 You are on the bus.
->TECLEO: w
+>[30m[47m
+TECLEO: w
 The bus lurches ahead and comes to a screeching halt.
 Third-Maple intersection
 You are on the bus.
->TECLEO: w
+>[30m[47m
+TECLEO: w
 The bus lurches ahead and comes to a screeching halt.
 Second-Maple intersection
 You are on the bus.
->TECLEO: w
+>[30m[47m
+TECLEO: w
 The bus lurches ahead and comes to a screeching halt.
 First-Maple intersection
 You are on the bus.
->TECLEO: w
+>[30m[47m
+TECLEO: w
 The bus lurches ahead and comes to a screeching halt.
 Main-Maple intersection
 You are on the bus.
->TECLEO:
->COMENTARIO: # contra la valla
+>[30m[47m
+TECLEO:
+>[30m[47m
+COMENTARIO: # contra la valla
+[30m[47m
 TECLEO: nw
 As the bus approaches, the gate opens and you drive through.
 Museum entrance
 You are in front of the Museum of Natural History.  A door leads into
 the building to the north, and a road leads to the southeast.
 You are on the bus.
->TECLEO: out
+>[30m[47m
+TECLEO: out
 You hop off the bus.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Museum lobby
 You are in the main lobby for the Museum of Natural History.  In the center
 of the room is the huge skeleton of a dinosaur.  Doors lead out to the
 south and east.
 There is a dinosaur bone here.
->TECLEO: take bone
+>[30m[47m
+TECLEO: take bone
 Taken.  
->TECLEO: look skeleton
+>[30m[47m
+TECLEO: look skeleton
 Unfortunately you do not know enough about dinosaurs to tell very much about
 it.  It is very big, though.
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Geological display
 You are in the geological display.  All of the objects that used to
 be on display are missing.  There are rooms to the east, west, and
 north.
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Maintenance room
 You are in some sort of maintenance room for the museum.  There is a
 switch on the wall labeled ‘BL’.  There are doors to the west and north.
 There is a packet of nitric acid here.
->TECLEO: take acid
+>[30m[47m
+TECLEO: take acid
 Taken.  
->TECLEO: push switch
+>[30m[47m
+TECLEO: push switch
 The button is now in the on position.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Classroom
 You are in a classroom where school children were taught about natural
 history.  On the blackboard is written, ‘No children allowed downstairs.’
 There is a door to the east with an ‘exit’ sign on it.  There is another
 door to the west.
 There is a packet of glycerine here.
->TECLEO: take glycerine
+>[30m[47m
+TECLEO: take glycerine
 Taken.  
->TECLEO: w
+>[30m[47m
+TECLEO: w
 Marine life area
 You are in the marine life area.  The room is filled with fish tanks,
 which are filled with dead fish that have apparently died due to
@@ -2176,34 +2580,45 @@ There is a glass jar here.
 The room is lit by a black light, causing the fish, and some of
 your objects, to give off an eerie glow.
 There is a valuable ruby here.
->TECLEO: get jar
+>[30m[47m
+TECLEO: get jar
 Taken.  
->TECLEO: take ruby
+>[30m[47m
+TECLEO: take ruby
 Taken.  
->TECLEO: look jar
+>[30m[47m
+TECLEO: look jar
 It is a plain glass jar.
->TECLEO: look ruby
+>[30m[47m
+TECLEO: look ruby
 I see nothing special about that.
->TECLEO: look coins
+>[30m[47m
+TECLEO: look coins
 They are old coins from the 19th century.
->TECLEO: look bone
+>[30m[47m
+TECLEO: look bone
 In this light you can see some writing on the bone.  It says:
 For an explosive time, go to Fourth St. and Vermont.
->TECLEO: look egg
+>[30m[47m
+TECLEO: look egg
 It is a valuable Fabrege egg.
 >>It is a valuable Fabrege egg.
-He encontrado el huevo enjoyado
 I do not see that here.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Geological display
->TECLEO: w
+>[30m[47m
+TECLEO: w
 Museum lobby
->TECLEO: look
+>[30m[47m
+TECLEO: look
 Museum lobby
 You are in the main lobby for the Museum of Natural History.  In the center
 of the room is the huge skeleton of a dinosaur.  Doors lead out to the
 south and east.
->COMENTARIO: # Estoy en la entrada del museo otra vez
+>[30m[47m
+COMENTARIO: # Estoy en la entrada del museo otra vez
+[30m[47m
 TECLEO: inventory
 You currently have:
 A brass key
@@ -2216,36 +2631,49 @@ Some nitric acid
 Some glycerine
 A glass jar
 A ruby
->COMENTARIO: # Voy a fourth and vermont
+>[30m[47m
+COMENTARIO: # Voy a fourth and vermont
+[30m[47m
 TECLEO: s
 Museum entrance
 There is a bus here.
->TECLEO: se
+>[30m[47m
+TECLEO: se
 Main-Maple intersection
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Main-Oaktree intersection
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Main-Vermont intersection
->TECLEO: e
+>[30m[47m
+TECLEO: e
 First-Vermont intersection
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Second-Vermont intersection
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Third-Vermont intersection
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Fourth-Vermont intersection
->TECLEO: put acid in jar
+>[30m[47m
+TECLEO: put acid in jar
 Done.
->TECLEO: put glycerine in jar
+>[30m[47m
+TECLEO: put glycerine in jar
 Done.
->TECLEO: drop jar
+>[30m[47m
+TECLEO: drop jar
 Done.
 As the jar impacts the ground it explodes into many pieces.
 The explosion causes a hole to open up in the ground, which you fall
 through.
 Vermont station
 You are at the Vermont St. subway station.  A train is sitting here waiting.
->TECLEO: in
+>[30m[47m
+TECLEO: in
 As you board the train it immediately leaves the station.  It is a very
 bumpy ride.  It is shaking from side to side, and up and down.  You
 sit down in one of the chairs in order to be more comfortable.
@@ -2255,84 +2683,115 @@ force throws you out.  The train speeds away.
 
 Museum station
 You are at the Museum subway stop.  A passage leads off to the north.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 N/S tunnel
 You are in a north/south tunnel.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 North end of N/S tunnel
 You are at the north end of a north/south tunnel.  Stairs lead up and
 down from here.  There is a garbage disposal here.
->TECLEO: put coins in garbage
+>[30m[47m
+TECLEO: put coins in garbage
 You hear it slide down the chute and off into the distance.
 You have scored 60 out of a possible 90 points.
->TECLEO: put ruby in garbage
+>[30m[47m
+TECLEO: put ruby in garbage
 You hear it slide down the chute and off into the distance.
 You have scored 70 out of a possible 90 points.
->TECLEO: put egg in garbage
+>[30m[47m
+TECLEO: put egg in garbage
 You hear it slide down the chute and off into the distance.
 You have scored 80 out of a possible 90 points.
->TECLEO: up
+>[30m[47m
+TECLEO: up
 Top of subway stairs
 You are at the top of some stairs near the subway station.  There is
 a door to the west.
->COMENTARIO: # Si entro a la puerta, vuelvo a la clase
+>[30m[47m
+COMENTARIO: # Si entro a la puerta, vuelvo a la clase
+[30m[47m
 TECLEO: down
 North end of N/S tunnel
->TECLEO: down
+>[30m[47m
+TECLEO: down
 Bottom of subway stairs
 You are at the bottom of some stairs near the subway station.  There is
 a room to the northeast.
 There is a valuable amethyst here.
->TECLEO: take amethyst
+>[30m[47m
+TECLEO: take amethyst
 Taken.  
->TECLEO: up
+>[30m[47m
+TECLEO: up
 North end of N/S tunnel
->TECLEO: put amethyst in garbage
+>[30m[47m
+TECLEO: put amethyst in garbage
 You hear it slide down the chute and off into the distance.
 You have scored 90 out of a possible 90 points.
->TECLEO: down
+>[30m[47m
+TECLEO: down
 Bottom of subway stairs
->TECLEO: ne
+>[30m[47m
+TECLEO: ne
 Endgame computer room
 You are in another computer room.  There is a computer in here larger
 than you have ever seen.  It has no manufacturers name on it, but it
 does have a sign that says: This machine's name is ‘endgame’.  The
 exit is to the southwest.  There is no console here on which you could
 type.
->COMENTARIO: # Encuentro otro ordenador: endgame
+>[30m[47m
+COMENTARIO: # Encuentro otro ordenador: endgame
+[30m[47m
 COMENTARIO: # Voy a pokey a ver si hago ssh
+[30m[47m
 TECLEO: sw
 Bottom of subway stairs
->TECLEO: up
+>[30m[47m
+TECLEO: up
 North end of N/S tunnel
->TECLEO: up
+>[30m[47m
+TECLEO: up
 Top of subway stairs
->TECLEO: w
+>[30m[47m
+TECLEO: w
 Classroom
->TECLEO: w
+>[30m[47m
+TECLEO: w
 Marine life area
 The room is lit by a black light, causing the fish, and some of
 your objects, to give off an eerie glow.
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Geological display
->TECLEO: w
+>[30m[47m
+TECLEO: w
 Museum lobby
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Museum entrance
 There is a bus here.
->TECLEO: se
+>[30m[47m
+TECLEO: se
 Main-Maple intersection
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Post office
->TECLEO: e
+>[30m[47m
+TECLEO: e
 Meadow
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Old Building hallway
->TECLEO: w
+>[30m[47m
+TECLEO: w
 Computer room
 The panel lights are flashing in a seemingly organized pattern.
->TECLEO: type
-$ TECLEO: ssh endgame
+>[30m[47m
+TECLEO: type
+$ [30m[47m
+TECLEO: ssh endgame
 You have scored 90 out of a possible 90 points.
 
 Welcome to the endgame.  You are a truly noble adventurer.
@@ -2350,134 +2809,175 @@ There are some valuable coins here.
 There is a valuable ruby here.
 There is a jewel-encrusted egg here.
 There is a valuable amethyst here.
->TECLEO: take bracelet
+>[30m[47m
+TECLEO: take bracelet
 Taken.  
->TECLEO: take diamond
+>[30m[47m
+TECLEO: take diamond
 Taken.  
->TECLEO: take gold
+>[30m[47m
+TECLEO: take gold
 Taken.  
->TECLEO: take platinum
+>[30m[47m
+TECLEO: take platinum
 Taken.  
->TECLEO: take coins
+>[30m[47m
+TECLEO: take coins
 Taken.  
->TECLEO: take ruby
+>[30m[47m
+TECLEO: take ruby
 Taken.  
->TECLEO: take egg
+>[30m[47m
+TECLEO: take egg
 Your load would be too heavy.
->TECLEO: take amethyst
+>[30m[47m
+TECLEO: take amethyst
 Your load would be too heavy.
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Endgame N/S hallway
 You are in a north/south hallway.
->COMENTARIO: # aqui empiezan las preguntas
+>[30m[47m
+COMENTARIO: # aqui empiezan las preguntas
+[30m[47m
 TECLEO: n
 Question room 1
 You have reached a question room.  You must answer a question correctly in
 order to get by.  Use the ‘answer’ command to answer the question.
 Your question is:
-How many corners are there in town (excluding the one with the Post Office)?
->TECLEO:
-Correct.
+Name either of the two objects you found by digging.
+>Correct.
 Endgame N/S hallway
 You are in a north/south hallway.
->>COMENTARIO: # Ya he respondido una pregunta
+>[30m[47m
+TECLEO:
+>[30m[47m
+COMENTARIO: # Ya he respondido una pregunta
+[30m[47m
 TECLEO: n
 Question room 2
 You are in a second question room.
 Your question is:
-What password did you use during anonymous ftp to gamma?
->TECLEO:
-Correct.
+What type of bear was hiding your key?
+>Correct.
 Endgame N/S hallway
-You are in a north/south hallway.
->>COMENTARIO: # Ya he respondido 2 preguntas
+You are in a north/south hallway.[30m[47m
+TECLEO:
+
+>>[30m[47m
+COMENTARIO: # Ya he respondido 2 preguntas
+[30m[47m
 TECLEO: n
 Question room 3
 You are in a third question room.
 Your question is:
-What type of bear was hiding your key?
->TECLEO: get bill
-Correct.
+How many megabytes of memory is on the CPU board for the Vax?
+>Correct.
 Endgame treasure room
 You are in the endgame treasure room.  A door leads out to the north, and
 a hallway leads to the south.
 There is a 100 dollar bill here.
->Taken.  
->TECLEO: drop bill
+>[30m[47m
+TECLEO: get bill
+Taken.  
+>[30m[47m
+TECLEO: drop bill
 Done.
->TECLEO: drop bracelet
+>[30m[47m
+TECLEO: drop bracelet
 Done.
->TECLEO: drop diamond
+>[30m[47m
+TECLEO: drop diamond
 Done.
->TECLEO: drop gold
+>[30m[47m
+TECLEO: drop gold
 Done.
->TECLEO:
->TECLEO: n
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO: n
 Winner's room
 You are in the winner's room.  A door leads back to the south.
 The Mona Lisa is here.
->TECLEO: take mona lisa
+>[30m[47m
+TECLEO: take mona lisa
 Taken.  
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Endgame treasure room
 There is a 100 dollar bill here.
 There is an emerald bracelet here.
 There is a shimmering diamond here.
 There is a gold bar here.
->TECLEO: drop mona lisa
+>[30m[47m
+TECLEO: drop mona lisa
 Done.
->TECLEO:
->COMENTARIO: # voy a por los tesoros que faltan
+>[30m[47m
+TECLEO:
+>[30m[47m
+COMENTARIO: # voy a por los tesoros que faltan
+[30m[47m
 TECLEO: s
 Question room 3
 Your question is:
-What network protocol is used between pokey and gamma?
+What password did you use during anonymous ftp to gamma?
 >Correct.
 Endgame N/S hallway
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Question room 2
 Your question is:
-Give either of the two last names in the mailroom, other than your own.
+What is the nearest whole dollar to the price of the shovel?
 >Correct.
 Endgame N/S hallway
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Question room 1
 Your question is:
-Excluding the endgame, how many places are there where you can put
-treasures for points?
+What cartoon character is on the towel?
 >Correct.
+[30m[47m
 Endgame N/S hallway
 >TECLEO:
->TECLEO: s
+>[30m[47m
+TECLEO: s
 Treasure room
 You are in the treasure room.  A door leads out to the north.
 There is a silver bar here.
 There is a jewel-encrusted egg here.
 There is a valuable amethyst here.
->TECLEO: take silver
+>[30m[47m
+TECLEO: take silver
 Taken.  
->TECLEO: take amethyst
+>[30m[47m
+TECLEO: take amethyst
 Taken.  
->TECLEO: take egg
+>[30m[47m
+TECLEO: take egg
 Taken.  
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Endgame N/S hallway
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Question room 1
 Your question is:
-How many megabytes of memory is on the CPU board for the Vax?
+What is your login name on the ‘endgame’ machine?
 >Correct.
 Endgame N/S hallway
->TECLEO: n
+>[30m[47m
+TECLEO: n
 Question room 2
 Your question is:
-What cartoon character is on the towel?
->TECLEO: n
-Correct.
+Which street in town is named after a U.S. state?
+>Correct.
 Endgame N/S hallway
->Question room 3
+>[30m[47m
+TECLEO: n
+Question room 3
 Your question is:
-How many pounds did the weight weigh?
+Excluding the endgame, how many places are there where you can put
+treasures for points?
 >Correct.
 Endgame treasure room
 There is a 100 dollar bill here.
@@ -2485,15 +2985,21 @@ There is an emerald bracelet here.
 There is a shimmering diamond here.
 There is a gold bar here.
 The Mona Lisa is here.
->TECLEO:
->TECLEO: drop silver
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO: drop silver
 Done.
->TECLEO: drop amethyst
+>[30m[47m
+TECLEO: drop amethyst
 Done.
->TECLEO: drop egg
+>[30m[47m
+TECLEO: drop egg
 Done.
->TECLEO:
->TECLEO: inventory
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO: inventory
 You currently have:
 A brass key
 A license
@@ -2502,29 +3008,43 @@ A bone
 A platinum bar
 Some valuable coins
 A ruby
->TECLEO: score
+>[30m[47m
+TECLEO: score
 You have scored 80 endgame points out of a possible 110.
->TECLEO: drop brass key
+>[30m[47m
+TECLEO: drop brass key
 I don't know what that is.
->TECLEO: drop license
+>[30m[47m
+TECLEO: drop license
 Done.
->TECLEO: drop lamp
+>[30m[47m
+TECLEO: drop lamp
 Done.
->TECLEO: DROP bone
+>[30m[47m
+TECLEO: DROP bone
 Done.
->TECLEO: drop platinum bar
+>[30m[47m
+TECLEO: drop platinum bar
 Done.
->TECLEO: drop coins
+>[30m[47m
+TECLEO: drop coins
 Done.
->TECLEO: drop ruby
+>[30m[47m
+TECLEO: drop ruby
 Done.
->TECLEO:
->TECLEO:
->TECLEO:
->TECLEO: moby
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO: moby
 I don't understand that.
->TECLEO:
->TECLEO: quit
+>[30m[47m
+TECLEO:
+>[30m[47m
+TECLEO: quit
 
 You have scored 110 endgame points out of a possible 110.
 
