@@ -714,7 +714,7 @@ Ayuda interactiva de teclado. En el popup-type por defecto entra en conflicto co
   :config
     (which-key-mode t)
     (setq which-key-idle-delay 3.0)
-    (which-key-popup-type (quote frame)))
+    (setq which-key-popup-type (quote frame)))
 #+end_src
 
 
@@ -813,6 +813,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   :ensure t
   :config
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (setq projectile-switch-project-action 'projectile-dired)
     (projectile-mode 1))
 #+end_src
 
