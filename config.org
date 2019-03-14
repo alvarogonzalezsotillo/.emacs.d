@@ -209,6 +209,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | ob-rust                        |                                                                |
 | rust-mode                      |                                                                |
 | racer                          |                                                                |
+| magic-latex-buffer             |                                                                |
 |--------------------------------+----------------------------------------------------------------|
 
 *** Carga de paquetes sin configuración adicional
@@ -692,6 +693,11 @@ Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en e
   '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
 (eval-after-load "preview"
   '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{homeworkProblem}" t) )
+#+end_src
+
+Añadir sintaxis mágica
+#+begin_src emacs-lisp
+(add-hook 'latex-mode-hook 'magic-latex-buffer)
 #+end_src
 
 Añadir XeLatex
@@ -1726,6 +1732,7 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - ob-ammonite
 - greader
 - https://zge.us.to/emacs.d.html
+- magic-latex-buffer.el 
 
 * usettf
 
