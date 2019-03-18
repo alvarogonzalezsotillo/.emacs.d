@@ -665,7 +665,11 @@ Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auc
 
 Para imenu
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'TeX-outline-extra '("\\\\PROBLEMA{" 4))
+(add-to-list 'TeX-outline-extra '("imenu" 2))
+(add-to-list 'TeX-outline-extra '("imenu1" 1))
+(add-to-list 'TeX-outline-extra '("imenu2" 2))
+(add-to-list 'TeX-outline-extra '("imenu3" 3))
+(add-to-list 'TeX-outline-extra '("imenu4" 4))
 #+END_SRC
 
 
