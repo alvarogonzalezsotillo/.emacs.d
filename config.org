@@ -529,6 +529,24 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
 #+end_src
 
 
+Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga =org-tempo=
+#+begin_src emacs-lisp
+  (setq org-structure-template-alist 
+        '(("n" . "notes")
+          ("a" . "export ascii")
+          ("c" . "center")
+          ("C" . "comment")
+          ("e" . "example")
+          ("E" . "export")
+          ("h" . "export html")
+          ("l" . "export latex")
+          ("q" . "quote")
+          ("s" . "src")
+          ("v" . "verse")))
+  (require 'org-tempo)
+#+end_src
+
+
 *** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
@@ -665,7 +683,11 @@ Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auc
 
 Para imenu
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'TeX-outline-extra '("\\\\PROBLEMA{" 4))
+(add-to-list 'TeX-outline-extra '("imenu" 2))
+(add-to-list 'TeX-outline-extra '("imenu1" 1))
+(add-to-list 'TeX-outline-extra '("imenu2" 2))
+(add-to-list 'TeX-outline-extra '("imenu3" 3))
+(add-to-list 'TeX-outline-extra '("imenu4" 4))
 #+END_SRC
 
 
@@ -724,7 +746,7 @@ Ayuda interactiva de teclado. En el popup-type por defecto entra en conflicto co
 #+end_src
 
 
-** TODO Paquete =auto-highlight-symbol=
+** Paquete =auto-highlight-symbol=
 Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en todo el buffer, para que se pueda navegar por todas las ocurrencias del fichero, pero ralentizaba bastante. Ahora uso =smartscan=.
 #+begin_src emacs-lisp
   (use-package auto-highlight-symbol
