@@ -1734,6 +1734,22 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - https://zge.us.to/emacs.d.html
 - magic-latex-buffer.el 
 
+
+#+begin_src emacs-lisp
+  (defun my/dired-hook ()
+    (setq  indent-line-function 'dired-subtree-toggle))
+
+  (add-hook 'dired-mode-hook 'my/dired-hook)
+
+
+
+
+#+end_src
+
+#+RESULTS:
+| my/dired-hook |
+
+
 * usettf
 
 Actualmente desactivado
