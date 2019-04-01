@@ -210,6 +210,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | rust-mode                      |                                                                |
 | racer                          |                                                                |
 | magic-latex-buffer             |                                                                |
+| dired-toggle                   |                                                                |
 |--------------------------------+----------------------------------------------------------------|
 
 *** Carga de paquetes sin configuración adicional
