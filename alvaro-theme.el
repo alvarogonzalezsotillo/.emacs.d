@@ -4,6 +4,7 @@
 
 (custom-theme-set-faces
  'alvaro
+ '(minimap-active-region-background ((t (:inverse-video t))))
  '(magit-branch-local ((t (:background "dark red" :foreground "LightSkyBlue1"))))
  '(magit-branch-remote ((t (:background "dark magenta" :foreground "DarkSeaGreen2"))))
  '(neo-dir-link-face ((t (:height 0.8))))
