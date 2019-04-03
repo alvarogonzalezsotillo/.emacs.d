@@ -532,20 +532,28 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
 
 Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga =org-tempo=
 #+begin_src emacs-lisp
-  (setq org-structure-template-alist 
-        '(("n" . "notes")
-          ("a" . "export ascii")
-          ("c" . "center")
-          ("C" . "comment")
-          ("e" . "example")
-          ("E" . "export")
-          ("h" . "export html")
-          ("l" . "export latex")
-          ("q" . "quote")
-          ("s" . "src")
-          ("v" . "verse")))
-  (require 'org-tempo)
+    (require 'org-tempo)
+    (setq org-structure-template-alist 
+          '(("n" . "notes")
+            ("a" . "export ascii")
+            ("c" . "center")
+            ("C" . "comment")
+            ("e" . "example")
+            ("E" . "export")
+            ("h" . "export html")
+            ("l" . "export latex")
+            ("q" . "quote")
+            ("s" . "src")
+            ("v" . "verse")))
+
+
+  ;; (("L" . "latex")
+  ;;  ("H" . "html")
+  ;;  ("A" . "ascii")
+  ;;  ("i" . "index"))
+
 #+end_src
+
 
 
 *** Lenguajes =org-babel=
