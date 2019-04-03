@@ -113,10 +113,13 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | adaptive-wrap                  | Indentación visual de las líneas respecto a su prefijo         |
 | ag                             |                                                                |
 | alert                          |                                                                |
+| all-the-icons                  |                                                                |
+| all-the-icons-dired            |                                                                |
 | auto-highlight-symbol          | Resalte automático del símbolo bajo el cursor                  |
 | bind-key                       |                                                                |
 | calfw                          |                                                                |
 | calfw-ical                     |                                                                |
+| cargo                          |                                                                |
 | chess                          |                                                                |
 | color-theme-sanityinc-tomorrow |                                                                |
 | company                        |                                                                |
@@ -133,15 +136,18 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | default-text-scale             |                                                                |
 | diffview                       |                                                                |
 | dired-narrow                   |                                                                |
+| dired-subtree                  |                                                                |
+| dired-toggle                   |                                                                |
 | ensime                         |                                                                |
 | esup                           |                                                                |
 | expand-region                  |                                                                |
 | flycheck                       |                                                                |
 | flycheck-plantuml              |                                                                |
+| flycheck-rust                  |                                                                |
 | gift-mode                      |                                                                |
 | git-gutter                     | Marca las filas cambiadas en el margen                         |
-| git-timemachine                |                                                                |
 | gitignore-mode                 |                                                                |
+| git-timemachine                |                                                                |
 | graphviz-dot-mode              |                                                                |
 | helm-ag                        |                                                                |
 | helm-company                   |                                                                |
@@ -163,13 +169,15 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | lsp-javascript-typescript      |                                                                |
 | lsp-mode                       |                                                                |
 | lsp-ui                         |                                                                |
+| magic-latex-buffer             |                                                                |
 | magit                          | Interfaz para git                                              |
 | markdown-mode                  |                                                                |
 | markdown-preview-mode          |                                                                |
 | ob-restclient                  |                                                                |
+| ob-rust                        |                                                                |
 | org                            |                                                                |
-| org-bullets                    |                                                                |
 | org-attach-screenshot          |                                                                |
+| org-bullets                    |                                                                |
 | org-page                       |                                                                |
 | page-break-lines               |                                                                |
 | paradox                        |                                                                |
@@ -180,14 +188,15 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | popup-switcher                 |                                                                |
 | prettier-js                    |                                                                |
 | quickrun                       | Ejecuta el buffer actual con el intérprete/compilador adecuado |
+| racer                          |                                                                |
 | rectangle-utils                |                                                                |
 | restclient                     |                                                                |
 | restclient-helm                |                                                                |
+| rust-mode                      |                                                                |
 | scad-mode                      |                                                                |
 | scad-preview                   |                                                                |
 | scala-mode                     |                                                                |
 | skewer-mode                    |                                                                |
-| sublimity                      |                                                                |
 | swiper-helm                    |                                                                |
 | switch-window                  |                                                                |
 | tablist                        |                                                                |
@@ -204,13 +213,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | wgrep                          |                                                                |
 | wgrep-helm                     |                                                                |
 | yafolding                      | /Folding/ de secciones basado en la indentación                |
-| cargo                          |                                                                |
-| flycheck-rust                  |                                                                |
-| ob-rust                        |                                                                |
-| rust-mode                      |                                                                |
-| racer                          |                                                                |
-| magic-latex-buffer             |                                                                |
-| dired-subtree                  |                                                                |
 |--------------------------------+----------------------------------------------------------------|
 
 *** Carga de paquetes sin configuración adicional
@@ -726,10 +728,6 @@ Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en e
   '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{homeworkProblem}" t) )
 #+end_src
 
-Añadir sintaxis mágica
-#+begin_src emacs-lisp
-(add-hook 'latex-mode-hook 'magic-latex-buffer)
-#+end_src
 
 Añadir XeLatex
 
@@ -1033,14 +1031,7 @@ Retroceder en la historia de disposición de ventanas y búferes
     (winner-mode 1))
 #+end_src
 
-
-Grabar la disposición de bufers y ventanas para la siguiente sesión
-#+begin_src emacs-lisp
-(setq desktop-save t)
-(desktop-save-mode)
-#+end_src
-
-** Ratón en =xterm=
+* Ratón en =xterm=
 El ratón también puede utilizarse en un =xterm=
 #+begin_src emacs-lisp
 (xterm-mouse-mode)
@@ -1152,14 +1143,27 @@ Mi línea de estado (modeline)
 
 #+end_src
 
-** /Minimap/
-El minimap parece una buena idea, pero no funciona demasiado bien
-#+begin_src lisp
-(require 'sublimity)
-(require 'sublimity-map)
-(require 'sublimity-attractive)
-(sublimity-map-set-delay 2)
+
+
+** =minimap=
+#+begin_src emacs-lisp
+(use-package minimap
+  :ensure t
+  :defer 1
+  :config
+
+
+
+ (setq minimap-hide-fringes t)
+ (setq minimap-major-modes '(org-mode tex-mode prog-mode))
+ (setq minimap-window-location 'right)
+ (minimap-mode 0)
+
+)
 #+end_src
+
+#+RESULTS:
+: t
 
 
 * Atajos de teclado
@@ -1673,6 +1677,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 
 (defun bonito-para-org()
   (interactive)
+  (message "Detecto un ORG que se abre")
   (bonito-para-proyector)
   (org-bullets-mode 1)
   (electric-pair-local-mode 1))
@@ -1680,6 +1685,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 
 (defun bonito-para-codigo()
   (interactive)
+  (message "Detecto un CODIGO que se abre")
   (toggle-truncate-lines 1)
   (highlight-indent-guides-mode 0)
   (toggle-word-wrap 1)
@@ -1689,11 +1695,20 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
   (yafolding-mode 1)
   (adaptive-wrap-prefix-mode 1))
 
+(defun bonito-para-latex()
+  (interactive)
+  (toggle-truncate-lines -1)
+  (message "Detecto un LATEX que se abre")
+  (magic-latex-buffer 1))
+
+
+
 (add-hook 'prog-mode-hook 'bonito-para-codigo)
 (add-hook 'text-mode-hook 'bonito-para-proyector)
 (add-hook 'org-mode-hook 'bonito-para-org)
-(add-hook 'tex-mode-hook 'bonito-para-codigo)
+(add-hook 'LaTeX-mode-hook 'bonito-para-latex)
 #+end_src
+
 
 
 ** /Fringes/
@@ -1755,6 +1770,16 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
 (load custom-file)
 #+end_src
 
+
+* Escritorio
+Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago al final, para que se carguen ahora los buferes previos.
+#+begin_src emacs-lisp
+(setq desktop-save t)
+(desktop-save-mode)
+#+end_src
+
+*
+
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
 - Elfeed
@@ -1768,17 +1793,11 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 
 #+begin_src emacs-lisp
   (defun my/dired-hook ()
+    (all-the-icons-dired-mode 1)
     (setq  indent-line-function 'dired-subtree-toggle))
 
   (add-hook 'dired-mode-hook 'my/dired-hook)
-
-
-
-
 #+end_src
-
-#+RESULTS:
-| my/dired-hook |
 
 
 * usettf
