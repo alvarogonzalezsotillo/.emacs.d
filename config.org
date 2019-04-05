@@ -220,8 +220,10 @@ Por cada paquete sin opciones especiales, simplemente lo cargo con =use-package=
 
 El bucle =dolist= se realiza sobre los datos de la tabla =mis-paquetes=. Cada fila se recibe como una lista de columnas, así que me quedo con la primera columna y la convierto a un =symbol=. Después, construyo la llamada a =use-package= y la evaluo (como =use-package= es una macro, no puedo hacerlo directamente)
 #+BEGIN_SRC emacs-lisp :var mis-paquetes=mis-paquetes
+  (message "Valor de mis-paquetes: %s" mis-paquetes)
   (dolist (paquete mis-paquetes)
-    (message (concat "Voy a cargar el paquete: " (car paquete)))
+    (message "La variable con el paquete es del tipo: %s: %s" (type-of paquete) paquete)
+    (message "Voy a cargar el paquete: %s" (car paquete))
     (setq lista `(use-package ,(intern (car paquete)) :defer 1 :ensure t ) )
     (eval lista))
 #+END_SRC
@@ -811,7 +813,8 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
     (setq helm-echo-input-in-header-line t)
     (setq helm-display-buffer-reuse-frame t)
     (setq helm-use-undecorated-frame-option t)
-  :after (tramp)) ;; PARA EVITAR EL ERROR Symbol’s value as variable is void: tramp-methods
+  :after (tramp) ;; PARA EVITAR EL ERROR Symbols's value as variable is void: tramp-methods
+)
 
 
 (use-package helm-projectile
@@ -819,7 +822,8 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   :defer 1
   :config 
     (helm-projectile-on)
-  :after (helm))
+  :after (helm)
+)
 
 #+end_src
 
@@ -1677,7 +1681,6 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 
 (defun bonito-para-org()
   (interactive)
-  (message "Detecto un ORG que se abre")
   (bonito-para-proyector)
   (org-bullets-mode 1)
   (electric-pair-local-mode 1))
@@ -1685,7 +1688,6 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 
 (defun bonito-para-codigo()
   (interactive)
-  (message "Detecto un CODIGO que se abre")
   (toggle-truncate-lines 1)
   (highlight-indent-guides-mode 0)
   (toggle-word-wrap 1)
@@ -1698,7 +1700,6 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 (defun bonito-para-latex()
   (interactive)
   (toggle-truncate-lines -1)
-  (message "Detecto un LATEX que se abre")
   (magic-latex-buffer 1))
 
 
@@ -1792,18 +1793,26 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 
 
 #+begin_src emacs-lisp
+
   (if
       (file-exists-p "/data/data/com.termux/files/usr/bin/sh")
       (setq TeX-shell  "/data/data/com.termux/files/usr/bin/sh"))
 #+end_src
 
 #+begin_src emacs-lisp
+
+(setq dired-listing-switches "-aBhl --group-directories-first")
+
+
   (defun my/dired-hook ()
     (all-the-icons-dired-mode 1)
+    (dired-hide-details-mode 1)
     (setq  indent-line-function 'dired-subtree-toggle))
 
   (add-hook 'dired-mode-hook 'my/dired-hook)
 #+end_src
+
+#+RESULTS:
 
 
 * usettf
