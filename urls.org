@@ -1,4 +1,4 @@
-#+STARTUP: showeverything
+#+STARTUP: overview
 
 
 * Moodle
@@ -6,6 +6,9 @@
 
 
 ** 2018-2019
+:PROPERTIES:
+:VISIBILITY:all
+:END:
    | Curso              | url                                                                                     | directorio    |
    |--------------------+-----------------------------------------------------------------------------------------+---------------|
    | Avellaneda         | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/                       | [[file:~/clase/]] |
