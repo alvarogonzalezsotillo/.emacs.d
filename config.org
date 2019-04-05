@@ -1792,6 +1792,12 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 
 
 #+begin_src emacs-lisp
+  (if
+      (file-exists-p "/data/data/com.termux/files/usr/bin/sh")
+      (setq TeX-shell  "/data/data/com.termux/files/usr/bin/sh"))
+#+end_src
+
+#+begin_src emacs-lisp
   (defun my/dired-hook ()
     (all-the-icons-dired-mode 1)
     (setq  indent-line-function 'dired-subtree-toggle))
