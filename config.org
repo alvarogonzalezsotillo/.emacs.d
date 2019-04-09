@@ -229,8 +229,6 @@ El bucle =dolist= se realiza sobre los datos de la tabla =mis-paquetes=. Cada fi
 #+END_SRC
 
 
-#+RESULTS:
-
 
 Por último, el paquete =ob-scala= es un paquete local bajado de [[https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el][https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el]]. Sirve para ejecutar código =scala= directamente desde un documento =orgmode=.
 
@@ -1810,6 +1808,23 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
     (setq  indent-line-function 'dired-subtree-toggle))
 
   (add-hook 'dired-mode-hook 'my/dired-hook)
+
+(use-package dired-subtree 
+  :ensure t
+  :defer 1
+  :config
+
+  (set-face-attribute 'dired-subtree-depth-1-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-2-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-3-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-4-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-5-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-6-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-7-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-8-face nil :background 'unspecified)
+)
+
+
 #+end_src
 
 #+RESULTS:
