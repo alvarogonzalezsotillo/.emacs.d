@@ -1788,6 +1788,12 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - greader
 - https://zge.us.to/emacs.d.html
 - Swiper-isearch - a more isearch-like swiper
+- change-inner
+- magithub
+- google-this
+- emamux
+
+
 
 #+begin_src emacs-lisp
 
