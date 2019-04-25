@@ -1159,13 +1159,11 @@ Mi línea de estado (modeline)
  (setq minimap-hide-fringes t)
  (setq minimap-major-modes '(org-mode tex-mode prog-mode))
  (setq minimap-window-location 'right)
- (minimap-mode 0)
+ ; (minimap-mode 0) si el minimap no está activo da un error de timer nil
 
 )
 #+end_src
 
-#+RESULTS:
-: t
 
 
 * Atajos de teclado
@@ -1819,14 +1817,13 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
   (set-face-attribute 'dired-subtree-depth-4-face nil :background 'unspecified)
   (set-face-attribute 'dired-subtree-depth-5-face nil :background 'unspecified)
   (set-face-attribute 'dired-subtree-depth-6-face nil :background 'unspecified)
-  (set-face-attribute 'dired-subtree-depth-7-face nil :background 'unspecified)
-  (set-face-attribute 'dired-subtree-depth-8-face nil :background 'unspecified)
 )
 
 
 #+end_src
 
 #+RESULTS:
+: t
 
 
 * usettf
