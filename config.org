@@ -1279,7 +1279,21 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
 * Utilidades
 
-
+** Convertir un fichero =gift= en un examen =pdf=
+Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
+   #+begin_src emacs-lisp
+(defun gifttolatex (titulo)
+   "ejecuta giftolatex en el buffer actual."
+   (interactive
+    (list (read-string "Título: " (buffer-name))))
+   
+   (let
+       ((comando (format "sh -c 'gifttolatex -t \"%s\" \"%s\"'" titulo buffer-file-name))
+       )
+   (shell-command comando)
+   )
+   )
+   #+end_src
 
 ** Abrir proyecto en ventana nueva con neotree
 #+begin_src emacs-lisp
@@ -1778,6 +1792,39 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - https://zge.us.to/emacs.d.html
 - magic-latex-buffer.el 
 
+
+#+begin_src emacs-lisp
+
+  (defun my-js2-mode-hook()
+    (interactive)
+    (ac-js2-mode)
+    (setq ac-js2-evaluate-calls t)
+    (auto-highlight-symbol-mode 0)
+    (js2-highlight-vars-mode)
+
+    (defvar my-company-backends-js2-mode
+      '(
+        (
+         ac-js2-company
+         company-files
+         company-dabbrev-code
+         company-capf
+         )
+        )
+      )
+
+    (set (make-local-variable 'company-backends) my-company-backends-js2-mode))
+
+
+
+  (add-hook 'js2-mode-hook #'my-js2-mode-hook)
+
+
+
+#+end_src
+
+#+RESULTS:
+: my-js2-mode-hook
 
 #+begin_src emacs-lisp
 
