@@ -1149,12 +1149,11 @@ Mi línea de estado (modeline)
  (setq minimap-hide-fringes t)
  (setq minimap-major-modes '(org-mode tex-mode prog-mode))
  (setq minimap-window-location 'right)
+ ;(minimap-mode 0) si el minimap no está activo da un error de timer nil
 
 )
 #+end_src
 
-#+RESULTS:
-: t
 
 
 * Atajos de teclado
@@ -1790,8 +1789,7 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - ob-ammonite
 - greader
 - https://zge.us.to/emacs.d.html
-- magic-latex-buffer.el 
-
+- Swiper-isearch - a more isearch-like swiper
 
 #+begin_src emacs-lisp
 
@@ -1862,6 +1860,7 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 #+end_src
 
 #+RESULTS:
+: t
 
 
 * usettf
