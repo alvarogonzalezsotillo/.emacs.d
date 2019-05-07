@@ -1281,17 +1281,20 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
    #+begin_src emacs-lisp
-(defun gifttolatex (titulo)
-   "ejecuta giftolatex en el buffer actual."
-   (interactive
-    (list (read-string "Título: " (buffer-name))))
-   
-   (let
-       ((comando (format "sh -c 'gifttolatex -t \"%s\" \"%s\"'" titulo buffer-file-name))
+     (defun gifttolatex (titulo porcentajetest)
+       "ejecuta giftolatex en el buffer actual."
+       (interactive
+        (list 
+         (read-string "Título: " (buffer-name))
+         (read-number "Porcentaje del test: " 60))
+        )
+  
+       (let
+           ((comando (format "sh -c 'gifttolatex -k -t \"%s\" -q \"%s\" \"%s\"'" titulo porcentajetest buffer-file-name))
+            )
+         (shell-command comando)
+         )
        )
-   (shell-command comando)
-   )
-   )
    #+end_src
 
 ** Abrir proyecto en ventana nueva con neotree
