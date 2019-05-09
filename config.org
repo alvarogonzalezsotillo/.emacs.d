@@ -1764,7 +1764,6 @@ Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna c
 El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
 #+begin_src emacs-lisp
 (setq custom-file "~/.emacs.d/custom-file.el")
-(load custom-file)
 #+end_src
 
 
