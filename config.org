@@ -88,17 +88,6 @@ Utilizo tres repositorios de paquetes:
 - Agrupa la configuración de cada paquete
 - Instala el paquete si no está instalado
 
-Para actualizar siempre los paquetes, utilizo =auto-package-update= 
-#+BEGIN_SRC emacs-lisp 
-  (use-package auto-package-update
-    :ensure t
-    :defer nil
-    :config
-    (setq auto-package-update-delete-old-versions t)
-    (setq auto-package-update-hide-results t)
-    (setq auto-package-update-interval 9999)
-    (auto-package-update-maybe))
-#+END_SRC
 
 
 *** Tabla de paquetes
@@ -527,13 +516,11 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
     :config
       (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
       (modify-syntax-entry ?= "(=" org-mode-syntax-table)
+      (modify-syntax-entry ?_ "(_" org-mode-syntax-table)
       (modify-syntax-entry ?* "(*" org-mode-syntax-table)
-      (modify-syntax-entry ?/ "(/" org-mode-syntax-table))
-#+end_src
+      (modify-syntax-entry ?/ "(/" org-mode-syntax-table)
 
-
-Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga =org-tempo=
-#+begin_src emacs-lisp
+    ; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
     (require 'org-tempo)
     (setq org-structure-template-alist 
           '(("n" . "notes")
@@ -553,8 +540,11 @@ Desde la versión 9 de orgmode, los templates rápidos no están activados por d
   ;;  ("H" . "html")
   ;;  ("A" . "ascii")
   ;;  ("i" . "index"))
-
+)
 #+end_src
+
+
+
 
 
 
@@ -804,7 +794,6 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
     (setq helm-display-header-line nil)
     (setq helm-autoresize-max-height 30)
     (setq helm-autoresize-min-height 30)
-    (setq projectile-completion-system 'helm)
     (helm-autoresize-mode 1)
     (helm-mode 1)
     (helm-flx-mode +1)
@@ -820,6 +809,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   :defer 1
   :config 
     (helm-projectile-on)
+    (setq projectile-completion-system 'helm)
   :after (helm)
 )
 
@@ -1159,7 +1149,7 @@ Mi línea de estado (modeline)
  (setq minimap-hide-fringes t)
  (setq minimap-major-modes '(org-mode tex-mode prog-mode))
  (setq minimap-window-location 'right)
- ; (minimap-mode 0) si el minimap no está activo da un error de timer nil
+ ;(minimap-mode 0) si el minimap no está activo da un error de timer nil
 
 )
 #+end_src
@@ -1288,7 +1278,24 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
 * Utilidades
 
-
+** Convertir un fichero =gift= en un examen =pdf=
+Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
+   #+begin_src emacs-lisp
+     (defun gifttolatex (titulo porcentajetest)
+       "ejecuta giftolatex en el buffer actual."
+       (interactive
+        (list 
+         (read-string "Título: " (buffer-name))
+         (read-number "Porcentaje del test: " 60))
+        )
+  
+       (let
+           ((comando (format "sh -c 'gifttolatex -k -t \"%s\" -q \"%s\" \"%s\"'" titulo porcentajetest buffer-file-name))
+            )
+         (shell-command comando)
+         )
+       )
+   #+end_src
 
 ** Abrir proyecto en ventana nueva con neotree
 #+begin_src emacs-lisp
@@ -1792,6 +1799,39 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - emamux
 
 
+
+#+begin_src emacs-lisp
+
+  (defun my-js2-mode-hook()
+    (interactive)
+    (ac-js2-mode)
+    (setq ac-js2-evaluate-calls t)
+    (auto-highlight-symbol-mode 0)
+    (js2-highlight-vars-mode)
+
+    (defvar my-company-backends-js2-mode
+      '(
+        (
+         ac-js2-company
+         company-files
+         company-dabbrev-code
+         company-capf
+         )
+        )
+      )
+
+    (set (make-local-variable 'company-backends) my-company-backends-js2-mode))
+
+
+
+  (add-hook 'js2-mode-hook #'my-js2-mode-hook)
+
+
+
+#+end_src
+
+#+RESULTS:
+: my-js2-mode-hook
 
 #+begin_src emacs-lisp
 
