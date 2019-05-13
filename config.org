@@ -1778,8 +1778,12 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
 * Escritorio
 Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago al final, para que se carguen ahora los buferes previos.
 #+begin_src emacs-lisp
-(setq desktop-save t)
-(desktop-save-mode)
+(use-package desktop
+  :ensure t
+  :config         
+    (delete-file (desktop-full-lock-name))
+    (setq desktop-save t)
+    (desktop-save-mode))
 #+end_src
 
 *
