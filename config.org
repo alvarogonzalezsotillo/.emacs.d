@@ -794,7 +794,6 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
     (setq helm-display-header-line nil)
     (setq helm-autoresize-max-height 30)
     (setq helm-autoresize-min-height 30)
-    (setq projectile-completion-system 'helm)
     (helm-autoresize-mode 1)
     (helm-mode 1)
     (helm-flx-mode +1)
@@ -810,6 +809,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   :defer 1
   :config 
     (helm-projectile-on)
+    (setq projectile-completion-system 'helm)
   :after (helm)
 )
 
