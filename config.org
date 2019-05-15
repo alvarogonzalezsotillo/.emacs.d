@@ -988,6 +988,7 @@ Utilizo =smartscan= para localizar ocurrencias de símbolos.
   :ensure t
   :defer 1
   :config
+    (setq smartscan-symbol-selector "symbol")
     (global-smartscan-mode 1))
 #+end_src
 
