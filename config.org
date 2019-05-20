@@ -336,12 +336,21 @@ Añado las siguientes reglas para hacer búsquedas simples con =dumb-jump= en fi
 ** Paquete =bm=
 Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 #+BEGIN_SRC emacs-lisp
-  (use-package bm
-    :ensure t
-    :bind (("<C-f2>" . bm-toggle)
-           ("<f2>" . bm-next )
-           ("<S-f2>" . bm-previous)))
+  (defun my/bookmark-or-edit ()
+    (interactive)
+
+    (if (string= major-mode "dired-mode")
+        (wdired-change-to-wdired-mode)
+        (bm-next)))
+
+
+    (use-package bm
+      :ensure t
+    )
 #+END_SRC
+
+#+RESULTS:
+: bm-previous
 
 
 ** Paquete =multiple-cursors=
@@ -349,9 +358,6 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 #+BEGIN_SRC emacs-lisp
   (use-package multiple-cursors
     :ensure t
-    :bind (("<C-f2>" . bm-toggle)
-	   ("<f2>" . bm-next )
-	   ("<S-f2>" . bm-previous))
     :custom (mc/always-run-for-all t))
 
 
@@ -1209,9 +1215,15 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
   ;; MIS TECLAS
   (defvar mis-teclas-minor-mode-map
     (let ((map (make-sparse-keymap)))
-      ;(define-key map (kbd "C-i") 'some-function)
       (define-key map (kbd "C-e") 'er/expand-region)
       (define-key map (kbd "C-S-e") 'er/contract-region)
+      (define-key map (kbd "M-<up>") 'er/expand-region)
+      (define-key map (kbd "M-<down>") 'er/contract-region)
+
+      (define-key map (kbd "M-<left>") 'winner-undo)
+      (define-key map (kbd "M-<right>") 'winner-redo)
+
+
       (define-key map (kbd "C-z") 'undo )
       (define-key map (kbd "C-x C-d") 'dired)
       (define-key map (kbd "C-x d") 'dired-other-frame)
@@ -1262,6 +1274,11 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
       (define-key map (kbd "C-S-l") 'toggle-truncate-lines)
 
+      (define-key map (kbd "<C-f2>") 'bm-toggle)
+      (define-key map (kbd "<f2>")  'my/bookmark-or-edit )
+      (define-key map (kbd "<S-f2>") 'bm-previous)
+
+
 
       map)
     "mis-teclas-minor-mode keymap")
@@ -1275,6 +1292,10 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
   (mis-teclas-minor-mode 1)
 
 #+end_src
+
+#+RESULTS:
+: t
+
 
 
 
