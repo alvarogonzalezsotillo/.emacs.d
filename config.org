@@ -988,6 +988,7 @@ Utilizo =smartscan= para localizar ocurrencias de símbolos.
   :ensure t
   :defer 1
   :config
+    (setq smartscan-symbol-selector "symbol")
     (global-smartscan-mode 1))
 #+end_src
 
@@ -1110,6 +1111,7 @@ La barra de menú y la de herramientas es de lo primero que se quita al personal
 ** Servidor emacs
 Arranco el servidor para utilizar /emacsclient/
 #+begin_src emacs-lisp
+(setenv "EDITOR" "emacsclient")
 (server-force-delete)
 (server-start)
 #+end_src
@@ -1777,8 +1779,12 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
 * Escritorio
 Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago al final, para que se carguen ahora los buferes previos.
 #+begin_src emacs-lisp
-(setq desktop-save t)
-(desktop-save-mode)
+(use-package desktop
+  :ensure t
+  :config         
+    (delete-file (desktop-full-lock-name))
+    (setq desktop-save t)
+    (desktop-save-mode))
 #+end_src
 
 *
