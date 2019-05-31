@@ -1902,10 +1902,24 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 
 
 #+begin_src emacs-lisp
+;; EMPEZAR A BUSCAR LA SELECCIÓN
+(defun stribb/isearch-region (&optional not-regexp no-recursive-edit)
+  "If a region is active, make this the isearch default search pattern."
+  (interactive "P\np")
+  (when (use-region-p)
+    (let ((search (buffer-substring-no-properties
+                   (region-beginning)
+                   (region-end))))
+      (message "stribb/ir: %s %d %d" search (region-beginning) (region-end))
+      (setq deactivate-mark t)
+      (isearch-yank-string search))))
+
+(advice-add 'isearch-forward-regexp :after 'stribb/isearch-region)
+(advice-add 'isearch-forward :after 'stribb/isearch-region)
+
 #+end_src
 
 #+RESULTS:
-: t
 
 
 * usettf
