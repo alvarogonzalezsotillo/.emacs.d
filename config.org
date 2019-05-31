@@ -1857,7 +1857,6 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
       (desktop-save-mode))
 #+end_src
 
-*
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
@@ -1917,6 +1916,8 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 (advice-add 'isearch-forward-regexp :after 'stribb/isearch-region)
 (advice-add 'isearch-forward :after 'stribb/isearch-region)
 
+(advice-add 'isearch-backward-regexp :after 'stribb/isearch-region)
+(advice-add 'isearch-backward :after 'stribb/isearch-region)
 #+end_src
 
 #+RESULTS:
