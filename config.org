@@ -520,12 +520,6 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
   (use-package org
     :ensure t
     :config
-      (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
-      (modify-syntax-entry ?= "(=" org-mode-syntax-table)
-      (modify-syntax-entry ?_ "(_" org-mode-syntax-table)
-      (modify-syntax-entry ?* "(*" org-mode-syntax-table)
-      (modify-syntax-entry ?/ "(/" org-mode-syntax-table)
-
     ; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
     (require 'org-tempo)
     (setq org-structure-template-alist 
@@ -541,12 +535,21 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
             ("s" . "src")
             ("v" . "verse")))
 
+    (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
+    (modify-syntax-entry ?= "(=" org-mode-syntax-table)
+    (modify-syntax-entry ?_ "(_" org-mode-syntax-table)
+    (modify-syntax-entry ?* "(*" org-mode-syntax-table)
+    (modify-syntax-entry ?/ "(/" org-mode-syntax-table)
 
-  ;; (("L" . "latex")
-  ;;  ("H" . "html")
-  ;;  ("A" . "ascii")
-  ;;  ("i" . "index"))
-)
+    ;;; https://stackoverflow.com/questions/40110927/how-to-export-a-reference-to-a-begin-src-block-to-latex/40689439#40689439
+    (setq org-latex-prefer-user-labels t)
+
+
+    ;; (("L" . "latex")
+    ;;  ("H" . "html")
+    ;;  ("A" . "ascii")
+    ;;  ("i" . "index"))
+    )
 #+end_src
 
 
@@ -1338,9 +1341,6 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
 #+end_src
 
-#+RESULTS:
-: t
-
 
 
 
@@ -1358,7 +1358,7 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
         )
   
        (let
-           ((comando (format "sh -c 'gifttolatex -k -t \"%s\" -q \"%s\" \"%s\"'" titulo porcentajetest buffer-file-name))
+           ((comando (format "sh -c 'gifttolatex -t \"%s\" -q \"%s\" \"%s\"'" titulo porcentajetest buffer-file-name))
             )
          (shell-command comando)
          )
@@ -1771,6 +1771,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 (defun bonito-para-latex()
   (interactive)
   (toggle-truncate-lines -1)
+  (setq magic-latex-enable-suscript nil)
   (magic-latex-buffer 1))
 
 
@@ -1846,16 +1847,16 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
 * Escritorio
 Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago al final, para que se carguen ahora los buferes previos.
 #+begin_src emacs-lisp
-(delete-file "/home/alvaro/.emacs.d/.emacs.desktop.lock")
-(use-package desktop
-  :ensure t
-  :config         
-    (delete-file (desktop-full-lock-name))
-    (setq desktop-save t)
-    (desktop-save-mode))
+  (save-place-mode 1)
+  (delete-file "/home/alvaro/.emacs.d/.emacs.desktop.lock")
+  (use-package desktop
+    :ensure t
+    :config         
+      (delete-file (desktop-full-lock-name))
+      (setq desktop-save t)
+      (desktop-save-mode))
 #+end_src
 
-*
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
@@ -1904,8 +1905,27 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 #+end_src
 
 
+#+begin_src emacs-lisp
+;; EMPEZAR A BUSCAR LA SELECCIÓN
+(defun stribb/isearch-region (&optional not-regexp no-recursive-edit)
+  "If a region is active, make this the isearch default search pattern."
+  (interactive "P\np")
+  (when (use-region-p)
+    (let ((search (buffer-substring-no-properties
+                   (region-beginning)
+                   (region-end))))
+      (message "stribb/ir: %s %d %d" search (region-beginning) (region-end))
+      (setq deactivate-mark t)
+      (isearch-yank-string search))))
+
+(advice-add 'isearch-forward-regexp :after 'stribb/isearch-region)
+(advice-add 'isearch-forward :after 'stribb/isearch-region)
+
+(advice-add 'isearch-backward-regexp :after 'stribb/isearch-region)
+(advice-add 'isearch-backward :after 'stribb/isearch-region)
+#+end_src
+
 #+RESULTS:
-: t
 
 
 * usettf
