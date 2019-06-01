@@ -336,12 +336,21 @@ Añado las siguientes reglas para hacer búsquedas simples con =dumb-jump= en fi
 ** Paquete =bm=
 Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 #+BEGIN_SRC emacs-lisp
-  (use-package bm
-    :ensure t
-    :bind (("<C-f2>" . bm-toggle)
-           ("<f2>" . bm-next )
-           ("<S-f2>" . bm-previous)))
+  (defun my/bookmark-or-edit ()
+    (interactive)
+
+    (if (string= major-mode "dired-mode")
+        (wdired-change-to-wdired-mode)
+        (bm-next)))
+
+
+    (use-package bm
+      :ensure t
+    )
 #+END_SRC
+
+#+RESULTS:
+: bm-previous
 
 
 ** Paquete =multiple-cursors=
@@ -349,9 +358,6 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 #+BEGIN_SRC emacs-lisp
   (use-package multiple-cursors
     :ensure t
-    :bind (("<C-f2>" . bm-toggle)
-	   ("<f2>" . bm-next )
-	   ("<S-f2>" . bm-previous))
     :custom (mc/always-run-for-all t))
 
 
@@ -729,6 +735,15 @@ Añadir XeLatex
 #+END_SRC
 
 
+En =Termux= se necesita especificar la camino a la /shell/ para ejecutar comandos de /Latex/
+#+begin_src emacs-lisp
+  (if
+      (file-exists-p "/data/data/com.termux/files/usr/bin/sh")
+      (setq TeX-shell  "/data/data/com.termux/files/usr/bin/sh"))
+#+end_src
+
+
+
 
 ** Paquete =which-key=
 
@@ -1040,6 +1055,13 @@ El ratón también puede utilizarse en un =xterm=
 
 * Visualización
 
+** Resaltar términos buscados
+=isearch= resalta las coincidencias con la búsqueda, pero se quitan al acabar de buscar. Con esto, las coincidencias quedan resaltadas hasta la siguiente búsqueda o hasta ejecutar =lazy-highlight-cleanup=
+#+begin_src emacs-lisp
+(setq lazy-highlight-cleanup nil)
+(setq lazy-highlight-max-at-a-time nil)
+(setq lazy-highlight-initial-delay 0)
+#+end_src
 
 ** /scroll bars/
 
@@ -1157,6 +1179,35 @@ Mi línea de estado (modeline)
 #+end_src
 
 
+** =dired=
+Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
+
+#+begin_src emacs-lisp
+(setq dired-listing-switches "-aBhl --group-directories-first")
+
+
+(defun my/dired-hook ()
+  (all-the-icons-dired-mode 1)
+  (dired-hide-details-mode 1)
+  (setq  indent-line-function 'dired-subtree-toggle))
+
+(add-hook 'dired-mode-hook 'my/dired-hook)
+
+(use-package dired-subtree 
+  :ensure t
+  :defer 1
+  :config
+
+  (set-face-attribute 'dired-subtree-depth-1-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-2-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-3-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-4-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-5-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-6-face nil :background 'unspecified)
+)
+
+
+#+end_src
 
 * Atajos de teclado
 
@@ -1209,9 +1260,15 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
   ;; MIS TECLAS
   (defvar mis-teclas-minor-mode-map
     (let ((map (make-sparse-keymap)))
-      ;(define-key map (kbd "C-i") 'some-function)
       (define-key map (kbd "C-e") 'er/expand-region)
       (define-key map (kbd "C-S-e") 'er/contract-region)
+      (define-key map (kbd "M-<up>") 'er/expand-region)
+      (define-key map (kbd "M-<down>") 'er/contract-region)
+
+      (define-key map (kbd "M-<left>") 'winner-undo)
+      (define-key map (kbd "M-<right>") 'winner-redo)
+
+
       (define-key map (kbd "C-z") 'undo )
       (define-key map (kbd "C-x C-d") 'dired)
       (define-key map (kbd "C-x d") 'dired-other-frame)
@@ -1262,6 +1319,11 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
       (define-key map (kbd "C-S-l") 'toggle-truncate-lines)
 
+      (define-key map (kbd "<C-f2>") 'bm-toggle)
+      (define-key map (kbd "<f2>")  'my/bookmark-or-edit )
+      (define-key map (kbd "<S-f2>") 'bm-previous)
+
+
 
       map)
     "mis-teclas-minor-mode keymap")
@@ -1275,6 +1337,10 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
   (mis-teclas-minor-mode 1)
 
 #+end_src
+
+#+RESULTS:
+: t
+
 
 
 
@@ -1780,6 +1846,7 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
 * Escritorio
 Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago al final, para que se carguen ahora los buferes previos.
 #+begin_src emacs-lisp
+(delete-file "/home/alvaro/.emacs.d/.emacs.desktop.lock")
 (use-package desktop
   :ensure t
   :config         
@@ -1803,7 +1870,7 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - magithub
 - google-this
 - emamux
-
+- https://gitlab.com/LazyLama/emacs_latex_class
 
 
 #+begin_src emacs-lisp
@@ -1836,43 +1903,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 
 #+end_src
 
-#+RESULTS:
-: my-js2-mode-hook
-
-#+begin_src emacs-lisp
-
-  (if
-      (file-exists-p "/data/data/com.termux/files/usr/bin/sh")
-      (setq TeX-shell  "/data/data/com.termux/files/usr/bin/sh"))
-#+end_src
-
-#+begin_src emacs-lisp
-
-(setq dired-listing-switches "-aBhl --group-directories-first")
-
-
-  (defun my/dired-hook ()
-    (all-the-icons-dired-mode 1)
-    (dired-hide-details-mode 1)
-    (setq  indent-line-function 'dired-subtree-toggle))
-
-  (add-hook 'dired-mode-hook 'my/dired-hook)
-
-(use-package dired-subtree 
-  :ensure t
-  :defer 1
-  :config
-
-  (set-face-attribute 'dired-subtree-depth-1-face nil :background 'unspecified)
-  (set-face-attribute 'dired-subtree-depth-2-face nil :background 'unspecified)
-  (set-face-attribute 'dired-subtree-depth-3-face nil :background 'unspecified)
-  (set-face-attribute 'dired-subtree-depth-4-face nil :background 'unspecified)
-  (set-face-attribute 'dired-subtree-depth-5-face nil :background 'unspecified)
-  (set-face-attribute 'dired-subtree-depth-6-face nil :background 'unspecified)
-)
-
-
-#+end_src
 
 #+RESULTS:
 : t
