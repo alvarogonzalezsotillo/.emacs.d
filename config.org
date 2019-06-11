@@ -520,12 +520,6 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
   (use-package org
     :ensure t
     :config
-      (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
-      (modify-syntax-entry ?= "(=" org-mode-syntax-table)
-      (modify-syntax-entry ?_ "(_" org-mode-syntax-table)
-      (modify-syntax-entry ?* "(*" org-mode-syntax-table)
-      (modify-syntax-entry ?/ "(/" org-mode-syntax-table)
-
     ; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
     (require 'org-tempo)
     (setq org-structure-template-alist 
@@ -541,12 +535,21 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
             ("s" . "src")
             ("v" . "verse")))
 
+    (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
+    (modify-syntax-entry ?= "(=" org-mode-syntax-table)
+    (modify-syntax-entry ?_ "(_" org-mode-syntax-table)
+    (modify-syntax-entry ?* "(*" org-mode-syntax-table)
+    (modify-syntax-entry ?/ "(/" org-mode-syntax-table)
 
-  ;; (("L" . "latex")
-  ;;  ("H" . "html")
-  ;;  ("A" . "ascii")
-  ;;  ("i" . "index"))
-)
+    ;;; https://stackoverflow.com/questions/40110927/how-to-export-a-reference-to-a-begin-src-block-to-latex/40689439#40689439
+    (setq org-latex-prefer-user-labels t)
+
+
+    ;; (("L" . "latex")
+    ;;  ("H" . "html")
+    ;;  ("A" . "ascii")
+    ;;  ("i" . "index"))
+    )
 #+end_src
 
 
@@ -733,6 +736,15 @@ Añadir XeLatex
      		'("XeLaTeX" "xelatex -interaction=nonstopmode %s"
 		  TeX-run-command t t :help "Run xelatex") t))
 #+END_SRC
+
+
+En =Termux= se necesita especificar la camino a la /shell/ para ejecutar comandos de /Latex/
+#+begin_src emacs-lisp
+  (if
+      (file-exists-p "/data/data/com.termux/files/usr/bin/sh")
+      (setq TeX-shell  "/data/data/com.termux/files/usr/bin/sh"))
+#+end_src
+
 
 
 
@@ -1046,6 +1058,13 @@ El ratón también puede utilizarse en un =xterm=
 
 * Visualización
 
+** Resaltar términos buscados
+=isearch= resalta las coincidencias con la búsqueda, pero se quitan al acabar de buscar. Con esto, las coincidencias quedan resaltadas hasta la siguiente búsqueda o hasta ejecutar =lazy-highlight-cleanup=
+#+begin_src emacs-lisp
+(setq lazy-highlight-cleanup nil)
+(setq lazy-highlight-max-at-a-time nil)
+(setq lazy-highlight-initial-delay 0)
+#+end_src
 
 ** /scroll bars/
 
@@ -1163,6 +1182,35 @@ Mi línea de estado (modeline)
 #+end_src
 
 
+** =dired=
+Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
+
+#+begin_src emacs-lisp
+(setq dired-listing-switches "-aBhl --group-directories-first")
+
+
+(defun my/dired-hook ()
+  (all-the-icons-dired-mode 1)
+  (dired-hide-details-mode 1)
+  (setq  indent-line-function 'dired-subtree-toggle))
+
+(add-hook 'dired-mode-hook 'my/dired-hook)
+
+(use-package dired-subtree 
+  :ensure t
+  :defer 1
+  :config
+
+  (set-face-attribute 'dired-subtree-depth-1-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-2-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-3-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-4-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-5-face nil :background 'unspecified)
+  (set-face-attribute 'dired-subtree-depth-6-face nil :background 'unspecified)
+)
+
+
+#+end_src
 
 * Atajos de teclado
 
@@ -1297,9 +1345,6 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
 #+end_src
 
-#+RESULTS:
-: t
-
 
 
 
@@ -1317,7 +1362,7 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
         )
   
        (let
-           ((comando (format "sh -c 'gifttolatex -k -t \"%s\" -q \"%s\" \"%s\"'" titulo porcentajetest buffer-file-name))
+           ((comando (format "sh -c 'gifttolatex -t \"%s\" -q \"%s\" \"%s\"'" titulo porcentajetest buffer-file-name))
             )
          (shell-command comando)
          )
@@ -1730,6 +1775,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 (defun bonito-para-latex()
   (interactive)
   (toggle-truncate-lines -1)
+  (setq magic-latex-enable-suscript nil)
   (magic-latex-buffer 1))
 
 
@@ -1805,15 +1851,16 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
 * Escritorio
 Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago al final, para que se carguen ahora los buferes previos.
 #+begin_src emacs-lisp
-(use-package desktop
-  :ensure t
-  :config         
-    (delete-file (desktop-full-lock-name))
-    (setq desktop-save t)
-    (desktop-save-mode))
+  (save-place-mode 1)
+  (delete-file "/home/alvaro/.emacs.d/.emacs.desktop.lock")
+  (use-package desktop
+    :ensure t
+    :config         
+      (delete-file (desktop-full-lock-name))
+      (setq desktop-save t)
+      (desktop-save-mode))
 #+end_src
 
-*
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
@@ -1824,6 +1871,12 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - greader
 - https://zge.us.to/emacs.d.html
 - Swiper-isearch - a more isearch-like swiper
+- change-inner
+- magithub
+- google-this
+- emamux
+- https://gitlab.com/LazyLama/emacs_latex_class
+
 
 #+begin_src emacs-lisp
 
@@ -1855,46 +1908,28 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 
 #+end_src
 
-#+RESULTS:
-: my-js2-mode-hook
 
 #+begin_src emacs-lisp
+;; EMPEZAR A BUSCAR LA SELECCIÓN
+(defun stribb/isearch-region (&optional not-regexp no-recursive-edit)
+  "If a region is active, make this the isearch default search pattern."
+  (interactive "P\np")
+  (when (use-region-p)
+    (let ((search (buffer-substring-no-properties
+                   (region-beginning)
+                   (region-end))))
+      (message "stribb/ir: %s %d %d" search (region-beginning) (region-end))
+      (setq deactivate-mark t)
+      (isearch-yank-string search))))
 
-  (if
-      (file-exists-p "/data/data/com.termux/files/usr/bin/sh")
-      (setq TeX-shell  "/data/data/com.termux/files/usr/bin/sh"))
-#+end_src
+(advice-add 'isearch-forward-regexp :after 'stribb/isearch-region)
+(advice-add 'isearch-forward :after 'stribb/isearch-region)
 
-#+begin_src emacs-lisp
-
-(setq dired-listing-switches "-aBhl --group-directories-first")
-
-
-  (defun my/dired-hook ()
-    (all-the-icons-dired-mode 1)
-    (dired-hide-details-mode 1)
-    (setq  indent-line-function 'dired-subtree-toggle))
-
-  (add-hook 'dired-mode-hook 'my/dired-hook)
-
-(use-package dired-subtree 
-  :ensure t
-  :defer 1
-  :config
-
-  (set-face-attribute 'dired-subtree-depth-1-face nil :background 'unspecified)
-  (set-face-attribute 'dired-subtree-depth-2-face nil :background 'unspecified)
-  (set-face-attribute 'dired-subtree-depth-3-face nil :background 'unspecified)
-  (set-face-attribute 'dired-subtree-depth-4-face nil :background 'unspecified)
-  (set-face-attribute 'dired-subtree-depth-5-face nil :background 'unspecified)
-  (set-face-attribute 'dired-subtree-depth-6-face nil :background 'unspecified)
-)
-
-
+(advice-add 'isearch-backward-regexp :after 'stribb/isearch-region)
+(advice-add 'isearch-backward :after 'stribb/isearch-region)
 #+end_src
 
 #+RESULTS:
-: t
 
 
 * usettf
