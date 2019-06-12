@@ -1151,17 +1151,14 @@ Mi línea de estado (modeline)
                mode-line-modified
                " %[" mode-line-buffer-identification " %] "
                " | " '(vc-mode vc-mode)
-               " | %m "
-               " | %n "
-               " |" mode-line-coding-system-map
-               " |" mode-line-misc-info
+               " | %m %n "
                " | %IB %Z"
-               " | %l:%c "
+               " | %l:%c %p"
                mode-line-end-spaces
+
                ) )
 
 #+end_src
-
 
 
 ** =minimap=
@@ -1349,21 +1346,25 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
    #+begin_src emacs-lisp
-     (defun gifttolatex (titulo porcentajetest)
+     (defun gifttolatex (titulo porcentajetest parametros)
        "ejecuta giftolatex en el buffer actual."
        (interactive
         (list 
          (read-string "Título: " (buffer-name))
-         (read-number "Porcentaje del test: " 60))
+         (read-number "Porcentaje del test: " 60)
+         (read-string "Otros parámetros:" "-k"))
         )
   
        (let
-           ((comando (format "sh -c 'gifttolatex -t \"%s\" -q \"%s\" \"%s\"'" titulo porcentajetest buffer-file-name))
+           ((comando (format "sh -c 'gifttolatex %s -t \"%s\" -q \"%s\" \"%s\"'" parametros titulo porcentajetest buffer-file-name))
             )
          (shell-command comando)
          )
        )
    #+end_src
+
+   #+RESULTS:
+   : gifttolatex
 
 ** Abrir proyecto en ventana nueva con neotree
 #+begin_src emacs-lisp
@@ -1902,6 +1903,7 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 
 #+begin_src emacs-lisp
 ;; EMPEZAR A BUSCAR LA SELECCIÓN
+;; https://www.reddit.com/r/emacs/comments/b7yjje/isearch_region_search/
 (defun stribb/isearch-region (&optional not-regexp no-recursive-edit)
   "If a region is active, make this the isearch default search pattern."
   (interactive "P\np")
