@@ -1066,6 +1066,18 @@ El ratón también puede utilizarse en un =xterm=
 (setq lazy-highlight-initial-delay 0)
 #+end_src
 
+** Marcar las ocurrencias de la selección
+#+begin_src emacs-lisp
+(use-package region-occurrences-highlighter 
+  :ensure t
+  :defer 1
+  :config
+  (add-hook 'prog-mode-hook 'region-occurrences-highlighter-mode)
+  (add-hook 'org-mode-hook 'region-occurrences-highlighter-mode)
+)
+#+end_src
+
+
 ** /scroll bars/
 
 #+BEGIN_SRC emacs-lisp
@@ -1947,20 +1959,8 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
         )
   )
 
-  (define-key global-map (kbd "<left-margin> <mouse-1>") 'click-en-el-margen)
 
 
-
-#+end_src
-#+RESULTS:
-: click-en-el-margen
-
-
-
-
-
-  
-#+begin_src emacs-lisp
 (defun kk(event)
   (interactive "event")
 
