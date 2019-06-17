@@ -1927,7 +1927,33 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 (advice-add 'isearch-backward :after 'stribb/isearch-region)
 #+end_src
 
+
+
+#+begin_src emacs-lisp
+  (defun click-en-el-margen (event) 
+    (interactive "e")
+    (let*
+        ((start (event-start event))
+         (position (posn-point start))
+         (line (line-number-at-pos position t))
+        )
+       
+      (message "Han hecho click en el margen %s" event)
+      (message "  start %s" start)
+      (message "  position %s" position)
+      (message "  line %s" line)
+
+
+        )
+  )
+
+  (define-key global-map (kbd "<left-margin> <mouse-1>") 'click-en-el-margen)
+
+
+
+#+end_src
 #+RESULTS:
+: click-en-el-margen
 
 
 * usettf
