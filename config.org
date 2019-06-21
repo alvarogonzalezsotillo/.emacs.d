@@ -1957,62 +1957,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 
 #+begin_src emacs-lisp
 
-  (require 'posframe)
-
-
-  (defun post-command-hook-posframe-gitgutter ()
-    (message "this-command:%s" this-command)
-    (if (not (string= this-command "click-en-el-margen"))
-        (ocultar-posframe-gitgutter)))
-
-  (defun ocultar-posframe-gitgutter ()
-    (posframe-delete "*posframe-gitgutter-hunk*")
-    (remove-hook 'post-command-hook 'post-command-hook-posframe-gitgutter )
-    )
-
-  (defun remove-first-line (str)
-    (mapconcat 'identity (cdr (split-string raw-content "\n")) "\n"))
-
-  (defun click-en-el-margen (event) 
-    (interactive "event")
-
-    (setq posframe-mouse-banish nil)
-  
-    (let*
-        ((start (event-start event))
-         (position (posn-point start))
-         (window (posn-window start)))
-    
-      (posn-set-point start)
-                                          ;(condition-case nil
-      (let*
-          (
-           (info (git-gutter:search-here-diffinfo git-gutter:diffinfos))
-           (raw-content (git-gutter-hunk-content info))
-           (content (remove-first-line raw-content))
-           )
-                                          ;(message "list-content:%s" list-content)
-                                          ;(message "content:%s" content)
-        (posframe-show  "*posframe-gitgutter-hunk*"
-                        :string content
-                        :position position
-                        :internal-border-width 10
-                        :internal-border-color "#00FFFF"
-                        :foreground-color "#ff00ff"
-                        :background-color "#00ff00")
-
-        (add-hook 'post-command-hook 'post-command-hook-posframe-gitgutter)
-        )
-
-    
-                                          ;(error (message "Un error")))
-                                          ; el buffer es el de la variable git-gutter:popup-buffer
-
-      )
-    )
-
-
-  (define-key global-map (kbd "<left-margin> <mouse-1>") 'click-en-el-margen)
 #+end_src
 
 * usettf
