@@ -175,6 +175,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | popup-complete                 |                                                                |
 | popup-imenu                    |                                                                |
 | popup-switcher                 |                                                                |
+| posframe                       |                                                                |
 | prettier-js                    |                                                                |
 | quickrun                       | Ejecuta el buffer actual con el intérprete/compilador adecuado |
 | racer                          |                                                                |
@@ -293,14 +294,20 @@ Estoy usando =treemacs= en vez de =neotree=.
 
 
 ** Paquete =swoop=
-Búsqueda con previsualización. Lo configuro para que no seleccione el símbolo en en cursor.
+Búsqueda con previsualización. Lo configuro para que no seleccione el símbolo en en cursor, sino la seleción
 #+begin_src emacs-lisp
-(use-package swoop
-  :ensure t
-  :defer 1
-  :config
-    ;(setq helm-swoop-pre-input-function nil)
-)
+  (use-package swoop
+    :ensure t
+    :defer 1
+    :config
+
+  
+    (setq helm-swoop-pre-input-function
+          (lambda () 
+            (if (use-region-p)
+                (buffer-substring-no-properties (region-beginning) (region-end))
+              nil)))
+    )
 #+end_src
 
 
@@ -1223,6 +1230,30 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 * Atajos de teclado
 
+
+Si empiezo una búsqueda con =C-s= o =C-r=, se empieza buscando la selección
+#+begin_src emacs-lisp
+;; https://www.reddit.com/r/emacs/comments/b7yjje/isearch_region_search/
+(defun stribb/isearch-region (&optional not-regexp no-recursive-edit)
+  "If a region is active, make this the isearch default search pattern."
+  (interactive "P\np")
+  (when (use-region-p)
+    (let ((search (buffer-substring-no-properties
+                   (region-beginning)
+                   (region-end))))
+      ;;;(message "stribb/ir: %s %d %d" search (region-beginning) (region-end))
+      (setq deactivate-mark t)
+      (isearch-yank-string search))))
+
+(advice-add 'isearch-forward-regexp :after 'stribb/isearch-region)
+(advice-add 'isearch-forward :after 'stribb/isearch-region)
+
+(advice-add 'isearch-backward-regexp :after 'stribb/isearch-region)
+(advice-add 'isearch-backward :after 'stribb/isearch-region)
+#+end_src
+
+#+RESULTS:
+
 Cuando quiero cerrar un buffer, prefiero que no pregunte.
 #+begin_src emacs-lisp
 (defun kill-this-buffer-dont-ask ()
@@ -1918,76 +1949,66 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 #+end_src
 
 
-#+begin_src emacs-lisp
-;; EMPEZAR A BUSCAR LA SELECCIÓN
-;; https://www.reddit.com/r/emacs/comments/b7yjje/isearch_region_search/
-(defun stribb/isearch-region (&optional not-regexp no-recursive-edit)
-  "If a region is active, make this the isearch default search pattern."
-  (interactive "P\np")
-  (when (use-region-p)
-    (let ((search (buffer-substring-no-properties
-                   (region-beginning)
-                   (region-end))))
-      (message "stribb/ir: %s %d %d" search (region-beginning) (region-end))
-      (setq deactivate-mark t)
-      (isearch-yank-string search))))
-
-(advice-add 'isearch-forward-regexp :after 'stribb/isearch-region)
-(advice-add 'isearch-forward :after 'stribb/isearch-region)
-
-(advice-add 'isearch-backward-regexp :after 'stribb/isearch-region)
-(advice-add 'isearch-backward :after 'stribb/isearch-region)
-#+end_src
-
 
 
 #+begin_src emacs-lisp
+
+  (require 'posframe)
+
+
+  (defun post-command-hook-posframe-gitgutter ()
+    (message "this-command:%s" this-command)
+    (if (not (string= this-command "click-en-el-margen"))
+        (ocultar-posframe-gitgutter)))
+
+  (defun ocultar-posframe-gitgutter ()
+    (posframe-delete "*posframe-gitgutter-hunk*")
+    (remove-hook 'post-command-hook 'post-command-hook-posframe-gitgutter )
+    )
+
+  (defun remove-first-line (str)
+    (mapconcat 'identity (cdr (split-string raw-content "\n")) "\n"))
+
   (defun click-en-el-margen (event) 
-    (interactive "e")
+    (interactive "event")
+
+    (setq posframe-mouse-banish nil)
+  
     (let*
         ((start (event-start event))
          (position (posn-point start))
-         (line (line-number-at-pos position t))
-        )
-       
-      (message "Han hecho click en el margen %s" event)
-      (message "  start %s" start)
-      (message "  position %s" position)
-      (message "  line %s" line)
-
-
-        )
-  )
-
-
-
-(defun kk(event)
-  (interactive "event")
-
-  (let (
-        (position (posn-point (event-start event)))
-        )
-        (message "Position: %s" position)
-        (goto-char position)
-        )
-
-  ;(condition-case nil
+         (window (posn-window start)))
+    
+      (posn-set-point start)
+                                          ;(condition-case nil
       (let*
           (
            (info (git-gutter:search-here-diffinfo git-gutter:diffinfos))
-           (content (git-gutter-hunk-content info))
-           (buffer (generate-new-buffer "git-gutter+:"))
+           (raw-content (git-gutter-hunk-content info))
+           (content (remove-first-line raw-content))
            )
-        (git-gutter:update-popuped-buffer (git-gutter:search-here-diffinfo git-gutter:diffinfos))
-        (message "infos: %s" (git-gutter:search-here-diffinfo git-gutter:diffinfos))
-        (message "content: %s" content)
+                                          ;(message "list-content:%s" list-content)
+                                          ;(message "content:%s" content)
+        (posframe-show  "*posframe-gitgutter-hunk*"
+                        :string content
+                        :position position
+                        :internal-border-width 10
+                        :internal-border-color "#00FFFF"
+                        :foreground-color "#ff00ff"
+                        :background-color "#00ff00")
+
+        (add-hook 'post-command-hook 'post-command-hook-posframe-gitgutter)
         )
-    ;(error (message "Un error")))
-    ; el buffer es el de la variable git-gutter:popup-buffer
 
-  )
+    
+                                          ;(error (message "Un error")))
+                                          ; el buffer es el de la variable git-gutter:popup-buffer
 
-(define-key global-map (kbd "<left-margin> <mouse-1>") 'kk)
+      )
+    )
+
+
+  (define-key global-map (kbd "<left-margin> <mouse-1>") 'click-en-el-margen)
 #+end_src
 
 * usettf
