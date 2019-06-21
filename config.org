@@ -1289,11 +1289,15 @@ A veces es fácil perderse entre comandos a medio introducir y ventanas popup. M
   (interactive)
   (keyboard-escape-quit)
   (keyboard-quit)
+  (abort-recursive-edit)
   (setq quit-flag t))
 (define-key global-map [escape] 'super-escape)
-
+(define-key minibuffer-local-map [escape] 'super-escape)
 (define-key company-active-map [escape] 'company-abort)
 #+end_src
+
+#+RESULTS:
+: company-abort
 
 
 
