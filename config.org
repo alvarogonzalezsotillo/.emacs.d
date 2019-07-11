@@ -1923,7 +1923,9 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - https://gitlab.com/LazyLama/emacs_latex_class
 - https://github.com/patrickt/emacs/blob/master/init.el
 - https://github.com/ema2159/centaur-tabs/blob/master/README.org
-
+- https://melpa.org/#/helm-file-preview
+- color-rg
+- centaur-tabs
 #+begin_src emacs-lisp
 
   (defun my-js2-mode-hook()
