@@ -2,6 +2,12 @@
 
 // http://tulengua.es/es/separar-en-silabas
 
+const log = (s)=> {
+    //console.log(s);
+    null;
+};
+
+
 const vocales = ["a","e","i","o","u","á","é","í","ó","ú","ü"];
 const trasVocales = ["b","c","d","f","l","m","n","ns","r","rs","s","t","z"];
 const consonantes = ["b","c", "d", "f", "g", "h", "j", "k", "l", "m", "n","ñ","p","q","r","s","t","v","w","x","y","z"];
@@ -32,7 +38,7 @@ function buscaSubstr(array,s){
     return array.
         filter(a=>s.startsWith(a)).
         map(r=>E(r,s.substr(r.length)));
-        
+    
 }
 
 
@@ -55,7 +61,7 @@ const vocal = s => buscaSubstr(vocales,s);
 const consonante = s => buscaSubstr(consonantes,s);
 const dobleConsonante = s => buscaSubstr(doblesConsonantes,s);
 const trasVocal = s => buscaSubstr(trasVocales,s);
-   
+
 
 const grupoConsonanticoInicial =
       s =>primero([dobleConsonante,consonante],s);
@@ -92,35 +98,32 @@ function grupoVocalico(s){
     
 
     
- 
+    
 }
 grupoVocalico.toString = ()=> "grupoVocalico";
 
-const silabas = [
-
-    [s=>buscaSubstr(silabasEspeciales,s)],
-    [grupoVocalico],
-    [grupoConsonanticoInicial,grupoVocalico],
-
-
-
-
-    [grupoVocalico,trasVocal],    
-    [grupoConsonanticoInicial,grupoVocalico,trasVocal],
-
- 
-];
-
 
 function silaba(str){
+    // extrae todas las siguientes posibles sílabas, dejando primero la que debe ser explorada primero
+    const silabas = [
+        [s=>buscaSubstr(silabasEspeciales,s)],
+        [grupoVocalico],
+        [grupoConsonanticoInicial,grupoVocalico],
+        [grupoVocalico,trasVocal],    
+        [grupoConsonanticoInicial,grupoVocalico,trasVocal],
+    ];
+
     log(`silaba: str:${str}`);
     
-    const ret = silabas.map(s=> secuencia(s,str)).
+    const ret = silabas.
+          map(s=> secuencia(s,str)).
           filter(e=> e.length).
           flat();
     log(`silaba: str:${str} ret:${ret.join("  ")}`);
     return ret;
 }
+
+
 
 function palabra(str){
     function palabraR(silabas,resto){
@@ -145,41 +148,12 @@ function palabra(str){
     return palabraR([],str);
 }
 
-function arrayIgual(a,b){
-    if(a.length != b.length){
-        return false;
-    }
-    for (let i = 0; i < a.length; i++) {
-        if( a[i] != b[i]){
-            return false;
-        }
-    }
-    return true;
-}
-
-
-const log = (s)=> {
-    //console.log(s);
-    null;
-};
-
-const assert = (b,s) => {
-    if(!b) {
-        console.trace();
-        throw(s || "error");
-    }
-};
-
-const assertEquals = (a,b) => assert(a==b,`${a} != ${b}`);
-
-
-
 function secuencia(buscas,str){
-    
+    // aplica varios extractores uno tras otro, y devuelve todas las posibilidades
     const log = ()=>null;
     log(`secuencia: str:${str}`);
     if(!str && buscas.length > 0){
-        return null;
+        return [];
     }
     
     let ret = [E("",str)];
@@ -205,6 +179,34 @@ function secuencia(buscas,str){
 
 
 function tests(){
+
+
+    function arrayIgual(a,b){
+        if(a.length != b.length){
+            return false;
+        }
+        for (let i = 0; i < a.length; i++) {
+            if( a[i] != b[i]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
+    
+    const assert = (b,s) => {
+        if(!b) {
+            console.trace();
+            throw(s || "error");
+        }
+    };
+
+    const assertEquals = (a,b) => assert(a==b,`${a} != ${b}`);
+
+
+
     assertEquals(vocal("abd")[0].extraido,"a");
     assertEquals(vocal("abd")[0].resto,"bd");
 
@@ -221,32 +223,35 @@ function tests(){
     assertEquals(grupoVocalico("baob").length,0);
 
     
-    function pruebaPalabra(array){
+    function PP(array){
         const p = array.join("");
         const s = palabra(p);
-        log(`pruebaPalabra: s:${s}`);
-        console.log(`pruebaPalabra: ${p} -> ${s.join("-")}`);
+        log(`PP: s:${s}`);
+        console.log(`PP: ${p} -> ${s.join("-")}`);
         if(!arrayIgual(array,s)){
 	    throw(s);
 	}
     }
 
     
-    pruebaPalabra(["pa","la", "bra"]);
-    pruebaPalabra(["pe","pe"]);
-    pruebaPalabra(["sal","chi","chón"]);
-    pruebaPalabra(["ca","mión"]);
-    pruebaPalabra(["con","se","guir"]);
-    pruebaPalabra(["a","dic","ción"]);
-    pruebaPalabra(["trans","por","te"]);
-    pruebaPalabra(["trans", "at","lán","ti","co"]);
-    pruebaPalabra(["ci","güe","ña"]);
-    pruebaPalabra(["ahue","va","do"]);
-    pruebaPalabra(["es","pec","ta","cu","lar"]);
-    pruebaPalabra(["pers","pi","caz"]);
-    pruebaPalabra(["e","rror"]);
-    pruebaPalabra(["her","mo","su","ra"]);
-    pruebaPalabra(["con","ver","sa","ción"]);
+    PP(["pa","la", "bra"]);
+    PP(["pe","pe"]);
+    PP(["sal","chi","chón"]);
+    PP(["ca","mión"]);
+    PP(["con","se","guir"]);
+    PP(["a","dic","ción"]);
+    PP(["trans","por","te"]);
+    PP(["trans", "at","lán","ti","co"]);
+    PP(["ci","güe","ña"]);
+    PP(["ahue","va","do"]);
+    PP(["es","pec","ta","cu","lar"]);
+    PP(["pers","pi","caz"]);
+    PP(["e","rror"]);
+    PP(["her","mo","su","ra"]);
+    PP(["con","ver","sa","ción"]);
+    PP(["per","se","gui","réis"]);
+    PP(["ma","ría"]);
+    
 }
 
 
