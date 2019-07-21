@@ -35,6 +35,7 @@ function E(e,r){
 
 
 function buscaSubstr(array,s){
+    // extrae todos los prefijos posibles, en orden
     return array.
         filter(a=>s.startsWith(a)).
         map(r=>E(r,s.substr(r.length)));
@@ -43,6 +44,7 @@ function buscaSubstr(array,s){
 
 
 function primero(array,s){
+    // resultado del primer extractor valido
     for(let a of array){
         const r = a(s);
         if(r.length) {
@@ -126,6 +128,7 @@ function silaba(str){
 
 
 function palabra(str){
+    // extrae sílabas de forma recursiva, devielve el primer éxito
     function palabraR(silabas,resto){
         if(!resto){
             return silabas;
