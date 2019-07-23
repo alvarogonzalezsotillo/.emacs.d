@@ -8,8 +8,11 @@ const log = (s)=> {
 };
 
 
-const vocales = ["a","e","i","o","u","á","é","í","ó","ú","ü"];
-const trasVocales = ["b","c","d","f","l","m","n","ns","r","rs","s","t","z"];
+const acentuadas = "aéíóú".split("");
+const abiertas = "aáeéoó".split("");
+const cerradas = "iíuúü".split("");
+const vocales = abiertas.concat(cerradas);
+const trasVocales = ["b","c","d","f","l","m","n","ns","r","rs","s","t","y","z"];
 const consonantes = ["b","c", "d", "f", "g", "h", "j", "k", "l", "m", "n","ñ","p","q","r","s","t","v","w","x","y","z"];
 const doblesConsonantes = ["ch", "rr","ll","dr","tr","ps"].
       concat(["b","c","f","g","p"].map(l=>l+"l")).
@@ -105,7 +108,7 @@ function grupoVocalico(s){
 grupoVocalico.toString = ()=> "grupoVocalico";
 
 
-function silaba(str){
+function silabaTodoDiptongo(str){
     // extrae todas las siguientes posibles sílabas, dejando primero la que debe ser explorada primero
     const silabas = [
         [s=>buscaSubstr(silabasEspeciales,s)],
@@ -136,7 +139,7 @@ function palabra(str){
 
         log(`palabraR: silabas:${silabas}  resto:${resto}`);
         
-        const ss = silaba(resto);
+        const ss = silabaTodoDiptongo(resto);
         log(`palabraR: resto:${resto} ss:${ss}`);
         for(let s of ss){
             const newSilabas = silabas.concat(s.extraido);
@@ -206,54 +209,126 @@ function tests(){
         }
     };
 
-    const assertEquals = (a,b) => assert(a==b,`${a} != ${b}`);
+    const assertEQ = (a,b) => assert(a==b,`${a} != ${b}`);
 
 
 
-    assertEquals(vocal("abd")[0].extraido,"a");
-    assertEquals(vocal("abd")[0].resto,"bd");
+    assertEQ(vocal("abd")[0].extraido,"a");
+    assertEQ(vocal("abd")[0].resto,"bd");
 
 
-    assertEquals(secuencia([vocal,vocal],"aej")[0].resto,"j");
-    assertEquals(secuencia([vocal,vocal],"aej")[0].extraido,"ae");
-    assertEquals(silaba("pepa")[0].extraido,"pe");
-    assertEquals(silaba("pepa")[0].resto,"pa");
+    assertEQ(secuencia([vocal,vocal],"aej")[0].resto,"j");
+    assertEQ(secuencia([vocal,vocal],"aej")[0].extraido,"ae");
+    assertEQ(silabaTodoDiptongo("pepa")[0].extraido,"pe");
+    assertEQ(silabaTodoDiptongo("pepa")[0].resto,"pa");
 
 
     
-    assertEquals(grupoVocalico("ab")[0].extraido,"a");
-    assertEquals(grupoVocalico("aob")[0].extraido,"ao");
-    assertEquals(grupoVocalico("baob").length,0);
+    assertEQ(grupoVocalico("ab")[0].extraido,"a");
+    assertEQ(grupoVocalico("aob")[0].extraido,"ao");
+    assertEQ(grupoVocalico("baob").length,0);
 
     
-    function PP(array){
+    function PP(silabeado){
+        const array = silabeado.split("-");
         const p = array.join("");
         const s = palabra(p);
+        const test = s.join("-");
         log(`PP: s:${s}`);
-        console.log(`PP: ${p} -> ${s.join("-")}`);
-        if(!arrayIgual(array,s)){
+        console.log(`pruebaPalabra: ${p} -> ${test}`);
+        if(silabeado != test){
 	    throw(s);
 	}
     }
 
     
-    PP(["pa","la", "bra"]);
-    PP(["pe","pe"]);
-    PP(["sal","chi","chón"]);
-    PP(["ca","mión"]);
-    PP(["con","se","guir"]);
-    PP(["a","dic","ción"]);
-    PP(["trans","por","te"]);
-    PP(["trans", "at","lán","ti","co"]);
-    PP(["ci","güe","ña"]);
-    PP(["ahue","va","do"]);
-    PP(["es","pec","ta","cu","lar"]);
-    PP(["pers","pi","caz"]);
-    PP(["e","rror"]);
-    PP(["her","mo","su","ra"]);
-    PP(["con","ver","sa","ción"]);
-    PP(["per","se","gui","réis"]);
-    PP(["ma","ría"]);
+    PP("pa-la-bra");
+    PP("pe-pe");
+    PP("sal-chi-chón");
+    PP("ca-mión");
+    PP("con-se-guir");
+    PP("a-dic-ción");
+    PP("trans-por-te");
+    PP("trans-at-lán-ti-co");
+    PP("ci-güe-ña");
+    PP("ahue-va-do");
+    PP("es-pec-ta-cu-lar");
+    PP("pers-pi-caz");
+    PP("e-rror");
+    PP("her-mo-su-ra");
+    PP("con-ver-sa-ción");
+    PP("per-se-gui-réis");
+    PP("ma-ría");
+    PP("rey");
+    PP("es-toy");
+    PP("pla-ya");
+    PP("pa-yo-yo");
+    PP("a-lla-nar");
+}
+
+
+function separaDiptongo(silabaS){
+
+    
+    // https://www.ejemplos.co/50-ejemplos-de-palabras-con-hiato/
+    const esAbierta = v => abiertas.includes(v);
+    const esAcentuada = v => acentuadas.includes(v);
+
+
+    function separables(v1,v2){
+        const c1 = !esAbierta(v1);
+        const c2 = !esAbierta(v2);
+        const a1 = esAcentuada(v1);
+        const a2 = esAcentuada(v2);
+
+        if( !c1 && !a1 && !c2 && !a2){
+            return true; // ae
+        }
+        if( !c1 && !a1 && !c2 && a2){
+            return true; // aé
+        }
+        if( !c1 && !a1 && c2 && !a2){
+            return false; // ai
+        }
+        if( !c1 && !a1 && c2 && a2){
+            return true; // aí
+        }
+        if( !c1 && a1 && !c2 && !a2){
+            return true; // áe
+        }
+        if( !c1 && a1 && !c2 && a2){
+            throw "imposible"; // áé
+        } 
+        if( !c1 && a1 && c2 && !a2){
+            return false; // ái
+        }
+        if( !c1 && a1 && c2 && a2){
+            throw "imposible"; // áí
+        }
+        if( c1 && !a1 && !c2 && !a2){
+            return false; // ia
+        }
+        if( c1 && !a1 && !c2 && a2){
+            return false; // iu
+        }
+        if( c1 && !a1 && c2 && a2){
+            return false; // iú
+        }
+        if( c1 && a1 && !c2 && !a2){
+            return true; // ía
+        }
+        if( c1 && a1 && !c2 && a2){
+            throw "imposible"; // íá
+        }
+        if( c1 && a1 && c2 && !a2){
+            return true; // íu
+        }
+        if( c1 && a1 && c2 && a2){
+            throw "imposible"; // íú
+        }
+        throw "inesperado";
+    }
+    
     
 }
 
