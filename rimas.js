@@ -129,7 +129,7 @@ function silabaTodoDiptongo(str){
 
 
 
-function palabra(str){
+function palabraSinHiatos(str){
     // extrae sílabas de forma recursiva, devielve el primer éxito
     function palabraR(silabas,resto){
         if(!resto){
@@ -241,7 +241,7 @@ function tests(){
     }
 
     function PPD(silabeado){
-        PP(silabeado,palabra);
+        PP(silabeado,palabraSinHiatos);
     }
 
 
@@ -291,127 +291,128 @@ function tests(){
 }
 
 function palabraConHiatos(str){
-    const condiptongos = palabra(str);
+    const condiptongos = palabraSinHiatos
+    (str);
     let ret = [];
     for(let s of condiptongos){
         ret = ret.concat(separaHiato(s));
     }
     return ret;
     
-}
-
-function separaHiato(silabaS){
-
-    // la silabaS proviene de palabra()
-    // las y pueden aparecer al principio como consonante o al final como vocal. Si es vocal es siempre diptongo.
-    // Puede haber h intercalada, si se separa va en la segunda sílaba
-    // https://www.ejemplos.co/50-ejemplos-de-palabras-con-hiato/
-    const esAbierta = v => abiertas.includes(v);
-    const esAcentuada = v => acentuadas.includes(v);
-    const esVocal = v => vocales.includes(v);
 
 
-    function separables(v1,v2){
-        log(`separables:  v1:${v1} v2:${v2}`);
-        const c1 = !esAbierta(v1);
-        const c2 = !esAbierta(v2);
-        const a1 = esAcentuada(v1);
-        const a2 = esAcentuada(v2);
+    function separaHiato(silabaS){
 
-        log(`separables: c1:${c1}  a1:${a1} c2:${c2} a2:${a2}`);
-
-        if( !c1 && !a1 && !c2 && !a2){
-            return true; // ae
-        }
-        if( !c1 && !a1 && !c2 && a2){
-            return true; // aé
-        }
-        if( !c1 && !a1 && c2 && !a2){
-            return false; // ai
-        }
-        if( !c1 && !a1 && c2 && a2){
-            return true; // aí
-        }
-        if( !c1 && a1 && !c2 && !a2){
-            return true; // áe
-        }
-        if( !c1 && a1 && !c2 && a2){
-            throw "imposible"; // áé
-        } 
-        if( !c1 && a1 && c2 && !a2){
-            return false; // ái
-        }
-        if( !c1 && a1 && c2 && a2){
-            throw "imposible"; // áí
-        }
-        if( c1 && !a1 && !c2 && !a2){
-            return false; // ia
-        }
-        if( c1 && !a1 && !c2 && a2){
-            return false; // iá
-        }
-        if( c1 && !a1 && c2 && !a2 ){
-            return false; // iu
-        }
-        if( c1 && !a1 && c2 && a2){
-            return false; // iú
-        }
-        if( c1 && a1 && !c2 && !a2){
-            return true; // ía
-        }
-        if( c1 && a1 && !c2 && a2){
-            throw "imposible"; // íá
-        }
-        if( c1 && a1 && c2 && !a2){
-            return true; // íu
-        }
-        if( c1 && a1 && c2 && a2){
-            throw "imposible"; // íú
-        }
-        throw "inesperado";
-    }
-    
-
-    function separaPorHiato(i){
-        return [
-            silabaS.substr(0,i+1),
-            silabaS.substr(i+1)
-        ];
-    }
-    
-    const silabas = silabaS.split("");
+        // la silabaS proviene de palabra()
+        // las y pueden aparecer al principio como consonante o al final como vocal. Si es vocal es siempre diptongo.
+        // Puede haber h intercalada, si se separa va en la segunda sílaba
+        // https://www.ejemplos.co/50-ejemplos-de-palabras-con-hiato/
+        const esAbierta = v => abiertas.includes(v);
+        const esAcentuada = v => acentuadas.includes(v);
+        const esVocal = v => vocales.includes(v);
 
 
-    
-    function buscaVocal(desde){
-        // log(`buscaVocal: ${vocales} ${silabas} desde:${desde}`);
-        for( let i = desde; i < silabas.length ; i++ ){
-            if( esVocal(silabas[i]) ){
-                return i;
+        function separables(v1,v2){
+            log(`separables:  v1:${v1} v2:${v2}`);
+            const c1 = !esAbierta(v1);
+            const c2 = !esAbierta(v2);
+            const a1 = esAcentuada(v1);
+            const a2 = esAcentuada(v2);
+
+            log(`separables: c1:${c1}  a1:${a1} c2:${c2} a2:${a2}`);
+
+            if( !c1 && !a1 && !c2 && !a2){
+                return true; // ae
             }
+            if( !c1 && !a1 && !c2 && a2){
+                return true; // aé
+            }
+            if( !c1 && !a1 && c2 && !a2){
+                return false; // ai
+            }
+            if( !c1 && !a1 && c2 && a2){
+                return true; // aí
+            }
+            if( !c1 && a1 && !c2 && !a2){
+                return true; // áe
+            }
+            if( !c1 && a1 && !c2 && a2){
+                throw "imposible"; // áé
+            } 
+            if( !c1 && a1 && c2 && !a2){
+                return false; // ái
+            }
+            if( !c1 && a1 && c2 && a2){
+                throw "imposible"; // áí
+            }
+            if( c1 && !a1 && !c2 && !a2){
+                return false; // ia
+            }
+            if( c1 && !a1 && !c2 && a2){
+                return false; // iá
+            }
+            if( c1 && !a1 && c2 && !a2 ){
+                return false; // iu
+            }
+            if( c1 && !a1 && c2 && a2){
+                return false; // iú
+            }
+            if( c1 && a1 && !c2 && !a2){
+                return true; // ía
+            }
+            if( c1 && a1 && !c2 && a2){
+                throw "imposible"; // íá
+            }
+            if( c1 && a1 && c2 && !a2){
+                return true; // íu
+            }
+            if( c1 && a1 && c2 && a2){
+                throw "imposible"; // íú
+            }
+            throw "inesperado";
         }
-        return null;
-    }
-    
-    let i1 = buscaVocal(0);
-    if(i1==null){
-        throw "esperaba vocal";
-    }
-    let i2 = buscaVocal(i1+1);
-    if(i2==null){
+        
+
+        function separaPor(i){
+            return [
+                silabaS.substr(0,i+1),
+                silabaS.substr(i+1)
+            ];
+        }
+        
+        const silabas = silabaS.split("");
+
+
+        
+        function buscaVocal(desde){
+            // log(`buscaVocal: ${vocales} ${silabas} desde:${desde}`);
+            for( let i = desde; i < silabas.length ; i++ ){
+                if( esVocal(silabas[i]) ){
+                    return i;
+                }
+            }
+            return null;
+        }
+        
+        let i1 = buscaVocal(0);
+        if(i1==null){
+            throw "esperaba vocal";
+        }
+        let i2 = buscaVocal(i1+1);
+        if(i2==null){
+            return [silabaS];
+        }
+        
+        log(`separaHiato: ${silabaS}: i1:${i1} i2:${i2}`);
+        if(separables(silabas[i1],silabas[i2])){
+            let [ret,resto] = separaPor(i1);
+            log(`separaHiato: ret:${ret} resto:${resto}`);
+            let recursion = separaHiato(resto);
+            log(`separaHiato: recursion:${recursion}`);
+            return [ret].concat(recursion);
+        }
         return [silabaS];
-    }
-    
-    log(`separaHiato: ${silabaS}: i1:${i1} i2:${i2}`);
-    if(separables(silabas[i1],silabas[i2])){
-        let [ret,resto] = separaPorHiato(i1);
-        log(`separaHiato: ret:${ret} resto:${resto}`);
-        let recursion = separaHiato(resto);
-        log(`separaHiato: recursion:${recursion}`);
-        return [ret].concat(recursion);
-    }
-    return [silabaS];
-    
+    }    
     
 }
 
