@@ -2,13 +2,12 @@
 
 // http://tulengua.es/es/separar-en-silabas
 
-const log = (s)=> {
-    //console.log(s);
-    null;
-};
+function log(s){
+    // console.log(s);
+}
 
 
-const acentuadas = "aéíóú".split("");
+const acentuadas = "áéíóú".split("");
 const abiertas = "aáeéoó".split("");
 const cerradas = "iíuúü".split("");
 const vocales = abiertas.concat(cerradas);
@@ -229,10 +228,10 @@ function tests(){
     assertEQ(grupoVocalico("baob").length,0);
 
     
-    function PP(silabeado){
+    function PP(silabeado,separador){
         const array = silabeado.split("-");
         const p = array.join("");
-        const s = palabra(p);
+        const s = separador(p);
         const test = s.join("-");
         log(`PP: s:${s}`);
         console.log(`pruebaPalabra: ${p} -> ${test}`);
@@ -241,45 +240,85 @@ function tests(){
 	}
     }
 
+    function PPD(silabeado){
+        PP(silabeado,palabra);
+    }
+
+
+    function PPH(silabeado){
+        PP(silabeado,palabraConHiatos);
+    }
     
-    PP("pa-la-bra");
-    PP("pe-pe");
-    PP("sal-chi-chón");
-    PP("ca-mión");
-    PP("con-se-guir");
-    PP("a-dic-ción");
-    PP("trans-por-te");
-    PP("trans-at-lán-ti-co");
-    PP("ci-güe-ña");
-    PP("ahue-va-do");
-    PP("es-pec-ta-cu-lar");
-    PP("pers-pi-caz");
-    PP("e-rror");
-    PP("her-mo-su-ra");
-    PP("con-ver-sa-ción");
-    PP("per-se-gui-réis");
-    PP("ma-ría");
-    PP("rey");
-    PP("es-toy");
-    PP("pla-ya");
-    PP("pa-yo-yo");
-    PP("a-lla-nar");
+    PPD("pa-la-bra");
+    PPD("pe-pe");
+    PPD("sal-chi-chón");
+    PPD("ca-mión");
+    PPD("con-se-guir");
+    PPD("a-dic-ción");
+    PPD("trans-por-te");
+    PPD("trans-at-lán-ti-co");
+    PPD("ci-güe-ña");
+    PPD("ahue-va-do");
+    PPD("es-pec-ta-cu-lar");
+    PPD("pers-pi-caz");
+    PPD("e-rror");
+    PPD("her-mo-su-ra");
+    PPD("con-ver-sa-ción");
+    PPD("per-se-gui-réis");
+    PPD("ma-ría");
+    PPD("rey");
+    PPD("es-toy");
+    PPD("pla-ya");
+    PPD("pa-yo-yo");
+    PPD("a-lla-nar");
+
+    assert(arrayIgual( separaHiato("ría"), ["rí","a"]));
+    assert(arrayIgual( separaHiato("ria"), ["ria"]));
+    assert(arrayIgual( separaHiato("ahu"), ["ahu"]));
+    assert(arrayIgual( separaHiato("ahú"), ["a","hú"]));
+
+    PPH("ma-rí-a");
+    PPH("ca-mión");
+    PPH("ci-güe-ña");
+    PPH("quie-tud");
+    PPH("re-yer-ta");
+    PPH("a-pa-re-ce-réis");
+    PPH("hia-to");
+    PPH("bien");
+    PPH("dié-re-sis");
+    PPH("i-gual-dad");
+    
 }
 
-
-function separaDiptongo(silabaS){
-
+function palabraConHiatos(str){
+    const condiptongos = palabra(str);
+    let ret = [];
+    for(let s of condiptongos){
+        ret = ret.concat(separaHiato(s));
+    }
+    return ret;
     
+}
+
+function separaHiato(silabaS){
+
+    // la silabaS proviene de palabra()
+    // las y pueden aparecer al principio como consonante o al final como vocal. Si es vocal es siempre diptongo.
+    // Puede haber h intercalada, si se separa va en la segunda sílaba
     // https://www.ejemplos.co/50-ejemplos-de-palabras-con-hiato/
     const esAbierta = v => abiertas.includes(v);
     const esAcentuada = v => acentuadas.includes(v);
+    const esVocal = v => vocales.includes(v);
 
 
     function separables(v1,v2){
+        log(`separables:  v1:${v1} v2:${v2}`);
         const c1 = !esAbierta(v1);
         const c2 = !esAbierta(v2);
         const a1 = esAcentuada(v1);
         const a2 = esAcentuada(v2);
+
+        log(`separables: c1:${c1}  a1:${a1} c2:${c2} a2:${a2}`);
 
         if( !c1 && !a1 && !c2 && !a2){
             return true; // ae
@@ -309,6 +348,9 @@ function separaDiptongo(silabaS){
             return false; // ia
         }
         if( c1 && !a1 && !c2 && a2){
+            return false; // iá
+        }
+        if( c1 && !a1 && c2 && !a2 ){
             return false; // iu
         }
         if( c1 && !a1 && c2 && a2){
@@ -328,6 +370,47 @@ function separaDiptongo(silabaS){
         }
         throw "inesperado";
     }
+    
+
+    function separaPorHiato(i){
+        return [
+            silabaS.substr(0,i+1),
+            silabaS.substr(i+1)
+        ];
+    }
+    
+    const silabas = silabaS.split("");
+
+
+    
+    function buscaVocal(desde){
+        // log(`buscaVocal: ${vocales} ${silabas} desde:${desde}`);
+        for( let i = desde; i < silabas.length ; i++ ){
+            if( esVocal(silabas[i]) ){
+                return i;
+            }
+        }
+        return null;
+    }
+    
+    let i1 = buscaVocal(0);
+    if(i1==null){
+        throw "esperaba vocal";
+    }
+    let i2 = buscaVocal(i1+1);
+    if(i2==null){
+        return [silabaS];
+    }
+    
+    log(`separaHiato: ${silabaS}: i1:${i1} i2:${i2}`);
+    if(separables(silabas[i1],silabas[i2])){
+        let [ret,resto] = separaPorHiato(i1);
+        log(`separaHiato: ret:${ret} resto:${resto}`);
+        let recursion = separaHiato(resto);
+        log(`separaHiato: recursion:${recursion}`);
+        return [ret].concat(recursion);
+    }
+    return [silabaS];
     
     
 }
