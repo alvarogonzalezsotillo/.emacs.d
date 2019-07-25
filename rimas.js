@@ -272,11 +272,6 @@ function tests(){
     PPD("pa-yo-yo");
     PPD("a-lla-nar");
 
-    assert(arrayIgual( separaHiato("ría"), ["rí","a"]));
-    assert(arrayIgual( separaHiato("ria"), ["ria"]));
-    assert(arrayIgual( separaHiato("ahu"), ["ahu"]));
-    assert(arrayIgual( separaHiato("ahú"), ["a","hú"]));
-
     PPH("ma-rí-a");
     PPH("ca-mión");
     PPH("ci-güe-ña");
@@ -288,6 +283,66 @@ function tests(){
     PPH("dié-re-sis");
     PPH("i-gual-dad");
     
+}
+
+function acentuaSilabas(silabas){
+
+    function posicionAcentoGrafico(){
+        for(let i in silabas){
+            if( silabas[i].find(l=>acentuadas.find(l))){
+                return i;
+            }
+            
+        }
+        return null;
+    }
+
+    if(silabas.length < 2){
+        return silabas.map(s=>s.toUpperCase());
+    }
+
+    const acento = posicionAcentoGrafico();
+    if( acento != null ){
+        const ret = silabas.slice();
+        ret[acento] = ret[acento].toUpperCase();
+        return ret;
+    }
+
+ 
+
+
+    const ultima = silabas[silabas.length-1].toLowerCase();
+    const penultima = silabas[silabas.length-2].toLowerCase();
+    const mente =
+          silabas.length > 2 &&
+          ultima == "te" &&
+          penultima == "men";
+
+    if(mente){
+        // adverbio a partir de adjetivo
+        const raiz = silabas.slice(0,-2);
+        return acentuaSilabas(raiz).concat(["men","te"]);
+    }
+
+    const ultimaL = ultima.charAt(ultima.length);
+    const acabaNSVocal =
+          ultimaL == n ||
+          ultimaL == s ||
+          vocales.find(l=>l==ultimaL);
+
+    
+    let i = -1;
+    if( acabaNSVocal ){
+        // acaba en nsa sin acento gráfico, es llana
+        i = silabas.length-2;
+    }
+    else{
+        // no acaba en nsa ni acento gráfico, es aguda
+        i = silabas.length-1;
+    }
+    const ret = silabas.slice();
+    ret[i] = ret[i].toUpperCase();
+    return ret;
 }
 
 function palabraConHiatos(str){
