@@ -233,8 +233,9 @@ function tests(){
         const p = array.join("");
         const s = separador(p);
         const test = s.join("-");
+        const acentuada = acentuaSilabas(s);
         log(`PP: s:${s}`);
-        console.log(`pruebaPalabra: ${p} -> ${test}`);
+        console.log(`pruebaPalabra: ${p} -> ${test}  ${acentuada}`);
         if(silabeado != test){
 	    throw(s);
 	}
@@ -249,30 +250,30 @@ function tests(){
         PP(silabeado,palabraConHiatos);
     }
     
-    PPD("pa-la-bra");
-    PPD("pe-pe");
-    PPD("sal-chi-chón");
-    PPD("ca-mión");
-    PPD("con-se-guir");
-    PPD("a-dic-ción");
-    PPD("trans-por-te");
-    PPD("trans-at-lán-ti-co");
-    PPD("ci-güe-ña");
-    PPD("ahue-va-do");
-    PPD("es-pec-ta-cu-lar");
-    PPD("pers-pi-caz");
-    PPD("e-rror");
-    PPD("her-mo-su-ra");
-    PPD("con-ver-sa-ción");
-    PPD("per-se-gui-réis");
-    PPD("ma-ría");
-    PPD("rey");
-    PPD("es-toy");
-    PPD("pla-ya");
-    PPD("pa-yo-yo");
-    PPD("a-lla-nar");
-
+    PPH("pa-la-bra");
+    PPH("pe-pe");
+    PPH("sal-chi-chón");
+    PPH("ca-mión");
+    PPH("con-se-guir");
+    PPH("a-dic-ción");
+    PPH("trans-por-te");
+    PPH("trans-at-lán-ti-co");
+    PPH("ci-güe-ña");
+    PPH("ahue-va-do");
+    PPH("es-pec-ta-cu-lar");
+    PPH("pers-pi-caz");
+    PPH("e-rror");
+    PPH("her-mo-su-ra");
+    PPH("con-ver-sa-ción");
+    PPH("per-se-gui-réis");
     PPH("ma-rí-a");
+    PPH("rey");
+    PPH("es-toy");
+    PPH("pla-ya");
+    PPH("pa-yo-yo");
+    PPH("a-lla-nar");
+
+  
     PPH("ca-mión");
     PPH("ci-güe-ña");
     PPH("quie-tud");
@@ -282,14 +283,15 @@ function tests(){
     PPH("bien");
     PPH("dié-re-sis");
     PPH("i-gual-dad");
-    
+
+  
 }
 
 function acentuaSilabas(silabas){
 
     function posicionAcentoGrafico(){
         for(let i in silabas){
-            if( silabas[i].find(l=>acentuadas.find(l))){
+            if( silabas[i].split("").find(l=>acentuadas.includes(l))){
                 return i;
             }
             
@@ -298,6 +300,7 @@ function acentuaSilabas(silabas){
     }
 
     if(silabas.length < 2){
+        // monosílabo
         return silabas.map(s=>s.toUpperCase());
     }
 
@@ -324,12 +327,13 @@ function acentuaSilabas(silabas){
         return acentuaSilabas(raiz).concat(["men","te"]);
     }
 
-    const ultimaL = ultima.charAt(ultima.length);
+    const ultimaL = ultima.charAt(ultima.length-1);
     const acabaNSVocal =
-          ultimaL == n ||
-          ultimaL == s ||
-          vocales.find(l=>l==ultimaL);
+          ultimaL == "n" ||
+          ultimaL == "s" ||
+          vocales.includes(ultimaL);
 
+    log( `acentuaSilabas: ${silabas} ${ultimaL} ${acabaNSVocal}`);
     
     let i = -1;
     if( acabaNSVocal ){
