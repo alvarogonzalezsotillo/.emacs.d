@@ -3,7 +3,7 @@
 // http://tulengua.es/es/separar-en-silabas
 
 function log(s){
-    // console.log(s);
+     // console.log(s);
 }
 
 
@@ -283,12 +283,71 @@ function tests(){
     PPH("bien");
     PPH("dié-re-sis");
     PPH("i-gual-dad");
+    PPH("co-me-rí-ais");
 
-  
+
+    console.log(new Palabra("marrón").silabas);
+    console.log(new Palabra("marrón").acento);
+    console.log(new Palabra("marrón").toString());
+}
+
+function addLazyProp(o,p,evaluator){
+    const internalName = `_${p}_private`;
+    Object.defineProperty(o,p, {
+        get(){
+            if(!o[internalName]){
+                o[internalName] = evaluator();
+            }
+            return o[internalName];
+        }
+    });
+}
+
+class Palabra{
+    constructor(texto){
+        this.texto = texto;
+        addLazyProp(
+            this,
+            "silabas",
+            () => palabraConHiatos(this.texto)
+        );
+        addLazyProp(
+            this,
+            "acento",
+            () => silabaAcentuada(this.silabas)
+        );
+        addLazyProp(
+            this,
+            "silabasAcentuadas",
+            () => {
+                const ret = this.silabas.slice();
+                const i = this.acento;
+                ret[i] = ret[i].toUpperCase();
+                return ret;
+
+            }
+        );
+        
+    }
+
+    toString(){
+        return `${this.texto} ${this.silabasAcentuadas}`;
+    }
 }
 
 function acentuaSilabas(silabas){
+    let i = silabaAcentuada(silabas);
+    log(`acentuaSilabas ${silabas} i:${i}`);
+    const ret = silabas.slice();
+    ret[i] = ret[i].toUpperCase();
+    return ret;
 
+}
+
+function silabaAcentuada(silabas){
+    // https://lengualdia.blogspot.com/2012/02/excepciones-de-la-rima-los-diptongos-y.html?m=1
+    // https://www.poemas-del-alma.com/blog/taller/hiatos-diptongos-y-triptongos 
+    
     function posicionAcentoGrafico(){
         for(let i in silabas){
             if( silabas[i].split("").find(l=>acentuadas.includes(l))){
@@ -301,14 +360,12 @@ function acentuaSilabas(silabas){
 
     if(silabas.length < 2){
         // monosílabo
-        return silabas.map(s=>s.toUpperCase());
+        return 0;
     }
 
     const acento = posicionAcentoGrafico();
     if( acento != null ){
-        const ret = silabas.slice();
-        ret[acento] = ret[acento].toUpperCase();
-        return ret;
+        return acento;
     }
 
  
@@ -344,9 +401,8 @@ function acentuaSilabas(silabas){
         // no acaba en nsa ni acento gráfico, es aguda
         i = silabas.length-1;
     }
-    const ret = silabas.slice();
-    ret[i] = ret[i].toUpperCase();
-    return ret;
+
+    return i;
 }
 
 function palabraConHiatos(str){
