@@ -1953,6 +1953,15 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - https://melpa.org/#/helm-file-preview
 - color-rg
 - centaur-tabs
+- indent-guide
+- recentf-mode
+- (setq bookmark-save-flag 1)
+- save-place-mode
+- ;; Avoid performance issues in files with very long lines.
+(unless (version<= emacs-version "27")
+(global-so-long-mode 1))
+- org-hide-emphasis-markers is a
+- openwith
 #+begin_src emacs-lisp
 
   (defun my-js2-mode-hook()
