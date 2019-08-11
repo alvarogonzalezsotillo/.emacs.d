@@ -325,19 +325,24 @@ Image+ permite hace zoom en las imágenes
 ** Paquete =dumb-jump=
 Añado las siguientes reglas para hacer búsquedas simples con =dumb-jump= en ficheros =sql= y =org=.
 #+begin_src emacs-lisp
-;; ADITIONAL DUMBJUMB RULES
-(use-package dumb-jump
-  :ensure t
-  :config
+  ;; ADITIONAL DUMBJUMB RULES
+  (use-package dumb-jump
+    :ensure t
+    :config
 
     (add-to-list 'dumb-jump-find-rules
-      '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "sql"
-	       :regex ": \\bJJJ\\j"))
+                 '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "sql"
+                         :regex ": \\bJJJ\\j"))
     (add-to-list 'dumb-jump-find-rules
-      '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "org"
-	       :regex ": \\bJJJ\\j")))
+                 '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "org"
+                         :regex ": \\bJJJ\\j"))
 
-     (setq dump-jump-selector 'helm)
+    (add-to-list 'dumb-jump-language-file-exts
+
+                 '(:language "javascript" :ext "mjs" :agtype "js" :rgtype "js")))
+
+
+  (setq dump-jump-selector 'helm)
 #+end_src
 
 ** Paquete =bm=

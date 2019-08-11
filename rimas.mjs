@@ -3,7 +3,7 @@
 // http://tulengua.es/es/separar-en-silabas
 
 function log(s){
-     // console.log(s);
+    //console.log(s);
 }
 
 import {corpus} from "./corpus.mjs";
@@ -240,6 +240,31 @@ function acentuaSilabas(silabas){
 
 }
 
+
+function vocalTonica(silaba){
+    const ls = silaba.split("");
+    const acento = ls.findIndex( l=> acentuadas.includes(l) );
+
+    // si hay una vocal acentuada, es esa
+    if( acento >= 0 ){
+        return acento;
+    }
+
+    // el acento estará en la última vocal abierta
+    for( let i = ls.length -1 ; i >= 0 ; i-- ){
+        if( abiertas.includes(ls[i]) ){
+            return i;
+        }
+    }
+
+    // en otro caso, en la última vocal
+    for( let i = ls.length -1 ; i >= 0 ; i-- ){
+        if( vocales.includes(ls[i]) ){
+            return i;
+        }
+    }
+}
+
 function silabaTonica(silabas){
     // https://lengualdia.blogspot.com/2012/02/excepciones-de-la-rima-los-diptongos-y.html?m=1
     // https://www.poemas-del-alma.com/blog/taller/hiatos-diptongos-y-triptongos 
@@ -291,20 +316,23 @@ function silabaTonica(silabas){
     let i = -1;
     if( acabaNSVocal ){
         // acaba en nsa sin acento gráfico, es llana
+        log( `silabaTonica: llana` );
         i = silabas.length-2;
     }
     else{
         // no acaba en nsa ni acento gráfico, es aguda
+        log( `silabaTonica: aguda` );
         i = silabas.length-1;
     }
 
+    log( `silabaTonica: ${i}` );
     return i;
 }
 
 function palabraConHiatos(str){
-    const condiptongos = palabraSinHiatos
-    (str);
+    const condiptongos = palabraSinHiatos(str);
     let ret = [];
+    log(`palabraConHiatos:  ${str} condiptongos:${condiptongos}`);
     for(let s of condiptongos){
         ret = ret.concat(separaHiato(s));
     }
@@ -440,7 +468,7 @@ function* rimaConsonanteCon(palabra,numeroSilabas){
     }
 
     function silabaRimaCon(s1,s2,esTonica){
-        if(!esTonica){
+        if( !esTonica){
             return s1 == s2;
         }
         const ls1 = s1.split("").filter(l=>l!="h");
@@ -485,10 +513,8 @@ function* rimaConsonanteCon(palabra,numeroSilabas){
 }
 
 export {
-   acentuaSilabas,
     palabraConHiatos,
-    palabraSinHiatos,
+    silabaTonica,
     Palabra
-    
 };
 
