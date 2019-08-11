@@ -3,7 +3,10 @@
 import{
     palabraConHiatos,
     silabaTonica,
-    Palabra
+    Palabra,
+    rimaConsonanteCon,
+    rimasConsonantesCon,
+    testExport
 
 } from "./rimas.mjs";
 
@@ -47,7 +50,7 @@ function PP(silabeado,separador,tonica){
     const test = s.join("-");
     log(`PP: s:${s}`);
     const t = silabaTonica(s);
-    console.log(`pruebaPalabra: ${p} -> ${test} t:${t}`);
+    log(`pruebaPalabra: ${p} -> ${test} t:${t}`);
     if(silabeado != test){
 	throw(s);
     }
@@ -62,14 +65,20 @@ function PPT(silabeado,tonica){
 }
 
 function testPalabra(){
-    console.log(new Palabra("marrón").silabas);
-    console.log(new Palabra("marrón").acento);
-    console.log(new Palabra("marrón").toString());
+    const P = (s)=>new Palabra(s);
+    assertEQ(P("marrón").letraTonica,4);
+    assertEQ(P("transporte").letraTonica,6);
+    assertEQ(P("américa").letraTonica,2);
+    assertEQ(P("armario").letraTonica,3);
+    assertEQ(P("reinos").letraTonica,1);
+
+    assert(rimaConsonanteCon("manolo","bolo"));
+    assert(rimaConsonanteCon("manoló","voló"));
 }
 
 function testSilabeado(){
 
-    
+    PPT("ma-no-lo",1);
     PPT("pa-la-bra",1);
     PPT("pe-pe",0);
     PPT("sal-chi-chón",2);
@@ -105,5 +114,24 @@ function testSilabeado(){
     PPT("co-me-rí-ais",2);
 }
 
+function testVocalTonica(){
+    const vocalTonicaDeSilaba = testExport.vocalTonicaDeSilaba;
+
+    assertEQ( vocalTonicaDeSilaba("a"), 0 );
+    assertEQ( vocalTonicaDeSilaba("trans"), 2 );
+    assertEQ( vocalTonicaDeSilaba("ciu"), 2 );
+    assertEQ( vocalTonicaDeSilaba("coe"), 2 );
+    assertEQ( vocalTonicaDeSilaba("cíe"), 1 );
+}
 
 testSilabeado();
+testPalabra();
+
+testVocalTonica();
+
+console.log("Probando generator");
+for( let p of rimasConsonantesCon("reinos",5) ){
+    console.log(p);
+}
+console.log("Probado generator");
+

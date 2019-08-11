@@ -6,6 +6,10 @@ function log(s){
     //console.log(s);
 }
 
+function warn(s){
+//    console.log(`WARN: ${s}` );
+}
+
 import {corpus} from "./corpus.mjs";
 
 
@@ -13,7 +17,7 @@ const acentuadas = "áéíóú".split("");
 const abiertas = "aáeéoó".split("");
 const cerradas = "iíuúü".split("");
 const vocales = abiertas.concat(cerradas);
-const trasVocales = ["b","c","d","f","l","m","n","ns","r","rs","s","t","y","z"];
+const trasVocales = ["b","c","d","f","g","l","m","n","ns","p","r","rs","s","t","x","y","z"];
 const consonantes = ["b","c", "d", "f", "g", "h", "j", "k", "l", "m", "n","ñ","p","q","r","s","t","v","w","x","y","z"];
 const doblesConsonantes = ["ch", "rr","ll","dr","tr","ps"].
       concat(["b","c","f","g","p"].map(l=>l+"l")).
@@ -187,42 +191,26 @@ function secuencia(buscas,str){
 
 
 
-function addLazyProp(o,p,evaluator){
-    const internalName = `_${p}_private`;
+function addObjectLazyProp(o,p,evaluator){
+    const internalName = `_private_${p}_`;
     Object.defineProperty(o,p, {
         get(){
-            if(!o[internalName]){
-                o[internalName] = evaluator();
+            log("DefineProperty:");
+            if(!this[internalName]){
+                this[internalName] = evaluator.call(this,this);
             }
-            return o[internalName];
+            return this[internalName];
         }
     });
+}
+
+function addClassLazyProp(clazz,p,evaluator){
+    addObjectLazyProp(clazz.prototype,p,evaluator);
 }
 
 class Palabra{
     constructor(texto){
         this.texto = texto;
-        addLazyProp(
-            this,
-            "silabas",
-            () => palabraConHiatos(this.texto)
-        );
-        addLazyProp(
-            this,
-            "tonica",
-            () => silabaTonica(this.silabas)
-        );
-        addLazyProp(
-            this,
-            "silabasConTonica",
-            () => {
-                const ret = this.silabas.slice();
-                const i = this.tonica;
-                ret[i] = ret[i].toUpperCase();
-                return ret;
-
-            }
-        );
         
     }
 
@@ -230,6 +218,37 @@ class Palabra{
         return `${this.texto} ${this.silabasConTonica}`;
     }
 }
+
+addClassLazyProp(
+    Palabra,
+    "silabas",
+    (o) => palabraConHiatos(o.texto)
+);
+
+addClassLazyProp(
+    Palabra,
+    "silabaTonica",
+    (o) => silabaTonica(o.silabas)
+);
+
+addClassLazyProp(
+    Palabra,
+    "letraTonica",
+    (o) => letraTonica(o.silabas)
+);
+
+addClassLazyProp(
+    Palabra,
+    "silabasConTonica",
+    (o) => {
+        const ret = o.silabas.slice();
+        const i = o.tonica;
+        ret[i] = ret[i].toUpperCase();
+        return ret;
+
+    }
+);
+
 
 function acentuaSilabas(silabas){
     let i = silabaTonica(silabas);
@@ -241,7 +260,7 @@ function acentuaSilabas(silabas){
 }
 
 
-function vocalTonica(silaba){
+function vocalTonicaDeSilaba(silaba){
     const ls = silaba.split("");
     const acento = ls.findIndex( l=> acentuadas.includes(l) );
 
@@ -263,6 +282,20 @@ function vocalTonica(silaba){
             return i;
         }
     }
+
+    return null;
+}
+
+function letraTonica(silabas){
+    const t = silabaTonica(silabas);
+    if( t == null ){
+        return null;
+    }
+    const s = silabas[t];
+    const i = vocalTonicaDeSilaba(s);
+
+    log(`letraTonica: ${silabas} t:${t} s:${s} i:${i}`);
+    return silabas.slice(0,t).join("").length + i;
 }
 
 function silabaTonica(silabas){
@@ -331,6 +364,10 @@ function silabaTonica(silabas){
 
 function palabraConHiatos(str){
     const condiptongos = palabraSinHiatos(str);
+    if( !condiptongos ){
+        warn(`condiptongos es null:${str}`);
+        return null;
+    }
     let ret = [];
     log(`palabraConHiatos:  ${str} condiptongos:${condiptongos}`);
     for(let s of condiptongos){
@@ -376,13 +413,13 @@ function palabraConHiatos(str){
                 return true; // áe
             }
             if( !c1 && a1 && !c2 && a2){
-                throw "imposible"; // áé
+                return null; //throw "imposible"; // áé
             } 
             if( !c1 && a1 && c2 && !a2){
                 return false; // ái
             }
             if( !c1 && a1 && c2 && a2){
-                throw "imposible"; // áí
+                return null; //throw "imposible"; // áí
             }
             if( c1 && !a1 && !c2 && !a2){
                 return false; // ia
@@ -400,13 +437,13 @@ function palabraConHiatos(str){
                 return true; // ía
             }
             if( c1 && a1 && !c2 && a2){
-                throw "imposible"; // íá
+                return null; //throw "imposible"; // íá
             }
             if( c1 && a1 && c2 && !a2){
                 return true; // íu
             }
             if( c1 && a1 && c2 && a2){
-                throw "imposible"; // íú
+                return null; //throw "imposible"; // íú
             }
             throw "inesperado";
         }
@@ -443,7 +480,7 @@ function palabraConHiatos(str){
         }
         
         log(`separaHiato: ${silabaS}: i1:${i1} i2:${i2}`);
-        if(separables(silabas[i1],silabas[i2])){
+        if(separables(silabas[i1],silabas[i2]) == true){
             let [ret,resto] = separaPor(i1);
             log(`separaHiato: ret:${ret} resto:${resto}`);
             let recursion = separaHiato(resto);
@@ -456,7 +493,43 @@ function palabraConHiatos(str){
 }
 
 
-function* rimaConsonanteCon(palabra,numeroSilabas){
+function rimaConsonanteCon(p1,p2){
+    const silabas1 = palabraConHiatos(p1);
+    const silabas2 = palabraConHiatos(p2);
+    if( silabas1 == null || silabas2 == null ){
+        return false;
+    }
+    const i1 = letraTonica(silabas1);
+    const i2 = letraTonica(silabas2);
+    const fin1 = p1.substring(i1);
+    const fin2 = p2.substring(i2);
+    return fin1 == fin2;
+}
+
+function* rimasConsonantesCon(palabra,numeroSilabas){
+    console.log("rimasConsonantesCon");
+    const silabas = palabraConHiatos(palabra);
+    const tonica = silabaTonica(silabas);
+
+    if( tonica+1 >= numeroSilabas){
+        console.log("tonica+1 >= numeroSilabas");
+        return;
+    }
+    
+    if( !corpus[numeroSilabas+1] ){
+        console.log("!corpus[numeroSilabas+1]");
+        return;
+    }
+    const candidatas = corpus[numeroSilabas+1];
+
+    for( let c of candidatas ){
+        if( rimaConsonanteCon(palabra,c) ){
+            yield c;
+        }
+    }
+}
+
+function* rimaAsonsonanteCon(palabra,numeroSilabas){
     if( !corpus[numeroSilabas+1] ){
         return;
     }
@@ -512,9 +585,17 @@ function* rimaConsonanteCon(palabra,numeroSilabas){
     }
 }
 
+
+const testExport = {
+    vocalTonicaDeSilaba: vocalTonicaDeSilaba,
+};
+
 export {
     palabraConHiatos,
     silabaTonica,
-    Palabra
+    Palabra,
+    rimaConsonanteCon,
+    rimasConsonantesCon,
+    testExport
 };
 
