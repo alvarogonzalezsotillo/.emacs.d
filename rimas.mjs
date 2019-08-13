@@ -194,10 +194,15 @@ function secuencia(buscas,str){
 function addObjectLazyProp(o,p,evaluator){
     const internalName = `_private_${p}_`;
     Object.defineProperty(o,p, {
-        get(){
+        enumerable: true,
+        get: function(){
             log("DefineProperty:");
             if(!this[internalName]){
-                this[internalName] = evaluator.call(this,this);
+                Object.defineProperty(this,internalName,{
+                    writable: false,
+                    enumerable: false,
+                    value: evaluator.call(this,this)
+                });
             }
             return this[internalName];
         }
@@ -211,7 +216,6 @@ function addClassLazyProp(clazz,p,evaluator){
 class Palabra{
     constructor(texto){
         this.texto = texto;
-        
     }
 
     toString(){
@@ -242,10 +246,25 @@ addClassLazyProp(
     "silabasConTonica",
     (o) => {
         const ret = o.silabas.slice();
-        const i = o.tonica;
+        const i = o.silabaTonica;
         ret[i] = ret[i].toUpperCase();
         return ret;
 
+    }
+);
+
+addClassLazyProp(
+    Palabra,
+    "asPlainObject",
+    (o) => {
+        const ret = {};
+        for( let p in o ){
+            if( p != "asPlainObject" ){
+                ret[p] = o[p];
+            }
+        }
+        Object.freeze(ret);
+        return ret;
     }
 );
 

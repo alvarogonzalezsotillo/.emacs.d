@@ -65,7 +65,15 @@ function PPT(silabeado,tonica){
 }
 
 function testPalabra(){
-    const P = (s)=>new Palabra(s);
+    const P = (s)=>{
+        const ret = new Palabra(s);
+        console.log(JSON.stringify(ret.asPlainObject));
+        for( let p in ret ){
+            console.log(`  ${p}: ${ret[p]}`);
+        }
+        console.log("  " + JSON.stringify(ret));
+        return ret;
+    };
     assertEQ(P("marrón").letraTonica,4);
     assertEQ(P("transporte").letraTonica,6);
     assertEQ(P("américa").letraTonica,2);
@@ -101,8 +109,6 @@ function testSilabeado(){
     PPT("pla-ya",0);
     PPT("pa-yo-yo",1);
     PPT("a-lla-nar",2);
-
-    
     PPT("ca-mión",1);
     PPT("quie-tud",1);
     PPT("re-yer-ta",1);
@@ -112,6 +118,7 @@ function testSilabeado(){
     PPT("dié-re-sis",0);
     PPT("i-gual-dad",2);
     PPT("co-me-rí-ais",2);
+    PPT("pa-ra-guay", 2);
 }
 
 function testVocalTonica(){
