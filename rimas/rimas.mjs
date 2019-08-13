@@ -10,7 +10,7 @@ function warn(s){
 //    console.log(`WARN: ${s}` );
 }
 
-import {corpus} from "./corpus.mjs";
+import {corpus} from "./corpus-by-length.mjs";
 
 
 const acentuadas = "áéíóú".split("");

@@ -65,15 +65,7 @@ function PPT(silabeado,tonica){
 }
 
 function testPalabra(){
-    const P = (s)=>{
-        const ret = new Palabra(s);
-        console.log(JSON.stringify(ret.asPlainObject));
-        for( let p in ret ){
-            console.log(`  ${p}: ${ret[p]}`);
-        }
-        console.log("  " + JSON.stringify(ret));
-        return ret;
-    };
+    const P = (s)=>new Palabra(s);
     assertEQ(P("marrón").letraTonica,4);
     assertEQ(P("transporte").letraTonica,6);
     assertEQ(P("américa").letraTonica,2);
