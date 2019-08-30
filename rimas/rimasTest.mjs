@@ -129,8 +129,9 @@ testPalabra();
 testVocalTonica();
 
 console.log("Probando generator");
-for( let p of rimasConsonantesCon("reinos",5) ){
-    console.log(p);
+for( let p of rimasConsonantesCon("fragata",3) ){
+    const silabas = palabraConHiatos(p);
+    console.log(`${p}\t${silabas}`);
 }
 console.log("Probado generator");
 

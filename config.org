@@ -1979,8 +1979,8 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
     (defvar my-company-backends-js2-mode
       '(
         (
-         ac-js2-company
          company-files
+         ac-js2-company
          company-dabbrev-code
          company-capf
          )

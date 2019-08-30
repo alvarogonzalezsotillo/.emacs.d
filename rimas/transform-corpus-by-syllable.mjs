@@ -64,4 +64,13 @@ fs.writeFile(
     console.log("OK");
 } );
 
+fs.writeFile(
+    "corpus-by-syllable-no-pp.json",
+    "// -*- mode: fundamental; -*-\n" + JSON.stringify(corpusBySyllable),
+    (error)=>{
+    if(error){
+        console.log(`ERROR: ${error}`);
+    }
+    console.log("OK");
+} );
 

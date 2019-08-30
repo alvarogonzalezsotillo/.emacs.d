@@ -10,7 +10,7 @@ function warn(s){
 //    console.log(`WARN: ${s}` );
 }
 
-import {corpus} from "./corpus-by-length.mjs";
+import {corpus} from "./corpus-by-syllable-no-pp.mjs";
 
 
 const acentuadas = "áéíóú".split("");
@@ -324,7 +324,7 @@ function silabaTonica(silabas){
     function posicionAcentoGrafico(){
         for(let i in silabas){
             if( silabas[i].split("").find(l=>acentuadas.includes(l))){
-                return i;
+                return parseInt(i);
             }
             
         }
@@ -530,16 +530,18 @@ function* rimasConsonantesCon(palabra,numeroSilabas){
     const silabas = palabraConHiatos(palabra);
     const tonica = silabaTonica(silabas);
 
+    console.log(`tonica:${tonica} numeroSilabas:${numeroSilabas}`);
+    console.log(`tonica+1:${tonica+1} numeroSilabas:${numeroSilabas}`);
     if( tonica+1 >= numeroSilabas){
         console.log("tonica+1 >= numeroSilabas");
         return;
     }
     
-    if( !corpus[numeroSilabas+1] ){
-        console.log("!corpus[numeroSilabas+1]");
+    if( !corpus[numeroSilabas-1] ){
+        console.log("!corpus[numeroSilabas-1]");
         return;
     }
-    const candidatas = corpus[numeroSilabas+1];
+    const candidatas = corpus[numeroSilabas-1];
 
     for( let c of candidatas ){
         if( rimaConsonanteCon(palabra,c) ){
