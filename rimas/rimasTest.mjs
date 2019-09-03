@@ -6,6 +6,7 @@ import{
     Palabra,
     rimaConsonanteCon,
     rimasConsonantesCon,
+    normalizaPronunciacion,
     testExport
 
 } from "./rimas.mjs";
@@ -123,15 +124,28 @@ function testVocalTonica(){
     assertEQ( vocalTonicaDeSilaba("cíe"), 1 );
 }
 
+function testRimasConsonantes(){
+    console.log("Probando generator");
+    for( let p of rimasConsonantesCon("fragata",3) ){
+        const silabas = palabraConHiatos(p);
+        console.log(`${p}\t${silabas}`);
+    }
+    console.log("Probado generator");
+}
+
+
 testSilabeado();
 testPalabra();
-
 testVocalTonica();
+//testRimasConsonantes();
 
-console.log("Probando generator");
-for( let p of rimasConsonantesCon("fragata",3) ){
-    const silabas = palabraConHiatos(p);
-    console.log(`${p}\t${silabas}`);
+function f(silaba){
+    console.log( `${silaba} ${normalizaPronunciacion(silaba)}`);
 }
-console.log("Probado generator");
+
+f("quio");
+f("baca");
+f("vigui");
+f("cigui");
+f("chigi");
 

@@ -606,6 +606,70 @@ function* rimaAsonsonanteCon(palabra,numeroSilabas){
     }
 }
 
+function normalizaPronunciacion(silaba){
+    /*
+      GUI -> GI
+      GÜI -> GUI
+      GI  -> JI
+      HA  -> A
+      VI  -> BI
+      QUI -> KI
+      CA  -> KA
+      CI  -> ZI
+      
+    */
+
+    const map = [
+        ["gue", "ge"],
+        ["gui", "gi"],
+        ["güe", "gue"],
+        ["güi", "gui"],
+        ["qui", "ki"],
+        ["que", "ke"],
+        ["ce", "ze"],
+        ["ci", "zi"],
+        ["ge", "je"],
+        ["gi", "ji"],
+        ["ch", "ch"],
+        ["h", ""],
+        ["v", "b"],
+        ["c", "k"],
+    ];
+
+    function match(restoDeSilaba){
+        if( restoDeSilaba.length == 0 ){
+            return {
+                traduccion : "",
+                restoDeSilaba : ""
+            };
+        }
+        
+        for( let i = 0 ; i < map.length ; i++ ){
+            if( restoDeSilaba.startsWith(map[i][0]) ){
+                return {
+                    traduccion : map[i][1],
+                    restoDeSilaba : restoDeSilaba.substring( map[i][0].length )
+                };
+            }
+        }
+        
+        return {
+            traduccion : restoDeSilaba.substring(0,1),
+            restoDeSilaba : restoDeSilaba.substring(1)
+        };
+    }
+    
+    let ret = "";
+    let restoDeSilaba = silaba;
+    while( restoDeSilaba != "" ){
+        
+        const m = match(restoDeSilaba);
+        restoDeSilaba = m.restoDeSilaba;
+        ret += m.traduccion;
+    }
+
+    return ret;
+}
 
 const testExport = {
     vocalTonicaDeSilaba: vocalTonicaDeSilaba,
@@ -617,6 +681,7 @@ export {
     Palabra,
     rimaConsonanteCon,
     rimasConsonantesCon,
+    normalizaPronunciacion,
     testExport
 };
 
