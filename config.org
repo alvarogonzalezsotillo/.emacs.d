@@ -1069,6 +1069,14 @@ El ratón también puede utilizarse en un =xterm=
 
 
 * Visualización
+  
+
+** Líneas muy largas
+Avoid performance issues in files with very long lines.
+#+begin_src emacs-lisp
+(unless (version<= emacs-version "27")
+(global-so-long-mode 1))
+#+end_src
 
 ** Pestañas
 #+begin_src emacs-lisp
@@ -1962,11 +1970,13 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - recentf-mode
 - (setq bookmark-save-flag 1)
 - save-place-mode
-- ;; Avoid performance issues in files with very long lines.
-(unless (version<= emacs-version "27")
-(global-so-long-mode 1))
 - org-hide-emphasis-markers is a
 - openwith
+- calctex
+- dot-mode
+- (global-eldoc-mode -1)
+- didyoumean.el 
+
 #+begin_src emacs-lisp
 
   (defun my-js2-mode-hook()
