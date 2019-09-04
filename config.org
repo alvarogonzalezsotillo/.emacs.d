@@ -325,19 +325,24 @@ Image+ permite hace zoom en las imágenes
 ** Paquete =dumb-jump=
 Añado las siguientes reglas para hacer búsquedas simples con =dumb-jump= en ficheros =sql= y =org=.
 #+begin_src emacs-lisp
-;; ADITIONAL DUMBJUMB RULES
-(use-package dumb-jump
-  :ensure t
-  :config
+  ;; ADITIONAL DUMBJUMB RULES
+  (use-package dumb-jump
+    :ensure t
+    :config
 
     (add-to-list 'dumb-jump-find-rules
-      '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "sql"
-	       :regex ": \\bJJJ\\j"))
+                 '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "sql"
+                         :regex ": \\bJJJ\\j"))
     (add-to-list 'dumb-jump-find-rules
-      '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "org"
-	       :regex ": \\bJJJ\\j")))
+                 '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "org"
+                         :regex ": \\bJJJ\\j"))
 
-     (setq dump-jump-selector 'helm)
+    (add-to-list 'dumb-jump-language-file-exts
+
+                 '(:language "javascript" :ext "mjs" :agtype "js" :rgtype "js")))
+
+
+  (setq dump-jump-selector 'helm)
 #+end_src
 
 ** Paquete =bm=
@@ -1072,6 +1077,33 @@ Avoid performance issues in files with very long lines.
 (unless (version<= emacs-version "27")
 (global-so-long-mode 1))
 #+end_src
+
+** Pestañas
+#+begin_src emacs-lisp
+  (use-package centaur-tabs
+    :demand
+    :config
+    (centaur-tabs-mode t)
+    (setq centaur-tabs-set-icons t)
+    (setq centaur-tabs-style "chanfer")
+    (setq centaur-tabs-set-modified-marker t)
+
+    (defun my-centaur-tabs-buffer-groups ()
+      (list
+       (cond
+        ((or (string-equal "*" (substring (buffer-name) 0 1))
+             )
+         "Emacs")
+        (t
+         (centaur-tabs-get-group-name (current-buffer))))))
+
+
+    (setq centaur-tabs-buffer-groups-function 'my-centaur-tabs-buffer-groups)
+    )
+#+end_src
+
+#+RESULTS:
+: t
 
 ** Resaltar términos buscados
 =isearch= resalta las coincidencias con la búsqueda, pero se quitan al acabar de buscar. Con esto, las coincidencias quedan resaltadas hasta la siguiente búsqueda o hasta ejecutar =lazy-highlight-cleanup=
@@ -1957,8 +1989,8 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
     (defvar my-company-backends-js2-mode
       '(
         (
-         ac-js2-company
          company-files
+         ac-js2-company
          company-dabbrev-code
          company-capf
          )
@@ -1980,62 +2012,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 
 #+begin_src emacs-lisp
 
-  (require 'posframe)
-
-
-  (defun post-command-hook-posframe-gitgutter ()
-    (message "this-command:%s" this-command)
-    (if (not (string= this-command "click-en-el-margen"))
-        (ocultar-posframe-gitgutter)))
-
-  (defun ocultar-posframe-gitgutter ()
-    (posframe-delete "*posframe-gitgutter-hunk*")
-    (remove-hook 'post-command-hook 'post-command-hook-posframe-gitgutter )
-    )
-
-  (defun remove-first-line (str)
-    (mapconcat 'identity (cdr (split-string raw-content "\n")) "\n"))
-
-  (defun click-en-el-margen (event) 
-    (interactive "event")
-
-    (setq posframe-mouse-banish nil)
-  
-    (let*
-        ((start (event-start event))
-         (position (posn-point start))
-         (window (posn-window start)))
-    
-      (posn-set-point start)
-                                          ;(condition-case nil
-      (let*
-          (
-           (info (git-gutter:search-here-diffinfo git-gutter:diffinfos))
-           (raw-content (git-gutter-hunk-content info))
-           (content (remove-first-line raw-content))
-           )
-                                          ;(message "list-content:%s" list-content)
-                                          ;(message "content:%s" content)
-        (posframe-show  "*posframe-gitgutter-hunk*"
-                        :string content
-                        :position position
-                        :internal-border-width 10
-                        :internal-border-color "#00FFFF"
-                        :foreground-color "#ff00ff"
-                        :background-color "#00ff00")
-
-        (add-hook 'post-command-hook 'post-command-hook-posframe-gitgutter)
-        )
-
-    
-                                          ;(error (message "Un error")))
-                                          ; el buffer es el de la variable git-gutter:popup-buffer
-
-      )
-    )
-
-
-  (define-key global-map (kbd "<left-margin> <mouse-1>") 'click-en-el-margen)
 #+end_src
 
 * usettf

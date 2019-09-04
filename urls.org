@@ -502,3 +502,9 @@ done;
 | Success        |                                       |           |     |    |
 | DESINSTALANDO: | com.android.calendar                  |           |     |    |
 | Success        |                                       |           |     |    |
+
+* Side Projects
+- /home/alvaro/github/objgraph-javascript
+- /home/alvaro/github/dunnet-solver
+- /home/alvaro/github/palabras-anagramadas
+- /home/alvaro/github/escultura
