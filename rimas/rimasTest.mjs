@@ -51,13 +51,14 @@ function PP(silabeado,separador,tonica){
     const test = s.join("-");
     log(`PP: s:${s}`);
     const t = silabaTonica(s);
-    log(`pruebaPalabra: ${p} -> ${test} t:${t}`);
+    console.log(`pruebaPalabra: ${p} -> ${test} -> ${new Palabra(p).pronunciacion} -> t:${t}`);
     if(silabeado != test){
 	throw(s);
     }
     if(tonica >= 0 ){
         assertEQ(t,tonica);
     }
+
 }
 
 
@@ -113,6 +114,7 @@ function testSilabeado(){
     PPT("co-me-rí-ais",2);
     PPT("pa-ra-guay", 2);
     PPT("e-rra-ta",1);
+    PPT("lla-na",0);
 }
 
 function testVocalTonica(){
@@ -158,6 +160,6 @@ testVocalTonica();
 
 testNormalizaPronunciacion();
 
-testRimasConsonantes();
+//testRimasConsonantes();
 
 

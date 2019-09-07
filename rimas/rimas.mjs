@@ -225,6 +225,12 @@ class Palabra{
 
 addClassLazyProp(
     Palabra,
+    "pronunciacion",
+    (o) => o.silabas.map( s => normalizaPronunciacion(s) )
+);
+
+addClassLazyProp(
+    Palabra,
     "silabas",
     (o) => palabraConHiatos(o.texto)
 );
@@ -616,6 +622,9 @@ function normalizaPronunciacion(silaba){
       QUI -> KI
       CA  -> KA
       CI  -> ZI
+      LL  -> Y
+      Yv  -> Yv
+      Y   -> i  
       
     */
 
@@ -641,6 +650,18 @@ function normalizaPronunciacion(silaba){
         ["gi", "ji"],
         ["gí", "jí"],
         ["ch", "ch"],
+        ["ll", "y"],
+        ["ya", "ya"],
+        ["ye", "ye"],
+        ["yi", "yi"],
+        ["yo", "yo"],
+        ["yu", "yu"],
+        ["yá", "yá"],
+        ["yé", "yé"],
+        ["yí", "yí"],
+        ["yó", "yó"],
+        ["yú", "yú"],
+        ["y", "i"],
         ["h", ""],
         ["v", "b"],
         ["c", "k"],
