@@ -112,6 +112,7 @@ function testSilabeado(){
     PPT("i-gual-dad",2);
     PPT("co-me-rí-ais",2);
     PPT("pa-ra-guay", 2);
+    PPT("e-rra-ta",1);
 }
 
 function testVocalTonica(){
@@ -125,27 +126,38 @@ function testVocalTonica(){
 }
 
 function testRimasConsonantes(){
-    console.log("Probando generator");
     for( let p of rimasConsonantesCon("fragata",3) ){
         const silabas = palabraConHiatos(p);
         console.log(`${p}\t${silabas}`);
     }
-    console.log("Probado generator");
 }
 
+
+function testNormalizaPronunciacion(){
+
+    function f(silaba, esperado){
+        const n = normalizaPronunciacion(silaba);
+        if( esperado !=  n ){
+            console.log( `${silaba} ${n}`);
+            throw(silaba);
+        }
+
+    }
+
+    f("quio" , "kio" );
+    f("baca" , "baka" );
+    f("vigui", "bigi" );
+    f("cige", "zije" );
+    f("chigi", "chiji" );
+
+}
 
 testSilabeado();
 testPalabra();
 testVocalTonica();
-//testRimasConsonantes();
 
-function f(silaba){
-    console.log( `${silaba} ${normalizaPronunciacion(silaba)}`);
-}
+testNormalizaPronunciacion();
 
-f("quio");
-f("baca");
-f("vigui");
-f("cigui");
-f("chigi");
+testRimasConsonantes();
+
 

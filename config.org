@@ -150,6 +150,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | ibuffer-sidebar                |                                                                |
 | imenu-anywhere                 |                                                                |
 | imenu-list                     |                                                                |
+| indent-guide                   |                                                                |
 | intellij-theme                 |                                                                |
 | kodi-remote                    |                                                                |
 | latex-preview-pane             |                                                                |
@@ -415,6 +416,33 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 #+begin_src emacs-lisp
   (require 'company)
   (company-flx-mode +1)
+
+
+  (defun my-js2-mode-hook()
+    (interactive)
+    (ac-js2-mode)
+    (setq ac-js2-evaluate-calls t)
+    (auto-highlight-symbol-mode 0)
+    (js2-highlight-vars-mode)
+
+    (defvar my-company-backends-js2-mode
+      '(
+        (
+         company-files
+         ac-js2-company
+         company-dabbrev-code
+         company-capf
+         )
+        )
+      )
+
+    (set (make-local-variable 'company-backends) my-company-backends-js2-mode))
+
+
+
+  (add-hook 'js2-mode-hook #'my-js2-mode-hook)
+
+
 
 
 
@@ -1069,7 +1097,14 @@ El ratón también puede utilizarse en un =xterm=
 
 
 * Visualización
-  
+
+** Previsualización de ficheros en Helm
+Se me cuelga a veces, está desactivado
+#+begin_src lisp
+(use-package helm-file-preview
+  :config
+  (helm-file-preview-mode 1))
+#+end_src
 
 ** Líneas muy largas
 Avoid performance issues in files with very long lines.
@@ -1854,6 +1889,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
       (display-line-numbers-mode 1))
   (auto-highlight-symbol-mode 1)
   (yafolding-mode 1)
+  (indent-guide-mode 1)
   (adaptive-wrap-prefix-mode 1))
 
 (defun bonito-para-latex()
@@ -1965,8 +2001,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - https://github.com/ema2159/centaur-tabs/blob/master/README.org
 - https://melpa.org/#/helm-file-preview
 - color-rg
-- centaur-tabs
-- indent-guide
 - recentf-mode
 - (setq bookmark-save-flag 1)
 - save-place-mode
@@ -1977,42 +2011,10 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - (global-eldoc-mode -1)
 - didyoumean.el 
 
-#+begin_src emacs-lisp
-
-  (defun my-js2-mode-hook()
-    (interactive)
-    (ac-js2-mode)
-    (setq ac-js2-evaluate-calls t)
-    (auto-highlight-symbol-mode 0)
-    (js2-highlight-vars-mode)
-
-    (defvar my-company-backends-js2-mode
-      '(
-        (
-         company-files
-         ac-js2-company
-         company-dabbrev-code
-         company-capf
-         )
-        )
-      )
-
-    (set (make-local-variable 'company-backends) my-company-backends-js2-mode))
-
-
-
-  (add-hook 'js2-mode-hook #'my-js2-mode-hook)
-
-
-
-#+end_src
 
 
 
 
-#+begin_src emacs-lisp
-
-#+end_src
 
 * usettf
 
