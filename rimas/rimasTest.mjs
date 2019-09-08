@@ -128,7 +128,7 @@ function testVocalTonica(){
 }
 
 function testRimasConsonantes(){
-    for( let p of rimasConsonantesCon("fragata",3) ){
+    for( let p of rimasConsonantesCon("galleta",2) ){
         const silabas = palabraConHiatos(p);
         console.log(`${p}\t${silabas}`);
     }
@@ -160,6 +160,6 @@ testVocalTonica();
 
 testNormalizaPronunciacion();
 
-//testRimasConsonantes();
+testRimasConsonantes();
 
 
