@@ -1081,11 +1081,11 @@ Avoid performance issues in files with very long lines.
 ** Pestañas
 #+begin_src emacs-lisp
   (use-package centaur-tabs
-    :demand
+    :ensure t
     :config
     (centaur-tabs-mode t)
     (setq centaur-tabs-set-icons t)
-    (setq centaur-tabs-style "chanfer")
+    (setq centaur-tabs-style "chamfer")
     (setq centaur-tabs-set-modified-marker t)
 
     (defun my-centaur-tabs-buffer-groups ()
