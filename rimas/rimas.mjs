@@ -10,7 +10,8 @@ function warn(s){
 //    console.log(`WARN: ${s}` );
 }
 
-import {corpus} from "./corpus-by-syllable-no-pp.mjs";
+import {corpus as corpusBySyllable} from "./corpus-by-syllable-no-pp.mjs";
+import {corpusByFrequency} from "./corpus-by-frequency.mjs";
 
 
 const acentuadas = "áéíóú".split("");
@@ -222,6 +223,12 @@ class Palabra{
         return `${this.texto} ${this.silabasConTonica}`;
     }
 }
+
+addClassLazyProp(
+    Palabra,
+    "pronunciacion",
+    (o) => o.silabas.map( s => normalizaPronunciacion(s) )
+);
 
 addClassLazyProp(
     Palabra,
@@ -532,16 +539,15 @@ function* rimasConsonantesCon(palabra,numeroSilabas){
 
     console.log(`tonica:${tonica} numeroSilabas:${numeroSilabas}`);
     console.log(`tonica+1:${tonica+1} numeroSilabas:${numeroSilabas}`);
-    if( tonica+1 >= numeroSilabas){
+    if( tonica+1 > numeroSilabas){
         console.log("tonica+1 >= numeroSilabas");
         return;
     }
-    
-    if( !corpus[numeroSilabas-1] ){
-        console.log("!corpus[numeroSilabas-1]");
-        return;
+
+    let candidatas = corpusByFrequency;
+    if( numeroSilabas > 0 && corpusBySyllable[numeroSilabas-1] ){
+        candidatas = corpusBySyllable[numeroSilabas-1];
     }
-    const candidatas = corpus[numeroSilabas-1];
 
     for( let c of candidatas ){
         if( rimaConsonanteCon(palabra,c) ){
@@ -600,7 +606,7 @@ function* rimaAsonsonanteCon(palabra,numeroSilabas){
     }
 
     
-    const candidatas = corpus[numeroSilabas+1];
+    const candidatas = corpusBySyllable[numeroSilabas+1];
     for(c of candidatas){
         yield c;
     }
@@ -616,21 +622,46 @@ function normalizaPronunciacion(silaba){
       QUI -> KI
       CA  -> KA
       CI  -> ZI
+      LL  -> Y
+      Yv  -> Yv
+      Y   -> i  
       
     */
 
     const map = [
         ["gue", "ge"],
+        ["gué", "gé"],
         ["gui", "gi"],
+        ["guí", "gí"],
         ["güe", "gue"],
+        ["güé", "gué"],
         ["güi", "gui"],
-        ["qui", "ki"],
+        ["güí", "guí"],
         ["que", "ke"],
+        ["qué", "ké"],
+        ["qui", "ki"],
+        ["quí", "kí"],
         ["ce", "ze"],
+        ["cé", "zé"],
         ["ci", "zi"],
+        ["cí", "zí"],
         ["ge", "je"],
+        ["gé", "jé"],
         ["gi", "ji"],
+        ["gí", "jí"],
         ["ch", "ch"],
+        ["ll", "y"],
+        ["ya", "ya"],
+        ["ye", "ye"],
+        ["yi", "yi"],
+        ["yo", "yo"],
+        ["yu", "yu"],
+        ["yá", "yá"],
+        ["yé", "yé"],
+        ["yí", "yí"],
+        ["yó", "yó"],
+        ["yú", "yú"],
+        ["y", "i"],
         ["h", ""],
         ["v", "b"],
         ["c", "k"],

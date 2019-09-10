@@ -1,7 +1,7 @@
 // -*- mode: js2; -*-
 
 import {Palabra} from "./rimas.mjs";
-import {corpus as corpusByLength} from "./corpus-by-length.mjs";
+import {corpusByFrequency} from "./corpus-by-frequency.mjs";
 import {default as fs} from "fs";
 
 const corpusBySyllableFull = [];
@@ -30,23 +30,24 @@ function addToCorpus(p){
 
     arrayFull.push(palabra.asPlainObject);
     array.push(p);
+
+    if( array.length % 10000 == 1 ){
+        console.log(p);
+    }
     
     return true;
 }
 
-for( let i in corpusByLength ){
-    for(let p of corpusByLength[i]){
-        addToCorpus(p);
-    }
-        
-    console.log(`WARN: ${i}`);
-
+for(let p of corpusByFrequency){
+    addToCorpus(p);
 }
 
-console.log( "WARN: to JSON file...");
+const header = "// -*- mode: fundamental;coding:utf-8 -*-\nexport const corpus = ";
+
+console.log( "WARN: to MJS file...");
 fs.writeFile(
-    "corpus-by-syllable-full.json",
-    "// -*- mode: fundamental; -*-\n" + JSON.stringify(corpusBySyllableFull,null,2),
+    "corpus-by-syllable-full.mjs",
+    header + JSON.stringify(corpusBySyllableFull,null,2),
     (error)=>{
     if(error){
         console.log(`ERROR: ${error}`);
@@ -55,8 +56,8 @@ fs.writeFile(
 } );
 
 fs.writeFile(
-    "corpus-by-syllable.json",
-    "// -*- mode: fundamental; -*-\n" + JSON.stringify(corpusBySyllable,null,2),
+    "corpus-by-syllable.mjs",
+    header + JSON.stringify(corpusBySyllable,null,2),
     (error)=>{
     if(error){
         console.log(`ERROR: ${error}`);
@@ -65,12 +66,12 @@ fs.writeFile(
 } );
 
 fs.writeFile(
-    "corpus-by-syllable-no-pp.json",
-    "// -*- mode: fundamental; -*-\n" + JSON.stringify(corpusBySyllable),
+    "corpus-by-syllable-no-pp.mjs",
+    header + JSON.stringify(corpusBySyllable),
     (error)=>{
     if(error){
         console.log(`ERROR: ${error}`);
     }
-    console.log("OK");
+    console.log("corpus-by-syllable-no-pp.mjs OK");
 } );
 
