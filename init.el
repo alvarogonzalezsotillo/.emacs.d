@@ -4,6 +4,13 @@
 ;;; Code:
 (defun carga-config-org (refresh debug)
   "Carga la configuración, refrescando la lista de paquetes si se indica REFRESH, con debug si se indica DEBUG"
+  (interactive
+   (list
+    (y-or-n-p "Refresh packages? ")
+    (y-or-n-p "Enable debug? ")
+   )
+  
+   )
   (setq debug-on-error debug)
 
   (message "Inicializo sistema de paquetes...")

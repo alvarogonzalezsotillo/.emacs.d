@@ -109,7 +109,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | calfw                          |                                                                |
 | calfw-ical                     |                                                                |
 | cargo                          |                                                                |
-| chess                          |                                                                |
 | color-theme-sanityinc-tomorrow |                                                                |
 | company                        |                                                                |
 | company-auctex                 |                                                                |
@@ -151,6 +150,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | ibuffer-sidebar                |                                                                |
 | imenu-anywhere                 |                                                                |
 | imenu-list                     |                                                                |
+| indent-guide                   |                                                                |
 | intellij-theme                 |                                                                |
 | kodi-remote                    |                                                                |
 | latex-preview-pane             |                                                                |
@@ -175,6 +175,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | popup-complete                 |                                                                |
 | popup-imenu                    |                                                                |
 | popup-switcher                 |                                                                |
+| posframe                       |                                                                |
 | prettier-js                    |                                                                |
 | quickrun                       | Ejecuta el buffer actual con el intérprete/compilador adecuado |
 | racer                          |                                                                |
@@ -293,14 +294,20 @@ Estoy usando =treemacs= en vez de =neotree=.
 
 
 ** Paquete =swoop=
-Búsqueda con previsualización. Lo configuro para que no seleccione el símbolo en en cursor.
+Búsqueda con previsualización. Lo configuro para que no seleccione el símbolo en en cursor, sino la seleción
 #+begin_src emacs-lisp
-(use-package swoop
-  :ensure t
-  :defer 1
-  :config
-    ;(setq helm-swoop-pre-input-function nil)
-)
+  (use-package swoop
+    :ensure t
+    :defer 1
+    :config
+
+  
+    (setq helm-swoop-pre-input-function
+          (lambda () 
+            (if (use-region-p)
+                (buffer-substring-no-properties (region-beginning) (region-end))
+              nil)))
+    )
 #+end_src
 
 
@@ -319,18 +326,24 @@ Image+ permite hace zoom en las imágenes
 ** Paquete =dumb-jump=
 Añado las siguientes reglas para hacer búsquedas simples con =dumb-jump= en ficheros =sql= y =org=.
 #+begin_src emacs-lisp
-;; ADITIONAL DUMBJUMB RULES
-(use-package dumb-jump
-  :ensure t
-  :config
+  ;; ADITIONAL DUMBJUMB RULES
+  (use-package dumb-jump
+    :ensure t
+    :config
 
     (add-to-list 'dumb-jump-find-rules
-      '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "sql"
-	       :regex ": \\bJJJ\\j"))
+                 '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "sql"
+                         :regex ": \\bJJJ\\j"))
     (add-to-list 'dumb-jump-find-rules
-      '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "org"
-	       :regex ": \\bJJJ\\j")))
+                 '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "org"
+                         :regex ": \\bJJJ\\j"))
 
+    (add-to-list 'dumb-jump-language-file-exts
+
+                 '(:language "javascript" :ext "mjs" :agtype "js" :rgtype "js")))
+
+
+  (setq dump-jump-selector 'helm)
 #+end_src
 
 ** Paquete =bm=
@@ -403,6 +416,33 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 #+begin_src emacs-lisp
   (require 'company)
   (company-flx-mode +1)
+
+
+  (defun my-js2-mode-hook()
+    (interactive)
+    (ac-js2-mode)
+    (setq ac-js2-evaluate-calls t)
+    (auto-highlight-symbol-mode 0)
+    (js2-highlight-vars-mode)
+
+    (defvar my-company-backends-js2-mode
+      '(
+        (
+         company-files
+         ac-js2-company
+         company-dabbrev-code
+         company-capf
+         )
+        )
+      )
+
+    (set (make-local-variable 'company-backends) my-company-backends-js2-mode))
+
+
+
+  (add-hook 'js2-mode-hook #'my-js2-mode-hook)
+
+
 
 
 
@@ -1058,6 +1098,49 @@ El ratón también puede utilizarse en un =xterm=
 
 * Visualización
 
+** Previsualización de ficheros en Helm
+Se me cuelga a veces, está desactivado
+#+begin_src lisp
+(use-package helm-file-preview
+  :config
+  (helm-file-preview-mode 1))
+#+end_src
+
+** Líneas muy largas
+Avoid performance issues in files with very long lines.
+#+begin_src emacs-lisp
+(unless (version<= emacs-version "27")
+(global-so-long-mode 1))
+#+end_src
+
+** Pestañas
+#+begin_src emacs-lisp
+  (use-package centaur-tabs
+    :ensure t
+    :config
+    (centaur-tabs-mode t)
+    (setq centaur-tabs-set-icons t)
+    (setq centaur-tabs-style "chamfer")
+    (setq centaur-tabs-set-modified-marker t)
+    (centaur-tabs-group-by-projectile-project)
+
+    (defun my-centaur-tabs-buffer-groups ()
+      (list
+       (cond
+        ((or (string-equal "*" (substring (buffer-name) 0 1))
+             )
+         "Emacs")
+        (t
+         (centaur-tabs-get-group-name (current-buffer))))))
+
+
+    (setq centaur-tabs-buffer-groups-function 'my-centaur-tabs-buffer-groups)
+    )
+#+end_src
+
+#+RESULTS:
+: t
+
 ** Resaltar términos buscados
 =isearch= resalta las coincidencias con la búsqueda, pero se quitan al acabar de buscar. Con esto, las coincidencias quedan resaltadas hasta la siguiente búsqueda o hasta ejecutar =lazy-highlight-cleanup=
 #+begin_src emacs-lisp
@@ -1065,6 +1148,18 @@ El ratón también puede utilizarse en un =xterm=
 (setq lazy-highlight-max-at-a-time nil)
 (setq lazy-highlight-initial-delay 0)
 #+end_src
+
+** Marcar las ocurrencias de la selección
+#+begin_src emacs-lisp
+(use-package region-occurrences-highlighter 
+  :ensure t
+  :defer 1
+  :config
+  (add-hook 'prog-mode-hook 'region-occurrences-highlighter-mode)
+  (add-hook 'org-mode-hook 'region-occurrences-highlighter-mode)
+)
+#+end_src
+
 
 ** /scroll bars/
 
@@ -1151,17 +1246,14 @@ Mi línea de estado (modeline)
                mode-line-modified
                " %[" mode-line-buffer-identification " %] "
                " | " '(vc-mode vc-mode)
-               " | %m "
-               " | %n "
-               " |" mode-line-coding-system-map
-               " |" mode-line-misc-info
+               " | %m %n "
                " | %IB %Z"
-               " | %l:%c "
+               " | %l:%c %p"
                mode-line-end-spaces
+
                ) )
 
 #+end_src
-
 
 
 ** =minimap=
@@ -1214,6 +1306,30 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 * Atajos de teclado
 
+
+Si empiezo una búsqueda con =C-s= o =C-r=, se empieza buscando la selección
+#+begin_src emacs-lisp
+;; https://www.reddit.com/r/emacs/comments/b7yjje/isearch_region_search/
+(defun stribb/isearch-region (&optional not-regexp no-recursive-edit)
+  "If a region is active, make this the isearch default search pattern."
+  (interactive "P\np")
+  (when (use-region-p)
+    (let ((search (buffer-substring-no-properties
+                   (region-beginning)
+                   (region-end))))
+      ;;;(message "stribb/ir: %s %d %d" search (region-beginning) (region-end))
+      (setq deactivate-mark t)
+      (isearch-yank-string search))))
+
+(advice-add 'isearch-forward-regexp :after 'stribb/isearch-region)
+(advice-add 'isearch-forward :after 'stribb/isearch-region)
+
+(advice-add 'isearch-backward-regexp :after 'stribb/isearch-region)
+(advice-add 'isearch-backward :after 'stribb/isearch-region)
+#+end_src
+
+#+RESULTS:
+
 Cuando quiero cerrar un buffer, prefiero que no pregunte.
 #+begin_src emacs-lisp
 (defun kill-this-buffer-dont-ask ()
@@ -1249,11 +1365,15 @@ A veces es fácil perderse entre comandos a medio introducir y ventanas popup. M
   (interactive)
   (keyboard-escape-quit)
   (keyboard-quit)
+  (abort-recursive-edit)
   (setq quit-flag t))
 (define-key global-map [escape] 'super-escape)
-
+(define-key minibuffer-local-map [escape] 'super-escape)
 (define-key company-active-map [escape] 'company-abort)
 #+end_src
+
+#+RESULTS:
+: company-abort
 
 
 
@@ -1349,21 +1469,25 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
    #+begin_src emacs-lisp
-     (defun gifttolatex (titulo porcentajetest)
+     (defun gifttolatex (titulo porcentajetest parametros)
        "ejecuta giftolatex en el buffer actual."
        (interactive
         (list 
          (read-string "Título: " (buffer-name))
-         (read-number "Porcentaje del test: " 60))
+         (read-number "Porcentaje del test: " 60)
+         (read-string "Otros parámetros:" "-k"))
         )
   
        (let
-           ((comando (format "sh -c 'gifttolatex -t \"%s\" -q \"%s\" \"%s\"'" titulo porcentajetest buffer-file-name))
+           ((comando (format "sh -c 'gifttolatex %s -t \"%s\" -q \"%s\" \"%s\"'" parametros titulo porcentajetest buffer-file-name))
             )
          (shell-command comando)
          )
        )
    #+end_src
+
+   #+RESULTS:
+   : gifttolatex
 
 ** Abrir proyecto en ventana nueva con neotree
 #+begin_src emacs-lisp
@@ -1766,6 +1890,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
       (display-line-numbers-mode 1))
   (auto-highlight-symbol-mode 1)
   (yafolding-mode 1)
+  (indent-guide-mode 1)
   (adaptive-wrap-prefix-mode 1))
 
 (defun bonito-para-latex()
@@ -1870,61 +1995,26 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - magithub
 - google-this
 - emamux
+- helm-tramp
 - https://gitlab.com/LazyLama/emacs_latex_class
-
-
-#+begin_src emacs-lisp
-
-  (defun my-js2-mode-hook()
-    (interactive)
-    (ac-js2-mode)
-    (setq ac-js2-evaluate-calls t)
-    (auto-highlight-symbol-mode 0)
-    (js2-highlight-vars-mode)
-
-    (defvar my-company-backends-js2-mode
-      '(
-        (
-         ac-js2-company
-         company-files
-         company-dabbrev-code
-         company-capf
-         )
-        )
-      )
-
-    (set (make-local-variable 'company-backends) my-company-backends-js2-mode))
+- https://github.com/patrickt/emacs/blob/master/init.el
+- https://github.com/ema2159/centaur-tabs/blob/master/README.org
+- https://melpa.org/#/helm-file-preview
+- color-rg
+- recentf-mode
+- (setq bookmark-save-flag 1)
+- save-place-mode
+- org-hide-emphasis-markers is a
+- openwith
+- calctex
+- dot-mode
+- (global-eldoc-mode -1)
+- didyoumean.el 
+- BAT cat
+- statusbar.el
 
 
 
-  (add-hook 'js2-mode-hook #'my-js2-mode-hook)
-
-
-
-#+end_src
-
-
-#+begin_src emacs-lisp
-;; EMPEZAR A BUSCAR LA SELECCIÓN
-(defun stribb/isearch-region (&optional not-regexp no-recursive-edit)
-  "If a region is active, make this the isearch default search pattern."
-  (interactive "P\np")
-  (when (use-region-p)
-    (let ((search (buffer-substring-no-properties
-                   (region-beginning)
-                   (region-end))))
-      (message "stribb/ir: %s %d %d" search (region-beginning) (region-end))
-      (setq deactivate-mark t)
-      (isearch-yank-string search))))
-
-(advice-add 'isearch-forward-regexp :after 'stribb/isearch-region)
-(advice-add 'isearch-forward :after 'stribb/isearch-region)
-
-(advice-add 'isearch-backward-regexp :after 'stribb/isearch-region)
-(advice-add 'isearch-backward :after 'stribb/isearch-region)
-#+end_src
-
-#+RESULTS:
 
 
 * usettf
