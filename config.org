@@ -1124,6 +1124,13 @@ Avoid performance issues in files with very long lines.
     (setq centaur-tabs-set-modified-marker t)
     (centaur-tabs-group-by-projectile-project)
 
+
+
+    (define-key centaur-tabs-default-map (kbd "<header-line> <triple-mouse-4>") 'centaur-tabs-forward )
+    (define-key centaur-tabs-default-map (kbd "<header-line> <triple-mouse-5>") 'centaur-tabs-backward )
+
+
+
     (defun my-centaur-tabs-buffer-groups ()
       (list
        (cond
@@ -1138,8 +1145,7 @@ Avoid performance issues in files with very long lines.
     )
 #+end_src
 
-#+RESULTS:
-: t
+
 
 ** Resaltar términos buscados
 =isearch= resalta las coincidencias con la búsqueda, pero se quitan al acabar de buscar. Con esto, las coincidencias quedan resaltadas hasta la siguiente búsqueda o hasta ejecutar =lazy-highlight-cleanup=
@@ -1953,8 +1959,6 @@ Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna c
 (tema-oscuro)
 #+end_src
 
-#+RESULTS:
-: t
 
 
 
