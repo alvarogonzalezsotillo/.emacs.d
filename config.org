@@ -1117,6 +1117,7 @@ Avoid performance issues in files with very long lines.
 #+begin_src emacs-lisp
   (use-package centaur-tabs
     :ensure t
+    :defer 1
     :config
     (centaur-tabs-mode t)
     (setq centaur-tabs-set-icons t)
