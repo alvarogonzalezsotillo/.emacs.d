@@ -1935,18 +1935,20 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
   "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e"
   "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" default)))
 
+  (defvar my-dark-theme 'sanityinc-tomorrow-bright)
+  (defvar my-light-theme 'intellij)
 
 
-       (defun tema-oscuro()
+       (defun tema-claro()
          (interactive)
-         (disable-theme 'intellij)
-         (load-theme 'sanityinc-tomorrow-bright)
+         (disable-theme my-dark-theme)
+         (load-theme my-light-theme)
          (load-theme 'alvaro t))
 
-       (defun tema-claro ()
+       (defun tema-oscuro ()
          (interactive)
-         (disable-theme 'sanityinc-tomorrow-bright)
-         (load-theme 'intellij t)
+         (disable-theme my-light-theme)
+         (load-theme my-dark-theme t)
          (load-theme 'alvaro t))
 
 
