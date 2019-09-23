@@ -1122,7 +1122,10 @@ Avoid performance issues in files with very long lines.
     (setq centaur-tabs-set-icons t)
     (setq centaur-tabs-style "chamfer")
     (setq centaur-tabs-set-modified-marker t)
+    (setq centaur-tabs-gray-out-icons 'buffer)
     (centaur-tabs-group-by-projectile-project)
+    (setq centaur-tabs-set-bar 'over)
+    (setq centaur-tabs-cycle-scope 'tabs)
 
     (defun my-centaur-tabs-buffer-groups ()
       (list
