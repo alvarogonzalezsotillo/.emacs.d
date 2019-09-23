@@ -1116,7 +1116,8 @@ Avoid performance issues in files with very long lines.
 ** Pestañas
 #+begin_src emacs-lisp
   (use-package centaur-tabs
-    :demand
+    :ensure t
+    :defer 1
     :config
     (centaur-tabs-mode t)
     (setq centaur-tabs-set-icons t)
@@ -1126,6 +1127,13 @@ Avoid performance issues in files with very long lines.
     (centaur-tabs-group-by-projectile-project)
     (setq centaur-tabs-set-bar 'over)
     (setq centaur-tabs-cycle-scope 'tabs)
+
+
+
+    (define-key centaur-tabs-default-map (kbd "<header-line> <triple-mouse-4>") 'centaur-tabs-forward )
+    (define-key centaur-tabs-default-map (kbd "<header-line> <triple-mouse-5>") 'centaur-tabs-backward )
+
+
 
     (defun my-centaur-tabs-buffer-groups ()
       (list
@@ -1141,8 +1149,7 @@ Avoid performance issues in files with very long lines.
     )
 #+end_src
 
-#+RESULTS:
-: t
+
 
 ** Resaltar términos buscados
 =isearch= resalta las coincidencias con la búsqueda, pero se quitan al acabar de buscar. Con esto, las coincidencias quedan resaltadas hasta la siguiente búsqueda o hasta ejecutar =lazy-highlight-cleanup=
@@ -1931,18 +1938,20 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
   "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e"
   "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" default)))
 
+  (defvar my-dark-theme 'sanityinc-tomorrow-bright)
+  (defvar my-light-theme 'intellij)
 
 
-       (defun tema-oscuro()
+       (defun tema-claro()
          (interactive)
-         (disable-theme 'intellij)
-         (load-theme 'sanityinc-tomorrow-bright)
+         (disable-theme my-dark-theme)
+         (load-theme my-light-theme)
          (load-theme 'alvaro t))
 
-       (defun tema-claro ()
+       (defun tema-oscuro ()
          (interactive)
-         (disable-theme 'sanityinc-tomorrow-bright)
-         (load-theme 'intellij t)
+         (disable-theme my-light-theme)
+         (load-theme my-dark-theme t)
          (load-theme 'alvaro t))
 
 
@@ -1956,8 +1965,6 @@ Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna c
 (tema-oscuro)
 #+end_src
 
-#+RESULTS:
-: t
 
 
 
@@ -2014,7 +2021,8 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - dot-mode
 - (global-eldoc-mode -1)
 - didyoumean.el 
-
+- BAT cat
+- statusbar.el
 
 
 
