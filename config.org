@@ -210,7 +210,7 @@ Por cada paquete sin opciones especiales, simplemente lo cargo con =use-package=
 
 El bucle =dolist= se realiza sobre los datos de la tabla =mis-paquetes=. Cada fila se recibe como una lista de columnas, así que me quedo con la primera columna y la convierto a un =symbol=. Después, construyo la llamada a =use-package= y la evaluo (como =use-package= es una macro, no puedo hacerlo directamente)
 #+BEGIN_SRC emacs-lisp :var mis-paquetes=mis-paquetes
-  (message "Valor de mis-paquetes: %s" mis-paquetes)
+  ;(message "Valor de mis-paquetes: %s" mis-paquetes)
   (dolist (paquete mis-paquetes)
     ;(message "La variable con el paquete es del tipo: %s: %s" (type-of paquete) paquete)
     ;(message "Voy a cargar el paquete: %s" (car paquete))
@@ -573,8 +573,7 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
 
 
     ; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
-    ;(require 'org-tempo)
-    (if nil
+    (require 'org-tempo)
     (setq org-structure-template-alist 
           '(("n" . "notes")
             ("a" . "export ascii")
@@ -588,11 +587,9 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
             ("s" . "src")
             ("v" . "verse")))
 
-    ))
+    
 #+end_src
 
-
-<s
 
 
 

@@ -508,3 +508,23 @@ done;
 - /home/alvaro/github/dunnet-solver
 - /home/alvaro/github/palabras-anagramadas
 - /home/alvaro/github/escultura
+
+* Películas
+** ad astra
+** alita
+** hellboy 2019
+** terminator dark fate
+** men in black international
+** géminis
+** maléfica: maestra del mal
+** star wars ix
+** El silencio de la ciudad blanca
+** TODO Mission Imposible Fallout
+** Spiderman un nuevo universo
+** Bohemian Rhapsody
+** El corredor del laberinto: cura mortal
+** aniquilación
+** high life
+** gorrión rojo
+** ready player one
+** La la land
