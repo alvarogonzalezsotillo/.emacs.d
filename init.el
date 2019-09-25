@@ -54,6 +54,6 @@
   ;; DESACTIVAR EL DEBUG
   (setq debug-on-error nil))
 
-(carga-config-org t nil)
+(carga-config-org nil nil)
 
 

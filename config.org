@@ -212,8 +212,8 @@ El bucle =dolist= se realiza sobre los datos de la tabla =mis-paquetes=. Cada fi
 #+BEGIN_SRC emacs-lisp :var mis-paquetes=mis-paquetes
   (message "Valor de mis-paquetes: %s" mis-paquetes)
   (dolist (paquete mis-paquetes)
-    (message "La variable con el paquete es del tipo: %s: %s" (type-of paquete) paquete)
-    (message "Voy a cargar el paquete: %s" (car paquete))
+    ;(message "La variable con el paquete es del tipo: %s: %s" (type-of paquete) paquete)
+    ;(message "Voy a cargar el paquete: %s" (car paquete))
     (setq lista `(use-package ,(intern (car paquete)) :defer 1 :ensure t ) )
     (eval lista))
 #+END_SRC
@@ -506,6 +506,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
 #+end_src
 
+
 Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta el /case/
 #+begin_src emacs-lisp
   (setq company-dabbrev-code-everywhere t)
@@ -560,8 +561,20 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
   (use-package org
     :ensure t
     :config
+
+    (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
+    (modify-syntax-entry ?= "(=" org-mode-syntax-table)
+    (modify-syntax-entry ?_ "(_" org-mode-syntax-table)
+    (modify-syntax-entry ?* "(*" org-mode-syntax-table)
+    (modify-syntax-entry ?/ "(/" org-mode-syntax-table)
+
+    ;;; https://stackoverflow.com/questions/40110927/how-to-export-a-reference-to-a-begin-src-block-to-latex/40689439#40689439
+    (setq org-latex-prefer-user-labels t)
+
+
     ; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
-    (require 'org-tempo)
+    ;(require 'org-tempo)
+    (if nil
     (setq org-structure-template-alist 
           '(("n" . "notes")
             ("a" . "export ascii")
@@ -575,25 +588,11 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
             ("s" . "src")
             ("v" . "verse")))
 
-    (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
-    (modify-syntax-entry ?= "(=" org-mode-syntax-table)
-    (modify-syntax-entry ?_ "(_" org-mode-syntax-table)
-    (modify-syntax-entry ?* "(*" org-mode-syntax-table)
-    (modify-syntax-entry ?/ "(/" org-mode-syntax-table)
-
-    ;;; https://stackoverflow.com/questions/40110927/how-to-export-a-reference-to-a-begin-src-block-to-latex/40689439#40689439
-    (setq org-latex-prefer-user-labels t)
-
-
-    ;; (("L" . "latex")
-    ;;  ("H" . "html")
-    ;;  ("A" . "ascii")
-    ;;  ("i" . "index"))
-    )
+    ))
 #+end_src
 
 
-
+<s
 
 
 
@@ -1897,7 +1896,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
       (display-line-numbers-mode 1))
   (auto-highlight-symbol-mode 1)
   (yafolding-mode 1)
-  (indent-guide-mode 1)
+  (indent-guide-mode 0)
   (adaptive-wrap-prefix-mode 1))
 
 (defun bonito-para-latex()
@@ -1915,7 +1914,6 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 #+end_src
 
 
-
 ** /Fringes/
 Prefiero ocultar las flechas que indican que una línea se sale de la pantalla, y solo mostrar las de la derecha.
 
@@ -1929,11 +1927,11 @@ Tengo dos temas, claro y oscuro. El tema =alvaro= cambia algunos tamaños de let
 
 Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas en =custom-safe-themes= (lo he copiado del fichero =custom.el=).
 
+
+
 #+begin_src emacs-lisp
   (setq  custom-safe-themes  (quote
-  ("6e219d6b6a3f7e22888b203fd5492e12133ba40512be983858f05b42806fa573"
-  "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e"
-  "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" default)))
+("a63355b90843b228925ce8b96f88c587087c3ee4f428838716505fd01cf741c8" "6e219d6b6a3f7e22888b203fd5492e12133ba40512be983858f05b42806fa573" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" default)))
 
   (defvar my-dark-theme 'sanityinc-tomorrow-bright)
   (defvar my-light-theme 'intellij)
