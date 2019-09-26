@@ -574,6 +574,8 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
 
     ; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
     (require 'org-tempo)
+
+    ; si no existe org-tempo no se llega aquí, lo cual está bien porque lo siguiente solo hay que hacerlo para org-tempo
     (setq org-structure-template-alist 
           '(("n" . "notes")
             ("a" . "export ascii")
@@ -587,7 +589,7 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
             ("s" . "src")
             ("v" . "verse")))
 
-    
+  )
 #+end_src
 
 
