@@ -1979,13 +1979,17 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
 Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago al final, para que se carguen ahora los buferes previos.
 #+begin_src emacs-lisp
   (save-place-mode 1)
-  (delete-file "/home/alvaro/.emacs.d/.emacs.desktop.lock")
+  (delete-file (expand-file-name "~/.emacs.d/.emacs.desktop.lock"))
+
   (use-package desktop
+    :defer 1
     :ensure t
     :config         
+
       (delete-file (desktop-full-lock-name))
       (setq desktop-save t)
       (desktop-save-mode))
+
 #+end_src
 
 
