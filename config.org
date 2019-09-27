@@ -577,6 +577,8 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
 
     ; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
     (require 'org-tempo)
+
+    ; si no existe org-tempo no se llega aquí, lo cual está bien porque lo siguiente solo hay que hacerlo para org-tempo
     (setq org-structure-template-alist 
           '(("n" . "notes")
             ("a" . "export ascii")
@@ -590,7 +592,7 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
             ("s" . "src")
             ("v" . "verse")))
 
-    
+  )
 #+end_src
 
 
@@ -1122,7 +1124,10 @@ Avoid performance issues in files with very long lines.
     (setq centaur-tabs-set-icons t)
     (setq centaur-tabs-style "chamfer")
     (setq centaur-tabs-set-modified-marker t)
+    (setq centaur-tabs-gray-out-icons 'buffer)
     (centaur-tabs-group-by-projectile-project)
+    (setq centaur-tabs-set-bar 'over)
+    (setq centaur-tabs-cycle-scope 'tabs)
 
 
 
@@ -1977,13 +1982,17 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
 Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago al final, para que se carguen ahora los buferes previos.
 #+begin_src emacs-lisp
   (save-place-mode 1)
-  (delete-file "/home/alvaro/.emacs.d/.emacs.desktop.lock")
+  (delete-file (expand-file-name "~/.emacs.d/.emacs.desktop.lock"))
+
   (use-package desktop
+    :defer 1
     :ensure t
     :config         
+
       (delete-file (desktop-full-lock-name))
       (setq desktop-save t)
       (desktop-save-mode))
+
 #+end_src
 
 
