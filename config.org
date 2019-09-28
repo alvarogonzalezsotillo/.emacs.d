@@ -2069,3 +2069,21 @@ Actualmente desactivado
 #+LATEX_HEADER: \cfoot{}
 #+LATEX_HEADER: \lfoot{alvarogonzalezsotillo@gmail.com}
 #+LATEX_HEADER: \rfoot{\thepage}
+
+* localizar android
+** bluetooth discovery https://code.tutsplus.com/tutorials/create-a-bluetooth-scanner-with-androids-bluetooth-api--cms-24084
+https://developer.android.com/reference/android/bluetooth/BluetoothAdapter.html
+
+** umts
+https://stackoverflow.com/questions/20981074/ecgi-and-cgi-for-lte-and-gsm-networks
+https://comunidad.orange.es/t5/Android/TRUCO-Descubriendo-todo-lo-relacionado-con-la-cobertura-en-Android-post-100-geek/td-p/290749
+https://gabinetejuridicotecnologicojuandemeseguer.es/localizacion-posicionamiento-moviles-mediante-sistemas-moviles-gps
+https://ltve.wordpress.com/2015/09/30/android-con-api-opencellid-json-geolocalizar-bts/
+https://developer.android.com/reference/android/telephony/TelephonyManager.html#getAllCellInfo()
+
+** wifi
+https://developer.android.com/reference/android/net/wifi/ScanResult.html
+
+** location
+https://developer.android.com/training/location/retrieve-current#java
+
