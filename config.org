@@ -41,14 +41,17 @@ Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplement
 
 
 * Utilidades externas al /PATH/
-En el directorio =~/.emacs.d/bin/= guardo algunas utilidades que me interesa tener en todos los entornos de trabajo. Lo siguiente es para que estén disponibles desde las /shells/ que arranque desde emacs
+En el directorio =~/.emacs.d/bin/= guardo algunas utilidades que me interesa tener en todos los entornos de trabajo. Lo siguiente es para que estén disponibles desde las /shells/ que arranque desde emacs.
+
 #+begin_src emacs-lisp
   (setq exec-path-separator
         (if (string-equal system-type "windows-nt") ";" ":"))
   (setenv "PATH"
-          (concat (expand-file-name "~/.emacs.d/bin") exec-path-separator (getenv "PATH")))
-  (setq exec-path (append exec-path '("~/.emacs.d/bin")))
+          (concat (expand-file-name user-emacs-directory) "bin" exec-path-separator (getenv "PATH")))
+  (add-to-list 'exec-path (concat (expand-file-name user-emacs-directory) "bin"))
 #+end_src
+
+
 
 
 Las utilidades pueden consultarse en el [[https://github.com/alvarogonzalezsotillo/.emacs.d/tree/master/bin][repositorio en github]], y son:

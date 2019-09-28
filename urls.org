@@ -519,7 +519,7 @@ done;
 ** maléfica: maestra del mal
 ** star wars ix
 ** El silencio de la ciudad blanca
-** TODO Mission Imposible Fallout
+**  Mission Imposible Fallout
 ** Spiderman un nuevo universo
 ** Bohemian Rhapsody
 ** El corredor del laberinto: cura mortal
@@ -528,3 +528,4 @@ done;
 ** gorrión rojo
 ** ready player one
 ** La la land
+** anna
