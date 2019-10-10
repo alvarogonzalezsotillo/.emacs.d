@@ -41,14 +41,17 @@ Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplement
 
 
 * Utilidades externas al /PATH/
-En el directorio =~/.emacs.d/bin/= guardo algunas utilidades que me interesa tener en todos los entornos de trabajo. Lo siguiente es para que estén disponibles desde las /shells/ que arranque desde emacs
+En el directorio =~/.emacs.d/bin/= guardo algunas utilidades que me interesa tener en todos los entornos de trabajo. Lo siguiente es para que estén disponibles desde las /shells/ que arranque desde emacs.
+
 #+begin_src emacs-lisp
   (setq exec-path-separator
         (if (string-equal system-type "windows-nt") ";" ":"))
   (setenv "PATH"
-          (concat (expand-file-name "~/.emacs.d/bin") exec-path-separator (getenv "PATH")))
-  (setq exec-path (append exec-path '("~/.emacs.d/bin")))
+          (concat (expand-file-name user-emacs-directory) "bin" exec-path-separator (getenv "PATH")))
+  (add-to-list 'exec-path (concat (expand-file-name user-emacs-directory) "bin"))
 #+end_src
+
+
 
 
 Las utilidades pueden consultarse en el [[https://github.com/alvarogonzalezsotillo/.emacs.d/tree/master/bin][repositorio en github]], y son:
@@ -210,10 +213,10 @@ Por cada paquete sin opciones especiales, simplemente lo cargo con =use-package=
 
 El bucle =dolist= se realiza sobre los datos de la tabla =mis-paquetes=. Cada fila se recibe como una lista de columnas, así que me quedo con la primera columna y la convierto a un =symbol=. Después, construyo la llamada a =use-package= y la evaluo (como =use-package= es una macro, no puedo hacerlo directamente)
 #+BEGIN_SRC emacs-lisp :var mis-paquetes=mis-paquetes
-  (message "Valor de mis-paquetes: %s" mis-paquetes)
+  ;(message "Valor de mis-paquetes: %s" mis-paquetes)
   (dolist (paquete mis-paquetes)
-    (message "La variable con el paquete es del tipo: %s: %s" (type-of paquete) paquete)
-    (message "Voy a cargar el paquete: %s" (car paquete))
+    ;(message "La variable con el paquete es del tipo: %s: %s" (type-of paquete) paquete)
+    ;(message "Voy a cargar el paquete: %s" (car paquete))
     (setq lista `(use-package ,(intern (car paquete)) :defer 1 :ensure t ) )
     (eval lista))
 #+END_SRC
@@ -506,6 +509,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
 #+end_src
 
+
 Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta el /case/
 #+begin_src emacs-lisp
   (setq company-dabbrev-code-everywhere t)
@@ -560,20 +564,6 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
   (use-package org
     :ensure t
     :config
-    ; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
-    (require 'org-tempo)
-    (setq org-structure-template-alist 
-          '(("n" . "notes")
-            ("a" . "export ascii")
-            ("c" . "center")
-            ("C" . "comment")
-            ("e" . "example")
-            ("E" . "export")
-            ("h" . "export html")
-            ("l" . "export latex")
-            ("q" . "quote")
-            ("s" . "src")
-            ("v" . "verse")))
 
     (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
     (modify-syntax-entry ?= "(=" org-mode-syntax-table)
@@ -585,14 +575,27 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
     (setq org-latex-prefer-user-labels t)
 
 
-    ;; (("L" . "latex")
-    ;;  ("H" . "html")
-    ;;  ("A" . "ascii")
-    ;;  ("i" . "index"))
-    )
+    ; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
+    (ignore-errors
+      (require 'org-tempo)
+
+      ; si no existe org-tempo no se llega aquí, lo cual está bien porque lo siguiente solo hay que hacerlo para org-tempo
+      (setq org-structure-template-alist 
+            '(("n" . "notes")
+              ("a" . "export ascii")
+              ("c" . "center")
+              ("C" . "comment")
+              ("e" . "example")
+              ("E" . "export")
+              ("h" . "export html")
+              ("l" . "export latex")
+              ("q" . "quote")
+              ("s" . "src")
+              ("v" . "verse")))
+
+      )
+  )
 #+end_src
-
-
 
 
 
@@ -1123,8 +1126,10 @@ Avoid performance issues in files with very long lines.
     (setq centaur-tabs-set-icons t)
     (setq centaur-tabs-style "chamfer")
     (setq centaur-tabs-set-modified-marker t)
-    (setq centaur-tabs-set-bar 'over)
     (centaur-tabs-group-by-projectile-project)
+    (setq centaur-tabs-gray-out-icons 'buffer)
+    (setq centaur-tabs-set-bar 'over)
+    (setq centaur-tabs-cycle-scope 'tabs)
 
 
 
@@ -1144,6 +1149,8 @@ Avoid performance issues in files with very long lines.
 
 
     (setq centaur-tabs-buffer-groups-function 'my-centaur-tabs-buffer-groups)
+    (centaur-tabs-group-by-projectile-project)
+
     )
 #+end_src
 
@@ -1915,7 +1922,6 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 #+end_src
 
 
-
 ** /Fringes/
 Prefiero ocultar las flechas que indican que una línea se sale de la pantalla, y solo mostrar las de la derecha.
 
@@ -1929,11 +1935,11 @@ Tengo dos temas, claro y oscuro. El tema =alvaro= cambia algunos tamaños de let
 
 Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas en =custom-safe-themes= (lo he copiado del fichero =custom.el=).
 
+
+
 #+begin_src emacs-lisp
   (setq  custom-safe-themes  (quote
-  ("6e219d6b6a3f7e22888b203fd5492e12133ba40512be983858f05b42806fa573"
-  "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e"
-  "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" default)))
+("a63355b90843b228925ce8b96f88c587087c3ee4f428838716505fd01cf741c8" "6e219d6b6a3f7e22888b203fd5492e12133ba40512be983858f05b42806fa573" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" default)))
 
   (defvar my-dark-theme 'sanityinc-tomorrow-bright)
   (defvar my-light-theme 'intellij)
@@ -1972,7 +1978,6 @@ Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna c
 El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
 #+begin_src emacs-lisp
 (setq custom-file "~/.emacs.d/custom-file.el")
-(load custom-file)
 #+end_src
 
 
@@ -1980,13 +1985,17 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
 Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago al final, para que se carguen ahora los buferes previos.
 #+begin_src emacs-lisp
   (save-place-mode 1)
-  (delete-file "/home/alvaro/.emacs.d/.emacs.desktop.lock")
+  (delete-file (expand-file-name "~/.emacs.d/.emacs.desktop.lock"))
+
   (use-package desktop
+    :defer 1
     :ensure t
     :config         
+
       (delete-file (desktop-full-lock-name))
       (setq desktop-save t)
       (desktop-save-mode))
+
 #+end_src
 
 
