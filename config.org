@@ -1123,6 +1123,7 @@ Avoid performance issues in files with very long lines.
     (setq centaur-tabs-set-icons t)
     (setq centaur-tabs-style "chamfer")
     (setq centaur-tabs-set-modified-marker t)
+    (setq centaur-tabs-set-bar 'over)
     (centaur-tabs-group-by-projectile-project)
 
 
@@ -1897,7 +1898,6 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
       (display-line-numbers-mode 1))
   (auto-highlight-symbol-mode 1)
   (yafolding-mode 1)
-  (indent-guide-mode 1)
   (adaptive-wrap-prefix-mode 1))
 
 (defun bonito-para-latex()

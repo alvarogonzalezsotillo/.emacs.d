@@ -1,4 +1,9 @@
 ;;; Code:
+
+;;; HACER MENUS POPUP
+;;; https://stackoverflow.com/questions/16454838/yasnippet-how-to-create-a-right-click-context-menu-popup-menu
+
+
 (require 'posframe)
 (require 'git-gutter)
 
