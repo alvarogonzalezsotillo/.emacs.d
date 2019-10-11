@@ -1124,35 +1124,43 @@ Avoid performance issues in files with very long lines.
     :config
     (centaur-tabs-mode t)
     (setq centaur-tabs-set-icons t)
-    (setq centaur-tabs-style "chamfer")
+    (setq centaur-tabs-style "alternate")
     (setq centaur-tabs-set-modified-marker t)
     (centaur-tabs-group-by-projectile-project)
     (setq centaur-tabs-gray-out-icons 'buffer)
     (setq centaur-tabs-set-bar 'over)
     (setq centaur-tabs-cycle-scope 'tabs)
 
+(defun centaur-tabs--groups-menu-list ()
+  (cons "Centaur tabs groups menu"
+	(mapcar
+	 (lambda (g)
+	   (cons g g))
+	 (sort (centaur-tabs-get-groups) 'string<))))
+
+(defun centaur-tabs--groups-menu ()
+  "Show a popup menu with the centaur tabs groups"
+  (interactive)
+  (let*
+      ((sorted-groups (centaur-tabs--groups-menu-list))
+       (group (x-popup-menu t (list "Centaur tabs groups menu" sorted-groups))))
+    (centaur-tabs-switch-group group)))
 
 
-    (define-key centaur-tabs-default-map (kbd "<header-line> <triple-mouse-4>") 'centaur-tabs-forward )
-    (define-key centaur-tabs-default-map (kbd "<header-line> <triple-mouse-5>") 'centaur-tabs-backward )
+
+
+    (define-key centaur-tabs-default-map (kbd "<header-line> <triple-mouse-5>") 'centaur-tabs-forward )
+    (define-key centaur-tabs-default-map (kbd "<header-line> <triple-mouse-4>") 'centaur-tabs-backward )
+    (define-key centaur-tabs-mode-map (kbd "<header-line> <mouse-3>") 'centaur-tabs--groups-menu )
 
 
 
-    (defun my-centaur-tabs-buffer-groups ()
-      (list
-       (cond
-        ((or (string-equal "*" (substring (buffer-name) 0 1))
-             )
-         "Emacs")
-        (t
-         (centaur-tabs-get-group-name (current-buffer))))))
-
-
-    (setq centaur-tabs-buffer-groups-function 'my-centaur-tabs-buffer-groups)
-    (centaur-tabs-group-by-projectile-project)
 
     )
 #+end_src
+
+#+RESULTS:
+: t
 
 
 
@@ -1985,16 +1993,17 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
 Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago al final, para que se carguen ahora los buferes previos.
 #+begin_src emacs-lisp
   (save-place-mode 1)
-  (delete-file (expand-file-name "~/.emacs.d/.emacs.desktop.lock"))
 
   (use-package desktop
     :defer 1
     :ensure t
     :config         
 
-      (delete-file (desktop-full-lock-name))
+      (ignore-errors
+        (delete-file (desktop-full-lock-name)))
       (setq desktop-save t)
-      (desktop-save-mode))
+      (desktop-save-mode)
+      (desktop-read))
 
 #+end_src
 
