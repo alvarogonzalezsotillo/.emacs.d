@@ -529,3 +529,5 @@ done;
 ** ready player one
 ** La la land
 ** anna
+** hardcore henry
+** doom annihilation
