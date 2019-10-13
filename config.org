@@ -1117,7 +1117,7 @@ Avoid performance issues in files with very long lines.
 #+end_src
 
 ** Pestañas
-#+begin_src emacs-lisp
+#+begin_src lisp
   (use-package centaur-tabs
     :ensure t
     :defer 1
@@ -1130,32 +1130,6 @@ Avoid performance issues in files with very long lines.
     (setq centaur-tabs-gray-out-icons 'buffer)
     (setq centaur-tabs-set-bar 'over)
     (setq centaur-tabs-cycle-scope 'tabs)
-
-(defun centaur-tabs--groups-menu-list ()
-  (cons "Centaur tabs groups menu"
-	(mapcar
-	 (lambda (g)
-	   (cons g g))
-	 (sort (centaur-tabs-get-groups) 'string<))))
-
-(defun centaur-tabs--groups-menu ()
-  "Show a popup menu with the centaur tabs groups"
-  (interactive)
-  (let*
-      ((sorted-groups (centaur-tabs--groups-menu-list))
-       (group (x-popup-menu t (list "Centaur tabs groups menu" sorted-groups))))
-    (centaur-tabs-switch-group group)))
-
-
-
-
-    (define-key centaur-tabs-default-map (kbd "<header-line> <triple-mouse-5>") 'centaur-tabs-forward )
-    (define-key centaur-tabs-default-map (kbd "<header-line> <triple-mouse-4>") 'centaur-tabs-backward )
-    (define-key centaur-tabs-mode-map (kbd "<header-line> <mouse-3>") 'centaur-tabs--groups-menu )
-
-
-
-
     )
 #+end_src
 
