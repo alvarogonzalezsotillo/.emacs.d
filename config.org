@@ -213,10 +213,7 @@ Por cada paquete sin opciones especiales, simplemente lo cargo con =use-package=
 
 El bucle =dolist= se realiza sobre los datos de la tabla =mis-paquetes=. Cada fila se recibe como una lista de columnas, así que me quedo con la primera columna y la convierto a un =symbol=. Después, construyo la llamada a =use-package= y la evaluo (como =use-package= es una macro, no puedo hacerlo directamente)
 #+BEGIN_SRC emacs-lisp :var mis-paquetes=mis-paquetes
-  ;(message "Valor de mis-paquetes: %s" mis-paquetes)
   (dolist (paquete mis-paquetes)
-    ;(message "La variable con el paquete es del tipo: %s: %s" (type-of paquete) paquete)
-    ;(message "Voy a cargar el paquete: %s" (car paquete))
     (setq lista `(use-package ,(intern (car paquete)) :defer 1 :ensure t ) )
     (eval lista))
 #+END_SRC
@@ -1117,24 +1114,22 @@ Avoid performance issues in files with very long lines.
 #+end_src
 
 ** Pestañas
-#+begin_src lisp
+#+begin_src emacs-lisp
   (use-package centaur-tabs
-    :ensure t
+    :ensure nil
     :defer 1
     :config
-    (centaur-tabs-mode t)
     (setq centaur-tabs-set-icons t)
     (setq centaur-tabs-style "alternate")
     (setq centaur-tabs-set-modified-marker t)
-    (centaur-tabs-group-by-projectile-project)
     (setq centaur-tabs-gray-out-icons 'buffer)
     (setq centaur-tabs-set-bar 'over)
     (setq centaur-tabs-cycle-scope 'tabs)
+    (centaur-tabs-mode t)
+    (centaur-tabs-group-by-projectile-project)
+
     )
 #+end_src
-
-#+RESULTS:
-: t
 
 
 
