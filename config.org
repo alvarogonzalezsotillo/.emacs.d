@@ -213,10 +213,7 @@ Por cada paquete sin opciones especiales, simplemente lo cargo con =use-package=
 
 El bucle =dolist= se realiza sobre los datos de la tabla =mis-paquetes=. Cada fila se recibe como una lista de columnas, así que me quedo con la primera columna y la convierto a un =symbol=. Después, construyo la llamada a =use-package= y la evaluo (como =use-package= es una macro, no puedo hacerlo directamente)
 #+BEGIN_SRC emacs-lisp :var mis-paquetes=mis-paquetes
-  ;(message "Valor de mis-paquetes: %s" mis-paquetes)
   (dolist (paquete mis-paquetes)
-    ;(message "La variable con el paquete es del tipo: %s: %s" (type-of paquete) paquete)
-    ;(message "Voy a cargar el paquete: %s" (car paquete))
     (setq lista `(use-package ,(intern (car paquete)) :defer 1 :ensure t ) )
     (eval lista))
 #+END_SRC
@@ -1119,48 +1116,46 @@ Avoid performance issues in files with very long lines.
 ** Pestañas
 #+begin_src emacs-lisp
   (use-package centaur-tabs
-    :ensure t
+    :ensure nil
     :defer 1
     :config
-    (centaur-tabs-mode t)
     (setq centaur-tabs-set-icons t)
     (setq centaur-tabs-style "alternate")
     (setq centaur-tabs-set-modified-marker t)
-    (centaur-tabs-group-by-projectile-project)
     (setq centaur-tabs-gray-out-icons 'buffer)
     (setq centaur-tabs-set-bar 'over)
     (setq centaur-tabs-cycle-scope 'tabs)
-
-(defun centaur-tabs--groups-menu-list ()
-  (cons "Centaur tabs groups menu"
-	(mapcar
-	 (lambda (g)
-	   (cons g g))
-	 (sort (centaur-tabs-get-groups) 'string<))))
-
-(defun centaur-tabs--groups-menu ()
-  "Show a popup menu with the centaur tabs groups"
-  (interactive)
-  (let*
-      ((sorted-groups (centaur-tabs--groups-menu-list))
-       (group (x-popup-menu t (list "Centaur tabs groups menu" sorted-groups))))
-    (centaur-tabs-switch-group group)))
+    (centaur-tabs-mode t)
+    (centaur-tabs-group-by-projectile-project)
 
 
+    (defun my-centaur-tabs-hide-tab (x)
+      "Incluir magit entre los visibles."
+      (let ((name (format "%s" x)))
+        (or
+         ;; Current window is not dedicated window.
+         (window-dedicated-p (selected-window))
+
+         ;; Buffer name not match below blacklist.
+         (string-prefix-p "*epc" name)
+         (string-prefix-p "*helm" name)
+         (string-prefix-p "*Compile-Log*" name)
+         (string-prefix-p "*lsp" name)
+         (string-prefix-p "*company" name)
+         (string-prefix-p "*Flycheck" name)
+         (string-prefix-p "*tramp" name)
+         (string-prefix-p " *Mini" name)
+         (string-prefix-p "*help" name)
+         (string-prefix-p "*Help" name)
+
+         )))
+  
+
+    (setq centaur-tabs-hide-tab-function 'my-centaur-tabs-hide-tab)
 
 
-    (define-key centaur-tabs-default-map (kbd "<header-line> <triple-mouse-5>") 'centaur-tabs-forward )
-    (define-key centaur-tabs-default-map (kbd "<header-line> <triple-mouse-4>") 'centaur-tabs-backward )
-    (define-key centaur-tabs-mode-map (kbd "<header-line> <mouse-3>") 'centaur-tabs--groups-menu )
-
-
-
-
-    )
+  )
 #+end_src
-
-#+RESULTS:
-: t
 
 
 
@@ -1998,11 +1993,9 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
     :defer 1
     :ensure t
     :config         
-
-      (ignore-errors
-        (delete-file (desktop-full-lock-name)))
+      (setq desktop-load-locked-desktop t)
       (setq desktop-save t)
-      (desktop-save-mode)
+      (desktop-save-mode 1)
       (desktop-read))
 
 #+end_src
