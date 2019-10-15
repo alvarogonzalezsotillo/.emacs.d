@@ -1128,7 +1128,33 @@ Avoid performance issues in files with very long lines.
     (centaur-tabs-mode t)
     (centaur-tabs-group-by-projectile-project)
 
-    )
+
+    (defun my-centaur-tabs-hide-tab (x)
+      "Incluir magit entre los visibles."
+      (let ((name (format "%s" x)))
+        (or
+         ;; Current window is not dedicated window.
+         (window-dedicated-p (selected-window))
+
+         ;; Buffer name not match below blacklist.
+         (string-prefix-p "*epc" name)
+         (string-prefix-p "*helm" name)
+         (string-prefix-p "*Compile-Log*" name)
+         (string-prefix-p "*lsp" name)
+         (string-prefix-p "*company" name)
+         (string-prefix-p "*Flycheck" name)
+         (string-prefix-p "*tramp" name)
+         (string-prefix-p " *Mini" name)
+         (string-prefix-p "*help" name)
+         (string-prefix-p "*Help" name)
+
+         )))
+  
+
+    (setq centaur-tabs-hide-tab-function 'my-centaur-tabs-hide-tab)
+
+
+  )
 #+end_src
 
 
