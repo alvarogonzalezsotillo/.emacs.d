@@ -1125,8 +1125,10 @@ Avoid performance issues in files with very long lines.
     (setq centaur-tabs-gray-out-icons 'buffer)
     (setq centaur-tabs-set-bar 'over)
     (setq centaur-tabs-cycle-scope 'tabs)
-    (centaur-tabs-mode t)
-    (centaur-tabs-group-by-projectile-project)
+
+
+    (setq centaur-tabs-hide-tabs-hooks '(reb-mode-hook completion-list-mode-hook))
+
 
 
     (defun my-centaur-tabs-hide-tab (x)
@@ -1152,6 +1154,9 @@ Avoid performance issues in files with very long lines.
   
 
     (setq centaur-tabs-hide-tab-function 'my-centaur-tabs-hide-tab)
+
+    (centaur-tabs-mode t)
+    (centaur-tabs-group-by-projectile-project)
 
 
   )
