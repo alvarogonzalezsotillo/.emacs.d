@@ -1149,12 +1149,17 @@ Avoid performance issues in files with very long lines.
          (string-prefix-p "*Help" name)
 
          )))
-  
+
+    (setq centaur-tabs-hide-tabs-hooks '(reb-mode-hook completion-list-mode-hook))
+
 
     (setq centaur-tabs-hide-tab-function 'my-centaur-tabs-hide-tab)
 
+    (centaur-tabs-mode t)
+    (centaur-tabs-group-by-projectile-project)
 
-  )
+
+    )
 #+end_src
 
 
@@ -2031,6 +2036,8 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - didyoumean.el 
 - BAT cat
 - statusbar.el
+- dired-single
+- recentf
 
 
 
