@@ -1125,8 +1125,28 @@ Avoid performance issues in files with very long lines.
     (setq centaur-tabs-gray-out-icons 'buffer)
     (setq centaur-tabs-set-bar 'over)
     (setq centaur-tabs-cycle-scope 'tabs)
-    (centaur-tabs-mode t)
-    (centaur-tabs-group-by-projectile-project)
+
+
+    (defun centaur-tabs-hide-tab (x)
+      "Incluir magit entre los visibles."
+      (let ((name (format "%s" x)))
+        (or
+         ;; Current window is not dedicated window.
+         (window-dedicated-p (selected-window))
+
+         ;; Buffer name not match below blacklist.
+         (string-prefix-p "*epc" name)
+         (string-prefix-p "*helm" name)
+         (string-prefix-p "*Compile-Log*" name)
+         (string-prefix-p "*lsp" name)
+         (string-prefix-p "*company" name)
+         (string-prefix-p "*Flycheck" name)
+         (string-prefix-p "*tramp" name)
+         (string-prefix-p " *Mini" name)
+         (string-prefix-p "*help" name)
+         (string-prefix-p "*Help" name)
+
+         )))
 
 
     (defun my-centaur-tabs-hide-tab (x)
@@ -2022,7 +2042,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - helm-tramp
 - https://gitlab.com/LazyLama/emacs_latex_class
 - https://github.com/patrickt/emacs/blob/master/init.el
-- https://github.com/ema2159/centaur-tabs/blob/master/README.org
 - https://melpa.org/#/helm-file-preview
 - color-rg
 - recentf-mode
