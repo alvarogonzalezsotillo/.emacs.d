@@ -854,6 +854,8 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 (setq helm-display-function 'helm-display-buffer-in-own-frame
       helm-display-buffer-width 120)
 
+;;; helm-popup-frame debería tener el foco
+
 (setq swiper-helm-display-function helm-display-function)
 (setq helm-swoop-split-window-function helm-display-function)
 #+end_src
@@ -1101,7 +1103,7 @@ Avoid performance issues in files with very long lines.
     (setq centaur-tabs-gray-out-icons 'buffer)
     (setq centaur-tabs-set-bar 'over)
     (setq centaur-tabs-cycle-scope 'tabs)
-
+    (setq entaur-tabs-show-navigation-buttons t)
 
     (setq centaur-tabs-hide-tabs-hooks '(reb-mode-hook completion-list-mode-hook))
 
