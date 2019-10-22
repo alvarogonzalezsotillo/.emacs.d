@@ -381,7 +381,8 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 
 ** Paquete =yasnippet=
 Plantillas para introducción rápida de partes del texto. =yasnippet= interfiere con otros modos en su uso del tabulador, así que cambio su combinación.
-#+begin_src emacs-lisp
+Lo he deshabilitado porque lo uso muy rara vez, y tarda bastante en actualizarse
+#+begin_src lisp
 (use-package yasnippet
   :ensure t
   :config 
@@ -810,26 +811,6 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
       (setq ahs-default-range 'ahs-range-display))
 #+end_src
 
-** Paquete =swiper= y =swoop=
-
-=swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Ahora estoy valorando si me quedo con =swiper= o =swoop=. Lo siguiente es para hacer que también aparezca en una /child frame/.
-
-#+begin_src lisp
-(use-package swiper
-  :ensure t
-  :defer 1
-  :after (helm)
-  :config
-    )
-
-
-(use-package swoop
-  :ensure t
-  :defer 1
-  :after (helm)
-  :config
-
-#+end_src
 
 
 
@@ -862,14 +843,6 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 )
 
 
-(use-package helm-projectile
-  :ensure t
-  :defer 1
-  :config 
-    (helm-projectile-on)
-    (setq projectile-completion-system 'helm)
-  :after (helm)
-)
 
 #+end_src
 
@@ -877,7 +850,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 
 *** /Child frame/
 =helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original. Estas opción es bastante lenta en algunos sistemas de ventanas.
-#+begin_src lisp
+#+begin_src emacs-lisp
 (setq helm-display-function 'helm-display-buffer-in-own-frame
       helm-display-buffer-width 120)
 
@@ -900,6 +873,16 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
     (setq projectile-switch-project-action 'projectile-dired)
     (projectile-mode 1))
+
+(use-package helm-projectile
+  :ensure t
+  :defer 1
+  :config 
+    (helm-projectile-on)
+    (setq projectile-completion-system 'helm)
+  :after (helm)
+)
+
 #+end_src
 
 *** Paquete =ox-reveal=
@@ -1089,13 +1072,6 @@ El ratón también puede utilizarse en un =xterm=
 #+end_src
 
 
-
-
-
-
-
-
-
 * Visualización
 
 ** Previsualización de ficheros en Helm
@@ -1125,11 +1101,9 @@ Avoid performance issues in files with very long lines.
     (setq centaur-tabs-gray-out-icons 'buffer)
     (setq centaur-tabs-set-bar 'over)
     (setq centaur-tabs-cycle-scope 'tabs)
-    (centaur-tabs-mode t)
-    (centaur-tabs-group-by-projectile-project)
 
 
-    (defun my-centaur-tabs-hide-tab (x)
+    (defun centaur-tabs-hide-tab (x)
       "Incluir magit entre los visibles."
       (let ((name (format "%s" x)))
         (or
@@ -1149,12 +1123,39 @@ Avoid performance issues in files with very long lines.
          (string-prefix-p "*Help" name)
 
          )))
-  
+
+    (defun my-centaur-tabs-hide-tab (x)
+      "Incluir magit entre los visibles."
+      (let ((name (format "%s" x)))
+        (or
+         ;; Current window is not dedicated window.
+         (window-dedicated-p (selected-window))
+
+         ;; Buffer name not match below blacklist.
+         (string-prefix-p "*epc" name)
+         (string-prefix-p "*helm" name)
+         (string-prefix-p "*Compile-Log*" name)
+         (string-prefix-p "*lsp" name)
+         (string-prefix-p "*company" name)
+         (string-prefix-p "*Flycheck" name)
+         (string-prefix-p "*tramp" name)
+         (string-prefix-p " *Mini" name)
+         (string-prefix-p "*help" name)
+         (string-prefix-p "*Help" name)
+         (string-prefix-p "*Helm" name)
+
+         )))
+
+    (setq centaur-tabs-hide-tabs-hooks '(reb-mode-hook completion-list-mode-hook))
+
 
     (setq centaur-tabs-hide-tab-function 'my-centaur-tabs-hide-tab)
 
+    (centaur-tabs-mode t)
+    (centaur-tabs-group-by-projectile-project)
 
-  )
+
+    )
 #+end_src
 
 
@@ -1173,8 +1174,8 @@ Avoid performance issues in files with very long lines.
   :ensure t
   :defer 1
   :config
-  (add-hook 'prog-mode-hook 'region-occurrences-highlighter-mode)
-  (add-hook 'org-mode-hook 'region-occurrences-highlighter-mode)
+  (add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
+  (add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
 )
 #+end_src
 
@@ -1192,9 +1193,9 @@ Avoid performance issues in files with very long lines.
 #+end_src
 
 ** Marcar la línea actual. 
-Está deshabilitado porque no funciona bien con /overlays/
+A veces lo deshabilito porque no funciona bien con /overlays/
 #+begin_src emacs-lisp
-(global-hl-line-mode -1)
+(global-hl-line-mode 1)
 #+end_src
 
 ** Respuestas de confirmación más cortas
@@ -1231,8 +1232,8 @@ El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminale
 La barra de menú y la de herramientas es de lo primero que se quita al personalizar /emacs/, lo mismo que esa pantalla de inicio.
 #+begin_src emacs-lisp
 (setq inhibit-startup-message t)
-(menu-bar-mode -1)
 (if (display-graphic-p)
+  (menu-bar-mode -1)
   (tool-bar-mode -1))
 #+end_src
 
@@ -1268,7 +1269,6 @@ Mi línea de estado (modeline)
                " | %IB %Z"
                " | %l:%c %p"
                mode-line-end-spaces
-
                ) )
 
 #+end_src
@@ -1359,17 +1359,15 @@ Cuando quiero cerrar un buffer, prefiero que no pregunte.
 
 En una búsqueda incremental, utilizo los cursores para ir a otras búsquedas anteriores o para navegar entre las ocurrencias en el fichero
 #+begin_src emacs-lisp
-  ;; TECLAS PARA ISEARCH
-  (progn
-    ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
-    (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
-    (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
+  ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
+  (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
+  (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
 
-    (define-key isearch-mode-map (kbd "<left>") 'isearch-repeat-backward)
-    (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward)
+  (define-key isearch-mode-map (kbd "<left>") 'isearch-repeat-backward)
+  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward)
 
-    (define-key minibuffer-local-isearch-map (kbd "<left>") 'isearch-reverse-exit-minibuffer)
-    (define-key minibuffer-local-isearch-map (kbd "<right>") 'isearch-forward-exit-minibuffer))
+  (define-key minibuffer-local-isearch-map (kbd "<left>") 'isearch-reverse-exit-minibuffer)
+  (define-key minibuffer-local-isearch-map (kbd "<right>") 'isearch-forward-exit-minibuffer)
 
 
 #+end_src
@@ -1383,15 +1381,13 @@ A veces es fácil perderse entre comandos a medio introducir y ventanas popup. M
   (interactive)
   (keyboard-escape-quit)
   (keyboard-quit)
+  (company-abort)
   (abort-recursive-edit)
   (setq quit-flag t))
 (define-key global-map [escape] 'super-escape)
 (define-key minibuffer-local-map [escape] 'super-escape)
 (define-key company-active-map [escape] 'company-abort)
 #+end_src
-
-#+RESULTS:
-: company-abort
 
 
 
@@ -1506,30 +1502,6 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
 
    #+RESULTS:
    : gifttolatex
-
-** Abrir proyecto en ventana nueva con neotree
-#+begin_src emacs-lisp
-
-  (defun abrir-proyecto--selecciona-proyecto ()
-    (helm :sources (helm-build-sync-source "Selecciona un proyecto"
-                     :candidates projectile-known-projects
-                     :fuzzy-match t)
-          :buffer "*Selección de proyecto*"))
-
-  (defun abrir-proyecto--seleccionado (proyecto)
-    (let ((frame (abrir-proyecto--selecciona-frame)))
-      (select-frame-set-input-focus frame)
-      (message (concat "El proyecto seleccionado es:" proyecto ))
-      (toggle-frame-maximized)
-      (dired proyecto)
-      (run-at-time "2" nil
-                 (lambda() (magit-status)))))
-
-  (defun abrir-proyecto()
-    (interactive)
-
-    (abrir-proyecto--seleccionado (abrir-proyecto--selecciona-proyecto) ))
-#+end_src
 
 ** Convierto el buffer actual a una frame nueva
 #+begin_src emacs-lisp
@@ -1753,7 +1725,7 @@ Este es mi horario lectivo (sin incluir guardias y otras horas que no son de doc
 
 ** Proxy de educamadrid
 Durante una temporada, en los colegios de la Comunidad de Madrid era obligatorio el uso de un proxy.
-#+begin_src emacs-lisp
+#+begin_src lisp
 (defun quitar-proxy()
   (interactive)
   (setq url-proxy-services '()))
@@ -1833,28 +1805,12 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
 #+end_src
 
 
-** Diferencias con la última versión de =git=, usando =git-gutter=
-#+begin_src emacs-lisp
-  (defun diferencias-git (&optional diffinfo)
-    "Popup current diff hunk."
-    (interactive)
-    (git-gutter:awhen (or diffinfo
-                          (git-gutter:search-here-diffinfo git-gutter:diffinfos))
-      (save-selected-window 
-        ;;(pop-to-buffer (git-gutter:update-popuped-buffer it))
-        (display-buffer-pop-up-frame (git-gutter:update-popuped-buffer it) nil)
-        )
-
-      )
-    )
-#+end_src
-
-
 
 * Apariencia
 
 ** Líneas vacías al final, como =vim=
-#+begin_src emacs-lisp
+Creo que esto se hace mejor con la variable =indicate-empty-lines=
+#+begin_src lisp
 (add-hook 'prog-mode-hook 'vim-empty-lines-mode)
 (add-hook 'org-mode-hook 'vim-empty-lines-mode)
 #+end_src
@@ -2017,12 +1973,10 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - helm-tramp
 - https://gitlab.com/LazyLama/emacs_latex_class
 - https://github.com/patrickt/emacs/blob/master/init.el
-- https://github.com/ema2159/centaur-tabs/blob/master/README.org
 - https://melpa.org/#/helm-file-preview
 - color-rg
 - recentf-mode
 - (setq bookmark-save-flag 1)
-- save-place-mode
 - org-hide-emphasis-markers is a
 - openwith
 - calctex
@@ -2031,6 +1985,8 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - didyoumean.el 
 - BAT cat
 - statusbar.el
+- dired-single
+- recentf
 
 
 
