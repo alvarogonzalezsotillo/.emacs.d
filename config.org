@@ -1092,7 +1092,7 @@ Avoid performance issues in files with very long lines.
 ** Pestañas
 #+begin_src emacs-lisp
   (use-package centaur-tabs
-    :ensure nil
+    :ensure t
     :defer 1
     :config
     (setq centaur-tabs-set-icons t)
