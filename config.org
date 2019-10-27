@@ -1948,13 +1948,16 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
   (use-package desktop
     :defer 1
     :ensure t
-    :config         
-      (setq desktop-load-locked-desktop t)
-      (setq desktop-save t)
-      (desktop-save-mode 1)
-      (desktop-read))
+    :config
+    (setq desktop-load-locked-desktop t)
+    (setq desktop-save t)
+    (desktop-save-mode 1)
+    (when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
+        (desktop-read))
+    )
 
 #+end_src
+
 
 
 * Futuras adiciones
