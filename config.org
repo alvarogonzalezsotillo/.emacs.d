@@ -1101,6 +1101,7 @@ Avoid performance issues in files with very long lines.
     (setq centaur-tabs-gray-out-icons 'buffer)
     (setq centaur-tabs-set-bar 'over)
     (setq centaur-tabs-cycle-scope 'tabs)
+    (setq centaur-tabs-show-navigation-buttons t)
 
 
     (defun centaur-tabs-hide-tab (x)
