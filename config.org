@@ -1997,7 +1997,7 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - statusbar.el
 - dired-single
 - recentf
-
+- https://www.wezm.net/technical/2019/10/useful-command-line-tools/
 
 #+BEGIN_SRC emacs-lisp
 
