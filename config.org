@@ -1156,6 +1156,11 @@ Avoid performance issues in files with very long lines.
     (centaur-tabs-mode t)
     (centaur-tabs-group-by-projectile-project)
 
+    ()
+
+    (define-key centaur-tabs-mode-map centaur-tabs-prefix-key centaur-tabs-prefix-map)
+    (define-key centaur-tabs-mode-map (kbd "<header-line> <double-mouse-1>") 'delete-other-windows) 
+
 
     )
 #+end_src
@@ -1994,7 +1999,15 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - recentf
 
 
+#+BEGIN_SRC emacs-lisp
 
+
+  (add-to-list 'httpd-mime-types '("mjs" . "text/javascript") )
+
+#+END_SRC
+
+#+RESULTS:
+: ((mjs . text/javascript) (png . image/png) (gif . image/gif) (jpg . image/jpeg) (jpeg . image/jpeg) (tif . image/tif) (tiff . image/tiff) (ico . image/x-icon) (svg . image/svg+xml) (css . text/css; charset=utf-8) (htm . text/html; charset=utf-8) (html . text/html; charset=utf-8) (xml . text/xml; charset=utf-8) (rss . text/xml; charset=utf-8) (atom . text/xml; charset=utf-8) (txt . text/plain; charset=utf-8) (el . text/plain; charset=utf-8) (js . text/javascript; charset=utf-8) (md . text/x-markdown; charset=utf-8) (gz . application/octet-stream) (ps . application/postscript) (eps . application/postscript) (pdf . application/pdf) (tar . application/x-tar) (zip . application/zip) (mp3 . audio/mpeg) (wav . audio/x-wav) (flac . audio/flac) (spx . audio/ogg) (oga . audio/ogg) (ogg . audio/ogg) (ogv . video/ogg) (mp4 . video/mp4) (mkv . video/x-matroska) (webm . video/webm))
 
 
 * usettf
