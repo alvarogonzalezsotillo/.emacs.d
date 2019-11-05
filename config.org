@@ -850,7 +850,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 
 *** /Child frame/
 =helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original. Estas opción es bastante lenta en algunos sistemas de ventanas.
-#+begin_src emacs-lisp
+#+begin_src lisp
 (setq helm-display-function 'helm-display-buffer-in-own-frame
       helm-display-buffer-width 120)
 
