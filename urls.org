@@ -66,6 +66,10 @@ Entrega de programaciones: https://aulavirtual3.educa.madrid.org/ies.alonsodeave
 | par            | 13ppt1vpo9jn6chevf8i8m6m4o@group.calendar.google.com | <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=2&amp;hl=es&amp;bgcolor=%23FFFFFF&amp;src=13ppt1vpo9jn6chevf8i8m6m4o@group.calendar.google.com&amp;color=%23B1440E&amp;ctz=Europe%2FMadrid" style="border-width:0" width="100%" height="600" frameborder="0" scrolling="no"></iframe> |                                                                                                                        |                                                                                                                                         |
 #+TBLFM: $3='(concat @2$4 $2 @2$5)
 
+dGljbzF2YWxsZWluY2xhbgppbmY0dmFsbGVpbmNsYW4KYWx2YXJvLnJzc2ZlZWQKZnJpa2lzbW9z
+CmFnc2llc2F2ZWxsYW5lZGEK
+
+
 ** Iframes para el moodle
 
 <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=2&amp;hl=es&amp;bgcolor=%23FFFFFF&amp;src=f69efvlsk3uf2okks75mgjc51c%40group.calendar.google.com&amp;color=%23B1440E&amp;ctz=Europe%2FMadrid" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>

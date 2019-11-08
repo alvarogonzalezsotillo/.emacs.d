@@ -34,10 +34,11 @@ Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplement
     (byte-recompile-directory (expand-file-name "~/.emacs.d/elpa") 0 t)
   #+END_SRC
 
-- En instalaciones nuevas, la carga final de =custom.el= falla si no existe.
-  #+begin_src sh
-  touch ~/.emacs.d/custom.el
+- El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
+  #+begin_src emacs-lisp
+  (setq custom-file "~/.emacs.d/custom-file.el")
   #+end_src
+
 
 
 * Utilidades externas al /PATH/
@@ -850,9 +851,11 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 
 *** /Child frame/
 =helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original. Estas opción es bastante lenta en algunos sistemas de ventanas.
-#+begin_src emacs-lisp
+#+begin_src lisp
 (setq helm-display-function 'helm-display-buffer-in-own-frame
       helm-display-buffer-width 120)
+
+;;; helm-popup-frame debería tener el foco
 
 (setq swiper-helm-display-function helm-display-function)
 (setq helm-swoop-split-window-function helm-display-function)
@@ -1091,71 +1094,79 @@ Avoid performance issues in files with very long lines.
 
 ** Pestañas
 #+begin_src emacs-lisp
-  (use-package centaur-tabs
-    :ensure nil
-    :defer 1
-    :config
-    (setq centaur-tabs-set-icons t)
-    (setq centaur-tabs-style "alternate")
-    (setq centaur-tabs-set-modified-marker t)
-    (setq centaur-tabs-gray-out-icons 'buffer)
-    (setq centaur-tabs-set-bar 'over)
-    (setq centaur-tabs-cycle-scope 'tabs)
+    (use-package centaur-tabs
+      :ensure t
+      :defer 1
+      :config
+      (setq centaur-tabs-set-icons t)
+      (setq centaur-tabs-style "alternate")
+      (setq centaur-tabs-set-modified-marker t)
+      (setq centaur-tabs-gray-out-icons 'buffer)
+      (setq centaur-tabs-set-bar 'over)
+      (setq centaur-tabs-cycle-scope 'tabs)
+      (setq centaur-tabs-show-navigation-buttons t)
+
+      (defun my-centaur-tabs-hide-tab (x)
+        "Incluir magit entre los visibles."
+        (let ((name (format "%s" x)))
+          (or
+           ;; Current window is not dedicated window.
+           (window-dedicated-p (selected-window))
+
+           ;; Buffer name not match below blacklist.
+           (string-prefix-p "*epc" name)
+           (string-prefix-p "*helm" name)
+           (string-prefix-p "*Compile-Log*" name)
+           (string-prefix-p "*lsp" name)
+           (string-prefix-p "*company" name)
+           (string-prefix-p "*Flycheck" name)
+           (string-prefix-p "*tramp" name)
+           (string-prefix-p " *Mini" name)
+           (string-prefix-p "*help" name)
+           (string-prefix-p "*Help" name)
+           (string-prefix-p "*Helm" name)
+
+           )))
+
+      (setq centaur-tabs-hide-tabs-hooks '(reb-mode-hook completion-list-mode-hook))
+      (setq centaur-tabs-hide-tab-function 'my-centaur-tabs-hide-tab)
 
 
-    (defun centaur-tabs-hide-tab (x)
-      "Incluir magit entre los visibles."
-      (let ((name (format "%s" x)))
-        (or
-         ;; Current window is not dedicated window.
-         (window-dedicated-p (selected-window))
+      (mapcar
+       (lambda (face) (set-face-attribute face nil :height 0.8) )
+       '(
+         centaur-tabs-active-bar-face
+         centaur-tabs-default
+         centaur-tabs-unselected
+         centaur-tabs-selected
+         centaur-tabs-unselected-modified
+         centaur-tabs-selected-modified
+         centaur-tabs-close-unselected
+         centaur-tabs-close-selected
+         centaur-tabs-close-mouse-face
+         centaur-tabs-modified-marker-selected
+         centaur-tabs-modified-marker-unselected
+         ))
 
-         ;; Buffer name not match below blacklist.
-         (string-prefix-p "*epc" name)
-         (string-prefix-p "*helm" name)
-         (string-prefix-p "*Compile-Log*" name)
-         (string-prefix-p "*lsp" name)
-         (string-prefix-p "*company" name)
-         (string-prefix-p "*Flycheck" name)
-         (string-prefix-p "*tramp" name)
-         (string-prefix-p " *Mini" name)
-         (string-prefix-p "*help" name)
-         (string-prefix-p "*Help" name)
-
-         )))
-
-    (defun my-centaur-tabs-hide-tab (x)
-      "Incluir magit entre los visibles."
-      (let ((name (format "%s" x)))
-        (or
-         ;; Current window is not dedicated window.
-         (window-dedicated-p (selected-window))
-
-         ;; Buffer name not match below blacklist.
-         (string-prefix-p "*epc" name)
-         (string-prefix-p "*helm" name)
-         (string-prefix-p "*Compile-Log*" name)
-         (string-prefix-p "*lsp" name)
-         (string-prefix-p "*company" name)
-         (string-prefix-p "*Flycheck" name)
-         (string-prefix-p "*tramp" name)
-         (string-prefix-p " *Mini" name)
-         (string-prefix-p "*help" name)
-         (string-prefix-p "*Help" name)
-         (string-prefix-p "*Helm" name)
-
-         )))
-
-    (setq centaur-tabs-hide-tabs-hooks '(reb-mode-hook completion-list-mode-hook))
+      (setq centaur-tabs-height 10)
+      (setq centaur-tabs-bar-height (+ 8 centaur-tabs-height))
 
 
-    (setq centaur-tabs-hide-tab-function 'my-centaur-tabs-hide-tab)
 
-    (centaur-tabs-mode t)
-    (centaur-tabs-group-by-projectile-project)
+      (centaur-tabs-mode t)
+      (centaur-tabs-group-by-projectile-project)
+
+      (defun my-maximize-or-split ()
+        (interactive)
+        (if (one-window-p)
+            (split-window-below)
+            (delete-other-window)))
+
+      (define-key centaur-tabs-mode-map centaur-tabs-prefix-key centaur-tabs-prefix-map)
+      (define-key centaur-tabs-mode-map (kbd "<header-line> <double-mouse-1>") 'my-maximize-or-split) 
 
 
-    )
+      )
 #+end_src
 
 
@@ -1194,7 +1205,7 @@ Avoid performance issues in files with very long lines.
 
 ** Marcar la línea actual. 
 A veces lo deshabilito porque no funciona bien con /overlays/
-#+begin_src emacs-lisp
+#+begin_src lisp
 (global-hl-line-mode 1)
 #+end_src
 
@@ -1892,7 +1903,7 @@ Prefiero ocultar las flechas que indican que una línea se sale de la pantalla, 
 ** Temas
 Tengo dos temas, claro y oscuro. El tema =alvaro= cambia algunos tamaños de letra (no colores).
 
-Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas en =custom-safe-themes= (lo he copiado del fichero =custom.el=).
+Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas en =custom-safe-themes= (lo he copiado del fichero =custom-file.el=).
 
 
 
@@ -1932,12 +1943,6 @@ Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna c
 
 
 
-
-* /Customize/
-El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
-#+begin_src emacs-lisp
-(setq custom-file "~/.emacs.d/custom-file.el")
-#+end_src
 
 
 * Escritorio
@@ -1995,7 +2000,15 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - recentf
 - https://www.wezm.net/technical/2019/10/useful-command-line-tools/
 
+#+BEGIN_SRC emacs-lisp
 
+
+  (add-to-list 'httpd-mime-types '("mjs" . "text/javascript") )
+
+#+END_SRC
+
+#+RESULTS:
+: ((mjs . text/javascript) (png . image/png) (gif . image/gif) (jpg . image/jpeg) (jpeg . image/jpeg) (tif . image/tif) (tiff . image/tiff) (ico . image/x-icon) (svg . image/svg+xml) (css . text/css; charset=utf-8) (htm . text/html; charset=utf-8) (html . text/html; charset=utf-8) (xml . text/xml; charset=utf-8) (rss . text/xml; charset=utf-8) (atom . text/xml; charset=utf-8) (txt . text/plain; charset=utf-8) (el . text/plain; charset=utf-8) (js . text/javascript; charset=utf-8) (md . text/x-markdown; charset=utf-8) (gz . application/octet-stream) (ps . application/postscript) (eps . application/postscript) (pdf . application/pdf) (tar . application/x-tar) (zip . application/zip) (mp3 . audio/mpeg) (wav . audio/x-wav) (flac . audio/flac) (spx . audio/ogg) (oga . audio/ogg) (ogg . audio/ogg) (ogv . video/ogg) (mp4 . video/mp4) (mkv . video/x-matroska) (webm . video/webm))
 
 
 * usettf
