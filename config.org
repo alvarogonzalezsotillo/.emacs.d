@@ -228,6 +228,17 @@ Por último, el paquete =ob-scala= es un paquete local bajado de [[https://githu
 (require 'ob-scala)
 #+end_src
 
+
+** Paquete =simple-httpd=
+Añado algunos /mime-type/ al servidor HTTP
+#+BEGIN_SRC emacs-lisp
+  (use-package simple-httpd
+    :defer 1
+    :config
+    (add-to-list 'httpd-mime-types '("mjs" . "text/javascript") ))
+#+END_SRC
+
+
 ** rust
 #+begin_src emacs-lisp
 (use-package rust-mode
@@ -728,12 +739,11 @@ Tampoco me interesan los ficheros de /lock/.
 
 Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
 #+begin_src emacs-lisp
-
 (setq LaTeX-verbatim-environments
       '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql"))
 #+end_src
 
-Para imenu
+Para imenu, defino una macro de Latex que no hace nada, pero que detecto en imenu.
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'TeX-outline-extra '("imenu" 2))
 (add-to-list 'TeX-outline-extra '("imenu1" 1))
