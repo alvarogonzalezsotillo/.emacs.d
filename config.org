@@ -1909,7 +1909,7 @@ Prefiero ocultar las flechas que indican que una línea se sale de la pantalla, 
 ** Temas
 Tengo dos temas, claro y oscuro. El tema =alvaro= cambia algunos tamaños de letra (no colores).
 
-Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas en =custom-safe-themes= (lo he copiado del fichero =custom.el=).
+Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas en =custom-safe-themes= (lo he copiado del fichero =custom-file.el=).
 
 
 
@@ -1973,6 +1973,9 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
+- https://github.com/justbur/emacs-vdiff/blob/master/README.org
+- https://github.com/honmaple/emacs-maple-minibuffer/blob/master/README.org
+- https://github.com/astoff/digestif/blob/master/README.md
 - Elfeed
 - Zoom-frm
 - org-re-reveal
