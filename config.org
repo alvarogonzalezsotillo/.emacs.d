@@ -1094,79 +1094,85 @@ Avoid performance issues in files with very long lines.
 
 ** Pestañas
 #+begin_src emacs-lisp
-    (use-package centaur-tabs
-      :ensure t
-      :defer 1
-      :config
-      (setq centaur-tabs-set-icons t)
-      (setq centaur-tabs-style "alternate")
-      (setq centaur-tabs-set-modified-marker t)
-      (setq centaur-tabs-gray-out-icons 'buffer)
-      (setq centaur-tabs-set-bar 'over)
-      (setq centaur-tabs-cycle-scope 'tabs)
-      (setq centaur-tabs-show-navigation-buttons t)
+  (use-package centaur-tabs
+    :ensure t
+    :defer 1
+    :config
+    (setq centaur-tabs-set-icons t)
+    (setq centaur-tabs-style "alternate")
+    (setq centaur-tabs-set-modified-marker t)
+    (setq centaur-tabs-gray-out-icons 'buffer)
+    (setq centaur-tabs-set-bar 'over)
+    (setq centaur-tabs-cycle-scope 'tabs)
+    (setq centaur-tabs-show-navigation-buttons t)
 
-      (defun my-centaur-tabs-hide-tab (x)
-        "Incluir magit entre los visibles."
-        (let ((name (format "%s" x)))
-          (or
-           ;; Current window is not dedicated window.
-           (window-dedicated-p (selected-window))
+    (defun my-centaur-tabs-hide-tab (x)
+      "Incluir magit entre los visibles."
+      (let ((name (format "%s" x)))
+        (or
+         ;; Current window is not dedicated window.
+         (window-dedicated-p (selected-window))
 
-           ;; Buffer name not match below blacklist.
-           (string-prefix-p "*epc" name)
-           (string-prefix-p "*helm" name)
-           (string-prefix-p "*Compile-Log*" name)
-           (string-prefix-p "*lsp" name)
-           (string-prefix-p "*company" name)
-           (string-prefix-p "*Flycheck" name)
-           (string-prefix-p "*tramp" name)
-           (string-prefix-p " *Mini" name)
-           (string-prefix-p "*help" name)
-           (string-prefix-p "*Help" name)
-           (string-prefix-p "*Helm" name)
+         ;; Buffer name not match below blacklist.
+         (string-prefix-p "*epc" name)
+         (string-prefix-p "*helm" name)
+         (string-prefix-p "*Compile-Log*" name)
+         (string-prefix-p "*lsp" name)
+         (string-prefix-p "*company" name)
+         (string-prefix-p "*Flycheck" name)
+         (string-prefix-p "*tramp" name)
+         (string-prefix-p " *Mini" name)
+         (string-prefix-p "*help" name)
+         (string-prefix-p "*Help" name)
+         (string-prefix-p "*Helm" name)
 
-           )))
+         )))
 
-      (setq centaur-tabs-hide-tabs-hooks '(reb-mode-hook completion-list-mode-hook))
-      (setq centaur-tabs-hide-tab-function 'my-centaur-tabs-hide-tab)
-
-
-      (mapcar
-       (lambda (face) (set-face-attribute face nil :height 0.8) )
-       '(
-         centaur-tabs-active-bar-face
-         centaur-tabs-default
-         centaur-tabs-unselected
-         centaur-tabs-selected
-         centaur-tabs-unselected-modified
-         centaur-tabs-selected-modified
-         centaur-tabs-close-unselected
-         centaur-tabs-close-selected
-         centaur-tabs-close-mouse-face
-         centaur-tabs-modified-marker-selected
-         centaur-tabs-modified-marker-unselected
-         ))
-
-      (setq centaur-tabs-height 10)
-      (setq centaur-tabs-bar-height (+ 8 centaur-tabs-height))
+    (setq centaur-tabs-hide-tabs-hooks '(reb-mode-hook completion-list-mode-hook))
+    (setq centaur-tabs-hide-tab-function 'my-centaur-tabs-hide-tab)
 
 
+    (mapcar
+     (lambda (face) (set-face-attribute face nil :height 0.8) )
+     '(
+       centaur-tabs-active-bar-face
+       centaur-tabs-default
+       centaur-tabs-unselected
+       centaur-tabs-selected
+       centaur-tabs-unselected-modified
+       centaur-tabs-selected-modified
+       centaur-tabs-close-unselected
+       centaur-tabs-close-selected
+       centaur-tabs-close-mouse-face
+       centaur-tabs-modified-marker-selected
+       centaur-tabs-modified-marker-unselected
+       ))
 
-      (centaur-tabs-mode t)
-      (centaur-tabs-group-by-projectile-project)
-
-      (defun my-maximize-or-split ()
-        (interactive)
-        (if (one-window-p)
-            (split-window-below)
-            (delete-other-window)))
-
-      (define-key centaur-tabs-mode-map centaur-tabs-prefix-key centaur-tabs-prefix-map)
-      (define-key centaur-tabs-mode-map (kbd "<header-line> <double-mouse-1>") 'my-maximize-or-split) 
+    (setq centaur-tabs-height 10)
+    (setq centaur-tabs-bar-height (+ 8 centaur-tabs-height))
 
 
-      )
+
+    (centaur-tabs-mode t)
+    (centaur-tabs-group-by-projectile-project)
+
+    (defun my-maximize-or-split ()
+      (interactive)
+      (if (one-window-p)
+          (split-window-below)
+          (delete-other-window)))
+
+    (define-key centaur-tabs-mode-map centaur-tabs-prefix-key centaur-tabs-prefix-map)
+    (define-key centaur-tabs-mode-map (kbd "<header-line> <double-mouse-1>") 'my-maximize-or-split) 
+    (define-key centaur-tabs-backward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-left) 
+    (define-key centaur-tabs-forward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-right)
+
+    (setq centaur-tabs--track-selected t) 
+
+(centaur-tabs-scroll (centaur-tabs-current-tabset) -1)
+(message "%d" (centaur-tabs-start (centaur-tabs-current-tabset)))
+
+    )
 #+end_src
 
 
