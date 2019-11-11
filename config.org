@@ -61,18 +61,25 @@ ls ~/.emacs.d/bin
 #+end_src
 
 #+RESULTS:
-| addtopath.sh           |
-| ec                     |
-| ghpages.sh             |
-| gifttolatex            |
-| githubclone.sh         |
-| keymon.sh              |
-| plantuml.1.2018.11.jar |
-| rmtemplatex.sh         |
-| shrinkpdf.sh           |
-| svg2pdf.sh             |
-| vncserver.sh           |
-| wake-alvarogonzalez.sh |
+| addtopath.sh                |
+| bfg-1.13.0.jar              |
+| colores-terminal.sh         |
+| colores-tty.sh              |
+| disable-gnome-animations.sh |
+| ec                          |
+| ghpages.sh                  |
+| gifttolatex                 |
+| githubclone.sh              |
+| keymon.sh                   |
+| pdf2svg.sh                  |
+| plantuml.1.2018.11.jar      |
+| rmtemplatex.sh              |
+| shellcheck                  |
+| shrinkpdf.sh                |
+| svg2pdf.sh                  |
+| texlab                      |
+| vncserver.sh                |
+| wake-alvarogonzalez.sh      |
 
 
 * Carga de paquetes
