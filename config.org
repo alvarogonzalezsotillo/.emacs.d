@@ -917,6 +917,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   :config
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
     (setq projectile-switch-project-action 'projectile-dired)
+    (setq projectile-indexing-method 'hybrid)
     (projectile-mode 1))
 
 (use-package helm-projectile
@@ -2049,6 +2050,24 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - https://www.wezm.net/technical/2019/10/useful-command-line-tools/
 
 
+
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/mis-paquetes/lsp-latex")
+(require 'lsp-latex)
+;; "texlab" must be located at a directory contained in `exec-path'.
+;; If you want to put "texlab" somewhere else,
+;; you can specify the path to "texlab" as follows:
+;; (setq lsp-latex-texlab-executable "/path/to/texlab")
+
+(with-eval-after-load "tex-mode"
+ (add-hook 'tex-mode-hook 'lsp)
+ (add-hook 'latex-mode-hook 'lsp))
+
+;; For YaTeX
+(with-eval-after-load "yatex"
+ (add-hook 'yatex-mode-hook 'lsp))
+#+end_src
 
 * usettf
 
