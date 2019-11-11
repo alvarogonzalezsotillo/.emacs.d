@@ -300,6 +300,38 @@ Estoy usando =treemacs= en vez de =neotree=.
       (treemacs--tear-down-git-mode)
       (setq treemacs-silent-refresh t)
       (setq treemacs--persist-kv-regex "^ ?- \\(?:\\sw\\|\\s_\\|\\s.\\)+ :: \\(?:/\\|\\sw\\|\\s_\\|\\s.\\|[[:space:]]\\)+$")
+
+
+    (mapcar
+     (lambda (face) (set-face-attribute face nil :height 0.8) )
+     '(
+        treemacs-directory-face                
+        treemacs-directory-collapsed-face      
+        treemacs-file-face                     
+        treemacs-root-face                     
+        treemacs-root-unreadable-face          
+        treemacs-root-remote-face              
+        treemacs-root-remote-unreadable-face   
+        treemacs-root-remote-disconnected-face 
+        treemacs-tags-face                     
+        treemacs-help-title-face               
+        treemacs-help-column-face              
+        treemacs-git-unmodified-face
+        treemacs-git-modified-face
+        treemacs-git-renamed-face
+        treemacs-git-ignored-face
+        treemacs-git-untracked-face
+        treemacs-git-added-face
+        treemacs-git-conflict-face
+        treemacs-term-node-face                
+        treemacs-on-success-pulse-face         
+        treemacs-on-failure-puse-face          
+       ))
+
+
+
+
+
   )
 #+end_src
 
@@ -2016,15 +2048,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - recentf
 - https://www.wezm.net/technical/2019/10/useful-command-line-tools/
 
-#+BEGIN_SRC emacs-lisp
-
-
-  (add-to-list 'httpd-mime-types '("mjs" . "text/javascript") )
-
-#+END_SRC
-
-#+RESULTS:
-: ((mjs . text/javascript) (png . image/png) (gif . image/gif) (jpg . image/jpeg) (jpeg . image/jpeg) (tif . image/tif) (tiff . image/tiff) (ico . image/x-icon) (svg . image/svg+xml) (css . text/css; charset=utf-8) (htm . text/html; charset=utf-8) (html . text/html; charset=utf-8) (xml . text/xml; charset=utf-8) (rss . text/xml; charset=utf-8) (atom . text/xml; charset=utf-8) (txt . text/plain; charset=utf-8) (el . text/plain; charset=utf-8) (js . text/javascript; charset=utf-8) (md . text/x-markdown; charset=utf-8) (gz . application/octet-stream) (ps . application/postscript) (eps . application/postscript) (pdf . application/pdf) (tar . application/x-tar) (zip . application/zip) (mp3 . audio/mpeg) (wav . audio/x-wav) (flac . audio/flac) (spx . audio/ogg) (oga . audio/ogg) (ogg . audio/ogg) (ogv . video/ogg) (mp4 . video/mp4) (mkv . video/x-matroska) (webm . video/webm))
 
 
 * usettf
