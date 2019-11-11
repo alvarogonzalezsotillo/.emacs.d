@@ -885,6 +885,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   :config
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
     (setq projectile-switch-project-action 'projectile-dired)
+    (setq projectile-indexing-method 'hybrid)
     (projectile-mode 1))
 
 (use-package helm-projectile
@@ -2026,6 +2027,24 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 #+RESULTS:
 : ((mjs . text/javascript) (png . image/png) (gif . image/gif) (jpg . image/jpeg) (jpeg . image/jpeg) (tif . image/tif) (tiff . image/tiff) (ico . image/x-icon) (svg . image/svg+xml) (css . text/css; charset=utf-8) (htm . text/html; charset=utf-8) (html . text/html; charset=utf-8) (xml . text/xml; charset=utf-8) (rss . text/xml; charset=utf-8) (atom . text/xml; charset=utf-8) (txt . text/plain; charset=utf-8) (el . text/plain; charset=utf-8) (js . text/javascript; charset=utf-8) (md . text/x-markdown; charset=utf-8) (gz . application/octet-stream) (ps . application/postscript) (eps . application/postscript) (pdf . application/pdf) (tar . application/x-tar) (zip . application/zip) (mp3 . audio/mpeg) (wav . audio/x-wav) (flac . audio/flac) (spx . audio/ogg) (oga . audio/ogg) (ogg . audio/ogg) (ogv . video/ogg) (mp4 . video/mp4) (mkv . video/x-matroska) (webm . video/webm))
 
+
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/mis-paquetes/lsp-latex")
+(require 'lsp-latex)
+;; "texlab" must be located at a directory contained in `exec-path'.
+;; If you want to put "texlab" somewhere else,
+;; you can specify the path to "texlab" as follows:
+;; (setq lsp-latex-texlab-executable "/path/to/texlab")
+
+(with-eval-after-load "tex-mode"
+ (add-hook 'tex-mode-hook 'lsp)
+ (add-hook 'latex-mode-hook 'lsp))
+
+;; For YaTeX
+(with-eval-after-load "yatex"
+ (add-hook 'yatex-mode-hook 'lsp))
+#+end_src
 
 * usettf
 
