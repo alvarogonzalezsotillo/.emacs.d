@@ -325,15 +325,12 @@ Estoy usando =treemacs= en vez de =neotree=.
         treemacs-git-conflict-face
         treemacs-term-node-face                
         treemacs-on-success-pulse-face         
-        treemacs-on-failure-puse-face          
+        treemacs-on-failure-pulse-face          
        ))
-
-
-
-
-
   )
 #+end_src
+
+#+RESULTS:
 
 
 
@@ -1210,13 +1207,9 @@ Avoid performance issues in files with very long lines.
     (define-key centaur-tabs-backward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-left) 
     (define-key centaur-tabs-forward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-right)
 
-    (setq centaur-tabs--track-selected t) 
-
-(centaur-tabs-scroll (centaur-tabs-current-tabset) -1)
-(message "%d" (centaur-tabs-start (centaur-tabs-current-tabset)))
-
     )
 #+end_src
+
 
 
 
