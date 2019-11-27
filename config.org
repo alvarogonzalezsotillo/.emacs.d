@@ -166,7 +166,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | kodi-remote                    |                                                                |
 | latex-preview-pane             |                                                                |
 | lorem-ipsum                    |                                                                |
-| lsp-javascript-typescript      |                                                                |
 | lsp-mode                       |                                                                |
 | lsp-ui                         |                                                                |
 | magic-latex-buffer             |                                                                |
@@ -332,7 +331,6 @@ Estoy usando =treemacs= en vez de =neotree=.
         treemacs-git-conflict-face
         treemacs-term-node-face                
         treemacs-on-success-pulse-face         
-        treemacs-on-failure-puse-face          
        ))
 
 
@@ -652,7 +650,11 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
 *** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
-  (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.1.2018.11.jar"))
+  (if
+      (file-exists-p "/usr/share/plantuml/plantuml.jar")
+      (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar")
+    (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.1.2018.11.jar")))
+
   (setq plantuml-jar-path org-plantuml-jar-path)
 
   (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t) (plantuml . t ) ( C . t)))
@@ -671,7 +673,7 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
  Además, no pido confirmación para varios lenguajes                                                                                                           
  #+begin_src emacs-lisp
  (defun my-org-confirm-babel-evaluate (lang body)                                                                                                             
-   (not (member lang '("dot" "emacs-lisp" "shell"))))
+   (not (member lang '("dot" "emacs-lisp" "shell" "plantuml"))))
  (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)                                                                                             
 #+end_src
 
@@ -1219,11 +1221,10 @@ Avoid performance issues in files with very long lines.
 
     (setq centaur-tabs--track-selected t) 
 
-(centaur-tabs-scroll (centaur-tabs-current-tabset) -1)
-(message "%d" (centaur-tabs-start (centaur-tabs-current-tabset)))
-
     )
 #+end_src
+
+#+RESULTS:
 
 
 
@@ -1237,14 +1238,18 @@ Avoid performance issues in files with very long lines.
 
 ** Marcar las ocurrencias de la selección
 #+begin_src emacs-lisp
-(use-package region-occurrences-highlighter 
-  :ensure t
-  :defer 1
-  :config
-  (add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
-  (add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
-)
+  (use-package region-occurrences-highlighter 
+    :ensure t
+    :defer 1
+    :config
+    (add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
+    (add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
+
+    (add-hook 'text-mode-hook #'region-occurrences-highlighter-mode)
+
+  )
 #+end_src
+
 
 
 ** /scroll bars/
