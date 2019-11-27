@@ -307,7 +307,7 @@ Estoy usando =treemacs= en vez de =neotree=.
      '(
         treemacs-directory-face                
         treemacs-directory-collapsed-face      
-        treemacs-file-face                     
+        ;treemacs-file-face                     
         treemacs-root-face                     
         treemacs-root-unreadable-face          
         treemacs-root-remote-face              
@@ -325,15 +325,12 @@ Estoy usando =treemacs= en vez de =neotree=.
         treemacs-git-conflict-face
         treemacs-term-node-face                
         treemacs-on-success-pulse-face         
-        treemacs-on-failure-puse-face          
+        treemacs-on-failure-pulse-face          
        ))
-
-
-
-
-
   )
 #+end_src
+
+#+RESULTS:
 
 
 
@@ -882,6 +879,16 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
     (setq helm-echo-input-in-header-line t)
     (setq helm-display-buffer-reuse-frame t)
     (setq helm-use-undecorated-frame-option t)
+
+
+    ;https://www.reddit.com/r/emacs/comments/345vtl/make_helm_window_at_the_bottom_without_using_any/
+    ;HELM SIEMPRE ABAJO CON ANCHO COMPLETO
+    (add-to-list 'display-buffer-alist
+                    `(,(rx bos "*helm" (* not-newline) "*" eos)
+                         (display-buffer-in-side-window)
+                         (inhibit-same-window . t)
+                         (window-height . 0.4)))
+
   :after (tramp) ;; PARA EVITAR EL ERROR Symbols's value as variable is void: tramp-methods
 )
 
@@ -1210,13 +1217,9 @@ Avoid performance issues in files with very long lines.
     (define-key centaur-tabs-backward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-left) 
     (define-key centaur-tabs-forward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-right)
 
-    (setq centaur-tabs--track-selected t) 
-
-(centaur-tabs-scroll (centaur-tabs-current-tabset) -1)
-(message "%d" (centaur-tabs-start (centaur-tabs-current-tabset)))
-
     )
 #+end_src
+
 
 
 
