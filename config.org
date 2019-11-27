@@ -307,7 +307,7 @@ Estoy usando =treemacs= en vez de =neotree=.
      '(
         treemacs-directory-face                
         treemacs-directory-collapsed-face      
-        treemacs-file-face                     
+        ;treemacs-file-face                     
         treemacs-root-face                     
         treemacs-root-unreadable-face          
         treemacs-root-remote-face              
