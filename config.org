@@ -61,18 +61,25 @@ ls ~/.emacs.d/bin
 #+end_src
 
 #+RESULTS:
-| addtopath.sh           |
-| ec                     |
-| ghpages.sh             |
-| gifttolatex            |
-| githubclone.sh         |
-| keymon.sh              |
-| plantuml.1.2018.11.jar |
-| rmtemplatex.sh         |
-| shrinkpdf.sh           |
-| svg2pdf.sh             |
-| vncserver.sh           |
-| wake-alvarogonzalez.sh |
+| addtopath.sh                |
+| bfg-1.13.0.jar              |
+| colores-terminal.sh         |
+| colores-tty.sh              |
+| disable-gnome-animations.sh |
+| ec                          |
+| ghpages.sh                  |
+| gifttolatex                 |
+| githubclone.sh              |
+| keymon.sh                   |
+| pdf2svg.sh                  |
+| plantuml.1.2018.11.jar      |
+| rmtemplatex.sh              |
+| shellcheck                  |
+| shrinkpdf.sh                |
+| svg2pdf.sh                  |
+| texlab                      |
+| vncserver.sh                |
+| wake-alvarogonzalez.sh      |
 
 
 * Carga de paquetes
@@ -159,7 +166,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | kodi-remote                    |                                                                |
 | latex-preview-pane             |                                                                |
 | lorem-ipsum                    |                                                                |
-| lsp-javascript-typescript      |                                                                |
 | lsp-mode                       |                                                                |
 | lsp-ui                         |                                                                |
 | magic-latex-buffer             |                                                                |
@@ -326,7 +332,6 @@ Estoy usando =treemacs= en vez de =neotree=.
         treemacs-git-conflict-face
         treemacs-term-node-face                
         treemacs-on-success-pulse-face         
-        treemacs-on-failure-pulse-face          
        ))
   )
 #+end_src
@@ -643,7 +648,11 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
 *** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
-  (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.1.2018.11.jar"))
+  (if
+      (file-exists-p "/usr/share/plantuml/plantuml.jar")
+      (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar")
+    (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.1.2018.11.jar")))
+
   (setq plantuml-jar-path org-plantuml-jar-path)
 
   (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t) (plantuml . t ) ( C . t)))
@@ -662,7 +671,7 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
  Además, no pido confirmación para varios lenguajes                                                                                                           
  #+begin_src emacs-lisp
  (defun my-org-confirm-babel-evaluate (lang body)                                                                                                             
-   (not (member lang '("dot" "emacs-lisp" "shell"))))
+   (not (member lang '("dot" "emacs-lisp" "shell" "plantuml"))))
  (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)                                                                                             
 #+end_src
 
@@ -1218,9 +1227,9 @@ Avoid performance issues in files with very long lines.
     (define-key centaur-tabs-backward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-left) 
     (define-key centaur-tabs-forward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-right)
 
+    (setq centaur-tabs--track-selected t) 
     )
 #+end_src
-
 
 
 
@@ -1234,14 +1243,18 @@ Avoid performance issues in files with very long lines.
 
 ** Marcar las ocurrencias de la selección
 #+begin_src emacs-lisp
-(use-package region-occurrences-highlighter 
-  :ensure t
-  :defer 1
-  :config
-  (add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
-  (add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
-)
+  (use-package region-occurrences-highlighter 
+    :ensure t
+    :defer 1
+    :config
+    (add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
+    (add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
+
+    (add-hook 'text-mode-hook #'region-occurrences-highlighter-mode)
+
+  )
 #+end_src
+
 
 
 ** /scroll bars/
@@ -2051,6 +2064,7 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
 - https://github.com/honmaple/emacs-maple-minibuffer/blob/master/README.org
+- http://blog.binchen.org/posts/effective-git-blame-in-emacs.html
 - https://github.com/astoff/digestif/blob/master/README.md
 - Elfeed
 - Zoom-frm
