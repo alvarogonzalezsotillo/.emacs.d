@@ -1571,7 +1571,7 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
     (transient-suffix-put 'magit-dispatch "E" :command 'vdiff-magit)
 
     ;; This flag will default to using ediff for merges.
-    ;; (setq vdiff-magit-use-ediff-for-merges nil)
+    (setq vdiff-magit-use-ediff-for-merges nil)
 
     ;; Whether vdiff-magit-dwim runs show variants on hunks.  If non-nil,
     ;; vdiff-magit-show-staged or vdiff-magit-show-unstaged are called based on what
@@ -1583,9 +1583,10 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
     ;; (setq vdiff-magit-show-stash-with-index t)
 
     ;; Only use two buffers (working file and index) for vdiff-magit-stage
-    ;; (setq vdiff-magit-stage-is-2way nil)#+end_src
+    (setq vdiff-magit-stage-is-2way nil)
     )
 #+end_src
+
 
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
