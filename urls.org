@@ -49,8 +49,45 @@ Entrega de programaciones: https://aulavirtual3.educa.madrid.org/ies.alonsodeave
    | Departamento              | http://aulavirtual2.educa.madrid.org/course/view.php?id=12364    |                                             |
 
 
+* radios
+http://portalvasco.com/blog/2019/07/escuchar-radio-online-streaming-vlc-similares/
+Noticias, debates, variedades
 
+Cadena Ser – http://playerservices.streamtheworld.com/api/livestream-redirect/CADENASER.mp3
+Cope – http://net2.cope.stream.flumotion.com/cope/net2.mp3
+esRadio – http://livestreaming3.esradio.fm/stream64.mp3
+Intereconomía – http://212.85.46.144/siliconorg
+Onda Cero – http://icecast-streaming.nice264.com/ondacero
+Radio Marca – http://radiomarca.streaming-pro.com:8030/radiomarca.mp3
+RNE – http://rne.rtveradio.cires21.com/rne/mp3/icecast.audio
+RNE 3 – http://radio3.rtveradio.cires21.com/radio3.mp3
+RNE 4 – http://radio4.rtveradio.cires21.com/radio4.mp3
+RNE 5 – http://radio5.rtveradio.cires21.com/radio5/mp3/icecast.audio
+RNE Clásica – http://radioclasica.rtveradio.cires21.com/radioclasica/mp3/icecast.audio
+RNE Exterior – http://radioexterior.rtveradio.cires21.com/radioexterior/mp3/icecast.audio
 
+Música
+
+Cadena 100 – http://cadena100.cope.stream.flumotion.com/cope/cadena100.mp3.m3u
+Cadena Dial – http://playerservices.streamtheworld.com/api/livestream-redirect/CADENADIAL.mp3
+Europa FM – http://icecast-streaming.nice264.com/europafm
+Happy FM – http://happyfm.streaming-pro.com:6020/live.mp3.m3u
+Hit FM – http://hitfm.kissfmradio.cires21.com/hitfm.mp3
+Ke Buena – http://playerservices.streamtheworld.com/api/livestream-redirect/KEBUENA_ES.mp3
+Kiss FM – http://kissfm.kissfmradio.cires21.com/kissfm.mp3
+La Jungla Radio – http://52.56.52.247:8005/lajunglaweb
+Los 40 – http://playerservices.streamtheworld.com/api/livestream-redirect/Los40.mp3
+Los 40 Classic – http://19393.live.streamtheworld.com/LOS40_CLASSIC.mp3
+Maxima FM – http://playerservices.streamtheworld.com/api/livestream-redirect/MAXIMAFM.mp3
+Megastar FM – http://megastar.cope.stream.flumotion.com/cope/megastar.mp3.m3u
+Melodia FM – http://icecast-streaming.nice264.com/melodiafm
+Oye Radio – http://5.135.155.232:8009/stream
+Que! Radio – http://radioserver9.profesionalhosting.com:59622
+Radio4G – http://r4g-mp3-live.flumotion.com/r4g/r4g-mp3-live.mp3
+Radio Dance – http://streaming.radionomy.com/1-Radio-Dance
+Radio Planeta – http://5.79.66.113:8004
+Radiolé – http://playerservices.streamtheworld.com/api/livestream-redirect/RADIOLE.mp3
+RockFM – http://rockfm.cope.stream.flumotion.com/cope/rockfm.mp3.m3u
 
 * Calendarios
 
@@ -65,6 +102,10 @@ Entrega de programaciones: https://aulavirtual3.educa.madrid.org/ies.alonsodeave
 | gbd            | 0aa5eh8ar9bv0h8efu1eb9tibc@group.calendar.google.com | <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=2&amp;hl=es&amp;bgcolor=%23FFFFFF&amp;src=0aa5eh8ar9bv0h8efu1eb9tibc@group.calendar.google.com&amp;color=%23B1440E&amp;ctz=Europe%2FMadrid" style="border-width:0" width="100%" height="600" frameborder="0" scrolling="no"></iframe> |                                                                                                                        |                                                                                                                                         |
 | par            | 13ppt1vpo9jn6chevf8i8m6m4o@group.calendar.google.com | <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=2&amp;hl=es&amp;bgcolor=%23FFFFFF&amp;src=13ppt1vpo9jn6chevf8i8m6m4o@group.calendar.google.com&amp;color=%23B1440E&amp;ctz=Europe%2FMadrid" style="border-width:0" width="100%" height="600" frameborder="0" scrolling="no"></iframe> |                                                                                                                        |                                                                                                                                         |
 #+TBLFM: $3='(concat @2$4 $2 @2$5)
+
+dGljbzF2YWxsZWluY2xhbgppbmY0dmFsbGVpbmNsYW4KYWx2YXJvLnJzc2ZlZWQKZnJpa2lzbW9z
+CmFnc2llc2F2ZWxsYW5lZGEK
+
 
 ** Iframes para el moodle
 
@@ -509,3 +550,31 @@ done;
 - /home/alvaro/github/dunnet-solver
 - /home/alvaro/github/palabras-anagramadas
 - /home/alvaro/github/escultura
+
+* Películas
+** ad astra
+** alita
+** hellboy 2019
+** terminator dark fate
+** men in black international
+** géminis
+** maléfica: maestra del mal
+** star wars ix
+** El silencio de la ciudad blanca
+**  Mission Imposible Fallout
+** Spiderman un nuevo universo
+** Bohemian Rhapsody
+** El corredor del laberinto: cura mortal
+** aniquilación
+** high life
+** gorrión rojo
+** ready player one
+** La la land
+** anna
+** hardcore henry
+** doom annihilation
+** la familia Addams
+
+** i am a hero
+
+** el silencio de la Ciudad Blanca

@@ -34,21 +34,25 @@ Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplement
     (byte-recompile-directory (expand-file-name "~/.emacs.d/elpa") 0 t)
   #+END_SRC
 
-- En instalaciones nuevas, la carga final de =custom.el= falla si no existe.
-  #+begin_src sh
-  touch ~/.emacs.d/custom.el
+- El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
+  #+begin_src emacs-lisp
+  (setq custom-file "~/.emacs.d/custom-file.el")
   #+end_src
 
 
+
 * Utilidades externas al /PATH/
-En el directorio =~/.emacs.d/bin/= guardo algunas utilidades que me interesa tener en todos los entornos de trabajo. Lo siguiente es para que estén disponibles desde las /shells/ que arranque desde emacs
+En el directorio =~/.emacs.d/bin/= guardo algunas utilidades que me interesa tener en todos los entornos de trabajo. Lo siguiente es para que estén disponibles desde las /shells/ que arranque desde emacs.
+
 #+begin_src emacs-lisp
   (setq exec-path-separator
         (if (string-equal system-type "windows-nt") ";" ":"))
   (setenv "PATH"
-          (concat (expand-file-name "~/.emacs.d/bin") exec-path-separator (getenv "PATH")))
-  (setq exec-path (append exec-path '("~/.emacs.d/bin")))
+          (concat (expand-file-name user-emacs-directory) "bin" exec-path-separator (getenv "PATH")))
+  (add-to-list 'exec-path (concat (expand-file-name user-emacs-directory) "bin"))
 #+end_src
+
+
 
 
 Las utilidades pueden consultarse en el [[https://github.com/alvarogonzalezsotillo/.emacs.d/tree/master/bin][repositorio en github]], y son:
@@ -57,18 +61,25 @@ ls ~/.emacs.d/bin
 #+end_src
 
 #+RESULTS:
-| addtopath.sh           |
-| ec                     |
-| ghpages.sh             |
-| gifttolatex            |
-| githubclone.sh         |
-| keymon.sh              |
-| plantuml.1.2018.11.jar |
-| rmtemplatex.sh         |
-| shrinkpdf.sh           |
-| svg2pdf.sh             |
-| vncserver.sh           |
-| wake-alvarogonzalez.sh |
+| addtopath.sh                |
+| bfg-1.13.0.jar              |
+| colores-terminal.sh         |
+| colores-tty.sh              |
+| disable-gnome-animations.sh |
+| ec                          |
+| ghpages.sh                  |
+| gifttolatex                 |
+| githubclone.sh              |
+| keymon.sh                   |
+| pdf2svg.sh                  |
+| plantuml.1.2018.11.jar      |
+| rmtemplatex.sh              |
+| shellcheck                  |
+| shrinkpdf.sh                |
+| svg2pdf.sh                  |
+| texlab                      |
+| vncserver.sh                |
+| wake-alvarogonzalez.sh      |
 
 
 * Carga de paquetes
@@ -155,7 +166,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | kodi-remote                    |                                                                |
 | latex-preview-pane             |                                                                |
 | lorem-ipsum                    |                                                                |
-| lsp-javascript-typescript      |                                                                |
 | lsp-mode                       |                                                                |
 | lsp-ui                         |                                                                |
 | magic-latex-buffer             |                                                                |
@@ -196,6 +206,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | treemacs-projectile            |                                                                |
 | use-package                    |                                                                |
 | use-ttf                        | Instala la fuente por defecto en todos los sistemas            |
+| vdiff                          |                                                                |
 | vim-empty-lines-mode           |                                                                |
 | volatile-highlights            |                                                                |
 | web-beautify                   |                                                                |
@@ -210,10 +221,7 @@ Por cada paquete sin opciones especiales, simplemente lo cargo con =use-package=
 
 El bucle =dolist= se realiza sobre los datos de la tabla =mis-paquetes=. Cada fila se recibe como una lista de columnas, así que me quedo con la primera columna y la convierto a un =symbol=. Después, construyo la llamada a =use-package= y la evaluo (como =use-package= es una macro, no puedo hacerlo directamente)
 #+BEGIN_SRC emacs-lisp :var mis-paquetes=mis-paquetes
-  (message "Valor de mis-paquetes: %s" mis-paquetes)
   (dolist (paquete mis-paquetes)
-    (message "La variable con el paquete es del tipo: %s: %s" (type-of paquete) paquete)
-    (message "Voy a cargar el paquete: %s" (car paquete))
     (setq lista `(use-package ,(intern (car paquete)) :defer 1 :ensure t ) )
     (eval lista))
 #+END_SRC
@@ -226,6 +234,17 @@ Por último, el paquete =ob-scala= es un paquete local bajado de [[https://githu
 (add-to-list 'load-path "~/.emacs.d/mis-paquetes")
 (require 'ob-scala)
 #+end_src
+
+
+** Paquete =simple-httpd=
+Añado algunos /mime-type/ al servidor HTTP
+#+BEGIN_SRC emacs-lisp
+  (use-package simple-httpd
+    :defer 1
+    :config
+    (add-to-list 'httpd-mime-types '("mjs" . "text/javascript") ))
+#+END_SRC
+
 
 ** rust
 #+begin_src emacs-lisp
@@ -288,8 +307,36 @@ Estoy usando =treemacs= en vez de =neotree=.
       (treemacs--tear-down-git-mode)
       (setq treemacs-silent-refresh t)
       (setq treemacs--persist-kv-regex "^ ?- \\(?:\\sw\\|\\s_\\|\\s.\\)+ :: \\(?:/\\|\\sw\\|\\s_\\|\\s.\\|[[:space:]]\\)+$")
+
+
+    (mapcar
+     (lambda (face) (set-face-attribute face nil :height 0.8) )
+     '(
+        treemacs-directory-face                
+        treemacs-directory-collapsed-face      
+        ;treemacs-file-face                     
+        treemacs-root-face                     
+        treemacs-root-unreadable-face          
+        treemacs-root-remote-face              
+        treemacs-root-remote-unreadable-face   
+        treemacs-root-remote-disconnected-face 
+        treemacs-tags-face                     
+        treemacs-help-title-face               
+        treemacs-help-column-face              
+        treemacs-git-unmodified-face
+        treemacs-git-modified-face
+        treemacs-git-renamed-face
+        treemacs-git-ignored-face
+        treemacs-git-untracked-face
+        treemacs-git-added-face
+        treemacs-git-conflict-face
+        treemacs-term-node-face                
+        treemacs-on-success-pulse-face         
+       ))
   )
 #+end_src
+
+#+RESULTS:
 
 
 
@@ -381,7 +428,8 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 
 ** Paquete =yasnippet=
 Plantillas para introducción rápida de partes del texto. =yasnippet= interfiere con otros modos en su uso del tabulador, así que cambio su combinación.
-#+begin_src emacs-lisp
+Lo he deshabilitado porque lo uso muy rara vez, y tarda bastante en actualizarse
+#+begin_src lisp
 (use-package yasnippet
   :ensure t
   :config 
@@ -506,6 +554,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
 #+end_src
 
+
 Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta el /case/
 #+begin_src emacs-lisp
   (setq company-dabbrev-code-everywhere t)
@@ -560,20 +609,6 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
   (use-package org
     :ensure t
     :config
-    ; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
-    (require 'org-tempo)
-    (setq org-structure-template-alist 
-          '(("n" . "notes")
-            ("a" . "export ascii")
-            ("c" . "center")
-            ("C" . "comment")
-            ("e" . "example")
-            ("E" . "export")
-            ("h" . "export html")
-            ("l" . "export latex")
-            ("q" . "quote")
-            ("s" . "src")
-            ("v" . "verse")))
 
     (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
     (modify-syntax-entry ?= "(=" org-mode-syntax-table)
@@ -585,14 +620,27 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
     (setq org-latex-prefer-user-labels t)
 
 
-    ;; (("L" . "latex")
-    ;;  ("H" . "html")
-    ;;  ("A" . "ascii")
-    ;;  ("i" . "index"))
-    )
+    ; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
+    (ignore-errors
+      (require 'org-tempo)
+
+      ; si no existe org-tempo no se llega aquí, lo cual está bien porque lo siguiente solo hay que hacerlo para org-tempo
+      (setq org-structure-template-alist 
+            '(("n" . "notes")
+              ("a" . "export ascii")
+              ("c" . "center")
+              ("C" . "comment")
+              ("e" . "example")
+              ("E" . "export")
+              ("h" . "export html")
+              ("l" . "export latex")
+              ("q" . "quote")
+              ("s" . "src")
+              ("v" . "verse")))
+
+      )
+  )
 #+end_src
-
-
 
 
 
@@ -600,7 +648,11 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
 *** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
-  (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.1.2018.11.jar"))
+  (if
+      (file-exists-p "/usr/share/plantuml/plantuml.jar")
+      (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar")
+    (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.1.2018.11.jar")))
+
   (setq plantuml-jar-path org-plantuml-jar-path)
 
   (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t) (plantuml . t ) ( C . t)))
@@ -619,7 +671,7 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
  Además, no pido confirmación para varios lenguajes                                                                                                           
  #+begin_src emacs-lisp
  (defun my-org-confirm-babel-evaluate (lang body)                                                                                                             
-   (not (member lang '("dot" "emacs-lisp" "shell"))))
+   (not (member lang '("dot" "emacs-lisp" "shell" "plantuml"))))
  (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)                                                                                             
 #+end_src
 
@@ -726,12 +778,11 @@ Tampoco me interesan los ficheros de /lock/.
 
 Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
 #+begin_src emacs-lisp
-
 (setq LaTeX-verbatim-environments
       '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql"))
 #+end_src
 
-Para imenu
+Para imenu, defino una macro de Latex que no hace nada, pero que detecto en imenu.
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'TeX-outline-extra '("imenu" 2))
 (add-to-list 'TeX-outline-extra '("imenu1" 1))
@@ -810,26 +861,6 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
       (setq ahs-default-range 'ahs-range-display))
 #+end_src
 
-** Paquete =swiper= y =swoop=
-
-=swiper= es un sistema de búsqueda de patrones en el buffer, con visualización simultánea de todas las ocurrencias, y también usa =helm=. Ahora estoy valorando si me quedo con =swiper= o =swoop=. Lo siguiente es para hacer que también aparezca en una /child frame/.
-
-#+begin_src lisp
-(use-package swiper
-  :ensure t
-  :defer 1
-  :after (helm)
-  :config
-    )
-
-
-(use-package swoop
-  :ensure t
-  :defer 1
-  :after (helm)
-  :config
-
-#+end_src
 
 
 
@@ -858,18 +889,20 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
     (setq helm-echo-input-in-header-line t)
     (setq helm-display-buffer-reuse-frame t)
     (setq helm-use-undecorated-frame-option t)
+
+
+    ;https://www.reddit.com/r/emacs/comments/345vtl/make_helm_window_at_the_bottom_without_using_any/
+    ;HELM SIEMPRE ABAJO CON ANCHO COMPLETO
+    (add-to-list 'display-buffer-alist
+                    `(,(rx bos "*helm" (* not-newline) "*" eos)
+                         (display-buffer-in-side-window)
+                         (inhibit-same-window . t)
+                         (window-height . 0.4)))
+
   :after (tramp) ;; PARA EVITAR EL ERROR Symbols's value as variable is void: tramp-methods
 )
 
 
-(use-package helm-projectile
-  :ensure t
-  :defer 1
-  :config 
-    (helm-projectile-on)
-    (setq projectile-completion-system 'helm)
-  :after (helm)
-)
 
 #+end_src
 
@@ -880,6 +913,8 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 #+begin_src lisp
 (setq helm-display-function 'helm-display-buffer-in-own-frame
       helm-display-buffer-width 120)
+
+;;; helm-popup-frame debería tener el foco
 
 (setq swiper-helm-display-function helm-display-function)
 (setq helm-swoop-split-window-function helm-display-function)
@@ -899,7 +934,18 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   :config
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
     (setq projectile-switch-project-action 'projectile-dired)
+    (setq projectile-indexing-method 'hybrid)
     (projectile-mode 1))
+
+(use-package helm-projectile
+  :ensure t
+  :defer 1
+  :config 
+    (helm-projectile-on)
+    (setq projectile-completion-system 'helm)
+  :after (helm)
+)
+
 #+end_src
 
 *** Paquete =ox-reveal=
@@ -1089,13 +1135,6 @@ El ratón también puede utilizarse en un =xterm=
 #+end_src
 
 
-
-
-
-
-
-
-
 * Visualización
 
 ** Previsualización de ficheros en Helm
@@ -1117,29 +1156,82 @@ Avoid performance issues in files with very long lines.
 #+begin_src emacs-lisp
   (use-package centaur-tabs
     :ensure t
+    :defer 1
     :config
-    (centaur-tabs-mode t)
     (setq centaur-tabs-set-icons t)
-    (setq centaur-tabs-style "chamfer")
+    (setq centaur-tabs-style "alternate")
     (setq centaur-tabs-set-modified-marker t)
+    (setq centaur-tabs-gray-out-icons 'buffer)
+    (setq centaur-tabs-set-bar 'over)
+    (setq centaur-tabs-cycle-scope 'tabs)
+    (setq centaur-tabs-show-navigation-buttons t)
+
+    (defun my-centaur-tabs-hide-tab (x)
+      "Incluir magit entre los visibles."
+      (let ((name (format "%s" x)))
+        (or
+         ;; Current window is not dedicated window.
+         (window-dedicated-p (selected-window))
+
+         ;; Buffer name not match below blacklist.
+         (string-prefix-p "*epc" name)
+         (string-prefix-p "*helm" name)
+         (string-prefix-p "*Compile-Log*" name)
+         (string-prefix-p "*lsp" name)
+         (string-prefix-p "*company" name)
+         (string-prefix-p "*Flycheck" name)
+         (string-prefix-p "*tramp" name)
+         (string-prefix-p " *Mini" name)
+         (string-prefix-p "*help" name)
+         (string-prefix-p "*Help" name)
+         (string-prefix-p "*Helm" name)
+
+         )))
+
+    (setq centaur-tabs-hide-tabs-hooks '(reb-mode-hook completion-list-mode-hook))
+    (setq centaur-tabs-hide-tab-function 'my-centaur-tabs-hide-tab)
+
+
+    (mapcar
+     (lambda (face) (set-face-attribute face nil :height 0.8) )
+     '(
+       centaur-tabs-active-bar-face
+       centaur-tabs-default
+       centaur-tabs-unselected
+       centaur-tabs-selected
+       centaur-tabs-unselected-modified
+       centaur-tabs-selected-modified
+       centaur-tabs-close-unselected
+       centaur-tabs-close-selected
+       centaur-tabs-close-mouse-face
+       centaur-tabs-modified-marker-selected
+       centaur-tabs-modified-marker-unselected
+       ))
+
+    (setq centaur-tabs-height 10)
+    (setq centaur-tabs-bar-height (+ 8 centaur-tabs-height))
+
+
+
+    (centaur-tabs-mode t)
     (centaur-tabs-group-by-projectile-project)
 
-    (defun my-centaur-tabs-buffer-groups ()
-      (list
-       (cond
-        ((or (string-equal "*" (substring (buffer-name) 0 1))
-             )
-         "Emacs")
-        (t
-         (centaur-tabs-get-group-name (current-buffer))))))
+    (defun my-maximize-or-split ()
+      (interactive)
+      (if (one-window-p)
+          (split-window-below)
+          (delete-other-window)))
 
+    (define-key centaur-tabs-mode-map centaur-tabs-prefix-key centaur-tabs-prefix-map)
+    (define-key centaur-tabs-mode-map (kbd "<header-line> <double-mouse-1>") 'my-maximize-or-split) 
+    (define-key centaur-tabs-backward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-left) 
+    (define-key centaur-tabs-forward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-right)
 
-    (setq centaur-tabs-buffer-groups-function 'my-centaur-tabs-buffer-groups)
+    (setq centaur-tabs--track-selected t) 
     )
 #+end_src
 
-#+RESULTS:
-: t
+
 
 ** Resaltar términos buscados
 =isearch= resalta las coincidencias con la búsqueda, pero se quitan al acabar de buscar. Con esto, las coincidencias quedan resaltadas hasta la siguiente búsqueda o hasta ejecutar =lazy-highlight-cleanup=
@@ -1151,14 +1243,18 @@ Avoid performance issues in files with very long lines.
 
 ** Marcar las ocurrencias de la selección
 #+begin_src emacs-lisp
-(use-package region-occurrences-highlighter 
-  :ensure t
-  :defer 1
-  :config
-  (add-hook 'prog-mode-hook 'region-occurrences-highlighter-mode)
-  (add-hook 'org-mode-hook 'region-occurrences-highlighter-mode)
-)
+  (use-package region-occurrences-highlighter 
+    :ensure t
+    :defer 1
+    :config
+    (add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
+    (add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
+
+    (add-hook 'text-mode-hook #'region-occurrences-highlighter-mode)
+
+  )
 #+end_src
+
 
 
 ** /scroll bars/
@@ -1174,9 +1270,9 @@ Avoid performance issues in files with very long lines.
 #+end_src
 
 ** Marcar la línea actual. 
-Está deshabilitado porque no funciona bien con /overlays/
-#+begin_src emacs-lisp
-(global-hl-line-mode -1)
+A veces lo deshabilito porque no funciona bien con /overlays/
+#+begin_src lisp
+(global-hl-line-mode 1)
 #+end_src
 
 ** Respuestas de confirmación más cortas
@@ -1213,9 +1309,8 @@ El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminale
 La barra de menú y la de herramientas es de lo primero que se quita al personalizar /emacs/, lo mismo que esa pantalla de inicio.
 #+begin_src emacs-lisp
 (setq inhibit-startup-message t)
-(menu-bar-mode -1)
-(if (display-graphic-p)
-  (tool-bar-mode -1))
+(ignore-errors (menu-bar-mode -1))
+(ignore-errors (tool-bar-mode -1))
 #+end_src
 
 ** Ancho de la página de =man=
@@ -1250,7 +1345,6 @@ Mi línea de estado (modeline)
                " | %IB %Z"
                " | %l:%c %p"
                mode-line-end-spaces
-
                ) )
 
 #+end_src
@@ -1341,17 +1435,15 @@ Cuando quiero cerrar un buffer, prefiero que no pregunte.
 
 En una búsqueda incremental, utilizo los cursores para ir a otras búsquedas anteriores o para navegar entre las ocurrencias en el fichero
 #+begin_src emacs-lisp
-  ;; TECLAS PARA ISEARCH
-  (progn
-    ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
-    (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
-    (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
+  ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
+  (define-key isearch-mode-map (kbd "<up>") 'isearch-ring-retreat )
+  (define-key isearch-mode-map (kbd "<down>") 'isearch-ring-advance )
 
-    (define-key isearch-mode-map (kbd "<left>") 'isearch-repeat-backward)
-    (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward)
+  (define-key isearch-mode-map (kbd "<left>") 'isearch-repeat-backward)
+  (define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward)
 
-    (define-key minibuffer-local-isearch-map (kbd "<left>") 'isearch-reverse-exit-minibuffer)
-    (define-key minibuffer-local-isearch-map (kbd "<right>") 'isearch-forward-exit-minibuffer))
+  (define-key minibuffer-local-isearch-map (kbd "<left>") 'isearch-reverse-exit-minibuffer)
+  (define-key minibuffer-local-isearch-map (kbd "<right>") 'isearch-forward-exit-minibuffer)
 
 
 #+end_src
@@ -1365,15 +1457,13 @@ A veces es fácil perderse entre comandos a medio introducir y ventanas popup. M
   (interactive)
   (keyboard-escape-quit)
   (keyboard-quit)
+  (company-abort)
   (abort-recursive-edit)
   (setq quit-flag t))
 (define-key global-map [escape] 'super-escape)
 (define-key minibuffer-local-map [escape] 'super-escape)
 (define-key company-active-map [escape] 'company-abort)
 #+end_src
-
-#+RESULTS:
-: company-abort
 
 
 
@@ -1466,6 +1556,38 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
 * Utilidades
 
+** =vdiff-magit=
+#+begin_src emacs-lisp
+  (use-package vdiff-magit
+    :ensure t
+    :defer 1
+    :config
+
+    (define-key magit-mode-map "e" 'vdiff-magit-dwim)
+    (define-key magit-mode-map "E" 'vdiff-magit)
+    (transient-suffix-put 'magit-dispatch "e" :description "vdiff (dwim)")
+    (transient-suffix-put 'magit-dispatch "e" :command 'vdiff-magit-dwim)
+    (transient-suffix-put 'magit-dispatch "E" :description "vdiff")
+    (transient-suffix-put 'magit-dispatch "E" :command 'vdiff-magit)
+
+    ;; This flag will default to using ediff for merges.
+    (setq vdiff-magit-use-ediff-for-merges nil)
+
+    ;; Whether vdiff-magit-dwim runs show variants on hunks.  If non-nil,
+    ;; vdiff-magit-show-staged or vdiff-magit-show-unstaged are called based on what
+    ;; section the hunk is in.  Otherwise, vdiff-magit-dwim runs vdiff-magit-stage
+    ;; when point is on an uncommitted hunk.
+    ;; (setq vdiff-magit-dwim-show-on-hunks nil)
+
+    ;; Whether vdiff-magit-show-stash shows the state of the index.
+    ;; (setq vdiff-magit-show-stash-with-index t)
+
+    ;; Only use two buffers (working file and index) for vdiff-magit-stage
+    (setq vdiff-magit-stage-is-2way nil)
+    )
+#+end_src
+
+
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
    #+begin_src emacs-lisp
@@ -1488,30 +1610,6 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
 
    #+RESULTS:
    : gifttolatex
-
-** Abrir proyecto en ventana nueva con neotree
-#+begin_src emacs-lisp
-
-  (defun abrir-proyecto--selecciona-proyecto ()
-    (helm :sources (helm-build-sync-source "Selecciona un proyecto"
-                     :candidates projectile-known-projects
-                     :fuzzy-match t)
-          :buffer "*Selección de proyecto*"))
-
-  (defun abrir-proyecto--seleccionado (proyecto)
-    (let ((frame (abrir-proyecto--selecciona-frame)))
-      (select-frame-set-input-focus frame)
-      (message (concat "El proyecto seleccionado es:" proyecto ))
-      (toggle-frame-maximized)
-      (dired proyecto)
-      (run-at-time "2" nil
-                 (lambda() (magit-status)))))
-
-  (defun abrir-proyecto()
-    (interactive)
-
-    (abrir-proyecto--seleccionado (abrir-proyecto--selecciona-proyecto) ))
-#+end_src
 
 ** Convierto el buffer actual a una frame nueva
 #+begin_src emacs-lisp
@@ -1735,7 +1833,7 @@ Este es mi horario lectivo (sin incluir guardias y otras horas que no son de doc
 
 ** Proxy de educamadrid
 Durante una temporada, en los colegios de la Comunidad de Madrid era obligatorio el uso de un proxy.
-#+begin_src emacs-lisp
+#+begin_src lisp
 (defun quitar-proxy()
   (interactive)
   (setq url-proxy-services '()))
@@ -1815,28 +1913,12 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
 #+end_src
 
 
-** Diferencias con la última versión de =git=, usando =git-gutter=
-#+begin_src emacs-lisp
-  (defun diferencias-git (&optional diffinfo)
-    "Popup current diff hunk."
-    (interactive)
-    (git-gutter:awhen (or diffinfo
-                          (git-gutter:search-here-diffinfo git-gutter:diffinfos))
-      (save-selected-window 
-        ;;(pop-to-buffer (git-gutter:update-popuped-buffer it))
-        (display-buffer-pop-up-frame (git-gutter:update-popuped-buffer it) nil)
-        )
-
-      )
-    )
-#+end_src
-
-
 
 * Apariencia
 
 ** Líneas vacías al final, como =vim=
-#+begin_src emacs-lisp
+Creo que esto se hace mejor con la variable =indicate-empty-lines=
+#+begin_src lisp
 (add-hook 'prog-mode-hook 'vim-empty-lines-mode)
 (add-hook 'org-mode-hook 'vim-empty-lines-mode)
 #+end_src
@@ -1890,7 +1972,6 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
       (display-line-numbers-mode 1))
   (auto-highlight-symbol-mode 1)
   (yafolding-mode 1)
-  (indent-guide-mode 1)
   (adaptive-wrap-prefix-mode 1))
 
 (defun bonito-para-latex()
@@ -1908,7 +1989,6 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 #+end_src
 
 
-
 ** /Fringes/
 Prefiero ocultar las flechas que indican que una línea se sale de la pantalla, y solo mostrar las de la derecha.
 
@@ -1920,26 +2000,28 @@ Prefiero ocultar las flechas que indican que una línea se sale de la pantalla, 
 ** Temas
 Tengo dos temas, claro y oscuro. El tema =alvaro= cambia algunos tamaños de letra (no colores).
 
-Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas en =custom-safe-themes= (lo he copiado del fichero =custom.el=).
+Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas en =custom-safe-themes= (lo he copiado del fichero =custom-file.el=).
+
+
 
 #+begin_src emacs-lisp
   (setq  custom-safe-themes  (quote
-  ("6e219d6b6a3f7e22888b203fd5492e12133ba40512be983858f05b42806fa573"
-  "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e"
-  "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" default)))
+("a63355b90843b228925ce8b96f88c587087c3ee4f428838716505fd01cf741c8" "6e219d6b6a3f7e22888b203fd5492e12133ba40512be983858f05b42806fa573" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" default)))
+
+  (defvar my-dark-theme 'sanityinc-tomorrow-bright)
+  (defvar my-light-theme 'intellij)
 
 
-
-       (defun tema-oscuro()
+       (defun tema-claro()
          (interactive)
-         (disable-theme 'intellij)
-         (load-theme 'sanityinc-tomorrow-bright)
+         (disable-theme my-dark-theme)
+         (load-theme my-light-theme)
          (load-theme 'alvaro t))
 
-       (defun tema-claro ()
+       (defun tema-oscuro ()
          (interactive)
-         (disable-theme 'sanityinc-tomorrow-bright)
-         (load-theme 'intellij t)
+         (disable-theme my-light-theme)
+         (load-theme my-dark-theme t)
          (load-theme 'alvaro t))
 
 
@@ -1953,38 +2035,38 @@ Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna c
 (tema-oscuro)
 #+end_src
 
-#+RESULTS:
-: t
 
 
 
 
 
-
-* /Customize/
-El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
-#+begin_src emacs-lisp
-(setq custom-file "~/.emacs.d/custom-file.el")
-(load custom-file)
-#+end_src
 
 
 * Escritorio
 Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago al final, para que se carguen ahora los buferes previos.
 #+begin_src emacs-lisp
   (save-place-mode 1)
-  (delete-file "/home/alvaro/.emacs.d/.emacs.desktop.lock")
+
   (use-package desktop
+    :defer 1
     :ensure t
-    :config         
-      (delete-file (desktop-full-lock-name))
-      (setq desktop-save t)
-      (desktop-save-mode))
+    :config
+    (setq desktop-load-locked-desktop t)
+    (setq desktop-save t)
+    (desktop-save-mode 1)
+    (when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
+        (desktop-read))
+    )
+
 #+end_src
+
 
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
+- https://github.com/honmaple/emacs-maple-minibuffer/blob/master/README.org
+- http://blog.binchen.org/posts/effective-git-blame-in-emacs.html
+- https://github.com/astoff/digestif/blob/master/README.md
 - Elfeed
 - Zoom-frm
 - org-re-reveal
@@ -1999,12 +2081,10 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - helm-tramp
 - https://gitlab.com/LazyLama/emacs_latex_class
 - https://github.com/patrickt/emacs/blob/master/init.el
-- https://github.com/ema2159/centaur-tabs/blob/master/README.org
 - https://melpa.org/#/helm-file-preview
 - color-rg
 - recentf-mode
 - (setq bookmark-save-flag 1)
-- save-place-mode
 - org-hide-emphasis-markers is a
 - openwith
 - calctex
@@ -2013,10 +2093,29 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - didyoumean.el 
 - BAT cat
 - statusbar.el
+- dired-single
+- recentf
+- https://www.wezm.net/technical/2019/10/useful-command-line-tools/
 
 
 
 
+#+begin_src emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/mis-paquetes/lsp-latex")
+(require 'lsp-latex)
+;; "texlab" must be located at a directory contained in `exec-path'.
+;; If you want to put "texlab" somewhere else,
+;; you can specify the path to "texlab" as follows:
+;; (setq lsp-latex-texlab-executable "/path/to/texlab")
+
+(with-eval-after-load "tex-mode"
+ (add-hook 'tex-mode-hook 'lsp)
+ (add-hook 'latex-mode-hook 'lsp))
+
+;; For YaTeX
+(with-eval-after-load "yatex"
+ (add-hook 'yatex-mode-hook 'lsp))
+#+end_src
 
 * usettf
 
@@ -2059,3 +2158,21 @@ Actualmente desactivado
 #+LATEX_HEADER: \cfoot{}
 #+LATEX_HEADER: \lfoot{alvarogonzalezsotillo@gmail.com}
 #+LATEX_HEADER: \rfoot{\thepage}
+
+* localizar android
+** bluetooth discovery https://code.tutsplus.com/tutorials/create-a-bluetooth-scanner-with-androids-bluetooth-api--cms-24084
+https://developer.android.com/reference/android/bluetooth/BluetoothAdapter.html
+
+** umts
+https://stackoverflow.com/questions/20981074/ecgi-and-cgi-for-lte-and-gsm-networks
+https://comunidad.orange.es/t5/Android/TRUCO-Descubriendo-todo-lo-relacionado-con-la-cobertura-en-Android-post-100-geek/td-p/290749
+https://gabinetejuridicotecnologicojuandemeseguer.es/localizacion-posicionamiento-moviles-mediante-sistemas-moviles-gps
+https://ltve.wordpress.com/2015/09/30/android-con-api-opencellid-json-geolocalizar-bts/
+https://developer.android.com/reference/android/telephony/TelephonyManager.html#getAllCellInfo()
+
+** wifi
+https://developer.android.com/reference/android/net/wifi/ScanResult.html
+
+** location
+https://developer.android.com/training/location/retrieve-current#java
+

@@ -1,0 +1,3 @@
+[submodule "mis-paquetes/lsp-latex"]
+	path = mis-paquetes/lsp-latex
+	url = https://github.com/ROCKTAKEY/lsp-latex.git

@@ -99,7 +99,7 @@ digraph{
   "bus" -> "Fifth-Sycamore intersection" [style="dotted"]
 
   "Fifth-Vermont intersection" -> "Fifth-Oaktree intersection" [taillabel="s"]
-  "Fifth-Oaktree intersection" -> "Cliff" [taillabel="w"]   
+  "Fifth-Oaktree intersection" -> "Cliff" [taillabel="e"]   
   "coins" -> "Fifth-Oaktree intersection" [style="dotted"]
   "Fifth-Oaktree intersection" -> "Fifth-Maple intersection" [taillabel="s"]    
 
@@ -141,6 +141,53 @@ digraph{
  "Fourth-Vermont intersection" -> "Fifth-Vermont intersection" [taillabel="e"]
 
  "Museum entrance" -> "Museum lobby" [taillabel="n"]
+ "bone" ->                   "Museum lobby" [style="dotted"]
+
+ "Museum lobby" -> "Geological display" [taillabel="e"]
+
+ "acid" ->                   "Maintenance room" [style="dotted"]
+ "Geological display" -> "Maintenance room" [taillabel="e"]
+
+ "glycerine" ->                   "Classroom" [style="dotted"]
+ "Maintenance room" -> "Classroom" [taillabel="n"]
+
+ "ruby" ->                   "Marine life area" [style="dotted"]
+ "jar" ->                   "Marine life area" [style="dotted"]
+ "Classroom" -> "Marine life area" [taillabel="w"]
+
+ "Marine life area" -> "Geological display" [taillabel="s"]
+
+ "Fourth-Vermont intersection" -> "Vermont station" [taillabel="?"]
+
+
+
+ "Vermont station" -> "Museum station" [taillabel="in"]
+
+ "Museum station" -> "N/S tunnel" [taillabel="n"]
+ "N/S tunnel" -> "North end of N/S tunnel" [taillabel="n"]
+
+ "North end of N/S tunnel" -> "Top of subway stairs" [taillabel="u"]
+
+ "amethyst" ->                   "Bottom of subway stairs" [style="dotted"]
+
+ "North end of N/S tunnel" -> "Bottom of subway stairs" [taillabel="d"]
+
+ "Bottom of subway stairs" -> "Endgame computer room" [taillabel="d"]
+
+ "Computer room" -> "Treasure room" [taillabel="?"]
+
+ "Treasure room" -> "Question room 1" [taillabel="n"]
+
+ "Question room 1" -> "Question room 2" [taillabel="n"]
+
+ "Question room 2" -> "Question room 3" [taillabel="n"]
+
+ "Question room 3" -> "Endgame treasure room" [taillabel="n"]
+
+ "Mona Lisa" ->                   "Winner's room" [style="dotted"]
+
+ "Endgame treasure room" -> "Winner's room" [taillabel="n"]
+
 }
 
 #+END_SRC
