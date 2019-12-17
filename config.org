@@ -2068,7 +2068,7 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 
 
 
-#+begin_src emacs-lisp
+#+begin_src lisp
 (add-to-list 'load-path "~/.emacs.d/mis-paquetes/lsp-latex")
 (require 'lsp-latex)
 ;; "texlab" must be located at a directory contained in `exec-path'.
