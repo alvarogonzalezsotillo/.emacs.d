@@ -2060,6 +2060,22 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
 
 #+end_src
 
+* KMS
+
+Manual
+https://raw.githubusercontent.com/Wind4/vlmcsd/master/man/vlmcsd.7
+
+Servicio de ubuntu
+https://blog.thirdechelon.org/2019/06/vlmcsd-on-ubuntu-18-04/
+
+Esta parece la fuente
+https://github.com/kkkgo/vlmcsd
+
+Binario de raspberry
+https://github.com/Wind4/vlmcsd/issues/28
+
+Docker de raspberry
+https://github.com/elarkasi/raspi-kms
 
 
 * Futuras adiciones
