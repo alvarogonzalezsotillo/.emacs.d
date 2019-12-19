@@ -199,6 +199,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | skewer-mode                    |                                                                |
 | swiper-helm                    |                                                                |
 | switch-window                  |                                                                |
+| systemd                        |                                                                |
 | tablist                        |                                                                |
 | transmission                   |                                                                |
 | transpose-frame                |                                                                |
