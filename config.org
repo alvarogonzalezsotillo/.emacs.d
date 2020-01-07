@@ -61,18 +61,25 @@ ls ~/.emacs.d/bin
 #+end_src
 
 #+RESULTS:
-| addtopath.sh           |
-| ec                     |
-| ghpages.sh             |
-| gifttolatex            |
-| githubclone.sh         |
-| keymon.sh              |
-| plantuml.1.2018.11.jar |
-| rmtemplatex.sh         |
-| shrinkpdf.sh           |
-| svg2pdf.sh             |
-| vncserver.sh           |
-| wake-alvarogonzalez.sh |
+| addtopath.sh                |
+| bfg-1.13.0.jar              |
+| colores-terminal.sh         |
+| colores-tty.sh              |
+| disable-gnome-animations.sh |
+| ec                          |
+| ghpages.sh                  |
+| gifttolatex                 |
+| githubclone.sh              |
+| keymon.sh                   |
+| pdf2svg.sh                  |
+| plantuml.1.2018.11.jar      |
+| rmtemplatex.sh              |
+| shellcheck                  |
+| shrinkpdf.sh                |
+| svg2pdf.sh                  |
+| texlab                      |
+| vncserver.sh                |
+| wake-alvarogonzalez.sh      |
 
 
 * Carga de paquetes
@@ -159,7 +166,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | kodi-remote                    |                                                                |
 | latex-preview-pane             |                                                                |
 | lorem-ipsum                    |                                                                |
-| lsp-javascript-typescript      |                                                                |
 | lsp-mode                       |                                                                |
 | lsp-ui                         |                                                                |
 | magic-latex-buffer             |                                                                |
@@ -193,6 +199,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | skewer-mode                    |                                                                |
 | swiper-helm                    |                                                                |
 | switch-window                  |                                                                |
+| systemd                        |                                                                |
 | tablist                        |                                                                |
 | transmission                   |                                                                |
 | transpose-frame                |                                                                |
@@ -200,6 +207,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | treemacs-projectile            |                                                                |
 | use-package                    |                                                                |
 | use-ttf                        | Instala la fuente por defecto en todos los sistemas            |
+| vdiff                          |                                                                |
 | vim-empty-lines-mode           |                                                                |
 | volatile-highlights            |                                                                |
 | web-beautify                   |                                                                |
@@ -325,7 +333,6 @@ Estoy usando =treemacs= en vez de =neotree=.
         treemacs-git-conflict-face
         treemacs-term-node-face                
         treemacs-on-success-pulse-face         
-        treemacs-on-failure-pulse-face          
        ))
   )
 #+end_src
@@ -642,7 +649,11 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
 *** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
-  (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.1.2018.11.jar"))
+  (if
+      (file-exists-p "/usr/share/plantuml/plantuml.jar")
+      (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar")
+    (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.1.2018.11.jar")))
+
   (setq plantuml-jar-path org-plantuml-jar-path)
 
   (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t) (plantuml . t ) ( C . t)))
@@ -661,7 +672,7 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
  Además, no pido confirmación para varios lenguajes                                                                                                           
  #+begin_src emacs-lisp
  (defun my-org-confirm-babel-evaluate (lang body)                                                                                                             
-   (not (member lang '("dot" "emacs-lisp" "shell"))))
+   (not (member lang '("dot" "emacs-lisp" "shell" "plantuml"))))
  (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)                                                                                             
 #+end_src
 
@@ -1217,9 +1228,9 @@ Avoid performance issues in files with very long lines.
     (define-key centaur-tabs-backward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-left) 
     (define-key centaur-tabs-forward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-right)
 
+    (setq centaur-tabs--track-selected t) 
     )
 #+end_src
-
 
 
 
@@ -1233,14 +1244,18 @@ Avoid performance issues in files with very long lines.
 
 ** Marcar las ocurrencias de la selección
 #+begin_src emacs-lisp
-(use-package region-occurrences-highlighter 
-  :ensure t
-  :defer 1
-  :config
-  (add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
-  (add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
-)
+  (use-package region-occurrences-highlighter 
+    :ensure t
+    :defer 1
+    :config
+    (add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
+    (add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
+
+    (add-hook 'text-mode-hook #'region-occurrences-highlighter-mode)
+
+  )
 #+end_src
+
 
 
 ** /scroll bars/
@@ -1541,6 +1556,38 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
 
 * Utilidades
+
+** =vdiff-magit=
+#+begin_src emacs-lisp
+  (use-package vdiff-magit
+    :ensure t
+    :defer 1
+    :config
+
+    (define-key magit-mode-map "e" 'vdiff-magit-dwim)
+    (define-key magit-mode-map "E" 'vdiff-magit)
+    (transient-suffix-put 'magit-dispatch "e" :description "vdiff (dwim)")
+    (transient-suffix-put 'magit-dispatch "e" :command 'vdiff-magit-dwim)
+    (transient-suffix-put 'magit-dispatch "E" :description "vdiff")
+    (transient-suffix-put 'magit-dispatch "E" :command 'vdiff-magit)
+
+    ;; This flag will default to using ediff for merges.
+    (setq vdiff-magit-use-ediff-for-merges nil)
+
+    ;; Whether vdiff-magit-dwim runs show variants on hunks.  If non-nil,
+    ;; vdiff-magit-show-staged or vdiff-magit-show-unstaged are called based on what
+    ;; section the hunk is in.  Otherwise, vdiff-magit-dwim runs vdiff-magit-stage
+    ;; when point is on an uncommitted hunk.
+    ;; (setq vdiff-magit-dwim-show-on-hunks nil)
+
+    ;; Whether vdiff-magit-show-stash shows the state of the index.
+    ;; (setq vdiff-magit-show-stash-with-index t)
+
+    ;; Only use two buffers (working file and index) for vdiff-magit-stage
+    (setq vdiff-magit-stage-is-2way nil)
+    )
+#+end_src
+
 
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
@@ -2014,10 +2061,27 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
 
 #+end_src
 
+* KMS
+
+Manual
+https://raw.githubusercontent.com/Wind4/vlmcsd/master/man/vlmcsd.7
+
+Servicio de ubuntu
+https://blog.thirdechelon.org/2019/06/vlmcsd-on-ubuntu-18-04/
+
+Esta parece la fuente
+https://github.com/kkkgo/vlmcsd
+
+Binario de raspberry
+https://github.com/Wind4/vlmcsd/issues/28
+
+Docker de raspberry
+https://github.com/elarkasi/raspi-kms
 
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
+
 
 (setq org-ellipsis "⤵")
 aftersave-add-hook
