@@ -2018,6 +2018,28 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
+
+(setq org-ellipsis "⤵")
+aftersave-add-hook
+
+(setq org-src-fontify-natively t)
+
+Trying to fix indentation behaviour within code blocks.
+
+(setq org-edit-src-content-indentation 0)
+(setq org-src-tab-acts-natively t)
+(setq org-src-preserve-indentation t)
+
+setq org-html-htmlize-output-type 'css)
+
+
+(setq org-download-method 'attach)
+
+
+- bandwich
+-  git-auto-commit-mode 1
+- visual-regexp
+- https://github.com/jakubroztocil/httpie/blob/master/README.rst
 - https://github.com/justbur/emacs-vdiff/blob/master/README.org
 - https://github.com/honmaple/emacs-maple-minibuffer/blob/master/README.org
 - http://blog.binchen.org/posts/effective-git-blame-in-emacs.html
