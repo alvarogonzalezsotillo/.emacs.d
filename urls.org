@@ -120,6 +120,7 @@ https://www.youtube.com/channel/UCPzPGxvUOAaoXCPctmHJm8Q
 
 ** Nuevo evento
 [[https://www.youtube.com/my_live_events?action_create_live_event=1][https://www.youtube.com/my_live_events?action_create_live_event=1]]
+Ya no funciona, ahora se hace con OBS Studio
 
 ** key-mon
 
@@ -554,6 +555,8 @@ done;
 - /home/alvaro/github/escultura
 
 * Películas
+boyz
+
 ** ad astra
 ** alita
 ** hellboy 2019

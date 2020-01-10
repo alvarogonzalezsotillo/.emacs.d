@@ -14,7 +14,7 @@
   (setq debug-on-error debug)
 
   (message "Inicializo sistema de paquetes...")
-  ;(package-initialize nil)
+  (package-initialize nil)
   (setq package-check-signature nil)
   (setq package-archives
         '(
@@ -30,6 +30,8 @@
             (package-install 'use-package))
 
   (message "use-package está instalado")
+  (require 'use-package)
+  
   (when refresh
     (message "Actualizando todos los paquetes...")
     (unless package-archive-contents
