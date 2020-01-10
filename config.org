@@ -399,7 +399,9 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
     (interactive)
 
     (if (string= major-mode "dired-mode")
-        (wdired-change-to-wdired-mode)
+        (progn
+          (all-the-icons-dired-mode -1)
+          (wdired-change-to-wdired-mode))
         (bm-next)))
 
 
