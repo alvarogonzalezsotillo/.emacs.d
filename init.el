@@ -29,6 +29,7 @@
             (package-refresh-contents)
             (package-install 'use-package))
 
+  (require 'use-package)
   (when refresh
     (message "Actualizando todos los paquetes...")
     (use-package auto-package-update

@@ -199,6 +199,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | skewer-mode                    |                                                                |
 | swiper-helm                    |                                                                |
 | switch-window                  |                                                                |
+| systemd                        |                                                                |
 | tablist                        |                                                                |
 | transmission                   |                                                                |
 | transpose-frame                |                                                                |
@@ -609,6 +610,16 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
   (use-package org
     :ensure t
     :config
+
+    (setq org-ellipsis "⤵")
+
+
+    ;Trying to fix indentation behaviour within code blocks.
+
+    (setq org-edit-src-content-indentation 0)
+    (setq org-src-tab-acts-natively t)
+    (setq org-src-preserve-indentation t)
+
 
     (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
     (modify-syntax-entry ?= "(=" org-mode-syntax-table)
@@ -1021,6 +1032,15 @@ Cuando exporto un fichero =org= a =reveal.js= tengo problemas en la forma en que
 
 * Edición
 
+** Expresiones regulares para find/replace
+#+begin_src emacs-lisp
+
+  (use-package visual-regexp
+    :defer 1
+    :config
+    (add-to-list 'httpd-mime-types '("mjs" . "text/javascript") ))
+
+#+end_src_
 
 ** Tabuladores /vs/ espacios
 No utilizo tabuladores en las indentaciones. 
@@ -1077,6 +1097,12 @@ Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones
 
 
 * Navegación
+
+
+Guardar el fichero de bookmarks cada vez que se modifiquen
+#+begin_src emacs-lisp
+(setq bookmark-save-flag 1)
+#+end_src
 
 
 Scroll con teclas de avance de página hasta el extremo del fichero. Sin esta opción, /Emacs/ no avanza hasta la primera línea si al dar a =RePag= no quedan páginas por retroceder.
@@ -1536,6 +1562,7 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
       (define-key map (kbd "<f2>")  'my/bookmark-or-edit )
       (define-key map (kbd "<S-f2>") 'bm-previous)
 
+      (define-key map (kbd "C-M-%") 'vr/query-replace)
 
 
       map)
@@ -2080,13 +2107,30 @@ https://github.com/elarkasi/raspi-kms
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
+
+
+aftersave-add-hook
+
+(setq org-src-fontify-natively t)
+
+
+setq org-html-htmlize-output-type 'css)
+
+
+(setq org-download-method 'attach)
+
+
+- bandwich
+- git-auto-commit-mode 1
+- visual-regexp
+- https://github.com/jakubroztocil/httpie/blob/master/README.rst
 - https://github.com/honmaple/emacs-maple-minibuffer/blob/master/README.org
 - http://blog.binchen.org/posts/effective-git-blame-in-emacs.html
 - https://github.com/astoff/digestif/blob/master/README.md
 - Elfeed
 - Zoom-frm
 - org-re-reveal
-- ob-ammonite
+- Ob-ammonite
 - greader
 - https://zge.us.to/emacs.d.html
 - Swiper-isearch - a more isearch-like swiper
@@ -2100,7 +2144,7 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - https://melpa.org/#/helm-file-preview
 - color-rg
 - recentf-mode
-- (setq bookmark-save-flag 1)
+- 
 - org-hide-emphasis-markers is a
 - openwith
 - calctex
