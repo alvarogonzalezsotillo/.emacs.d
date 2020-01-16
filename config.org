@@ -1354,9 +1354,13 @@ La barra de menú y la de herramientas es de lo primero que se quita al personal
 ** Servidor emacs
 Arranco el servidor para utilizar /emacsclient/
 #+begin_src emacs-lisp
-(setenv "EDITOR" "emacsclient")
-(server-force-delete)
-(server-start)
+  (use-package server
+    :config
+    (setenv "EDITOR" "emacsclient")
+    (server-force-delete)
+    (unless (server-running-p)
+      (server-start))
+    )
 #+end_src
 
 
