@@ -558,19 +558,13 @@ done;
 boyz
 
 ** ad astra
-** alita
 ** hellboy 2019
 ** terminator dark fate
-** men in black international
 ** géminis
-** maléfica: maestra del mal
 ** star wars ix
 ** El silencio de la ciudad blanca
-**  Mission Imposible Fallout
 ** Spiderman un nuevo universo
-** Bohemian Rhapsody
 ** El corredor del laberinto: cura mortal
-** aniquilación
 ** high life
 ** gorrión rojo
 ** ready player one
@@ -582,4 +576,4 @@ boyz
 
 ** i am a hero
 
-** el silencio de la Ciudad Blanca
+
