@@ -8,7 +8,15 @@ Al final, la mejor solución no es reducir el tiempo de arranque, sino /camuflar
 
 El /hack/ final es hacer que la instancia de *emacs* se arranque automáticamente al iniciar sesión, o mejor aún, cuando se inicia el sistema como un servicio.
 
-Utilizo este fichero *org* para configurar mis ordenadores *GNU Linux*, con [[https://caiorss.github.io/Emacs-Elisp-Programming/Org-mode-recipes.html][literate]] [[http://cachestocaches.com/2018/6/org-literate-programming/][programming]].
+Utilizo este fichero *org* para configurar mis ordenadores *GNU Linux*, con [[https://caiorss.github.io/Emacs-Elisp-Programming/Org-mode-recipes.html][literate]] [[http://cachestocaches.com/2018/6/org-literate-programming/][programming]]. Para activar la ejecución de bloques =shell= necesito ejecutar el siguiente bloque =elisp=
+#+begin_src emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '(
+     (shell . t)))
+#+end_src
+
+#+RESULTS:
 
 * Servicio
 
@@ -20,6 +28,7 @@ Este bloque de código se ejecuta en el directorio =/sudo::=, lo que indica a *e
 
 #+begin_src shell :dir "/sudo::" :cache no
 SERVICEFILE=/lib/systemd/system/emacs@.service
+EMACSDIR=/usr/local/bin
 
 sudo tee > $SERVICEFILE <<EOF
 [Unit]
@@ -27,8 +36,8 @@ Description=Emacs: the extensible, self-documenting text editor
 
 [Service]
 Type=forking
-ExecStart=/usr/bin/emacs --daemon --user %i
-ExecStop=/usr/bin/emacsclient --eval "(progn (setq kill-emacs-hook 'nil) (kill-emacs))"
+ExecStart=$EMACSDIR/emacs --daemon --user %i
+ExecStop=$EMACSDIR/emacsclient --eval "(progn (setq kill-emacs-hook 'nil) (kill-emacs))"
 Restart=always
 User=%i
 WorkingDirectory=/home/%i
@@ -43,6 +52,8 @@ sudo systemctl daemon-reload
 sudo systemctl enable emacs@alvaro
 #+end_src
 
+#+RESULTS:
+
 * Cliente
   
 
@@ -50,6 +61,8 @@ sudo systemctl enable emacs@alvaro
 Sistemas con *Gnome* o *KDE* utilizan ficheros =.desktop= para añadir aplicaciones a sus menús de inicio. Voy a añadir una nueva aplicación para =emacsclient=, basándome en el fichero =.desktop= que ya viene con *emacs* y la documentación en [[https://specifications.freedesktop.org/desktop-entry-spec/latest/index.html]] 
 
 #+begin_src shell
+EMACSDIR=/usr/local/bin
+
 cat > ~/.local/share/applications/emacsclient.desktop <<EOF
 #!/usr/bin/env xdg-open
 [Desktop Entry]
@@ -58,7 +71,7 @@ Name=GNU Emacs Client
 GenericName=Text Editor
 Comment=View and edit files
 MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
-Exec=/usr/bin/emacsclient --create-frame --alternate-editor "" %F
+Exec=$EMACSDIR/emacsclient --create-frame --alternate-editor "" %F
 Type=Application
 Icon=$HOME/.local/share/applications/emacsclient.svg
 Terminal=false
@@ -367,3 +380,6 @@ EOF
 #+RESULTS:
 
 
+
+* Problemas
+- *emacsclient* no encuentra el socket: añadir el parámetro =-s= con =/tmp/emacs1000/server/=

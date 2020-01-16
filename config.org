@@ -1357,7 +1357,6 @@ Arranco el servidor para utilizar /emacsclient/
   (use-package server
     :config
     (setenv "EDITOR" "emacsclient")
-    (server-force-delete)
     (unless (server-running-p)
       (server-start))
     )
