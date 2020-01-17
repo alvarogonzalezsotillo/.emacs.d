@@ -382,4 +382,4 @@ EOF
 
 
 * Problemas
-- *emacsclient* no encuentra el socket: añadir el parámetro =-s= con =/tmp/emacs1000/server/=
+- *emacsclient* no encuentra el socket: añadir el parámetro =-s= con =/tmp/emacs1000/server/=. El número =1000= indica el identificador del usuario. También puede especificarse la variable =server-socket-dir= al iniciar el servidor.
