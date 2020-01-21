@@ -668,8 +668,6 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 
   (setq plantuml-jar-path org-plantuml-jar-path)
 
-  (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t) (plantuml . t ) ( C . t)))
-
   (org-babel-do-load-languages
    'org-babel-load-languages
    '(
@@ -683,9 +681,9 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 
  Además, no pido confirmación para varios lenguajes                                                                                                           
  #+begin_src emacs-lisp
- (defun my-org-confirm-babel-evaluate (lang body)                                                                                                             
+ (defun my-org-confirm-babel-evaluate (lang body)
    (not (member lang '("dot" "emacs-lisp" "shell" "plantuml"))))
- (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)                                                                                             
+ (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
 #+end_src
 
    
@@ -745,7 +743,7 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 
 En ocasiones, =tramp= no consigue conectar con un usuario que tiene =zsh= como shell. Para ello, hay que añadir lo siguiente al fichero =.zshrc= remoto:
 #+begin_src sh
-EN .zshrc PARA QUE FUNCIONE tramp
+# EN .zshrc PARA QUE FUNCIONE tramp
 if [[ "$TERM" == "dumb" ]]
 then
   unsetopt zle
@@ -1285,13 +1283,6 @@ Avoid performance issues in files with very long lines.
 
 
 
-** /scroll bars/
-
-#+BEGIN_SRC emacs-lisp
-(if (display-graphic-p)
-   (scroll-bar-mode -1))
-#+END_SRC
-
 ** Cambiar el tamaño de fuente de todo /emacs/ (no solo el buffer actual)
 #+begin_src emacs-lisp
 (default-text-scale-mode 1)
@@ -1333,12 +1324,13 @@ El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminale
       scroll-preserve-screen-position 1)
 #+end_src
 
-** Barra de menú
+** Barras de desplazamiento, de herramientas y menú
 La barra de menú y la de herramientas es de lo primero que se quita al personalizar /emacs/, lo mismo que esa pantalla de inicio.
 #+begin_src emacs-lisp
 (setq inhibit-startup-message t)
 (ignore-errors (menu-bar-mode -1))
 (ignore-errors (tool-bar-mode -1))
+(ignore-errors (scroll-bar-mode -1))
 #+end_src
 
 ** Ancho de la página de =man=
