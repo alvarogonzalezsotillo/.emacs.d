@@ -25,13 +25,17 @@
 
   
   (message "Comprobando si use-package está instalado...")
-  (when (or refresh (not (require 'use-package nil 'noerror)))
+  (when (or refresh (not (require 'use-package nil t)))
             (package-refresh-contents)
             (package-install 'use-package))
 
+  (message "use-package está instalado")
   (require 'use-package)
+  
   (when refresh
     (message "Actualizando todos los paquetes...")
+    (unless package-archive-contents
+      (package-refresh-contents))
     (use-package auto-package-update
       :ensure t
       :defer nil
