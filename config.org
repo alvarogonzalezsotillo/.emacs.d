@@ -1965,11 +1965,22 @@ Creo que esto se hace mejor con la variable =indicate-empty-lines=
 
 ** Indicación de cambios de /git/
 Utilizo /git/ para casi todos mis ficheros. =git-gutter= marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual. indico que se refresquen los buffers cada 10 segundos.
-#+begin_src emacs-lisp
+#+begin_src lisp
 (global-git-gutter-mode +1)
 (setq git-gutter:update-interval 10)
 #+end_src
 
+#+BEGIN_SRC emacs-lisp
+(use-package diff-hl
+    :defer 1
+    :ensure t
+    :config
+    (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+    (global-diff-hl-mode)
+)
+#+END_SRC
+
+#+RESULTS:
 
 ** Saltos de página
 Mostrar =^L= (saltos de página) como una línea horizontal
