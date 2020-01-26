@@ -2097,9 +2097,9 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
     (setq desktop-load-locked-desktop t)
     (setq desktop-save t)
     (desktop-save-mode 1)
-    (when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
-        (desktop-read))
-    )
+    ;(when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
+    ;    (desktop-read))
+    ;)
 
 #+end_src
 
@@ -2176,7 +2176,7 @@ setq org-html-htmlize-output-type 'css)
 
 
 
-#+begin_src emacs-lisp
+#+begin_src lisp
 (add-to-list 'load-path "~/.emacs.d/mis-paquetes/lsp-latex")
 (require 'lsp-latex)
 ;; "texlab" must be located at a directory contained in `exec-path'.
