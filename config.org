@@ -570,9 +570,10 @@ Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta 
 
 #+begin_src emacs-lisp
 (use-package company-box
+  :ensure t
+  :defer 1
   :hook (company-mode . company-box-mode))
 #+end_src
-
 
 ** Paquete =neotree=
 En =neotree=, quiero ver todos los ficheros, y no me importa el ancho fijo de la ventana.
@@ -656,7 +657,11 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
   )
 #+end_src
 
-
+asdfasfadf
+a
+sfdas
+fa
+sf
 
 
 *** Lenguajes =org-babel=
@@ -1961,13 +1966,15 @@ Utilizo /git/ para casi todos mis ficheros. =git-gutter= marca en el margen izqu
 (setq git-gutter:update-interval 10)
 #+end_src
 
+Estoy probando =diff-hl=
+
 #+BEGIN_SRC emacs-lisp
 (use-package diff-hl
     :defer 1
     :ensure t
     :config
     (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
-    (global-diff-hl-mode)
+    (global-diff-hl-mode 1)
 )
 #+END_SRC
 
