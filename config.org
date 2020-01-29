@@ -657,12 +657,6 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
   )
 #+end_src
 
-asdfasfadf
-a
-sfdas
-fa
-sf
-
 
 *** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
@@ -875,6 +869,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   (use-package auto-highlight-symbol
     :ensure t
     :config
+      (setq ahs-idle-interval 0.0)
       (setq ahs-default-range 'ahs-range-display))
 #+end_src
 
@@ -2099,7 +2094,7 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
     (desktop-save-mode 1)
     ;(when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
     ;    (desktop-read))
-    ;)
+  )
 
 #+end_src
 
