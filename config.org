@@ -570,6 +570,7 @@ Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta 
 
 #+begin_src emacs-lisp
 (use-package company-box
+  :ensure t
   :hook (company-mode . company-box-mode))
 #+end_src
 
