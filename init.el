@@ -25,13 +25,17 @@
 
   
   (message "Comprobando si use-package está instalado...")
-  (when (or refresh (not (require 'use-package nil 'noerror)))
+  (when (or refresh (not (require 'use-package nil t)))
             (package-refresh-contents)
             (package-install 'use-package))
 
+  (message "use-package está instalado")
   (require 'use-package)
+  
   (when refresh
     (message "Actualizando todos los paquetes...")
+    (unless package-archive-contents
+      (package-refresh-contents))
     (use-package auto-package-update
       :ensure t
       :defer nil
@@ -41,6 +45,10 @@
       (setq auto-package-update-interval 1)
       (auto-package-update-maybe)))
 
+  (message "Versión inicial de org:%s" (org-version))
+  (message "Instalando org-plus-contrib para conseguir la última versión de org" )
+  (use-package org :ensure org-plus-contrib :pin org)
+  
   (use-package org
     :ensure t
     :demand t

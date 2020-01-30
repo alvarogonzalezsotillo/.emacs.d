@@ -401,7 +401,9 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
     (interactive)
 
     (if (string= major-mode "dired-mode")
-        (wdired-change-to-wdired-mode)
+        (progn
+          (all-the-icons-dired-mode -1)
+          (wdired-change-to-wdired-mode))
         (bm-next)))
 
 
@@ -565,11 +567,14 @@ Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta 
   (setq company-dabbrev-downcase nil)
 #+end_src
 
-#+RESULTS:
+=company-box= parecía una buena idea, pero no me gusta el alto de la lista.
 
-
-
-
+#+begin_src lisp
+(use-package company-box
+  :ensure t
+  :defer 1
+  :hook (company-mode . company-box-mode))
+#+end_src
 
 ** Paquete =neotree=
 En =neotree=, quiero ver todos los ficheros, y no me importa el ancho fijo de la ventana.
@@ -611,6 +616,16 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
     :ensure t
     :config
 
+    (setq org-ellipsis "⤵")
+
+
+    ;Trying to fix indentation behaviour within code blocks.
+
+    (setq org-edit-src-content-indentation 0)
+    (setq org-src-tab-acts-natively t)
+    (setq org-src-preserve-indentation t)
+
+
     (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
     (modify-syntax-entry ?= "(=" org-mode-syntax-table)
     (modify-syntax-entry ?_ "(_" org-mode-syntax-table)
@@ -644,8 +659,6 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
 #+end_src
 
 
-
-
 *** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
@@ -655,8 +668,6 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
     (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.1.2018.11.jar")))
 
   (setq plantuml-jar-path org-plantuml-jar-path)
-
-  (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t) (plantuml . t ) ( C . t)))
 
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -671,9 +682,9 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 
  Además, no pido confirmación para varios lenguajes                                                                                                           
  #+begin_src emacs-lisp
- (defun my-org-confirm-babel-evaluate (lang body)                                                                                                             
+ (defun my-org-confirm-babel-evaluate (lang body)
    (not (member lang '("dot" "emacs-lisp" "shell" "plantuml"))))
- (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)                                                                                             
+ (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
 #+end_src
 
    
@@ -733,7 +744,7 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 
 En ocasiones, =tramp= no consigue conectar con un usuario que tiene =zsh= como shell. Para ello, hay que añadir lo siguiente al fichero =.zshrc= remoto:
 #+begin_src sh
-EN .zshrc PARA QUE FUNCIONE tramp
+# EN .zshrc PARA QUE FUNCIONE tramp
 if [[ "$TERM" == "dumb" ]]
 then
   unsetopt zle
@@ -859,6 +870,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   (use-package auto-highlight-symbol
     :ensure t
     :config
+      (setq ahs-idle-interval 0.0)
       (setq ahs-default-range 'ahs-range-display))
 #+end_src
 
@@ -1022,6 +1034,15 @@ Cuando exporto un fichero =org= a =reveal.js= tengo problemas en la forma en que
 
 * Edición
 
+** Expresiones regulares para find/replace
+#+begin_src emacs-lisp
+
+  (use-package visual-regexp
+    :defer 1
+    :config
+    (add-to-list 'httpd-mime-types '("mjs" . "text/javascript") ))
+
+#+end_src_
 
 ** Tabuladores /vs/ espacios
 No utilizo tabuladores en las indentaciones. 
@@ -1078,6 +1099,12 @@ Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones
 
 
 * Navegación
+
+
+Guardar el fichero de bookmarks cada vez que se modifiquen
+#+begin_src emacs-lisp
+(setq bookmark-save-flag 1)
+#+end_src
 
 
 Scroll con teclas de avance de página hasta el extremo del fichero. Sin esta opción, /Emacs/ no avanza hasta la primera línea si al dar a =RePag= no quedan páginas por retroceder.
@@ -1258,13 +1285,6 @@ Avoid performance issues in files with very long lines.
 
 
 
-** /scroll bars/
-
-#+BEGIN_SRC emacs-lisp
-(if (display-graphic-p)
-   (scroll-bar-mode -1))
-#+END_SRC
-
 ** Cambiar el tamaño de fuente de todo /emacs/ (no solo el buffer actual)
 #+begin_src emacs-lisp
 (default-text-scale-mode 1)
@@ -1306,12 +1326,13 @@ El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminale
       scroll-preserve-screen-position 1)
 #+end_src
 
-** Barra de menú
+** Barras de desplazamiento, de herramientas y menú
 La barra de menú y la de herramientas es de lo primero que se quita al personalizar /emacs/, lo mismo que esa pantalla de inicio.
 #+begin_src emacs-lisp
 (setq inhibit-startup-message t)
 (ignore-errors (menu-bar-mode -1))
 (ignore-errors (tool-bar-mode -1))
+(ignore-errors (scroll-bar-mode -1))
 #+end_src
 
 ** Ancho de la página de =man=
@@ -1327,9 +1348,12 @@ La barra de menú y la de herramientas es de lo primero que se quita al personal
 ** Servidor emacs
 Arranco el servidor para utilizar /emacsclient/
 #+begin_src emacs-lisp
-(setenv "EDITOR" "emacsclient")
-(server-force-delete)
-(server-start)
+  (use-package server
+    :config
+    (setenv "EDITOR" "emacsclient")
+    (unless (server-running-p)
+      (server-start))
+    )
 #+end_src
 
 
@@ -1537,6 +1561,7 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
       (define-key map (kbd "<f2>")  'my/bookmark-or-edit )
       (define-key map (kbd "<S-f2>") 'bm-previous)
 
+      (define-key map (kbd "C-M-%") 'vr/query-replace)
 
 
       map)
@@ -1932,11 +1957,24 @@ Creo que esto se hace mejor con la variable =indicate-empty-lines=
 
 ** Indicación de cambios de /git/
 Utilizo /git/ para casi todos mis ficheros. =git-gutter= marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual. indico que se refresquen los buffers cada 10 segundos.
-#+begin_src emacs-lisp
+#+begin_src lisp
 (global-git-gutter-mode +1)
 (setq git-gutter:update-interval 10)
 #+end_src
 
+Estoy probando =diff-hl=
+
+#+BEGIN_SRC emacs-lisp
+(use-package diff-hl
+    :defer 1
+    :ensure t
+    :config
+    (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+    (global-diff-hl-mode 1)
+)
+#+END_SRC
+
+#+RESULTS:
 
 ** Saltos de página
 Mostrar =^L= (saltos de página) como una línea horizontal
@@ -2055,9 +2093,9 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
     (setq desktop-load-locked-desktop t)
     (setq desktop-save t)
     (desktop-save-mode 1)
-    (when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
-        (desktop-read))
-    )
+    ;(when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
+    ;    (desktop-read))
+  )
 
 #+end_src
 
@@ -2083,19 +2121,17 @@ https://github.com/elarkasi/raspi-kms
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
 
 
+
 company-box
 https://github.com/dgutov/diff-hl/blob/master/README.md
 org-tree-slide
 (setq org-ellipsis "⤵")
+
+
 aftersave-add-hook
 
 (setq org-src-fontify-natively t)
 
-Trying to fix indentation behaviour within code blocks.
-
-(setq org-edit-src-content-indentation 0)
-(setq org-src-tab-acts-natively t)
-(setq org-src-preserve-indentation t)
 
 setq org-html-htmlize-output-type 'css)
 
@@ -2104,17 +2140,16 @@ setq org-html-htmlize-output-type 'css)
 
 
 - bandwich
--  git-auto-commit-mode 1
+- git-auto-commit-mode 1
 - visual-regexp
 - https://github.com/jakubroztocil/httpie/blob/master/README.rst
-- https://github.com/justbur/emacs-vdiff/blob/master/README.org
 - https://github.com/honmaple/emacs-maple-minibuffer/blob/master/README.org
 - http://blog.binchen.org/posts/effective-git-blame-in-emacs.html
 - https://github.com/astoff/digestif/blob/master/README.md
 - Elfeed
 - Zoom-frm
 - org-re-reveal
-- ob-ammonite
+- Ob-ammonite
 - greader
 - https://zge.us.to/emacs.d.html
 - Swiper-isearch - a more isearch-like swiper
@@ -2128,7 +2163,7 @@ setq org-html-htmlize-output-type 'css)
 - https://melpa.org/#/helm-file-preview
 - color-rg
 - recentf-mode
-- (setq bookmark-save-flag 1)
+- 
 - org-hide-emphasis-markers is a
 - openwith
 - calctex
@@ -2144,7 +2179,7 @@ setq org-html-htmlize-output-type 'css)
 
 
 
-#+begin_src emacs-lisp
+#+begin_src lisp
 (add-to-list 'load-path "~/.emacs.d/mis-paquetes/lsp-latex")
 (require 'lsp-latex)
 ;; "texlab" must be located at a directory contained in `exec-path'.
