@@ -2083,6 +2083,9 @@ https://github.com/elarkasi/raspi-kms
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
 
 
+company-box
+https://github.com/dgutov/diff-hl/blob/master/README.md
+org-tree-slide
 (setq org-ellipsis "⤵")
 aftersave-add-hook
 
