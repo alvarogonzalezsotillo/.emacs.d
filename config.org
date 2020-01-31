@@ -1941,6 +1941,12 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
 
 * Apariencia
 
+** Cursor
+Cursor como barra vertical
+#+begin_src emacs-lisp
+(set-default 'cursor-type 'bar)
+#+end_src
+
 ** Líneas vacías al final, como =vim=
 Creo que esto se hace mejor con la variable =indicate-empty-lines=
 #+begin_src lisp
