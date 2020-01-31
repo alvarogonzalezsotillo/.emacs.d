@@ -567,12 +567,14 @@ Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta 
   (setq company-dabbrev-downcase nil)
 #+end_src
 
+=company-box= parecía una buena idea, pero no me gusta el alto de la lista.
 
-#+begin_src emacs-lisp
+#+begin_src lisp
 (use-package company-box
+  :ensure t
+  :defer 1
   :hook (company-mode . company-box-mode))
 #+end_src
-
 
 ** Paquete =neotree=
 En =neotree=, quiero ver todos los ficheros, y no me importa el ancho fijo de la ventana.
@@ -657,8 +659,6 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
 #+end_src
 
 
-
-
 *** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
@@ -668,8 +668,6 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
     (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.1.2018.11.jar")))
 
   (setq plantuml-jar-path org-plantuml-jar-path)
-
-  (setq org-babel-load-languages '((scala . t) (shell . t) (emacs-lisp . t) (dot . t) (plantuml . t ) ( C . t)))
 
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -684,9 +682,9 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 
  Además, no pido confirmación para varios lenguajes                                                                                                           
  #+begin_src emacs-lisp
- (defun my-org-confirm-babel-evaluate (lang body)                                                                                                             
+ (defun my-org-confirm-babel-evaluate (lang body)
    (not (member lang '("dot" "emacs-lisp" "shell" "plantuml"))))
- (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)                                                                                             
+ (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
 #+end_src
 
    
@@ -746,7 +744,7 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 
 En ocasiones, =tramp= no consigue conectar con un usuario que tiene =zsh= como shell. Para ello, hay que añadir lo siguiente al fichero =.zshrc= remoto:
 #+begin_src sh
-EN .zshrc PARA QUE FUNCIONE tramp
+# EN .zshrc PARA QUE FUNCIONE tramp
 if [[ "$TERM" == "dumb" ]]
 then
   unsetopt zle
@@ -872,6 +870,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   (use-package auto-highlight-symbol
     :ensure t
     :config
+      (setq ahs-idle-interval 0.0)
       (setq ahs-default-range 'ahs-range-display))
 #+end_src
 
@@ -1286,13 +1285,6 @@ Avoid performance issues in files with very long lines.
 
 
 
-** /scroll bars/
-
-#+BEGIN_SRC emacs-lisp
-(if (display-graphic-p)
-   (scroll-bar-mode -1))
-#+END_SRC
-
 ** Cambiar el tamaño de fuente de todo /emacs/ (no solo el buffer actual)
 #+begin_src emacs-lisp
 (default-text-scale-mode 1)
@@ -1334,12 +1326,13 @@ El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminale
       scroll-preserve-screen-position 1)
 #+end_src
 
-** Barra de menú
+** Barras de desplazamiento, de herramientas y menú
 La barra de menú y la de herramientas es de lo primero que se quita al personalizar /emacs/, lo mismo que esa pantalla de inicio.
 #+begin_src emacs-lisp
 (setq inhibit-startup-message t)
 (ignore-errors (menu-bar-mode -1))
 (ignore-errors (tool-bar-mode -1))
+(ignore-errors (scroll-bar-mode -1))
 #+end_src
 
 ** Ancho de la página de =man=
@@ -1358,7 +1351,6 @@ Arranco el servidor para utilizar /emacsclient/
   (use-package server
     :config
     (setenv "EDITOR" "emacsclient")
-    (server-force-delete)
     (unless (server-running-p)
       (server-start))
     )
@@ -1970,13 +1962,15 @@ Utilizo /git/ para casi todos mis ficheros. =git-gutter= marca en el margen izqu
 (setq git-gutter:update-interval 10)
 #+end_src
 
+Estoy probando =diff-hl=
+
 #+BEGIN_SRC emacs-lisp
 (use-package diff-hl
     :defer 1
     :ensure t
     :config
     (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
-    (global-diff-hl-mode)
+    (global-diff-hl-mode 1)
 )
 #+END_SRC
 
@@ -2101,7 +2095,7 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
     (desktop-save-mode 1)
     ;(when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
     ;    (desktop-read))
-    ;)
+  )
 
 #+end_src
 
