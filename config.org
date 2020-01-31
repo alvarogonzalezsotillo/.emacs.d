@@ -110,6 +110,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 #+NAME: mis-paquetes
 |--------------------------------+----------------------------------------------------------------|
 | 2048-game                      |                                                                |
+| ac-js2                         |                                                                |
 | adaptive-wrap                  | Indentación visual de las líneas respecto a su prefijo         |
 | ag                             |                                                                |
 | alert                          |                                                                |
@@ -471,10 +472,9 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
   (defun my-js2-mode-hook()
     (interactive)
-    (ac-js2-mode)
     (setq ac-js2-evaluate-calls t)
     (auto-highlight-symbol-mode 0)
-    (js2-highlight-vars-mode)
+    (js2-highlight-unused-variables-mode 1)
 
     (defvar my-company-backends-js2-mode
       '(
