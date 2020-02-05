@@ -567,8 +567,9 @@ Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta 
   (setq company-dabbrev-downcase nil)
 #+end_src
 
+=company-box= parecía una buena idea, pero no me gusta el alto de la lista.
 
-#+begin_src emacs-lisp
+#+begin_src lisp
 (use-package company-box
   :ensure t
   :defer 1
