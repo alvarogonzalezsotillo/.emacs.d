@@ -243,7 +243,9 @@ Añado algunos /mime-type/ al servidor HTTP
   (use-package simple-httpd
     :defer 1
     :config
-    (add-to-list 'httpd-mime-types '("mjs" . "text/javascript") ))
+    (add-to-list 'httpd-mime-types '("mjs" . "text/javascript") )
+    (add-to-list 'httpd-mime-types '("wasm" . "application/wasm") )
+)
 #+END_SRC
 
 
@@ -958,6 +960,18 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
     (setq projectile-completion-system 'helm)
   :after (helm)
 )
+
+#+end_src
+
+
+*** Paquete =ox-epub=
+
+#+begin_src emacs-lisp
+(use-package ox-epub
+  :ensure t
+  :defer 1
+)
+
 
 #+end_src
 
@@ -1824,6 +1838,8 @@ Generalmente utilizo un fichero orgmode para hacer transparencias y materiales p
          (html-reveal-filename (concat (file-name-sans-extension filename) ".reveal.html")) )
     (message "renombrando fichero: %s -> %s" html-filename html-reveal-filename)
     (rename-file html-filename html-reveal-filename t))
+
+  (org-epub-export-to-epub)
 
   (org-latex-export-to-pdf)
   (let* (
