@@ -45,6 +45,10 @@
       (setq auto-package-update-interval 1)
       (auto-package-update-maybe)))
 
+  (message "Versión inicial de org:%s" (org-version))
+  (message "Instalando org-plus-contrib para conseguir la última versión de org" )
+  (use-package org :ensure org-plus-contrib :pin org)
+  
   (use-package org
     :ensure t
     :demand t
