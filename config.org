@@ -870,7 +870,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   (use-package auto-highlight-symbol
     :ensure t
     :config
-      (setq ahs-idle-interval 0.0)
+      (setq ahs-idle-interval 3.0)
       (setq ahs-default-range 'ahs-range-display))
 #+end_src
 
@@ -1941,6 +1941,14 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
 
 
 * Apariencia
+
+** Cursor
+Cursor como barra vertical
+#+begin_src emacs-lisp
+(set-default 'cursor-type 'bar)
+(blink-cursor-mode 1)
+(setq blink-cursor-blinks 0)
+#+end_src
 
 ** Líneas vacías al final, como =vim=
 Creo que esto se hace mejor con la variable =indicate-empty-lines=
