@@ -29,4 +29,5 @@ normal(){
 
 }
 
-normal
+left
+
