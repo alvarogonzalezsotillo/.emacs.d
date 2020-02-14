@@ -138,7 +138,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | dired-narrow                   |                                                                |
 | dired-subtree                  |                                                                |
 | dired-toggle                   |                                                                |
-| ensime                         |                                                                |
 | esup                           |                                                                |
 | expand-region                  |                                                                |
 | flycheck                       |                                                                |
@@ -232,7 +231,7 @@ El bucle =dolist= se realiza sobre los datos de la tabla =mis-paquetes=. Cada fi
 
 Por último, el paquete =ob-scala= es un paquete local bajado de [[https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el][https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el]]. Sirve para ejecutar código =scala= directamente desde un documento =orgmode=.
 
-#+begin_src emacs-lisp
+#+begin_src lisp
 (add-to-list 'load-path "~/.emacs.d/mis-paquetes")
 (require 'ob-scala)
 #+end_src
@@ -532,7 +531,6 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
   ;; set default `company-backends'
   (setq company-backends my-company-backends)
-  (company-auctex-init)
 
   (add-hook 'after-init-hook 'global-company-mode)
 
@@ -675,7 +673,7 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
      (C . t )
      (dot . t)
      (plantuml . t)
-     (scala . t)
+     ;(scala . t)
      (shell . t)))
 #+end_src
 
@@ -782,69 +780,55 @@ Tampoco me interesan los ficheros de /lock/.
 ** Latex
 
 #+begin_src emacs-lisp
+(use-package auctex
+  :defer 1
+  :ensure t
+  :config
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq TeX-save-query nil)
 (setq TeX-PDF-mode t)
-#+end_src
 
-Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
-#+begin_src emacs-lisp
+; Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
+
 (setq LaTeX-verbatim-environments
       '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql"))
-#+end_src
 
-Para imenu, defino una macro de Latex que no hace nada, pero que detecto en imenu.
-#+BEGIN_SRC emacs-lisp
+; Para imenu, defino una macro de Latex que no hace nada, pero que detecto en imenu.
 (add-to-list 'TeX-outline-extra '("imenu" 2))
 (add-to-list 'TeX-outline-extra '("imenu1" 1))
 (add-to-list 'TeX-outline-extra '("imenu2" 2))
 (add-to-list 'TeX-outline-extra '("imenu3" 3))
 (add-to-list 'TeX-outline-extra '("imenu4" 4))
-#+END_SRC
 
-
-En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
-#+begin_src emacs-lisp
+; En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
 (setq TeX-source-correlate-mode t)
 (setq TeX-source-correlate-start-server t)
-#+end_src
 
 
-Modifico el comando Latex para incluir =-shell-escape=, de forma que Latex pueda arrancar programas de ayuda (por ejemplo, *Inkscape* para convertir SVG a PDF)
 
-#+begin_src emacs-lisp
+; Modifico el comando Latex para incluir =-shell-escape=, de forma que Latex pueda arrancar programas de ayuda (por ejemplo, *Inkscape* para convertir SVG a PDF)
+
 (setq LaTeX-command-style
    (quote (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
-#+end_src
+)
 
+; Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en el buffer de Emacs ([[https://www.gnu.org/software/auctex/manual/preview-latex.html][https://www.gnu.org/software/auctex/manual/preview-latex.html]])
 
-Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en el buffer de Emacs ([[https://www.gnu.org/software/auctex/manual/preview-latex.html][https://www.gnu.org/software/auctex/manual/preview-latex.html]])
-
-#+begin_src emacs-lisp
 (eval-after-load "preview"
   '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t) )
 (eval-after-load "preview"
   '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
 (eval-after-load "preview"
   '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{homeworkProblem}" t) )
-#+end_src
 
-
-Añadir XeLatex
-
-#+BEGIN_SRC emacs-lisp
-(use-package auctex
-  :defer 1
-  :ensure t
-  :config
+; Añadir XeLatex
 (eval-after-load "tex"
   '(add-to-list 'TeX-command-list
      		'("XeLaTeX" "xelatex -interaction=nonstopmode %s"
 		  TeX-run-command t t :help "Run xelatex") t))
 )
 #+END_SRC
-
 
 En =Termux= se necesita especificar la camino a la /shell/ para ejecutar comandos de /Latex/
 #+begin_src emacs-lisp
@@ -856,6 +840,7 @@ En =Termux= se necesita especificar la camino a la /shell/ para ejecutar comando
       (setq TeX-shell  "/data/data/com.termux/files/usr/bin/sh"))
 )
 #+end_src
+
 
 
 
@@ -2034,6 +2019,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
   (interactive)
   (toggle-truncate-lines -1)
   (setq magic-latex-enable-suscript nil)
+  (company-auctex-init)
   (magic-latex-buffer 1))
 
 
