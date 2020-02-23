@@ -4,3 +4,4 @@ rm *.log
 rm *.synctex.gz
 rm *.toc
 rm *.out
+rm *.atfi

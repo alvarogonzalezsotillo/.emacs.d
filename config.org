@@ -44,19 +44,30 @@ Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplement
 * Utilidades externas al /PATH/
 En el directorio =~/.emacs.d/bin/= guardo algunas utilidades que me interesa tener en todos los entornos de trabajo. Lo siguiente es para que estén disponibles desde las /shells/ que arranque desde emacs.
 
+Añado también el directorio de =cargo= para =rust=.
 #+begin_src emacs-lisp
-  (setq exec-path-separator
-        (if (string-equal system-type "windows-nt") ";" ":"))
-  (setenv "PATH"
-          (concat (expand-file-name user-emacs-directory) "bin" exec-path-separator (getenv "PATH")))
-  (add-to-list 'exec-path (concat (expand-file-name user-emacs-directory) "bin"))
+
+(let 
+  (  
+     (exec-path-separator  (if (string-equal system-type "windows-nt") ";" ":"))
+     (paths `(,(concat (expand-file-name user-emacs-directory) "bin") ,(concat (expand-file-name "~/") ".cargo/bin") ) )
+  )
+  (dolist (path paths)
+    (message "path: %s" path)
+    (setenv "PATH" (concat path exec-path-separator (getenv "PATH")))
+    (add-to-list 'exec-path path)
+  )
+
+  (message "PATH %s" (getenv "PATH"))
+  (message "exec-path %s" exec-path)
+)
+
 #+end_src
 
 
 
-
 Las utilidades pueden consultarse en el [[https://github.com/alvarogonzalezsotillo/.emacs.d/tree/master/bin][repositorio en github]], y son:
-#+begin_src shell :exports results
+,#+begin_src shell :exports results
 ls ~/.emacs.d/bin
 #+end_src
 
@@ -1823,35 +1834,44 @@ Generalmente utilizo un fichero orgmode para hacer transparencias y materiales p
 (defun reveal-y-pdf ()
   "Crea transparencias de reveal y hace el pdf a la vez."
   (interactive)
-  (org-html-export-to-html)
-  (let* (
-         (filename (buffer-file-name))
-         (html-filename (concat (file-name-sans-extension filename) ".html"))
-         (html-wp-filename (concat (file-name-sans-extension filename) ".wp.html")) )
-    (message "Copiando fichero: %s -> %s" html-filename html-wp-filename)
-    (copy-file html-filename html-wp-filename t) )
-  
-  (org-reveal-export-to-html)
-  (let* (
-         (filename (buffer-file-name))
-         (html-filename (concat (file-name-sans-extension filename) ".html"))
-         (html-reveal-filename (concat (file-name-sans-extension filename) ".reveal.html")) )
-    (message "renombrando fichero: %s -> %s" html-filename html-reveal-filename)
-    (rename-file html-filename html-reveal-filename t))
+  (ignore-errors
+    (org-html-export-to-html)
+    (let* (
+           (filename (buffer-file-name))
+           (html-filename (concat (file-name-sans-extension filename) ".html"))
+           (html-wp-filename (concat (file-name-sans-extension filename) ".wp.html")) )
+      (message "Copiando fichero: %s -> %s" html-filename html-wp-filename)
+      (copy-file html-filename html-wp-filename t) ))
 
-  (org-epub-export-to-epub)
+  (ignore-errors
+    (org-reveal-export-to-html)
+    (let* (
+           (filename (buffer-file-name))
+           (html-filename (concat (file-name-sans-extension filename) ".html"))
+           (html-reveal-filename (concat (file-name-sans-extension filename) ".reveal.html")) )
+      (message "renombrando fichero: %s -> %s" html-filename html-reveal-filename)
+      (rename-file html-filename html-reveal-filename t)))
 
-  (org-latex-export-to-pdf)
-  (let* (
-         (filename (buffer-file-name))
-         (tex-filename (concat (file-name-sans-extension filename) ".tex")))
+  (ignore-errors
+    (org-epub-export-to-epub))
 
-    
-    (message "Borrando fichero: %s" tex-filename)
-    (delete-file tex-filename) ) )
+  (ignore-errors
+    (org-latex-export-to-pdf)
+    (let* (
+           (filename (buffer-file-name))
+           (tex-filename (concat (file-name-sans-extension filename) ".tex")))
+
+      
+      (message "Borrando fichero: %s" tex-filename)
+      (delete-file tex-filename) ) ))
+
+
+
 
 
 #+end_src
+
+#+RESULTS:
 
 ** Función para decodificar una URL
 #+begin_src emacs-lisp
