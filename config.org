@@ -824,7 +824,7 @@ Tampoco me interesan los ficheros de /lock/.
 
 (setq LaTeX-command-style
    (quote (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
-)
+
 
 ; Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en el buffer de Emacs ([[https://www.gnu.org/software/auctex/manual/preview-latex.html][https://www.gnu.org/software/auctex/manual/preview-latex.html]])
 
