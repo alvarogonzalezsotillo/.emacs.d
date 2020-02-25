@@ -553,6 +553,7 @@ done;
 - /home/alvaro/github/dunnet-solver
 - /home/alvaro/github/palabras-anagramadas
 - /home/alvaro/github/escultura
+- rimas
 
 * Películas
 boyz
