@@ -67,7 +67,7 @@ Añado también el directorio de =cargo= para =rust=.
 
 
 Las utilidades pueden consultarse en el [[https://github.com/alvarogonzalezsotillo/.emacs.d/tree/master/bin][repositorio en github]], y son:
-,#+begin_src shell :exports results
+#+begin_src shell :exports results
 ls ~/.emacs.d/bin
 #+end_src
 
