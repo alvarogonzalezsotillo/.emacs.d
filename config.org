@@ -201,7 +201,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | rectangle-utils                |                                                                |
 | restclient                     |                                                                |
 | restclient-helm                |                                                                |
-| rust-mode                      |                                                                |
 | scad-mode                      |                                                                |
 | scad-preview                   |                                                                |
 | scala-mode                     |                                                                |
@@ -259,13 +258,44 @@ Añado algunos /mime-type/ al servidor HTTP
 
 
 ** rust
+
+  #+begin_src emacs-lisp
+(use-package lsp-mode
+  :ensure t
+  :config
+   (message "ESTOY CONFIGURANDO LSP-MODE")
+)
+
+(use-package lsp-ui
+  :ensure t
+)
+
+  #+end_src
+
+
 #+begin_src emacs-lisp
+(use-package toml-mode
+  :ensure t)
+
 (use-package rust-mode
   :ensure t
   :defer 1
   :config
+
+  (defun my-enable-lsp ()
+     (interactive)
+     (lsp)
+     (lsp-ui-mode -1)
+     (message "Espero que esté bien el LSP")
+  )
+
+  (add-hook 'rust-mode-hook #'my-enable-lsp)
 )
 #+end_src
+
+#+RESULTS:
+: t
+
 
 #+begin_src emacs-lisp
 (use-package flycheck-rust
@@ -841,6 +871,8 @@ Tampoco me interesan los ficheros de /lock/.
 )
 #+END_SRC
 
+#+RESULTS:
+
 En =Termux= se necesita especificar la camino a la /shell/ para ejecutar comandos de /Latex/
 #+begin_src emacs-lisp
 (use-package auctex
@@ -865,7 +897,7 @@ Ayuda interactiva de teclado. En el popup-type por defecto entra en conflicto co
   :config
     (which-key-mode t)
     (setq which-key-idle-delay 3.0)
-    (setq which-key-popup-type (quote frame)))
+    (setq which-key-popup-type (quote minibuffer)))
 #+end_src
 
 
@@ -978,10 +1010,19 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 
 #+end_src
 
+*** Paquete =org-re-reveal=
+#+begin_src emacs-lisp
+(use-package org-re-reveal
+  :ensure t
+  :config
+)
+#+end_src
+
+
 *** Paquete =ox-reveal=
 Cuando exporto un fichero =org= a =reveal.js= tengo problemas en la forma en que se escapan los caracteres =>= y =<= de los bloques de código. Con esta redefinición de la función =org-reveal-src-block= queda solucionado
 
-#+begin_src emacs-lisp
+#+begin_src lisp
   ;; ESCAPE HTML IN REVEAL
   (setq mi-org-html-protect-char-alist
         '(("&" . "&amp;")
@@ -1836,7 +1877,7 @@ Generalmente utilizo un fichero orgmode para hacer transparencias y materiales p
       (copy-file html-filename html-wp-filename t) ))
 
   (ignore-errors
-    (org-reveal-export-to-html)
+    (org-re-reveal-export-to-html)
     (let* (
            (filename (buffer-file-name))
            (html-filename (concat (file-name-sans-extension filename) ".html"))
@@ -2119,35 +2160,7 @@ Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna c
 
 
 
-* Configuración =rust=
 
-
-
-  #+begin_src emacs-lisp
-(use-package lsp-mode
-  :ensure t
-  :config
-   (message "ESTOY CONFIGURANDO LSP-MODE")
-
-)
-
-(use-package lsp-ui
-  :ensure t
-)
-
-
-  #+end_src
-
-#+begin_src lisp
-(add-to-list 'load-path "~/.emacs.d/mis-paquetes")
-(require 'lsp-rust-mio)
-
-
-
-#+end_src
-
-#+RESULTS:
-: lsp-rust-mio
 
 
 * Escritorio
