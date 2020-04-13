@@ -67,7 +67,7 @@ Añado también el directorio de =cargo= para =rust=.
 
 
 Las utilidades pueden consultarse en el [[https://github.com/alvarogonzalezsotillo/.emacs.d/tree/master/bin][repositorio en github]], y son:
-,#+begin_src shell :exports results
+#+begin_src shell :exports results
 ls ~/.emacs.d/bin
 #+end_src
 
@@ -2202,28 +2202,22 @@ https://github.com/elarkasi/raspi-kms
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
 
-
-aftersave-add-hook
-
-(setq org-src-fontify-natively t)
-
-
-setq org-html-htmlize-output-type 'css)
-
-
-(setq org-download-method 'attach)
-
-
+- bmini-frame
+- company-quickhelp-terminal
+- company-box, no me gystó
+- https://github.com/dgutov/diff-hl/blob/master/README.md
+- aftersave-add-hook
+- setq org-html-htmlize-output-type 'css)
+- (setq org-download-method 'attach)
 - bandwich
 - git-auto-commit-mode 1
-- visual-regexp
+
 - https://github.com/jakubroztocil/httpie/blob/master/README.rst
 - https://github.com/honmaple/emacs-maple-minibuffer/blob/master/README.org
 - http://blog.binchen.org/posts/effective-git-blame-in-emacs.html
 - https://github.com/astoff/digestif/blob/master/README.md
 - Elfeed
 - Zoom-frm
-- org-re-reveal
 - Ob-ammonite
 - greader
 - https://zge.us.to/emacs.d.html
@@ -2238,7 +2232,6 @@ setq org-html-htmlize-output-type 'css)
 - https://melpa.org/#/helm-file-preview
 - color-rg
 - recentf-mode
-- 
 - org-hide-emphasis-markers is a
 - openwith
 - calctex
