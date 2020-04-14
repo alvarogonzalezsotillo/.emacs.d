@@ -2158,8 +2158,9 @@ https://github.com/elarkasi/raspi-kms
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
-
-- bmini-frame
+- feebleline
+- vlfi ficheros grandes
+- mini-frame
 - company-quickhelp-terminal
 - company-box, no me gystó
 - https://github.com/dgutov/diff-hl/blob/master/README.md
