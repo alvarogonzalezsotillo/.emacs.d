@@ -18,3 +18,16 @@ obs
 gnome-tweaks
 java
 packet tracer
+rust
+ammonite
+nodejs
+prolog
+android-studio
+apache
+oh-my-zsh
+zsh
+impresora pdf
+kodi
+nmap
+vim
+winbind
