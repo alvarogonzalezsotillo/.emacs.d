@@ -181,6 +181,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | magit                          | Interfaz para git                                              |
 | markdown-mode                  |                                                                |
 | markdown-preview-mode          |                                                                |
+| ob-ammonite                    |                                                                |
 | ob-restclient                  |                                                                |
 | ob-rust                        |                                                                |
 | org                            |                                                                |
@@ -188,7 +189,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | org-bullets                    |                                                                |
 | org-page                       |                                                                |
 | page-break-lines               |                                                                |
-| paradox                        |                                                                |
 | php-mode                       |                                                                |
 | plantuml-mode                  |                                                                |
 | popup-complete                 |                                                                |
@@ -217,7 +217,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | use-ttf                        | Instala la fuente por defecto en todos los sistemas            |
 | vdiff                          |                                                                |
 | vim-empty-lines-mode           |                                                                |
-| volatile-highlights            |                                                                |
 | web-beautify                   |                                                                |
 | web-mode                       |                                                                |
 | wgrep                          |                                                                |
@@ -822,9 +821,7 @@ Tampoco me interesan los ficheros de /lock/.
 ** Latex
 
 #+begin_src emacs-lisp
-(use-package auctex
-  :defer 1
-  :ensure t
+(use-package latex
   :config
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
@@ -2049,19 +2046,16 @@ Prefiero =mini-modeline= para quitar la modeline.
 #+end_src
 
 
-#+begin_src emacs-lisp
+#+begin_src lisp
 (use-package    mini-modeline
   :ensure       t
-  :config
   :defer 10
+  :config
   (setq mini-modeline-enhance-visual t)
   (setq mini-modeline-r-format my-mode-line-format)
   (my-centaur-tabs-font-sizes 100)
   (mini-modeline-mode t))
 #+end_src
-
-#+RESULTS:
-: t
 
 
 ** Cursor
@@ -2226,8 +2220,8 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
     :ensure t
     :config
     (setq desktop-load-locked-desktop t)
-    (setq desktop-save t)
-    (desktop-save-mode 1)
+    ;(setq desktop-save t)
+    ;(desktop-save-mode 1)
     ;(when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
     ;    (desktop-read))
   )
