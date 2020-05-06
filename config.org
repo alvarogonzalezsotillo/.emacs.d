@@ -1089,7 +1089,11 @@ Cuando exporto un fichero =org= a =reveal.js= tengo problemas en la forma en que
 
 
 * Edición
-
+** Acentos en KDE
+Desde que uso Plasma no funcionan bien los acentos:
+#+begin_src emacs-lisp
+(require 'iso-transl)
+#+end_src
 ** Expresiones regulares para find/replace
 #+begin_src emacs-lisp
 
