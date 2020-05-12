@@ -831,7 +831,7 @@ Tampoco me interesan los ficheros de /lock/.
 ; Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
 
 (setq LaTeX-verbatim-environments
-      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql"))
+      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql" "listadoshell"))
 
 ; Para imenu, defino una macro de Latex que no hace nada, pero que detecto en imenu.
 (add-to-list 'TeX-outline-extra '("imenu" 2))
@@ -2065,7 +2065,7 @@ Prefiero =mini-modeline= para quitar la modeline.
 ** Cursor
 Cursor como barra vertical
 #+begin_src emacs-lisp
-(set-default 'cursor-type 'bar)
+(set-default 'cursor-type 'box)
 (blink-cursor-mode 1)
 (setq blink-cursor-blinks 0)
 #+end_src
