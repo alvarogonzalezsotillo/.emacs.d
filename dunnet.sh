@@ -157,7 +157,8 @@ start_dunnet(){
     log "Deshabilito sleep-for usado para dar realismo al PC con floppy"
     lisp="(progn
       (defun sleep-for (seconds &optional millis)
-         (message \"ignoro sleep-for\"))
+         ;(message \"ignoro sleep-for\")
+         nil)
       (dunnet))"
 
     emacs --no-init-file --batch --eval "$lisp" < dunnet.in | tee "$DUNNETOUT" &
@@ -166,11 +167,11 @@ start_dunnet(){
 }
 
 computer_colors(){
-    echo # -e "\e[37m\e[40m"
+    echo  -en "\e[37m\e[40m"
 }
 
 normal_colors(){
-    echo # -e "\e[30m\e[47m"
+    echo  -en "\e[30m\e[47m"
 }
 
 send_to_fifo_with_echo(){
@@ -183,17 +184,21 @@ send_to_fifo_with_echo(){
 linea_a_linea(){
     while IFS='' read -r line || [[ -n "$line" ]]
     do
+
+        sleep 1
+        
         if [[ $line == \>* ]]
         then  
             computer_colors
             local ordenalpc=${line:1}
-            send_to_fifo_with_echo "$ordenalpc" "PC COMMAND"
+            send_to_fifo_with_echo "$ordenalpc" " "
             get_pc_combination
         elif [[ $line == \#* ]]
         then
             normal_colors
-            echo COMENTARIO: $line 
-        else
+            echo COMMENT TO MYSELF: $line 
+        elif [[ "$line" != "" ]]
+        then
             normal_colors
             send_to_fifo_with_echo "$line"
             get_egg
@@ -499,7 +504,7 @@ linea_a_linea <<ENDOFGAME
 # me pongo a teclear en el pc
 >reset
 >
-#>dir
+>dir
 >type foo.txt
 >exit
 
