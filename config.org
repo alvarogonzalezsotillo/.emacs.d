@@ -1160,6 +1160,10 @@ Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones
 
 * Navegación
 
+Modo de ficheros recientes
+#+begin_src emacs-lisp
+(recentf-mode 1)
+#+end_src
 
 Guardar el fichero de bookmarks cada vez que se modifiquen
 #+begin_src emacs-lisp
@@ -2253,6 +2257,7 @@ https://github.com/elarkasi/raspi-kms
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
 
+- asciinema
 - company-quickhelp-terminal
 - https://github.com/dgutov/diff-hl/blob/master/README.md
 - aftersave-add-hook
@@ -2267,7 +2272,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - https://github.com/astoff/digestif/blob/master/README.md
 - Elfeed
 - Zoom-frm
-- Ob-ammonite
 - greader
 - https://zge.us.to/emacs.d.html
 - Swiper-isearch - a more isearch-like swiper
@@ -2280,8 +2284,7 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - https://github.com/patrickt/emacs/blob/master/init.el
 - https://melpa.org/#/helm-file-preview
 - color-rg
-- recentf-mode
-- org-hide-emphasis-markers is a
+- - org-hide-emphasis-markers is a
 - openwith
 - calctex
 - dot-mode
@@ -2290,7 +2293,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - BAT cat
 - statusbar.el
 - dired-single
-- recentf
 - https://www.wezm.net/technical/2019/10/useful-command-line-tools/
 
 

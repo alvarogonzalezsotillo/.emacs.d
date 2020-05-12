@@ -70,74 +70,74 @@ responde_pregunta(){
     
     if [[ $pregunta == "What is your login name on the ‘endgame’ machine?"*  ]]
     then
-        send_to_fifo "answer" "toukmond"
+        send_to_fifo_with_echo "answer toukmond" 
     fi
     if [[ $pregunta == "What type of bear was hiding your key?"* ]]
     then
-        send_to_fifo "answer" "grizzly"
+        send_to_fifo_with_echo "answer grizzly"
     fi
 
     if [[ $pregunta == "How many corners are there in town (excluding the one with the Post Office)?"* ]]
     then
-        send_to_fifo "answer" "24"
+        send_to_fifo_with_echo "answer 24"
     fi
 
     if [[ $pregunta == "What is the last name of the author of EMACS?"* ]]
     then
-        send_to_fifo "answer" "Stallman"
+        send_to_fifo_with_echo "answer Stallman"
     fi
 
     if [[ $pregunta == "treasures for points?"* ]]
     then
-        send_to_fifo "answer" "4"
+        send_to_fifo_with_echo "answer 4"
     fi
     if [[ $pregunta == "What is the nearest whole dollar to the price of the shovel?"* ]]
     then
-        send_to_fifo "answer" "20"
+        send_to_fifo_with_echo "answer 20"
     fi
     if [[ $pregunta == "Which street in town is named after a U.S. state?"* ]]
     then
-        send_to_fifo "answer" "Vermont"
+        send_to_fifo_with_echo "answer Vermont"
     fi
     if [[ $pregunta == "What network protocol is used between pokey and gamma?"* ]]
     then
-        send_to_fifo "answer" "tcp"
+        send_to_fifo_with_echo "answer tcp"
     fi
     if [[ $pregunta == "How many pounds did the weight weigh?"* ]]
     then
-        send_to_fifo "answer" "10"
+        send_to_fifo_with_echo "answer 10"
     fi
     if [[ $pregunta == "What cartoon character is on the towel?"* ]]
     then
-        send_to_fifo "answer" "snoopy"
+        send_to_fifo_with_echo "answer snoopy"
     fi
     if [[ $pregunta == "What is the name of the bus company serving the town?"* ]]
     then
-        send_to_fifo "answer" "mobytours"
+        send_to_fifo_with_echo "answer mobytours"
     fi
     if [[ $pregunta == "What password did you use during anonymous ftp to gamma?"* ]]
     then
-        send_to_fifo "answer" "toukmond@pockey"
+        send_to_fifo_with_echo "answer toukmond@pockey"
     fi
     if [[ $pregunta == "Name either of the two objects you found by digging."* ]]
     then
-        send_to_fifo "answer" "cpu"
+        send_to_fifo_with_echo "answer cpu"
     fi
     if [[ $pregunta == "Give either of the two last names in the mailroom, other than your own."* ]]
     then
-        send_to_fifo "answer" "Collier"
+        send_to_fifo_with_echo "answer Collier"
     fi
     if [[ $pregunta == "What is your password on the machine called ‘pokey’?"* ]]
     then
-        send_to_fifo "answer" "robert"
+        send_to_fifo_with_echo "answer robert"
     fi
     if [[ $pregunta == "How many megabytes of memory is on the CPU board for the Vax?"* ]]
     then
-        send_to_fifo "answer" "2"
+        send_to_fifo_with_echo "answer 2"
     fi
     if [[ $pregunta == "Name the STREET which runs right over the subway stop."* ]]
     then
-        send_to_fifo "answer" "fourth"
+        send_to_fifo_with_echo "answer fourth"
     fi
 
 
@@ -173,6 +173,13 @@ normal_colors(){
     echo # -e "\e[30m\e[47m"
 }
 
+send_to_fifo_with_echo(){
+    local TO_FIFO=$1
+    local PROMPT=${2:-"I SAY:"}
+    echo $PROMPT $TO_FIFO
+    send_to_fifo $TO_FIFO
+}
+
 linea_a_linea(){
     while IFS='' read -r line || [[ -n "$line" ]]
     do
@@ -180,8 +187,7 @@ linea_a_linea(){
         then  
             computer_colors
             local ordenalpc=${line:1}
-            echo ES UNA ORDEN PARA EL PC: $ordenalpc
-            send_to_fifo "$ordenalpc"
+            send_to_fifo_with_echo "$ordenalpc" "PC COMMAND"
             get_pc_combination
         elif [[ $line == \#* ]]
         then
@@ -189,8 +195,7 @@ linea_a_linea(){
             echo COMENTARIO: $line 
         else
             normal_colors
-            echo TECLEO: $line 
-            send_to_fifo $line
+            send_to_fifo_with_echo "$line"
             get_egg
             responde_pregunta
         fi
