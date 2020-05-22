@@ -2,6 +2,40 @@
 
 DUNNETOUT=dunnet.out
 DUNNETLOG=dunnet.log
+
+init_tput(){
+    bgBlack=$(tput setab 0) # black
+    bgRed=$(tput setab 1) # red
+    bgGreen=$(tput setab 2) # green
+    bgYellow=$(tput setab 3) # yellow
+    bgBlue=$(tput setab 4) # blue
+    bgMagenta=$(tput setab 5) # magenta
+    bgCyan=$(tput setab 6) # cyan
+    bgWhite=$(tput setab 7) # white
+
+    # foreground color using ANSI escape
+
+    fgBLack=$(tput setaf 0) # black
+    fgRed=$(tput setaf 1) # red
+    fgGreen=$(tput setaf 2) # green
+    fgYellow=$(tput setaf 3) # yellow
+    fgBlue=$(tput setaf 4) # blue
+    fgMagenta=$(tput setaf 5) # magenta
+    fgCyan=$(tput setaf 6) # cyan
+    fgWhite=$(tput setaf 7) # white
+
+    # text editing options
+
+    txBold=$(tput bold)   # bold
+    txHalf=$(tput dim)    # half-bright
+    txUnderline=$(tput smul)   # underline
+    txEndUnder=$(tput rmul)   # exit underline
+    txReverse=$(tput rev)    # reverse
+    txStandout=$(tput smso)   # standout
+    txEndStand=$(tput rmso)   # exit standout
+    txReset=$(tput sgr0)   # reset attributes
+}
+
 log(){
     echo $* >> "$DUNNETLOG"
 }
@@ -15,7 +49,7 @@ clean_up(){
 set_up_fifo(){
     rm dunnet.in
     mkfifo dunnet.in
-    sleep 10m > dunnet.in & #keep fifo open
+    sleep 30m > dunnet.in & #keep fifo open
 }
 
 send_to_fifo(){
@@ -58,10 +92,10 @@ string_contains(){
 
 get_egg(){
     #if last_output_line | grep -i "egg"
-    if string_contains "$(last_output_line)"  "egg"
+    if string_contains "$(last_output_line)"  "There is a jewel-encrusted egg here"
     then
         log He encontrado el huevo enjoyado
-        send_to_fifo "take egg"
+        send_to_fifo_with_echo "take egg" "EGG FOUND!: "
     fi
 }
 
@@ -167,17 +201,22 @@ start_dunnet(){
 }
 
 computer_colors(){
-    echo  -en "\e[37m\e[40m"
+    echo  -en # "\e[37m\e[40m"
 }
 
 normal_colors(){
-    echo  -en "\e[30m\e[47m"
+    echo  -en # "\e[30m\e[47m"
 }
 
+
+
 send_to_fifo_with_echo(){
+    init_tput
     local TO_FIFO=$1
-    local PROMPT=${2:-"I SAY:"}
-    echo $PROMPT $TO_FIFO
+    local PROMPT=${2:-""}
+    printf "$txBold$txUnderline%s%s$txReset\n\n" "$PROMPT" "$TO_FIFO"
+    #sleep 1
+    printf "\n"
     send_to_fifo $TO_FIFO
 }
 
@@ -185,26 +224,23 @@ linea_a_linea(){
     while IFS='' read -r line || [[ -n "$line" ]]
     do
 
-        sleep 1
+        #sleep 1
         
         if [[ $line == \>* ]]
         then  
-            computer_colors
             local ordenalpc=${line:1}
-            send_to_fifo_with_echo "$ordenalpc" " "
+            send_to_fifo_with_echo "$ordenalpc" "I TYPE:"
             get_pc_combination
         elif [[ $line == \#* ]]
         then
-            normal_colors
-            echo COMMENT TO MYSELF: $line 
+            printf "${fgBlue}COMMENT TO MYSELF: %s$txReset\n" "$line"
         elif [[ "$line" != "" ]]
         then
-            normal_colors
             send_to_fifo_with_echo "$line"
             get_egg
             responde_pregunta
         fi
-        #log "(small wait until next line)"
+
     done 
 }
 
@@ -756,7 +792,7 @@ score
 drop brass key
 drop license
 drop lamp
-DROP bone             
+DROP bone
 drop platinum bar
 drop coins
 drop ruby
