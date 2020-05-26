@@ -2289,7 +2289,7 @@ https://github.com/elarkasi/raspi-kms
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
-
+- fancy-narrow
 - helm-treemacs-icons
 - lsp-latex
 - https://github.com/Borderliner/RME
