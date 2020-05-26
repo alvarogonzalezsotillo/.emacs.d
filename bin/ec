@@ -5,4 +5,4 @@ then
     file="."
 fi
    
-emacsclient -n $file
+emacsclient -c -a "" -n $file

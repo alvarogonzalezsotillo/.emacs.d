@@ -171,7 +171,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | htmlize                        |                                                                |
 | ibuffer-sidebar                |                                                                |
 | imenu-anywhere                 |                                                                |
-| imenu-list                     |                                                                |
 | indent-guide                   |                                                                |
 | intellij-theme                 |                                                                |
 | kodi-remote                    |                                                                |
@@ -181,14 +180,15 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | magit                          | Interfaz para git                                              |
 | markdown-mode                  |                                                                |
 | markdown-preview-mode          |                                                                |
+| ob-ammonite                    |                                                                |
 | ob-restclient                  |                                                                |
 | ob-rust                        |                                                                |
 | org                            |                                                                |
 | org-attach-screenshot          |                                                                |
 | org-bullets                    |                                                                |
 | org-page                       |                                                                |
+| origami                        |                                                                |
 | page-break-lines               |                                                                |
-| paradox                        |                                                                |
 | php-mode                       |                                                                |
 | plantuml-mode                  |                                                                |
 | popup-complete                 |                                                                |
@@ -217,7 +217,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | use-ttf                        | Instala la fuente por defecto en todos los sistemas            |
 | vdiff                          |                                                                |
 | vim-empty-lines-mode           |                                                                |
-| volatile-highlights            |                                                                |
 | web-beautify                   |                                                                |
 | web-mode                       |                                                                |
 | wgrep                          |                                                                |
@@ -237,6 +236,7 @@ El bucle =dolist= se realiza sobre los datos de la tabla =mis-paquetes=. Cada fi
 
 
 
+
 Por último, el paquete =ob-scala= es un paquete local bajado de [[https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el][https://github.com/tkf/org-mode/blob/master/lisp/ob-scala.el]]. Sirve para ejecutar código =scala= directamente desde un documento =orgmode=.
 
 #+begin_src lisp
@@ -250,6 +250,7 @@ Añado algunos /mime-type/ al servidor HTTP
 #+BEGIN_SRC emacs-lisp
   (use-package simple-httpd
     :defer 1
+    :ensure t
     :config
     (add-to-list 'httpd-mime-types '("mjs" . "text/javascript") )
     (add-to-list 'httpd-mime-types '("wasm" . "application/wasm") )
@@ -715,6 +716,7 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
      (dot . t)
      (plantuml . t)
      ;(scala . t)
+     (ammonite . t)
      (shell . t)))
 #+end_src
 
@@ -814,16 +816,15 @@ Tampoco me interesan los ficheros de /lock/.
         version-control t)
 
   (setq create-lockfiles nil)
+
+ (setq auto-save-file-name-transforms
+          `((".*" "~/.saves" t)))
 #+end_src
-
-
 
 ** Latex
 
 #+begin_src emacs-lisp
-(use-package auctex
-  :defer 1
-  :ensure t
+(use-package latex
   :config
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
@@ -833,7 +834,7 @@ Tampoco me interesan los ficheros de /lock/.
 ; Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
 
 (setq LaTeX-verbatim-environments
-      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql"))
+      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql" "listadoshell"))
 
 ; Para imenu, defino una macro de Latex que no hace nada, pero que detecto en imenu.
 (add-to-list 'TeX-outline-extra '("imenu" 2))
@@ -1091,7 +1092,11 @@ Cuando exporto un fichero =org= a =reveal.js= tengo problemas en la forma en que
 
 
 * Edición
-
+** Acentos en KDE
+Desde que uso Plasma no funcionan bien los acentos:
+#+begin_src emacs-lisp
+(require 'iso-transl)
+#+end_src
 ** Expresiones regulares para find/replace
 #+begin_src emacs-lisp
 
@@ -1156,8 +1161,20 @@ Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones
 
 
 
+** Javascript
+
+   #+begin_src emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.mjs\\'" . js2-mode))
+   #+end_src
+
+
 * Navegación
 
+Modo de ficheros recientes
+#+begin_src emacs-lisp
+(recentf-mode 1)
+(setq recentf-max-saved-items 2000)
+#+end_src
 
 Guardar el fichero de bookmarks cada vez que se modifiquen
 #+begin_src emacs-lisp
@@ -1240,82 +1257,91 @@ Avoid performance issues in files with very long lines.
 
 ** Pestañas
 #+begin_src emacs-lisp
-  (use-package centaur-tabs
-    :ensure t
-    :defer 1
-    :config
-    (setq centaur-tabs-set-icons t)
-    (setq centaur-tabs-style "alternate")
-    (setq centaur-tabs-set-modified-marker t)
-    (setq centaur-tabs-gray-out-icons 'buffer)
-    (setq centaur-tabs-set-bar 'over)
-    (setq centaur-tabs-cycle-scope 'tabs)
-    (setq centaur-tabs-show-navigation-buttons t)
 
-    (defun my-centaur-tabs-hide-tab (x)
-      "Incluir magit entre los visibles."
-      (let ((name (format "%s" x)))
-        (or
-         ;; Current window is not dedicated window.
-         (window-dedicated-p (selected-window))
+(defun my-centaur-tabs-font-sizes (&optional height)
+  (interactive
+   (list 
+    (read-number "height: " 0.8)))
 
-         ;; Buffer name not match below blacklist.
-         (string-prefix-p "*epc" name)
-         (string-prefix-p "*helm" name)
-         (string-prefix-p "*Compile-Log*" name)
-         (string-prefix-p "*lsp" name)
-         (string-prefix-p "*company" name)
-         (string-prefix-p "*Flycheck" name)
-         (string-prefix-p "*tramp" name)
-         (string-prefix-p " *Mini" name)
-         (string-prefix-p "*help" name)
-         (string-prefix-p "*Help" name)
-         (string-prefix-p "*Helm" name)
+  (mapcar
+   (lambda (face) (set-face-attribute face nil :height (or height 0.8)) )
+   '(
+     centaur-tabs-active-bar-face
+     centaur-tabs-default
+     centaur-tabs-unselected
+     centaur-tabs-selected
+     centaur-tabs-unselected-modified
+     centaur-tabs-selected-modified
+     centaur-tabs-close-unselected
+     centaur-tabs-close-selected
+     centaur-tabs-close-mouse-face
+     centaur-tabs-modified-marker-selected
+     centaur-tabs-modified-marker-unselected
+     ))
 
-         )))
+  (setq centaur-tabs-height 10)
+  (setq centaur-tabs-bar-height (+ 8 centaur-tabs-height)))
 
-    (setq centaur-tabs-hide-tabs-hooks '(reb-mode-hook completion-list-mode-hook))
-    (setq centaur-tabs-hide-tab-function 'my-centaur-tabs-hide-tab)
+(use-package centaur-tabs
+  :ensure t
+  :defer 1
+  :config
+  (setq centaur-tabs-set-icons t)
+  (setq centaur-tabs-style "alternate")
+  (setq centaur-tabs-set-modified-marker t)
+  (setq centaur-tabs-gray-out-icons 'buffer)
+  (setq centaur-tabs-set-bar 'over)
+  (setq centaur-tabs-cycle-scope 'tabs)
+  (setq centaur-tabs-show-navigation-buttons t)
+
+  (defun my-centaur-tabs-hide-tab (x)
+    "Incluir magit entre los visibles."
+    (let ((name (format "%s" x)))
+      (or
+       ;; Current window is not dedicated window.
+       (window-dedicated-p (selected-window))
+
+       ;; Buffer name not match below blacklist.
+       (string-prefix-p "*epc" name)
+       (string-prefix-p "*helm" name)
+       (string-prefix-p "*Compile-Log*" name)
+       (string-prefix-p "*lsp" name)
+       (string-prefix-p "*company" name)
+       (string-prefix-p "*Flycheck" name)
+       (string-prefix-p "*tramp" name)
+       (string-prefix-p " *Mini" name)
+       (string-prefix-p "*help" name)
+       (string-prefix-p "*Help" name)
+       (string-prefix-p "*Helm" name)
+
+       )))
+
+  (setq centaur-tabs-hide-tabs-hooks '(reb-mode-hook completion-list-mode-hook))
+  (setq centaur-tabs-hide-tab-function 'my-centaur-tabs-hide-tab)
 
 
-    (mapcar
-     (lambda (face) (set-face-attribute face nil :height 0.8) )
-     '(
-       centaur-tabs-active-bar-face
-       centaur-tabs-default
-       centaur-tabs-unselected
-       centaur-tabs-selected
-       centaur-tabs-unselected-modified
-       centaur-tabs-selected-modified
-       centaur-tabs-close-unselected
-       centaur-tabs-close-selected
-       centaur-tabs-close-mouse-face
-       centaur-tabs-modified-marker-selected
-       centaur-tabs-modified-marker-unselected
-       ))
+  (my-centaur-tabs-font-sizes)
 
-    (setq centaur-tabs-height 10)
-    (setq centaur-tabs-bar-height (+ 8 centaur-tabs-height))
+  (centaur-tabs-mode t)
+  (centaur-tabs-group-by-projectile-project)
 
+  (defun my-maximize-or-split ()
+    (interactive)
+    (if (one-window-p)
+        (split-window-below)
+      (delete-other-window)))
 
+  (define-key centaur-tabs-mode-map centaur-tabs-prefix-key centaur-tabs-prefix-map)
+  (define-key centaur-tabs-mode-map (kbd "<header-line> <double-mouse-1>") 'my-maximize-or-split) 
+  (define-key centaur-tabs-backward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-left) 
+  (define-key centaur-tabs-forward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-right)
 
-    (centaur-tabs-mode t)
-    (centaur-tabs-group-by-projectile-project)
-
-    (defun my-maximize-or-split ()
-      (interactive)
-      (if (one-window-p)
-          (split-window-below)
-          (delete-other-window)))
-
-    (define-key centaur-tabs-mode-map centaur-tabs-prefix-key centaur-tabs-prefix-map)
-    (define-key centaur-tabs-mode-map (kbd "<header-line> <double-mouse-1>") 'my-maximize-or-split) 
-    (define-key centaur-tabs-backward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-left) 
-    (define-key centaur-tabs-forward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-right)
-
-    (setq centaur-tabs--track-selected t) 
-    )
+  (setq centaur-tabs--track-selected t) 
+  )
 #+end_src
+
+#+RESULTS:
+: t
 
 
 
@@ -1415,22 +1441,6 @@ Arranco el servidor para utilizar /emacsclient/
 #+end_src
 
 
-** /Modeline/
-Mi línea de estado (modeline)
-#+begin_src emacs-lisp
-(setq-default mode-line-format
-              (list
-               " "
-               mode-line-modified
-               " %[" mode-line-buffer-identification " %] "
-               " | " '(vc-mode vc-mode)
-               " | %m %n "
-               " | %IB %Z"
-               " | %l:%c %p"
-               mode-line-end-spaces
-               ) )
-
-#+end_src
 
 
 ** =minimap=
@@ -1461,6 +1471,7 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 (defun my/dired-hook ()
   (all-the-icons-dired-mode 1)
   (dired-hide-details-mode 1)
+  (auto-revert-mode 1)
   (setq  indent-line-function 'dired-subtree-toggle))
 
 (add-hook 'dired-mode-hook 'my/dired-hook)
@@ -1620,6 +1631,13 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
       (define-key map (kbd "<S-f2>") 'bm-previous)
 
       (define-key map (kbd "C-M-%") 'vr/query-replace)
+
+      (define-key map (kbd "<C-return>") 'origami-recursively-toggle-node)
+      (define-key map (kbd "<C-S-return>") 'origami-reset)
+
+
+
+      
 
 
       map)
@@ -2011,10 +2029,78 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
 
 * Apariencia
 
+** =imenu=
+Reduzco el tamaño de todas las fuentes de =imenu=
+   #+begin_src emacs-lisp
+(use-package imenu-list
+  :defer 1
+  :ensure t
+  :config 
+   (set-face-attribute 'imenu-list-entry-face nil :height  0.8)
+   (add-hook 'imenu-list-major-mode-hook (lambda () (message "IMENU MAJOR MODE")(linum-mode 1))))
+   #+end_src
+
+
+** /Modeline/, =mini-frame= y =feebleline=
+Mi línea de estado (modeline)
+#+begin_src emacs-lisp
+(setq my-mode-line-format
+              (list
+               " "
+               mode-line-modified
+               " %[" mode-line-buffer-identification " %] "
+               " | " '(vc-mode vc-mode)
+               " | %m %n "
+               " | %IB %Z"
+               " | %l:%c %p"
+               mode-line-end-spaces
+               ) )
+
+(setq-default mode-line-format my-mode-line-format)
+#+end_src
+
+Pone en lo alto el minibuffer. No sé si me gusta, funciona algo raro, y lo mismo no va bien con =febbleline= y =mini-modeline=.
+#+begin_src lisp
+(use-package mini-frame
+  :ensure t
+  :defer 1
+  :config
+  (mini-frame-mode))
+#+end_src
+
+Prefiero =mini-modeline= para quitar la modeline.
+#+begin_src lisp
+(use-package    feebleline
+  :ensure       t
+  :config
+  (setq feebleline-msg-functions
+        '((feebleline-line-number         :post "" :fmt "%5s")
+          (feebleline-column-number       :pre ":" :fmt "%-2s")
+          (feebleline-file-directory      :face feebleline-dir-face :post "")
+          (feebleline-file-or-buffer-name :face font-lock-keyword-face :post "")
+          (feebleline-file-modified-star  :face font-lock-warning-face :post "")
+          (feebleline-git-branch          :face feebleline-git-face :pre " : ")
+          (feebleline-project-name        :align right)))
+  (feebleline-mode 1))
+#+end_src
+
+
+#+begin_src lisp
+(use-package    mini-modeline
+  :ensure       t
+  :defer 10
+  :config
+  (setq mini-modeline-enhance-visual t)
+  (setq mini-modeline-r-format my-mode-line-format)
+  (my-centaur-tabs-font-sizes 100)
+  (mini-modeline-mode t))
+#+end_src
+
+
 ** Cursor
 Cursor como barra vertical
 #+begin_src emacs-lisp
-(set-default 'cursor-type 'bar)
+(set-default 'cursor-type 'box)
 (blink-cursor-mode 1)
 (setq blink-cursor-blinks 0)
 #+end_src
@@ -2088,7 +2174,9 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
   (if (>= emacs-major-version 26)
       (display-line-numbers-mode 1))
   (auto-highlight-symbol-mode 1)
-  (yafolding-mode 1))
+  ;(yafolding-mode 1)
+  (origami-mode 1)
+)
 
 (defun bonito-para-latex()
   (interactive)
@@ -2173,8 +2261,8 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
     :ensure t
     :config
     (setq desktop-load-locked-desktop t)
-    (setq desktop-save t)
-    (desktop-save-mode 1)
+    ;(setq desktop-save t)
+    ;(desktop-save-mode 1)
     ;(when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
     ;    (desktop-read))
   )
@@ -2201,14 +2289,18 @@ https://github.com/elarkasi/raspi-kms
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
+
 - helm-treemacs-icons
 - lsp-latex
 - https://github.com/Borderliner/RME
 - feebleline
 - vlfi ficheros grandes
 - mini-frame
+
+
+- asciinema
+
 - company-quickhelp-terminal
-- company-box, no me gystó
 - https://github.com/dgutov/diff-hl/blob/master/README.md
 - aftersave-add-hook
 - setq org-html-htmlize-output-type 'css)
@@ -2222,7 +2314,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - https://github.com/astoff/digestif/blob/master/README.md
 - Elfeed
 - Zoom-frm
-- Ob-ammonite
 - greader
 - https://zge.us.to/emacs.d.html
 - Swiper-isearch - a more isearch-like swiper
@@ -2235,8 +2326,7 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - https://github.com/patrickt/emacs/blob/master/init.el
 - https://melpa.org/#/helm-file-preview
 - color-rg
-- recentf-mode
-- org-hide-emphasis-markers is a
+- - org-hide-emphasis-markers is a
 - openwith
 - calctex
 - dot-mode
@@ -2245,7 +2335,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - BAT cat
 - statusbar.el
 - dired-single
-- recentf
 - https://www.wezm.net/technical/2019/10/useful-command-line-tools/
 
 
@@ -2326,4 +2415,71 @@ https://developer.android.com/reference/android/net/wifi/ScanResult.html
 
 ** location
 https://developer.android.com/training/location/retrieve-current#java
+
+
+#+begin_src emacs
+
+(defun initial-yafolding()
+  (interactive)
+
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward "*yafolding-hide-parent*" nil t 1)
+      (yafolding-hide-parent-element)))
+
+    (goto-char (point-min))
+    (while (search-forward "*yafolding-hide-next-line*" nil t 1)
+      (forward-line)
+      (yafolding-hide-element))
+
+    (goto-char (point-min))
+    (while (search-forward "*yafolding-hide*" nil t 1)
+      (yafolding-hide-element)))
+
+(add-hook 'find-file-hook 'initial-yafolding)
+
+#+end_src
+
+
+#+begin_src emacs-lisp
+ (defun origami-parser-imenu-flat (create)
+    "Origami parser producing folds for each imenu entry, without nesting."
+    (require 'imenu)
+    (lambda (content)
+      (let ((orig-major-mode major-mode))
+        (with-temp-buffer
+          (insert content)
+          (funcall orig-major-mode)
+          (let* ((items
+                  (-as-> (imenu--make-index-alist t) items
+                         (-flatten items)
+                         (-filter 'listp items)))
+                 (positions
+                  (-as-> (-map #'cdr items) positions
+                         (-filter 'identity positions)
+                         (-map-when 'markerp 'marker-position positions)
+                         (-filter 'natnump positions)
+                         (cons (point-min) positions)
+                         (-snoc positions (point-max))
+                         (-sort '< positions)
+                         (-uniq positions)))
+                 (ranges
+                  (-zip-pair positions (-map '1- (cdr positions))))
+                 (fold-nodes
+                  (--map
+                   (-let*
+                       (((range-beg . range-end) it)
+                        (line-beg
+                         (progn (goto-char range-beg)
+                                (line-beginning-position)))
+                        (offset
+                         (- (min (line-end-position) range-end) line-beg))
+                        (fold-node
+                         (funcall create line-beg range-end offset nil)))
+                     fold-node)
+                   ranges)))
+            fold-nodes)))))
+
+(add-to-list 'origami-parser-alist '( shell-script-mode . origami-parser-imenu-flat ))
+#+end_src
 
