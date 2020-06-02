@@ -175,6 +175,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | intellij-theme                 |                                                                |
 | kodi-remote                    |                                                                |
 | latex-preview-pane             |                                                                |
+| literate-calc-mode             |                                                                |
 | lorem-ipsum                    |                                                                |
 | magic-latex-buffer             |                                                                |
 | magit                          | Interfaz para git                                              |
@@ -187,7 +188,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | org-attach-screenshot          |                                                                |
 | org-bullets                    |                                                                |
 | org-page                       |                                                                |
-| origami                        |                                                                |
 | page-break-lines               |                                                                |
 | php-mode                       |                                                                |
 | plantuml-mode                  |                                                                |
@@ -221,7 +221,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | web-mode                       |                                                                |
 | wgrep                          |                                                                |
 | wgrep-helm                     |                                                                |
-| yafolding                      | /Folding/ de secciones basado en la indentación                |
+| yaml-mode                      |                                                                |
 |--------------------------------+----------------------------------------------------------------|
 
 *** Carga de paquetes sin configuración adicional
@@ -834,7 +834,7 @@ Tampoco me interesan los ficheros de /lock/.
 ; Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
 
 (setq LaTeX-verbatim-environments
-      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql" "listadoshell"))
+      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql" "listadoshell" "listadojava"))
 
 ; Para imenu, defino una macro de Latex que no hace nada, pero que detecto en imenu.
 (add-to-list 'TeX-outline-extra '("imenu" 2))
@@ -1634,6 +1634,7 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
       (define-key map (kbd "<C-return>") 'origami-recursively-toggle-node)
       (define-key map (kbd "<C-S-return>") 'origami-reset)
+      (define-key map (kbd "<M-return>") 'origami-close-all-nodes)
 
 
 
@@ -2028,6 +2029,56 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
 
 
 * Apariencia
+
+** =origami=
+
+   #+begin_src emacs-lisp
+
+(use-package origami
+  :defer 1
+  :ensure t
+  :config
+ (setq origami-show-fold-header nil)
+ (setq origami-fold-replacement "⤵⤵⤵")
+ (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified)
+ (set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
+
+)
+
+   #+end_src
+
+#+begin_src emacs-lisp
+(require 'origami-predef)
+
+(defun origami-predef-javascript()
+  "Close some predefined patterns, useful in javascript."
+  (interactive)
+  (origami-predef-apply-patterns (list
+                                  "^\\s-*[[:alnum:]]+([()[:alnum:], >=]*)\\s-*{"
+                                  "^\\s-*function\\s-*[[:alnum:]]+([()[:alnum:], >=]*)\\s-*{"
+                                  )))
+(add-hook 'js2-mode-hook #'origami-predef-javascript)
+
+
+(defun origami-predef-java()
+  "Close some predefined patterns, useful in java."
+  (interactive)
+  (origami-predef-apply-patterns '("private .*{" "protected .*{")))
+(add-hook 'java-mode-hook #'origami-predef-java)
+
+(defun origami-predef-sql()
+  "Close some predefined patterns, useful in SQL."
+  (interactive)
+  (origami-predef-apply-patterns '("create .*table" "create .*view" "begin")))
+(add-hook 'sql-mode-hook #'origami-predef-sql)
+
+
+(defun origami-predef-gift()
+  "Close some predefined patterns, useful in gift-mode (https://github.com/csrhodes/gift-mode)"
+  (interactive)
+  (origami-predef-apply-patterns "{" ))
+(add-hook 'gift-mode-hook #'origami-predef-gift)
+#+end_src
 
 ** =imenu=
 Reduzco el tamaño de todas las fuentes de =imenu=
