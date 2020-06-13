@@ -171,11 +171,11 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | htmlize                        |                                                                |
 | ibuffer-sidebar                |                                                                |
 | imenu-anywhere                 |                                                                |
-| imenu-list                     |                                                                |
 | indent-guide                   |                                                                |
 | intellij-theme                 |                                                                |
 | kodi-remote                    |                                                                |
 | latex-preview-pane             |                                                                |
+| literate-calc-mode             |                                                                |
 | lorem-ipsum                    |                                                                |
 | magic-latex-buffer             |                                                                |
 | magit                          | Interfaz para git                                              |
@@ -221,7 +221,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | web-mode                       |                                                                |
 | wgrep                          |                                                                |
 | wgrep-helm                     |                                                                |
-| yafolding                      | /Folding/ de secciones basado en la indentación                |
+| yaml-mode                      |                                                                |
 |--------------------------------+----------------------------------------------------------------|
 
 *** Carga de paquetes sin configuración adicional
@@ -233,6 +233,7 @@ El bucle =dolist= se realiza sobre los datos de la tabla =mis-paquetes=. Cada fi
     (setq lista `(use-package ,(intern (car paquete)) :defer 1 :ensure t ) )
     (eval lista))
 #+END_SRC
+
 
 
 
@@ -249,6 +250,7 @@ Añado algunos /mime-type/ al servidor HTTP
 #+BEGIN_SRC emacs-lisp
   (use-package simple-httpd
     :defer 1
+    :ensure t
     :config
     (add-to-list 'httpd-mime-types '("mjs" . "text/javascript") )
     (add-to-list 'httpd-mime-types '("wasm" . "application/wasm") )
@@ -814,9 +816,10 @@ Tampoco me interesan los ficheros de /lock/.
         version-control t)
 
   (setq create-lockfiles nil)
+
+ (setq auto-save-file-name-transforms
+          `((".*" "~/.saves" t)))
 #+end_src
-
-
 
 ** Latex
 
@@ -831,7 +834,7 @@ Tampoco me interesan los ficheros de /lock/.
 ; Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
 
 (setq LaTeX-verbatim-environments
-      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql" "listadoshell"))
+      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql" "listadoshell" "listadojava"))
 
 ; Para imenu, defino una macro de Latex que no hace nada, pero que detecto en imenu.
 (add-to-list 'TeX-outline-extra '("imenu" 2))
@@ -1158,11 +1161,19 @@ Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones
 
 
 
+** Javascript
+
+   #+begin_src emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.mjs\\'" . js2-mode))
+   #+end_src
+
+
 * Navegación
 
 Modo de ficheros recientes
 #+begin_src emacs-lisp
 (recentf-mode 1)
+(setq recentf-max-saved-items 2000)
 #+end_src
 
 Guardar el fichero de bookmarks cada vez que se modifiquen
@@ -1460,6 +1471,7 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 (defun my/dired-hook ()
   (all-the-icons-dired-mode 1)
   (dired-hide-details-mode 1)
+  (auto-revert-mode 1)
   (setq  indent-line-function 'dired-subtree-toggle))
 
 (add-hook 'dired-mode-hook 'my/dired-hook)
@@ -1619,6 +1631,14 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
       (define-key map (kbd "<S-f2>") 'bm-previous)
 
       (define-key map (kbd "C-M-%") 'vr/query-replace)
+
+      (define-key map (kbd "<C-return>") 'origami-recursively-toggle-node)
+      (define-key map (kbd "<C-S-return>") 'origami-reset)
+      (define-key map (kbd "<M-return>") 'origami-close-all-nodes)
+
+
+
+      
 
 
       map)
@@ -2010,6 +2030,68 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
 
 * Apariencia
 
+** =origami=
+
+   #+begin_src emacs-lisp
+
+(use-package origami
+  :defer 1
+  :ensure t
+  :config
+ (setq origami-show-fold-header nil)
+ (setq origami-fold-replacement "⤵⤵⤵")
+ (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified)
+ (set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
+
+)
+
+   #+end_src
+
+#+begin_src emacs-lisp
+(require 'origami-predef)
+
+(defun origami-predef-javascript()
+  "Close some predefined patterns, useful in javascript."
+  (interactive)
+  (origami-predef-apply-patterns (list
+                                  "^\\s-*[[:alnum:]]+([()[:alnum:], >=]*)\\s-*{"
+                                  "^\\s-*function\\s-*[[:alnum:]]+([()[:alnum:], >=]*)\\s-*{"
+                                  )))
+(add-hook 'js2-mode-hook #'origami-predef-javascript)
+
+
+(defun origami-predef-java()
+  "Close some predefined patterns, useful in java."
+  (interactive)
+  (origami-predef-apply-patterns '("private .*{" "protected .*{")))
+(add-hook 'java-mode-hook #'origami-predef-java)
+
+(defun origami-predef-sql()
+  "Close some predefined patterns, useful in SQL."
+  (interactive)
+  (origami-predef-apply-patterns '("create .*table" "create .*view" "begin")))
+(add-hook 'sql-mode-hook #'origami-predef-sql)
+
+
+(defun origami-predef-gift()
+  "Close some predefined patterns, useful in gift-mode (https://github.com/csrhodes/gift-mode)"
+  (interactive)
+  (origami-predef-apply-patterns "{" ))
+(add-hook 'gift-mode-hook #'origami-predef-gift)
+#+end_src
+
+** =imenu=
+Reduzco el tamaño de todas las fuentes de =imenu=
+   #+begin_src emacs-lisp
+(use-package imenu-list
+  :defer 1
+  :ensure t
+  :config 
+   (set-face-attribute 'imenu-list-entry-face nil :height  0.8)
+   (add-hook 'imenu-list-major-mode-hook (lambda () (message "IMENU MAJOR MODE")(linum-mode 1))))
+   #+end_src
+
+
 ** /Modeline/, =mini-frame= y =feebleline=
 Mi línea de estado (modeline)
 #+begin_src emacs-lisp
@@ -2143,7 +2225,9 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
   (if (>= emacs-major-version 26)
       (display-line-numbers-mode 1))
   (auto-highlight-symbol-mode 1)
-  (yafolding-mode 1))
+  ;(yafolding-mode 1)
+  (origami-mode 1)
+)
 
 (defun bonito-para-latex()
   (interactive)
@@ -2256,8 +2340,17 @@ https://github.com/elarkasi/raspi-kms
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
+- fancy-narrow
+- helm-treemacs-icons
+- lsp-latex
+- https://github.com/Borderliner/RME
+- feebleline
+- vlfi ficheros grandes
+- mini-frame
+
 
 - asciinema
+
 - company-quickhelp-terminal
 - https://github.com/dgutov/diff-hl/blob/master/README.md
 - aftersave-add-hook
@@ -2374,6 +2467,7 @@ https://developer.android.com/reference/android/net/wifi/ScanResult.html
 ** location
 https://developer.android.com/training/location/retrieve-current#java
 
+
 * Tele samsung
 https://www.askvg.com/secret-service-codes-for-sony-and-lg-tv/
 
@@ -2407,3 +2501,73 @@ P.STD + Menu + Sleep + Power
 Sleep + P.STD + Mute + Power
 
 You can press Channel Up/Down buttons to navigate between available options. To change their values, press Volume Up/Down buttons.
+
+* YAFOLDING
+
+#+begin_src emacs
+
+(defun initial-yafolding()
+  (interactive)
+
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward "*yafolding-hide-parent*" nil t 1)
+      (yafolding-hide-parent-element)))
+
+    (goto-char (point-min))
+    (while (search-forward "*yafolding-hide-next-line*" nil t 1)
+      (forward-line)
+      (yafolding-hide-element))
+
+    (goto-char (point-min))
+    (while (search-forward "*yafolding-hide*" nil t 1)
+      (yafolding-hide-element)))
+
+(add-hook 'find-file-hook 'initial-yafolding)
+
+#+end_src
+
+
+#+begin_src emacs-lisp
+ (defun origami-parser-imenu-flat (create)
+    "Origami parser producing folds for each imenu entry, without nesting."
+    (require 'imenu)
+    (lambda (content)
+      (let ((orig-major-mode major-mode))
+        (with-temp-buffer
+          (insert content)
+          (funcall orig-major-mode)
+          (let* ((items
+                  (-as-> (imenu--make-index-alist t) items
+                         (-flatten items)
+                         (-filter 'listp items)))
+                 (positions
+                  (-as-> (-map #'cdr items) positions
+                         (-filter 'identity positions)
+                         (-map-when 'markerp 'marker-position positions)
+                         (-filter 'natnump positions)
+                         (cons (point-min) positions)
+                         (-snoc positions (point-max))
+                         (-sort '< positions)
+                         (-uniq positions)))
+                 (ranges
+                  (-zip-pair positions (-map '1- (cdr positions))))
+                 (fold-nodes
+                  (--map
+                   (-let*
+                       (((range-beg . range-end) it)
+                        (line-beg
+                         (progn (goto-char range-beg)
+                                (line-beginning-position)))
+                        (offset
+                         (- (min (line-end-position) range-end) line-beg))
+                        (fold-node
+                         (funcall create line-beg range-end offset nil)))
+                     fold-node)
+                   ranges)))
+            fold-nodes)))))
+
+(add-to-list 'origami-parser-alist '( shell-script-mode . origami-parser-imenu-flat ))
+#+end_src
+
+
