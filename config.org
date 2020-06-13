@@ -2374,3 +2374,36 @@ https://developer.android.com/reference/android/net/wifi/ScanResult.html
 ** location
 https://developer.android.com/training/location/retrieve-current#java
 
+* Tele samsung
+https://www.askvg.com/secret-service-codes-for-sony-and-lg-tv/
+
+
+
+    Service Menu Code For Samsung TV:
+
+There are many codes available for accessing service menu in various Samsung TV models. You can try following codes one by one until you get access to service menu:
+
+First try following method. It works in all new Samsung TV series:
+
+Method 1: DO NOT power off your TV. Keep it ON and then press following buttons quickly on your TV remote:
+
+Mute + 1 + 1 + 9 + Enter
+
+Here "Enter" button is the OK/Select button present in the center of Left/Right/Top/Bottom buttons. It'll open secret service menu which allows you to turn on/off Hospitality Mode/Hotel Mode, etc.
+
+Other Methods:
+
+If above mentioned method doesn't work for you, try following methods:
+
+First power off your TV using the remote, then press following buttons quickly on the remote:
+
+Info + Settings + Mute + Power
+Mute + 1 + 8 + 2 + Power
+Mute + 1 + 1 + 9 + Power
+Display/Info + Menu + Mute + Power
+Display/Info + P.STD + Mute + Power
+P.STD + Help + Sleep + Power
+P.STD + Menu + Sleep + Power
+Sleep + P.STD + Mute + Power
+
+You can press Channel Up/Down buttons to navigate between available options. To change their values, press Volume Up/Down buttons.
