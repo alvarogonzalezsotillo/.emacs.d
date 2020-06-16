@@ -72,25 +72,28 @@ ls ~/.emacs.d/bin
 #+end_src
 
 #+RESULTS:
-| addtopath.sh                |
-| bfg-1.13.0.jar              |
-| colores-terminal.sh         |
-| colores-tty.sh              |
-| disable-gnome-animations.sh |
-| ec                          |
-| ghpages.sh                  |
-| gifttolatex                 |
-| githubclone.sh              |
-| keymon.sh                   |
-| pdf2svg.sh                  |
-| plantuml.1.2018.11.jar      |
-| rmtemplatex.sh              |
-| shellcheck                  |
-| shrinkpdf.sh                |
-| svg2pdf.sh                  |
-| texlab                      |
-| vncserver.sh                |
-| wake-alvarogonzalez.sh      |
+| addtopath.sh                 |
+| colores-terminal.sh          |
+| colores-tty.sh               |
+| disable-gnome-animations.sh  |
+| ec                           |
+| ghpages.sh                   |
+| gifttolatex                  |
+| githubclone.sh               |
+| install-emacs-as-service.org |
+| invert.sh                    |
+| keymon.sh                    |
+| pdf2svg.sh                   |
+| plantuml.1.2018.11.jar       |
+| rmtemplatex.sh               |
+| rotate-screen.sh             |
+| shellcheck                   |
+| shrinkpdf.sh                 |
+| svg2pdf.sh                   |
+| texlab                       |
+| video-to-whatsapp.sh         |
+| vncserver.sh                 |
+| wake-alvarogonzalez.sh       |
 
 
 * Carga de paquetes
@@ -124,7 +127,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | ac-js2                         |                                                                |
 | adaptive-wrap                  | Indentación visual de las líneas respecto a su prefijo         |
 | ag                             |                                                                |
-| alert                          |                                                                |
 | all-the-icons                  |                                                                |
 | all-the-icons-dired            |                                                                |
 | auto-highlight-symbol          | Resalte automático del símbolo bajo el cursor                  |
@@ -143,13 +145,10 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | company-restclient             |                                                                |
 | company-shell                  |                                                                |
 | company-web                    |                                                                |
-| crappy-jsp-mode                |                                                                |
 | default-text-scale             |                                                                |
 | diffview                       |                                                                |
 | dired-narrow                   |                                                                |
 | dired-subtree                  |                                                                |
-| dired-toggle                   |                                                                |
-| esup                           |                                                                |
 | expand-region                  |                                                                |
 | flycheck                       |                                                                |
 | flycheck-plantuml              |                                                                |
@@ -163,18 +162,13 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | helm-company                   |                                                                |
 | helm-flx                       |                                                                |
 | helm-gitignore                 |                                                                |
-| helm-google                    |                                                                |
 | helm-projectile                |                                                                |
 | helm-swoop                     |                                                                |
 | highlight-indent-guides        |                                                                |
-| howdoi                         |                                                                |
 | htmlize                        |                                                                |
 | ibuffer-sidebar                |                                                                |
-| imenu-anywhere                 |                                                                |
 | indent-guide                   |                                                                |
 | intellij-theme                 |                                                                |
-| kodi-remote                    |                                                                |
-| latex-preview-pane             |                                                                |
 | literate-calc-mode             |                                                                |
 | lorem-ipsum                    |                                                                |
 | magic-latex-buffer             |                                                                |
@@ -185,13 +179,11 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | ob-restclient                  |                                                                |
 | ob-rust                        |                                                                |
 | org                            |                                                                |
-| org-attach-screenshot          |                                                                |
 | org-bullets                    |                                                                |
 | org-page                       |                                                                |
 | page-break-lines               |                                                                |
 | php-mode                       |                                                                |
 | plantuml-mode                  |                                                                |
-| popup-complete                 |                                                                |
 | popup-imenu                    |                                                                |
 | popup-switcher                 |                                                                |
 | posframe                       |                                                                |
@@ -206,9 +198,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | scala-mode                     |                                                                |
 | skewer-mode                    |                                                                |
 | swiper-helm                    |                                                                |
-| switch-window                  |                                                                |
 | systemd                        |                                                                |
-| tablist                        |                                                                |
 | transmission                   |                                                                |
 | transpose-frame                |                                                                |
 | treemacs                       |                                                                |
@@ -264,7 +254,6 @@ Añado algunos /mime-type/ al servidor HTTP
 (use-package lsp-mode
   :ensure t
   :config
-   (message "ESTOY CONFIGURANDO LSP-MODE")
 )
 
 (use-package lsp-ui
@@ -286,16 +275,11 @@ Añado algunos /mime-type/ al servidor HTTP
   (defun my-enable-lsp ()
      (interactive)
      (lsp)
-     (lsp-ui-mode -1)
-     (message "Espero que esté bien el LSP")
-  )
+     (lsp-ui-mode -1))
 
   (add-hook 'rust-mode-hook #'my-enable-lsp)
 )
 #+end_src
-
-#+RESULTS:
-: t
 
 
 #+begin_src emacs-lisp
@@ -314,7 +298,7 @@ Añado algunos /mime-type/ al servidor HTTP
   :ensure t
   :defer 1
   :config
-    (add-hook 'rust-mode-hook 'cargo-minor-mode)
+    (add-hook 'rust-mode-hook #'cargo-minor-mode)
 )
 #+end_src
 
@@ -347,9 +331,9 @@ Estoy usando =treemacs= en vez de =neotree=.
     :defer 1
     :config
       (add-hook 'treemacs-mode-hook #'hacer-treemacs-resizable)
-      (treemacs--tear-down-git-mode)
+      ;(treemacs--tear-down-git-mode)
       (setq treemacs-silent-refresh t)
-      (setq treemacs--persist-kv-regex "^ ?- \\(?:\\sw\\|\\s_\\|\\s.\\)+ :: \\(?:/\\|\\sw\\|\\s_\\|\\s.\\|[[:space:]]\\)+$")
+      ;(setq treemacs--persist-kv-regex "^ ?- \\(?:\\sw\\|\\s_\\|\\s.\\)+ :: \\(?:/\\|\\sw\\|\\s_\\|\\s.\\|[[:space:]]\\)+$")
 
 
     (mapcar
@@ -432,8 +416,7 @@ Añado las siguientes reglas para hacer búsquedas simples con =dumb-jump= en fi
 
                  '(:language "javascript" :ext "mjs" :agtype "js" :rgtype "js")))
 
-
-  (setq dump-jump-selector 'helm)
+  (setq dumb-jump-selector 'helm)
 #+end_src
 
 ** Paquete =bm=
@@ -454,9 +437,6 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
     )
 #+END_SRC
 
-#+RESULTS:
-: bm-previous
-
 
 ** Paquete =multiple-cursors=
 
@@ -464,8 +444,6 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
   (use-package multiple-cursors
     :ensure t
     :custom (mc/always-run-for-all t))
-
-
 #+END_SRC
 
       
@@ -486,7 +464,6 @@ Lo he deshabilitado porque lo uso muy rara vez, y tarda bastante en actualizarse
 (use-package yasnippet-snippets
   :ensure t
   :after (yasnippet))
-    
 #+end_src
 
 
@@ -494,9 +471,8 @@ Lo he deshabilitado porque lo uso muy rara vez, y tarda bastante en actualizarse
 
 
 ** Paquete =smartparents=
-
-Este modo cierra automáticamente los paréntesis y otros bloques
-#+begin_src emacs-lisp
+Este modo cierra automáticamente los paréntesis y otros bloques. Aunque lo tengo desactivado siguen apareciendo, no sé quién los pone.
+#+begin_src emacs
 (use-package smartparens
   :ensure t
   :config
@@ -540,13 +516,13 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
   (defvar my-company-backends-prog-mode
     '(
+      company-lsp
       (
        company-web-html
        company-files
        company-dabbrev-code
        company-capf
        company-keywords
-       company-lsp
        company-yasnippet
        company-emoji
        company-capf
@@ -594,7 +570,6 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
   (define-key company-active-map [escape] 'company-abort)
   (global-company-mode)
-
 #+end_src
 
 
@@ -779,6 +754,10 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 =tramp= intenta optimizar las conexiones, enviando en línea los ficheros pequeños. Esto me da problemas en algunos sistemas, así que indico que los ficheros se copien a partir de 1 byte de tamaño:
 #+begin_src emacs-lisp
 (setq tramp-copy-size-limit 1)
+#+end_src
+
+A veces tengo problemas con tramp, así que tengo que activar las trazas de debug
+#+begin_src lisp
 (setq tramp-debug-buffer t)
 (setq tramp-verbose 10)
 #+end_src
@@ -932,7 +911,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   :config
     (setq helm-split-window-inside-p t)
     (setq helm-display-header-line nil)
-    (setq helm-autoresize-max-height 30)
+    (setq helm-autoresize-max-height 40)
     (setq helm-autoresize-min-height 30)
     (helm-autoresize-mode 1)
     (helm-mode 1)
@@ -1362,9 +1341,7 @@ Avoid performance issues in files with very long lines.
     (add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
     (add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
 
-    (add-hook 'text-mode-hook #'region-occurrences-highlighter-mode)
-
-  )
+    (add-hook 'text-mode-hook #'region-occurrences-highlighter-mode))
 #+end_src
 
 
@@ -2048,37 +2025,49 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
    #+end_src
 
 #+begin_src emacs-lisp
-(require 'origami-predef)
+(use-package origami-predef
+  :config
 
-(defun origami-predef-javascript()
-  "Close some predefined patterns, useful in javascript."
-  (interactive)
-  (origami-predef-apply-patterns (list
-                                  "^\\s-*[[:alnum:]]+([()[:alnum:], >=]*)\\s-*{"
-                                  "^\\s-*function\\s-*[[:alnum:]]+([()[:alnum:], >=]*)\\s-*{"
-                                  )))
-(add-hook 'js2-mode-hook #'origami-predef-javascript)
+  (defun origami-predef-javascript()
+    "Close some predefined patterns, useful in javascript."
+    (interactive)
+    (origami-predef-apply-patterns (list
+                                    "^\\s-*[[:alnum:]]+([()[:alnum:], >=]*)\\s-*{"
+                                    "^\\s-*function\\s-*[[:alnum:]]+([()[:alnum:], >=]*)\\s-*{"
+                                    )))
+  (add-hook 'js2-mode-hook #'origami-predef-javascript)
+
+  (defun origami-predef-lisp()
+    "Close some predefined patterns, useful in elisp."
+    (interactive)
+    (origami-predef-apply-patterns '("defcustom" "defvar" "defface" "defgroup" "defun .*--")))
+  (add-hook 'emacs-lisp-mode-hook #'origami-predef-lisp)
+
+  (defun origami-predef-java()
+    "Close some predefined patterns, useful in java."
+    (interactive)
+    (origami-predef-apply-patterns '("private .*{" "protected .*{")))
+  (add-hook 'java-mode-hook #'origami-predef-java)
+
+  (defun origami-predef-sql()
+    "Close some predefined patterns, useful in SQL."
+    (interactive)
+    (origami-predef-apply-patterns '("create .*table" "create .*view" "begin")))
+  (add-hook 'sql-mode-hook #'origami-predef-sql)
 
 
-(defun origami-predef-java()
-  "Close some predefined patterns, useful in java."
-  (interactive)
-  (origami-predef-apply-patterns '("private .*{" "protected .*{")))
-(add-hook 'java-mode-hook #'origami-predef-java)
-
-(defun origami-predef-sql()
-  "Close some predefined patterns, useful in SQL."
-  (interactive)
-  (origami-predef-apply-patterns '("create .*table" "create .*view" "begin")))
-(add-hook 'sql-mode-hook #'origami-predef-sql)
-
-
-(defun origami-predef-gift()
-  "Close some predefined patterns, useful in gift-mode (https://github.com/csrhodes/gift-mode)"
-  (interactive)
-  (origami-predef-apply-patterns "{" ))
-(add-hook 'gift-mode-hook #'origami-predef-gift)
+  (defun origami-predef-gift()
+    "Close some predefined patterns, useful in gift-mode (https://github.com/csrhodes/gift-mode)"
+    (interactive)
+    (origami-predef-apply-patterns "{" ))
+  (add-hook 'gift-mode-hook #'origami-predef-gift)
+  
+  (origami-predef-global-mode 1))
 #+end_src
+
+#+RESULTS:
+: t
+
 
 ** =imenu=
 Reduzco el tamaño de todas las fuentes de =imenu=
