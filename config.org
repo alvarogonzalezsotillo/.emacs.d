@@ -631,7 +631,9 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
     :ensure t
     :config
 
-    (setq org-ellipsis "⤵")
+    (setq org-ellipsis "⤵⤵⤵")
+    (set-face-attribute 'org-ellipsis nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
+
 
 
     ;Trying to fix indentation behaviour within code blocks.
@@ -2024,8 +2026,11 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
 
    #+end_src
 
+
 #+begin_src emacs-lisp
 (use-package origami-predef
+  :ensure t
+  :defer 1
   :config
 
   (defun origami-predef-javascript()
