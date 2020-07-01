@@ -2334,6 +2334,9 @@ https://github.com/elarkasi/raspi-kms
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
+- https://github.com/manateelazycat/awesome-tray
+- http://ergoemacs.org/emacs/emacs_list_and_set_font.html
+- https://github.com/lastquestion/explain-pause-mode
 - fancy-narrow
 - helm-treemacs-icons
 - lsp-latex
