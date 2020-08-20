@@ -1454,16 +1454,6 @@ Arranco el servidor para utilizar /emacsclient/
 Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 #+begin_src emacs-lisp
-(setq dired-listing-switches "-aBhl --group-directories-first")
-
-
-(defun my/dired-hook ()
-  (all-the-icons-dired-mode 1)
-  (dired-hide-details-mode 1)
-  (auto-revert-mode 1)
-  (setq  indent-line-function 'dired-subtree-toggle))
-
-(add-hook 'dired-mode-hook 'my/dired-hook)
 
 (use-package dired-subtree 
   :ensure t
@@ -1476,7 +1466,19 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
   (set-face-attribute 'dired-subtree-depth-4-face nil :background 'unspecified)
   (set-face-attribute 'dired-subtree-depth-5-face nil :background 'unspecified)
   (set-face-attribute 'dired-subtree-depth-6-face nil :background 'unspecified)
-)
+
+  (setq dired-listing-switches "-aBhl --group-directories-first")
+
+
+  (defun my/dired-hook ()
+    (all-the-icons-dired-mode 1)
+    (dired-hide-details-mode 1)
+    (auto-revert-mode 1)
+    (setq  indent-line-function 'dired-subtree-toggle))
+
+  (add-hook 'dired-mode-hook 'my/dired-hook)
+
+  )
 
 
 #+end_src
@@ -2346,6 +2348,26 @@ https://github.com/elarkasi/raspi-kms
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
+- (use-package json-navigator)
+- flycheck-popup
+- wrap-region
+- helm-posframe
+- stripe-buffer
+- su-mode
+- frame-resize-pixelwise 
+- helpful
+- backup-by-copying t 
+- (setq auto-save-visited-interval 60) (auto-save-visited-mode 1)
+- (use-package autorevert :ensure nil :config (setq auto-revert-verbose nil global-auto-revert-mode t global-auto-revert-non-file-buffers t))
+-  (delete-by-moving-to-trash t)
+-  (fast-but-imprecise-scrolling t)
+- https://github.com/ryuslash/mode-icons
+- find-trace-paths
+- helm icons
+-  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images) 
+- https://github.com/manateelazycat/awesome-tray
+- http://ergoemacs.org/emacs/emacs_list_and_set_font.html
+- https://github.com/lastquestion/explain-pause-mode
 - fancy-narrow
 - helm-treemacs-icons
 - lsp-latex
