@@ -176,6 +176,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | markdown-mode                  |                                                                |
 | markdown-preview-mode          |                                                                |
 | ob-ammonite                    |                                                                |
+| ob-typescript                  |                                                                |
 | ob-restclient                  |                                                                |
 | ob-rust                        |                                                                |
 | org                            |                                                                |
@@ -203,6 +204,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | transpose-frame                |                                                                |
 | treemacs                       |                                                                |
 | treemacs-projectile            |                                                                |
+| typescript-mode                |                                                                |
 | use-package                    |                                                                |
 | use-ttf                        | Instala la fuente por defecto en todos los sistemas            |
 | vdiff                          |                                                                |
@@ -694,6 +696,8 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
      (plantuml . t)
      ;(scala . t)
      (ammonite . t)
+     (typescript . t)
+     (rust . t)
      (shell . t)))
 #+end_src
 
@@ -1170,16 +1174,6 @@ Scroll con teclas de avance de página hasta el extremo del fichero. Sin esta op
 
 
 
-Utilizo =smartscan= para localizar ocurrencias de símbolos.
-#+begin_src emacs-lisp
-(use-package smartscan
-  :ensure t
-  :defer 1
-  :config
-    (setq smartscan-symbol-selector "symbol")
-    (global-smartscan-mode 1))
-#+end_src
-
 Algunas ventanas tienen menor /importancia/ que otras, ya que tienden a ser temporales (por ejemplo, las ventanas de ayuda). Con =popwin=, estas ventanas ocupan menos espacio en pantalla y desaparecen con =C-g=. Actualmente lo he quitado.
 #+begin_src lisp
 (use-package popwin
@@ -1221,6 +1215,13 @@ El ratón también puede utilizarse en un =xterm=
 
 * Visualización
 
+** Velocidad de la rueda de ratón
+[[https://stackoverflow.com/questions/445873/how-can-i-make-emacs-mouse-scrolling-slower-and-smoother]]
+   #+begin_src emacs-lisp
+(setq mouse-wheel-progressive-speed nil)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil))) 
+   #+end_src
+
 ** Previsualización de ficheros en Helm
 Se me cuelga a veces, está desactivado
 #+begin_src lisp
@@ -1239,34 +1240,41 @@ Avoid performance issues in files with very long lines.
 ** Pestañas
 #+begin_src emacs-lisp
 
-(defun my-centaur-tabs-font-sizes (&optional height)
-  (interactive
-   (list 
-    (read-number "height: " 0.8)))
 
-  (mapcar
-   (lambda (face) (set-face-attribute face nil :height (or height 0.8)) )
-   '(
-     centaur-tabs-active-bar-face
-     centaur-tabs-default
-     centaur-tabs-unselected
-     centaur-tabs-selected
-     centaur-tabs-unselected-modified
-     centaur-tabs-selected-modified
-     centaur-tabs-close-unselected
-     centaur-tabs-close-selected
-     centaur-tabs-close-mouse-face
-     centaur-tabs-modified-marker-selected
-     centaur-tabs-modified-marker-unselected
-     ))
+(add-to-list 'load-path "/home/alvaro/github/centaur-tabs")
 
-  (setq centaur-tabs-height 10)
-  (setq centaur-tabs-bar-height (+ 8 centaur-tabs-height)))
 
 (use-package centaur-tabs
-  :ensure t
+  :ensure nil
   :defer 1
   :config
+
+  (defun my-centaur-tabs-font-sizes (&optional height)
+    (interactive
+     (list 
+      (read-number "height: " 0.8)))
+
+    (mapcar
+     (lambda (face) (set-face-attribute face nil :height (or height 0.8)) )
+     '(
+       centaur-tabs-active-bar-face
+       centaur-tabs-default
+       centaur-tabs-unselected
+       centaur-tabs-selected
+       centaur-tabs-unselected-modified
+       centaur-tabs-selected-modified
+       centaur-tabs-close-unselected
+       centaur-tabs-close-selected
+       centaur-tabs-close-mouse-face
+       centaur-tabs-modified-marker-selected
+       centaur-tabs-modified-marker-unselected
+       ))
+
+    (setq centaur-tabs-height 10)
+    (setq centaur-tabs-bar-height (+ 8 centaur-tabs-height)))
+
+
+
   (setq centaur-tabs-set-icons t)
   (setq centaur-tabs-style "alternate")
   (setq centaur-tabs-set-modified-marker t)
@@ -1306,23 +1314,11 @@ Avoid performance issues in files with very long lines.
   (centaur-tabs-mode t)
   (centaur-tabs-group-by-projectile-project)
 
-  (defun my-maximize-or-split ()
-    (interactive)
-    (if (one-window-p)
-        (split-window-below)
-      (delete-other-window)))
 
-  (define-key centaur-tabs-mode-map centaur-tabs-prefix-key centaur-tabs-prefix-map)
-  (define-key centaur-tabs-mode-map (kbd "<header-line> <double-mouse-1>") 'my-maximize-or-split) 
-  (define-key centaur-tabs-backward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-left) 
-  (define-key centaur-tabs-forward-tab-map (kbd "<header-line> <C-mouse-1>") 'centaur-tabs-move-current-tab-to-right)
-
-  (setq centaur-tabs--track-selected t) 
-  )
+)
 #+end_src
 
 #+RESULTS:
-: t
 
 
 
@@ -1336,16 +1332,30 @@ Avoid performance issues in files with very long lines.
 
 ** Marcar las ocurrencias de la selección
 #+begin_src emacs-lisp
-  (use-package region-occurrences-highlighter 
-    :ensure t
-    :defer 1
-    :config
-    (add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
-    (add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
+(use-package region-occurrences-highlighter 
+  :ensure t
+  :defer 1
+  :config
+  (add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
+  (add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
 
-    (add-hook 'text-mode-hook #'region-occurrences-highlighter-mode))
+  (add-hook 'text-mode-hook #'region-occurrences-highlighter-mode)
+
+  (define-key region-occurrences-highlighter-nav-mode-map "\M-n" 'region-occurrences-highlighter-next)
+  (define-key region-occurrences-highlighter-nav-mode-map "\M-p" 'region-occurrences-highlighter-prev))
 #+end_src
 
+** Saltar rápidamente entre símbolos
+Utilizo =smartscan= para localizar ocurrencias de símbolos.
+Las teclas rápidas son M-n y M-p, que entran en conflicto con las de region-occurrences-highlighter-nav-mode-map. Cargo este paquete después para que en minor-mode-map-alist aparezca antes el keymap de region-occurrences.
+#+begin_src emacs-lisp
+(use-package smartscan
+  :ensure t
+  :defer 1
+  :config
+    (setq smartscan-symbol-selector "symbol")
+    (global-smartscan-mode 1))
+#+end_src
 
 
 ** Cambiar el tamaño de fuente de todo /emacs/ (no solo el buffer actual)
@@ -2033,6 +2043,8 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
   :defer 1
   :config
 
+  (origami-predef-global-mode 1)
+
   (defun origami-predef-javascript()
     "Close some predefined patterns, useful in javascript."
     (interactive)
@@ -2495,73 +2507,4 @@ P.STD + Menu + Sleep + Power
 Sleep + P.STD + Mute + Power
 
 You can press Channel Up/Down buttons to navigate between available options. To change their values, press Volume Up/Down buttons.
-
-* YAFOLDING
-
-#+begin_src emacs
-
-(defun initial-yafolding()
-  (interactive)
-
-  (save-excursion
-    (goto-char (point-min))
-    (while (search-forward "*yafolding-hide-parent*" nil t 1)
-      (yafolding-hide-parent-element)))
-
-    (goto-char (point-min))
-    (while (search-forward "*yafolding-hide-next-line*" nil t 1)
-      (forward-line)
-      (yafolding-hide-element))
-
-    (goto-char (point-min))
-    (while (search-forward "*yafolding-hide*" nil t 1)
-      (yafolding-hide-element)))
-
-(add-hook 'find-file-hook 'initial-yafolding)
-
-#+end_src
-
-
-#+begin_src emacs-lisp
- (defun origami-parser-imenu-flat (create)
-    "Origami parser producing folds for each imenu entry, without nesting."
-    (require 'imenu)
-    (lambda (content)
-      (let ((orig-major-mode major-mode))
-        (with-temp-buffer
-          (insert content)
-          (funcall orig-major-mode)
-          (let* ((items
-                  (-as-> (imenu--make-index-alist t) items
-                         (-flatten items)
-                         (-filter 'listp items)))
-                 (positions
-                  (-as-> (-map #'cdr items) positions
-                         (-filter 'identity positions)
-                         (-map-when 'markerp 'marker-position positions)
-                         (-filter 'natnump positions)
-                         (cons (point-min) positions)
-                         (-snoc positions (point-max))
-                         (-sort '< positions)
-                         (-uniq positions)))
-                 (ranges
-                  (-zip-pair positions (-map '1- (cdr positions))))
-                 (fold-nodes
-                  (--map
-                   (-let*
-                       (((range-beg . range-end) it)
-                        (line-beg
-                         (progn (goto-char range-beg)
-                                (line-beginning-position)))
-                        (offset
-                         (- (min (line-end-position) range-end) line-beg))
-                        (fold-node
-                         (funcall create line-beg range-end offset nil)))
-                     fold-node)
-                   ranges)))
-            fold-nodes)))))
-
-(add-to-list 'origami-parser-alist '( shell-script-mode . origami-parser-imenu-flat ))
-#+end_src
-
 
