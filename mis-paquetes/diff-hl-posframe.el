@@ -17,6 +17,7 @@
   "Keymap for diff-hl-posframe-mode.")
 
 (defvar diff-hl-posframe-buffer-name "*diff-hl-posframe-hunk*" "Name of the posframe used by diff-hl-posframe.")
+(defvar diff-hl-posframe-hunk-boundary "^@@.*@@$" "Regex that marks the boundary of a hunk.")
 (defvar diff-hl-posframe-frame nil "The postframe frame.")
 (defvar diff-hl-posframe-textscale 2 "Decrease of the diff-hl-posframe font.")
 
@@ -30,93 +31,92 @@
 
 (defun diff-hl-posframe--hide-handler  (_info)
   "Hide the posframe if the event is outside the posframe (after the posframe has been opened)."
-  ;(warn "this-command:%s %s" this-command (type-of this-command))
-  ;(warn "dif-hl-postrame-frame: %s last-event-frame:%s" diff-hl-posframe-frame last-event-frame)
+                                        ;(warn "this-command:%s %s" this-command (type-of this-command))
+                                        ;(warn "dif-hl-postrame-frame: %s last-event-frame:%s" diff-hl-posframe-frame last-event-frame)
   (and
    (not (eq this-command 'diff-hl-posframe--click))
    (not (eq last-event-frame diff-hl-posframe-frame))
    )
   )
 
-(defun posframe-hidehandler-when-buffer-switch-kk (info)
-  (posframe-hidehandler-when-buffer-switch info)
-  (diff-hl-posframe--hide-handler info))
-
 (defun diff-hl-posframe--click (event)
-  "Called when user clicks on margins.  EVENT holds click information."
+  "Called when user clicks on margins.  EVENT is click information."
   (interactive "event")
-
-  ;(add-hook 'post-command-hook 'diff-hl-posframe--post-command-hook t t)
-
   
   (when (posframe-workable-p)
-    (let*
-        ((start (event-start event))
-         (position (posn-point start))
-         (window (posn-window start)))
+
+    (let* ((content) (point-in-buffer) (frame) (window) (marker)
+           (start (event-start event))
+           (position (posn-point start)))
+
+      ;;; Move to the click nearest position
+      (posn-set-point (event-start event))
+
       
-      (posn-set-point start)
-      (let ((content) (point-in-buffer) (frame) (window))
-        (save-window-excursion
-          (save-excursion
-            (diff-hl-diff-goto-hunk)
-            (with-current-buffer "*vc-diff*"
-              (setq content (buffer-string))
-              (setq point-in-buffer (point)))
-            
-            ))
+      ;;; Use diff-hl to get the *vc-diff* content
+      (save-window-excursion
+        (save-excursion
+          (diff-hl-diff-goto-hunk)
+          (with-current-buffer "*vc-diff*"
+            (setq content (buffer-string))
+            (setq point-in-buffer (point)))
+          
+          ))
 
-        (setq posframe-mouse-banish nil)
-        (setq
-         diff-hl-posframe-frame
-         (posframe-show  diff-hl-posframe-buffer-name
-                        :string content
-                        :position position
-                        :internal-border-width 2
-                        :internal-border-color "#00FFFF"
-                        :hidehandler 'diff-hl-posframe--hide-handler))
+      ;;; Show posframe
+      (setq posframe-mouse-banish nil)
+      (setq
+       diff-hl-posframe-frame
+       (posframe-show  diff-hl-posframe-buffer-name
+                       :string content
+                       :position position
+                       :internal-border-width 2
+                       :accept-focus t
+                       :internal-border-color "#00FFFF"
+                       :hidehandler 'diff-hl-posframe--hide-handler))
+      (setq window (window-main-window diff-hl-posframe-frame))
+      
+      
+      ;;; Change the font size of the posframe
+      (with-current-buffer diff-hl-posframe-buffer-name
+        (diff-mode)
+        (highlight-regexp diff-hl-posframe-hunk-boundary
+                          (text-scale-decrease diff-hl-posframe-textscale)))
 
-        (setq window (window-main-window diff-hl-posframe-frame))
+      ;;; Narrow the content to the current hunk
+      (save-window-excursion
+        (select-window window)
+        ;;;(set-marker 'marker point-in-buffer)
+
+
+
+          ;;; Highlight the clicked line
+        (goto-char point-in-buffer)
+        (let ((overlay (make-overlay (point-at-bol) (1+ (point-at-eol)))))
+          (overlay-put overlay 'face bm-face))
+        ;;;(recenter)
         
+        (let ((start (or (re-search-backward diff-hl-posframe-hunk-boundary nil 1) 0))
+              (dummy (forward-line))
+              (end (or (re-search-forward diff-hl-posframe-hunk-boundary nil 1) 100000)))
+          (narrow-to-region start end))
         
 
-        (with-current-buffer diff-hl-posframe-buffer-name
-          (diff-mode)
-          (text-scale-decrease diff-hl-posframe-textscale))
-
         
-        (save-window-excursion
-          (select-window window)
-          (goto-char point-in-buffer)
-          (recenter))
-        
-
-    
         )
       )
     )
   )
 
-(defun diff-hl-posframe--after-delete-frame (frame)
-  "Hook on `after-delete-frame-functions`, to kill the buffer diff-hl-posframe-buffer-name if FRAME is the posframe."
-  ; disabled
-  ;(message "after-delete-frame:%s %s" frame diff-hl-posframe-frame)
-  ;(when (eq frame diff-hl-posframe-frame)
-  ;  (kill-buffer diff-hl-posframe-buffer-name))
-  )
+
 
 ;;;###autoload
-(define-minor-mode diff-hl-posframe-mode
-  "Enables the margin and fringe to show a posframe with vc diffs when clicked."
-  :group diff-hl-posframe-group
+  (define-minor-mode diff-hl-posframe-mode
+    "Enables the margin and fringe to show a posframe with vc diffs when clicked."
+    :group diff-hl-posframe-group
+    )
 
-  (if diff-hl-posframe-mode
-      (add-hook 'after-delete-frame-functions  #'diff-hl-posframe--after-delete-frame)
-    (remove-hook 'after-delete-frame-functions #'diff-hl-posframe--after-delete-frame)
-  )
-)
-
-(provide 'diff-hl-posframe)
+  (provide 'diff-hl-posframe)
 ;;; diff-hl-posframe.el ends here
 
 
