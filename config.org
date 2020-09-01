@@ -964,8 +964,6 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   )
 #+end_src
 
-#+RESULTS:
-: t
 
 
 ~helm-swoop~ no funciona bien con =helm-posframe=, al seleccionar una ocurrencia no salta a ella.
@@ -979,8 +977,6 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 
 #+end_src
 
-#+RESULTS:
-: t
 
 
 
@@ -1404,8 +1400,6 @@ Las teclas rápidas son M-n y M-p, que entran en conflicto con las de region-occ
 (setq frame-resize-pixelwise t)
 #+end_src
 
-#+RESULTS:
-: t
 
 ** Marcar la línea actual. 
 A veces lo deshabilito porque no funciona bien con /overlays/
@@ -1689,8 +1683,6 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
 #+end_src
 
-#+RESULTS:
-: t
 
 
 
@@ -2131,8 +2123,6 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
   (origami-predef-global-mode 1))
 #+end_src
 
-#+RESULTS:
-: t
 
 
 ** =imenu=

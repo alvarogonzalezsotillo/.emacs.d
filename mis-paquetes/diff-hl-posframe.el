@@ -147,7 +147,7 @@
        diff-hl-posframe-frame
        (posframe-show buffer
                       :position (point)
-                      :poshandler 'diff-hl-posframe-poshandler
+                      ;:poshandler 'diff-hl-posframe-poshandler
                       :internal-border-width 2
                       :accept-focus nil
                       :internal-border-color "#00FFFF"
