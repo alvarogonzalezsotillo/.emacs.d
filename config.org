@@ -1,4 +1,4 @@
-#+TITLE: Configuración Emacs 
+#+TITLE: Configuración Emacs hola
 #+author: Álvaro González (@alvarogonzalez)
 #+OPTIONS: toc:2 h:4 author:t
 
@@ -162,6 +162,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | helm-company                   |                                                                |
 | helm-flx                       |                                                                |
 | helm-gitignore                 |                                                                |
+| helm-posframe                  |                                                                |
 | helm-projectile                |                                                                |
 | helm-swoop                     |                                                                |
 | highlight-indent-guides        |                                                                |
@@ -419,6 +420,7 @@ Añado las siguientes reglas para hacer búsquedas simples con =dumb-jump= en fi
                  '(:language "javascript" :ext "mjs" :agtype "js" :rgtype "js")))
 
   (setq dumb-jump-selector 'helm)
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 #+end_src
 
 ** Paquete =bm=
@@ -793,17 +795,24 @@ Prefiero guardar todas las copias en un directorio, manteniendo varias versiones
 
 Tampoco me interesan los ficheros de /lock/.
 #+begin_src emacs-lisp
-  (setq backup-directory-alist `(("." . "~/.saves")))
-  (setq backup-by-copying t)
-  (setq delete-old-versions t
-        kept-new-versions 6
-        kept-old-versions 2
-        version-control t)
+(setq backup-directory-alist `(("." . "~/.saves")))
+(setq backup-by-copying t)
+(setq delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)
 
-  (setq create-lockfiles nil)
+(setq create-lockfiles nil)
 
- (setq auto-save-file-name-transforms
-          `((".*" "~/.saves" t)))
+(setq auto-save-file-name-transforms
+      `((".*" "~/.saves" t)))
+
+#+end_src
+
+Grabar en el propio fichero
+#+begin_src emacs-lisp
+(setq auto-save-visited-interval 60)
+(auto-save-visited-mode 1)
 #+end_src
 
 ** Latex
@@ -882,9 +891,17 @@ Ayuda interactiva de teclado. En el popup-type por defecto entra en conflicto co
   :ensure t
   :config
     (which-key-mode t)
-    (setq which-key-idle-delay 3.0)
-    (setq which-key-popup-type (quote minibuffer)))
+    (setq which-'key-idle-delay 3.0)
+)
+
+(use-package which-key-posframe
+  :ensure t
+  :config
+  (which-key-posframe-mode)
+
+)
 #+end_src
+
 
 
 ** Paquete =auto-highlight-symbol=
@@ -936,11 +953,34 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
                          (window-height . 0.4)))
 
   :after (tramp) ;; PARA EVITAR EL ERROR Symbols's value as variable is void: tramp-methods
+  )
+
+(use-package helm-posframe
+  :config
+  (setq helm-posframe-parameters '(:internal-border-width 40 :internal-border-color "pink"))
+  (setq helm-posframe-border-width 20)
+  (setq helm-posframe-poshandler 'posframe-poshandler-frame-top-center)
+  (helm-posframe-enable)
+  )
+#+end_src
+
+#+RESULTS:
+: t
+
+
+~helm-swoop~ no funciona bien con =helm-posframe=, al seleccionar una ocurrencia no salta a ella.
+#+begin_src emacs-lisp
+(use-package helm-swoop
+  :config
+  (setq helm-display-buffer-width 140)
+  (setq helm-display-buffer-height 20)
+  (setq helm-swoop-split-window-function 'helm-display-buffer-in-own-frame)
 )
 
-
-
 #+end_src
+
+#+RESULTS:
+: t
 
 
 
@@ -952,8 +992,8 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 
 ;;; helm-popup-frame debería tener el foco
 
-(setq swiper-helm-display-function helm-display-function)
-(setq helm-swoop-split-window-function helm-display-function)
+(setq swiper-helm-display-function 'helm-posframe-display) ;'helm-display-function)
+(setq helm-swoop-split-window-function 'helm-display-buffer-in-own-frame)
 #+end_src
 
 
@@ -1361,7 +1401,11 @@ Las teclas rápidas son M-n y M-p, que entran en conflicto con las de region-occ
 ** Cambiar el tamaño de fuente de todo /emacs/ (no solo el buffer actual)
 #+begin_src emacs-lisp
 (default-text-scale-mode 1)
+(setq frame-resize-pixelwise t)
 #+end_src
+
+#+RESULTS:
+: t
 
 ** Marcar la línea actual. 
 A veces lo deshabilito porque no funciona bien con /overlays/
@@ -1454,6 +1498,7 @@ Arranco el servidor para utilizar /emacsclient/
 Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 #+begin_src emacs-lisp
+(use-package dired-x)
 
 (use-package dired-subtree 
   :ensure t
@@ -1611,9 +1656,8 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
       (define-key map (kbd "C-x o") 'switch-window)
 
-      (define-key map (kbd "C-o") 'dumb-jump-go)
-
       (define-key map (kbd "C-.") 'company-complete)
+
 
       (define-key map (kbd "C-S-l") 'toggle-truncate-lines)
 
@@ -1644,6 +1688,9 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
   (mis-teclas-minor-mode 1)
 
 #+end_src
+
+#+RESULTS:
+: t
 
 
 
@@ -2348,16 +2395,15 @@ https://github.com/elarkasi/raspi-kms
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
-- (use-package json-navigator)
+- helm-xref
+- helm-icons
+- (use-package json-navigator) aa
 - flycheck-popup
 - wrap-region
 - helm-posframe
 - stripe-buffer
 - su-mode
-- frame-resize-pixelwise 
 - helpful
-- backup-by-copying t 
-- (setq auto-save-visited-interval 60) (auto-save-visited-mode 1)
 - (use-package autorevert :ensure nil :config (setq auto-revert-verbose nil global-auto-revert-mode t global-auto-revert-non-file-buffers t))
 -  (delete-by-moving-to-trash t)
 -  (fast-but-imprecise-scrolling t)
@@ -2395,7 +2441,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - Zoom-frm
 - greader
 - https://zge.us.to/emacs.d.html
-- Swiper-isearch - a more isearch-like swiper
 - change-inner
 - magithub
 - google-this
@@ -2530,3 +2575,12 @@ Sleep + P.STD + Mute + Power
 
 You can press Channel Up/Down buttons to navigate between available options. To change their values, press Volume Up/Down buttons.
 
+
+* nada
+
+  #+begin_src emacs-lisp
+(message "%s" (diff-hl-changes)) 
+  #+end_src
+
+  #+RESULTS:
+  : ((1 1 change) (165 1 insert) (423 1 insert) (798 6 change) (805 1 change) (807 9 change) (948 10 change) (960 8 insert) (971 3 insert) (984 2 change) (1393 1 insert) (1396 3 insert) (1490 1 insert) (1650 1 delete) (2383 2 insert) (2391 1 delete) (2392 1 delete) (2429 1 delete) (2563 9 insert))
