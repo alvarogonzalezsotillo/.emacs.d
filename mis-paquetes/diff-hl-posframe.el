@@ -1,65 +1,66 @@
 ;;; Code:
 
-;;; HACER MENUS POPUP
-;;; https://stackoverflow.com/questions/16454838/yasnippet-how-to-create-a-right-click-context-menu-popup-menu
 
 
 (require 'posframe)
 (require 'diff-hl)
 
 (defvar diff-hl-posframe-mode-map
-  (let ((map (make-sparse-keymap)))
+    (let ((map (make-sparse-keymap)))
     (define-key global-map (kbd "<left-margin> <mouse-1>") 'diff-hl-posframe--click)
     (define-key global-map (kbd "<right-margin> <mouse-1>") 'diff-hl-posframe--click)
     (define-key global-map (kbd "<left-fringe> <mouse-1>") 'diff-hl-posframe--click)
     (define-key global-map (kbd "<right-fringe> <mouse-1>") 'diff-hl-posframe--click)
     map)
-  "Keymap for diff-hl-posframe-mode.")
+    "Keymap for diff-hl-posframe-mode.")
 
 (defvar diff-hl-posframe-buffer-name "*diff-hl-posframe-hunk*" "Name of the posframe used by diff-hl-posframe.")
-(defvar diff-hl-posframe-hunk-boundary "^@@.*@@" "Regex that marks the boundary of a hunk.")
 (defvar diff-hl-posframe-frame nil "The postframe frame.")
-(defvar diff-hl-posframe-textscale 2 "Decrease of the diff-hl-posframe font.")
 
+(defgroup diff-hl-posframe-group nil
+  "Show vc diffs in a posframe."
+  :group 'convenience)
 
-(defun diff-hl-posframe--post-command-hook ()
-  "Post command hook to delete the posframe."
-  (when (not (string= this-command "diff-hl-posframe--click"))
-    (posframe-delete diff-hl-posframe-buffer-name)
-    (remove-hook 'post-command-hook 'diff-hl-posframe--post-command-hook t)))
+(defcustom diff-hl-posframe-hunk-boundary "^@@.*@@"
+  "Regex that marks the boundary of a hunk in *vc-diff* buffer."
+  :type 'string)
+
+(defcustom diff-hl-posframe-textscale 2
+  "Decrease of the diff-hl-posframe font."
+  :type 'integer)
+
+(defcustom diff-hl-posframe-internal-border-width 2
+  "Internal border width of the posframe.  The color can be customized with `internal-border` face."
+  :type 'integer)
+
+(defcustom diff-hl-posframe-narrow t
+  "Narrow the differences to the current hunk."
+  :type 'boolean)
+
+(defcustom diff-hl-posframe-poshandler nil
+  "Poshandler of the posframe (see `posframe-show`)."
+  :type 'function)
+
+(defcustom diff-hl-posframe-parameters nil
+  "The frame parameters used by helm-posframe."
+  :group 'helm-posframe
+  :type 'string)
+
+(defface diff-hl-posframe-clicked-line-face
+  '((t (:inverse-video t)))
+  "Face for the clicked line in the diff output.")
 
 
 (defun diff-hl-posframe--hide-handler  (_info)
   "Hide the posframe if the event is outside the posframe (after the posframe has been opened)."
 
-  (defun w (msg)
-    ;;(warn msg)
-    )
   (if (not (frame-visible-p diff-hl-posframe-frame))
       t
-
-    (w (format "************"))
-    (w (format "this-command:%s %s" this-command (type-of this-command)))
-    (w (format "dif-hl-postrame-frame: %s last-event-frame:%s" diff-hl-posframe-frame last-event-frame))
-    
     (let* ((invoking-command-p (eq this-command 'diff-hl-posframe--click))
            (ignore-command-p (eq this-command 'ignore))
            (command-in-posframe-p (eq last-event-frame diff-hl-posframe-frame))
            (keep-open-p (or invoking-command-p command-in-posframe-p ignore-command-p)))
-      (w (format "invoking:%s  ignore:%s inposframe:%s  keep:%s"
-            invoking-command-p ignore-command-p command-in-posframe-p keep-open-p))
       (not keep-open-p))))
-
-(defun diff-hl-posframe-poshandler (info)
-  "Posframe's position handler.  INFO has window sizes.  The posframe is positioned vertically centered."
-  (let* ((window-left (plist-get info :parent-window-left))
-         (window-top (plist-get info :parent-window-top))
-         (window-width (plist-get info :parent-window-width))
-         (window-height (plist-get info :parent-window-height))
-         (posframe-width (plist-get info :posframe-width))
-         (posframe-height (plist-get info :posframe-height)))
-    (cons (+ window-left (- window-width posframe-width))
-          (+ window-top (/ (- window-height posframe-height) 2)))))
 
 
 (defun diff-hl-posframe-buffer ()
@@ -70,9 +71,9 @@
 
   (let ((content)
         (point-in-buffer)
+        (line)
         (overlay)
         (buffer (get-buffer-create diff-hl-posframe-buffer-name)))
-
     
     
     (save-window-excursion
@@ -90,55 +91,56 @@
       ;; Highlight the clicked line
       (goto-char point-in-buffer)
       (setq overlay (make-overlay (point-at-bol) (1+ (point-at-eol))))
-      (overlay-put overlay 'face bm-face)
+      (overlay-put overlay 'face 'diff-hl-posframe-clicked-line-face)
       
       ;; diff-mode, highlight hunks boundaries
       (diff-mode)
       (highlight-regexp diff-hl-posframe-hunk-boundary)
-      (message "a")
       
 
       ;; Change face size
       (text-scale-decrease diff-hl-posframe-textscale)
-      (message "b")
       
       
 
       ;;  Find the hunk and narrow to it
       (re-search-backward diff-hl-posframe-hunk-boundary nil 1)
       (forward-line 1)
-      (message "c")
       
-      
-      (let* ((start (point)))
 
-        (re-search-forward diff-hl-posframe-hunk-boundary nil 1)
-        (move-beginning-of-line nil)
-        (narrow-to-region start (point)))
-      (message "d")
+      (when diff-hl-posframe-narrow
+        (let* ((start (point)))
+          (re-search-forward diff-hl-posframe-hunk-boundary nil 1)
+          (move-beginning-of-line nil)
+          (narrow-to-region start (point))))
       
 
       ;; Come back to the clicked line
-      ;; (goto-char (overlay-start overlay))
+      (goto-char (overlay-start overlay))
+      (setq line (line-number-at-pos))
       )
-    buffer))
+    
+    (list buffer line)))
 
 
 (defun diff-hl-posframe--click (event)
   "Called when user clicks on margins.  EVENT is click information."
   (interactive "event")
 
-  ;;(kill-buffer "*Warnings*")
-  
   (when (posframe-workable-p)
 
-    (let* ((window) (buffer)
+    (unless (vc-backend buffer-file-name)
+      (error "Buffer is not a file in version control"))
+    
+    (let* ((window) (buffer-and-line) (buffer) (line)
            (start (event-start event))
            (position (posn-point start)))
 
       ;;; Move to the click nearest position
       (posn-set-point (event-start event))
-      (setq buffer (diff-hl-posframe-buffer))
+      (setq buffer-and-line (diff-hl-posframe-buffer))
+      (setq buffer (elt buffer-and-line 0))
+      (setq line (elt buffer-and-line 1))
 
       
       ;;; Show posframe
@@ -147,18 +149,27 @@
        diff-hl-posframe-frame
        (posframe-show buffer
                       :position (point)
-                      ;:poshandler 'diff-hl-posframe-poshandler
-                      :internal-border-width 2
-                      :accept-focus nil
-                      :internal-border-color "#00FFFF"
-                      :hidehandler 'diff-hl-posframe--hide-handler))
+                      :poshandler diff-hl-posframe-poshandler
+                      :internal-border-width diff-hl-posframe-internal-border-width
+                      :accept-focus  nil
+                      :internal-border-color "#00FFFF" ; Doesn't always work, better define internal-border face
+                      :hidehandler 'diff-hl-posframe--hide-handler
+                      :override-parameters diff-hl-posframe-parameters
+                      )
+       )
       (setq window (window-main-window diff-hl-posframe-frame))
 
       ;;; Recenter arround point
-      (select-frame diff-hl-posframe-frame)
-      (select-window window)
-      (recenter)
-  )))
+      (with-selected-frame diff-hl-posframe-frame
+        (with-current-buffer buffer
+          (goto-char (point-min))
+          (forward-line (1- line))
+          (select-window window)
+          (recenter)
+          ))
+      )
+    )
+  )
 
 
 

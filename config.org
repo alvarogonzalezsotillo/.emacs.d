@@ -958,11 +958,16 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 (use-package helm-posframe
   :config
   (setq helm-posframe-parameters '(:internal-border-width 40 :internal-border-color "pink"))
-  (setq helm-posframe-border-width 20)
+  (setq helm-posframe-border-width 2)
   (setq helm-posframe-poshandler 'posframe-poshandler-frame-top-center)
   (helm-posframe-enable)
+
+  :after (helm)
   )
 #+end_src
+
+#+RESULTS:
+: t
 
 
 
@@ -973,9 +978,14 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   (setq helm-display-buffer-width 140)
   (setq helm-display-buffer-height 20)
   (setq helm-swoop-split-window-function 'helm-display-buffer-in-own-frame)
+
+  :after (helm)
 )
 
 #+end_src
+
+#+RESULTS:
+: t
 
 
 
@@ -1260,7 +1270,7 @@ El ratón también puede utilizarse en un =xterm=
 
 ** Previsualización de ficheros en Helm
 Se me cuelga a veces, está desactivado
-#+begin_src lisp
+#+begin_src emacs-lisp
 (use-package helm-file-preview
   :config
   (helm-file-preview-mode 1))
@@ -1270,7 +1280,7 @@ Se me cuelga a veces, está desactivado
 Avoid performance issues in files with very long lines.
 #+begin_src emacs-lisp
 (unless (version<= emacs-version "27")
-(global-so-long-mode 1))
+  (global-so-long-mode 1))
 #+end_src
 
 ** Pestañas
@@ -2569,8 +2579,7 @@ You can press Channel Up/Down buttons to navigate between available options. To 
 * nada
 
   #+begin_src emacs-lisp
-(message "%s" (diff-hl-changes)) 
+(tooltip-show "hola")
   #+end_src
 
   #+RESULTS:
-  : ((1 1 change) (165 1 insert) (423 1 insert) (798 6 change) (805 1 change) (807 9 change) (948 10 change) (960 8 insert) (971 3 insert) (984 2 change) (1393 1 insert) (1396 3 insert) (1490 1 insert) (1650 1 delete) (2383 2 insert) (2391 1 delete) (2392 1 delete) (2429 1 delete) (2563 9 insert))
