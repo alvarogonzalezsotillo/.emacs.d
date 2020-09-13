@@ -90,7 +90,7 @@
       
       ;; Highlight the clicked line
       (goto-char point-in-buffer)
-      (setq overlay (make-overlay (point-at-bol) (1+ (point-at-eol))))
+      (setq overlay (make-overlay (point-at-bol) (min (point-max) (1+ (point-at-eol)))))
       (overlay-put overlay 'face 'diff-hl-posframe-clicked-line-face)
       
       ;; diff-mode, highlight hunks boundaries

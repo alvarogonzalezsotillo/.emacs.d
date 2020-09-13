@@ -1,17 +1,12 @@
 
 
-
-;;; Code:
-(defun carga-config-org (refresh debug)
-  "Carga la configuración, refrescando la lista de paquetes si se indica REFRESH, con debug si se indica DEBUG"
+(defun my/setup-use-package (&optional refresh)
   (interactive
    (list
     (y-or-n-p "Refresh packages? ")
-    (y-or-n-p "Enable debug? ")
+    )
    )
-  
-   )
-  (setq debug-on-error debug)
+
 
   (message "Inicializo sistema de paquetes...")
   (package-initialize nil)
@@ -22,12 +17,10 @@
           ("gnu" . "http://elpa.gnu.org/packages/")
           ("melpa" . "http://melpa.org/packages/") ) )
   (package-initialize t)
-
-  
   (message "Comprobando si use-package está instalado...")
   (when (or refresh (not (require 'use-package nil t)))
-            (package-refresh-contents)
-            (package-install 'use-package))
+    (package-refresh-contents)
+    (package-install 'use-package))
 
   (message "use-package está instalado")
   (require 'use-package)
@@ -37,32 +30,46 @@
     (unless package-archive-contents
       (package-refresh-contents))
     (use-package auto-package-update
-      :ensure t
-      :defer nil
-      :config
-      (setq auto-package-update-delete-old-versions t)
-      (setq auto-package-update-hide-results t)
-      (setq auto-package-update-interval 1)
-      (auto-package-update-maybe)))
+		 :ensure t
+		 :defer nil
+		 :config
+		 (setq auto-package-update-delete-old-versions t)
+		 (setq auto-package-update-hide-results t)
+		 (setq auto-package-update-interval 1)
+		 (auto-package-update-maybe)))
 
   (message "Versión inicial de org:%s" (org-version))
   (message "Instalando org-plus-contrib para conseguir la última versión de org" )
   (use-package org :ensure org-plus-contrib :pin org)
   
   (use-package org
-    :ensure t
-    :demand t
-    :config
-      (require 'ob-tangle))
+	       :ensure t
+	       :demand t
+	       :config
+	       (require 'ob-tangle))
+  
+  )
+
+;;; Code:
+(defun my/carga-config-org (refresh debug)
+  "Carga la configuración, refrescando la lista de paquetes si se indica REFRESH, con debug si se indica DEBUG"
+  (interactive
+   (list
+    (y-or-n-p "Refresh packages? ")
+    (y-or-n-p "Enable debug? ")
+    )
+   
+   )
+  (setq debug-on-error debug)
+  (my/setup-use-package refresh)
 
   (message "Cargo el fichero org de configuración con org-version:%s" (org-version))
-
   
   (org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
 
   ;; DESACTIVAR EL DEBUG
   (setq debug-on-error nil))
 
-(carga-config-org nil nil)
+(my/carga-config-org nil nil)
 
 

@@ -1,4 +1,4 @@
-#+TITLE: Configuración Emacs hola
+#+TITLE: Configuración Emacs
 #+author: Álvaro González (@alvarogonzalez)
 #+OPTIONS: toc:2 h:4 author:t
 
@@ -149,12 +149,10 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | diffview                       |                                                                |
 | dired-narrow                   |                                                                |
 | dired-subtree                  |                                                                |
-| expand-region                  |                                                                |
 | flycheck                       |                                                                |
 | flycheck-plantuml              |                                                                |
 | flycheck-rust                  |                                                                |
 | gift-mode                      |                                                                |
-| git-gutter                     | Marca las filas cambiadas en el margen                         |
 | gitignore-mode                 |                                                                |
 | git-timemachine                |                                                                |
 | graphviz-dot-mode              |                                                                |
@@ -167,7 +165,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | helm-swoop                     |                                                                |
 | highlight-indent-guides        |                                                                |
 | htmlize                        |                                                                |
-| ibuffer-sidebar                |                                                                |
 | indent-guide                   |                                                                |
 | intellij-theme                 |                                                                |
 | literate-calc-mode             |                                                                |
@@ -309,17 +306,6 @@ Añado algunos /mime-type/ al servidor HTTP
 
 
 
-** Paquete =flycheck-inline=
-#+begin_src emacs-lisp
-(use-package flycheck-inline
-  :ensure t
-  :defer 1
-  :config
-    (with-eval-after-load 'flycheck
-      (add-hook 'flycheck-mode-hook #'turn-on-flycheck-inline))
-)
-#+end_src
-
 ** Paquete =treemacs=
 Estoy usando =treemacs= en vez de =neotree=.
 
@@ -329,16 +315,8 @@ Estoy usando =treemacs= en vez de =neotree=.
     (if treemacs--width-is-locked
         (treemacs-toggle-fixed-width)))
 
-  (use-package treemacs
-    :ensure t
-    :defer 1
-    :config
-      (add-hook 'treemacs-mode-hook #'hacer-treemacs-resizable)
-      ;(treemacs--tear-down-git-mode)
-      (setq treemacs-silent-refresh t)
-      ;(setq treemacs--persist-kv-regex "^ ?- \\(?:\\sw\\|\\s_\\|\\s.\\)+ :: \\(?:/\\|\\sw\\|\\s_\\|\\s.\\|[[:space:]]\\)+$")
-
-
+  (defun cambiar-faces-de-treemacs ()
+    ;; Cambio el tamaño por defecto del face
     (mapcar
      (lambda (face) (set-face-attribute face nil :height 0.8) )
      '(
@@ -362,13 +340,33 @@ Estoy usando =treemacs= en vez de =neotree=.
         treemacs-git-conflict-face
         treemacs-term-node-face                
         treemacs-on-success-pulse-face         
-       ))
+        ))
+    )
+  (use-package treemacs
+    :ensure t
+    :defer 1
+    :config
+      (add-hook 'treemacs-mode-hook #'hacer-treemacs-resizable)
+      (setq treemacs-silent-refresh t)
+      (cambiar-faces-de-treemacs)
+    :bind
+      (("<f8>" . treemacs))
+
+
   )
 #+end_src
 
 #+RESULTS:
 
-
+** =ibuffer-sidebar=
+   #+begin_src emacs-lisp
+(use-package ibuffer-sidebar
+  :defer 1
+  :ensure t
+  :bind
+      (("C-<f8>" . ibuffer-sidebar-toggle-sidebar))
+)
+   #+end_src
 
 ** Paquete =swoop=
 Búsqueda con previsualización. Lo configuro para que no seleccione el símbolo en en cursor, sino la seleción
@@ -423,6 +421,19 @@ Añado las siguientes reglas para hacer búsquedas simples con =dumb-jump= en fi
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 #+end_src
 
+** Paquete =expand-region=
+#+begin_src emacs-lisp
+(use-package expand-region
+  :ensure t
+  :defer 1
+  :bind
+      (( "C-e" . 'er/expand-region))
+      (( "C-S-e" . 'er/contract-region))
+      (( "M-<up>" . 'er/expand-region))
+      (( "M-<down>" . 'er/contract-region))
+)
+#+end_src
+
 ** Paquete =bm=
 Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 #+BEGIN_SRC emacs-lisp
@@ -438,6 +449,11 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 
     (use-package bm
       :ensure t
+      :bind
+      (( "<C-f2>" . bm-toggle))
+      (( "<f2>" . my/bookmark-or-edit ))
+      (( "<S-f2>" . bm-previous))
+
     )
 #+END_SRC
 
@@ -447,7 +463,15 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 #+BEGIN_SRC emacs-lisp
   (use-package multiple-cursors
     :ensure t
-    :custom (mc/always-run-for-all t))
+    :custom (mc/always-run-for-all t)
+    :bind
+
+      (("C-S-c C-S-c" . mc/edit-lines ))
+      (("C->" . mc/mark-next-like-this ))
+      (("C-<" . mc/mark-previous-like-this ))
+      (("C-S-<mouse-1>" . mc/add-cursor-on-click ))
+      (("C-S-c C-S-v" . mc/mark-all-like-this ))
+)
 #+END_SRC
 
       
@@ -571,7 +595,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
   (add-hook 'prog-mode-hook #'my-company-backends-prog-mode-function)
 
-
+  (global-set-key (kbd "C-.") 'company-complete)
   (define-key company-active-map [escape] 'company-abort)
   (global-company-mode)
 #+end_src
@@ -631,51 +655,52 @@ En =neotree=, quiero ver todos los ficheros, y no me importa el ancho fijo de la
 
 Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair-mode=
 #+begin_src emacs-lisp
-  (use-package org
-    :ensure t
-    :config
+(use-package org
+  :ensure t
+  :config
+  
+  (setq org-ellipsis "⤵⤵⤵")
+  (set-face-attribute 'org-ellipsis nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
+  
 
-    (setq org-ellipsis "⤵⤵⤵")
-    (set-face-attribute 'org-ellipsis nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
+  
+  ;;Trying to fix indentation behaviour within code blocks.
+  
+  (setq org-edit-src-content-indentation 0)
+  (setq org-src-fontify-natively t)
+  (setq org-src-tab-acts-natively t)
+  (setq org-src-preserve-indentation t)
+  
+
+  (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
+  (modify-syntax-entry ?= "(=" org-mode-syntax-table)
+  (modify-syntax-entry ?_ "(_" org-mode-syntax-table)
+  (modify-syntax-entry ?* "(*" org-mode-syntax-table)
+  (modify-syntax-entry ?/ "(/" org-mode-syntax-table)
+
+   ;; https://stackoverflow.com/questions/40110927/how-to-export-a-reference-to-a-begin-src-block-to-latex/40689439#40689439
+  (setq org-latex-prefer-user-labels t)
 
 
+  ;; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
+  (ignore-errors
+    (require 'org-tempo)
 
-    ;Trying to fix indentation behaviour within code blocks.
+    ;; si no existe org-tempo no se llega aquí, lo cual está bien porque lo siguiente solo hay que hacerlo para org-tempo
+    (setq org-structure-template-alist 
+          '(("n" . "notes")
+            ("a" . "export ascii")
+            ("c" . "center")
+            ("C" . "comment")
+            ("e" . "example")
+            ("E" . "export")
+            ("h" . "export html")
+            ("l" . "export latex")
+            ("q" . "quote")
+            ("s" . "src")
+            ("v" . "verse")))
 
-    (setq org-edit-src-content-indentation 0)
-    (setq org-src-tab-acts-natively t)
-    (setq org-src-preserve-indentation t)
-
-
-    (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
-    (modify-syntax-entry ?= "(=" org-mode-syntax-table)
-    (modify-syntax-entry ?_ "(_" org-mode-syntax-table)
-    (modify-syntax-entry ?* "(*" org-mode-syntax-table)
-    (modify-syntax-entry ?/ "(/" org-mode-syntax-table)
-
-    ;;; https://stackoverflow.com/questions/40110927/how-to-export-a-reference-to-a-begin-src-block-to-latex/40689439#40689439
-    (setq org-latex-prefer-user-labels t)
-
-
-    ; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
-    (ignore-errors
-      (require 'org-tempo)
-
-      ; si no existe org-tempo no se llega aquí, lo cual está bien porque lo siguiente solo hay que hacerlo para org-tempo
-      (setq org-structure-template-alist 
-            '(("n" . "notes")
-              ("a" . "export ascii")
-              ("c" . "center")
-              ("C" . "comment")
-              ("e" . "example")
-              ("E" . "export")
-              ("h" . "export html")
-              ("l" . "export latex")
-              ("q" . "quote")
-              ("s" . "src")
-              ("v" . "verse")))
-
-      )
+    )
   )
 #+end_src
 
@@ -819,6 +844,7 @@ Grabar en el propio fichero
 
 #+begin_src emacs-lisp
 (use-package latex
+  :ensure auctex
   :config
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
@@ -829,6 +855,10 @@ Grabar en el propio fichero
 
 (setq LaTeX-verbatim-environments
       '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql" "listadoshell" "listadojava"))
+
+
+(add-to-list 'auto-mode-alist '("\\.tex\\'" . latex-mode))
+
 
 ; Para imenu, defino una macro de Latex que no hace nada, pero que detecto en imenu.
 (add-to-list 'TeX-outline-extra '("imenu" 2))
@@ -863,21 +893,13 @@ Grabar en el propio fichero
   '(add-to-list 'TeX-command-list
      		'("XeLaTeX" "xelatex -interaction=nonstopmode %s"
 		  TeX-run-command t t :help "Run xelatex") t))
-)
-#+END_SRC
 
-#+RESULTS:
-
-En =Termux= se necesita especificar la camino a la /shell/ para ejecutar comandos de /Latex/
-#+begin_src emacs-lisp
-(use-package auctex
-  :defer 1
-  :ensure t
-  :config  (if
+;; En =Termux= se necesita especificar la camino a la /shell/ para ejecutar comandos de /Latex/
+(if
       (file-exists-p "/data/data/com.termux/files/usr/bin/sh")
       (setq TeX-shell  "/data/data/com.termux/files/usr/bin/sh"))
 )
-#+end_src
+#+END_SRC
 
 
 
@@ -891,7 +913,7 @@ Ayuda interactiva de teclado. En el popup-type por defecto entra en conflicto co
   :ensure t
   :config
     (which-key-mode t)
-    (setq which-'key-idle-delay 3.0)
+    (setq which-key-idle-delay 3.0)
 )
 
 (use-package which-key-posframe
@@ -916,6 +938,18 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 
 
 
+** =transpose-frame=
+
+   #+begin_src emacs-lisp
+
+(use-package transpose-frame 
+  :ensure t
+  :defer 1
+  :bind
+      (("<f5>" . transpose-frame))
+)
+
+   #+end_src
 
 ** Paquete =helm=
 =helm= es un sistema para seleccionar una opción entre varias posibilidades, que se puede usar para casi todo
@@ -926,6 +960,13 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 - ... y más
 
 #+begin_src emacs-lisp
+
+(use-package helm-icons
+  :ensure t
+  :defer 1
+  :config
+  (helm-icons-enable)
+)
 
 ;; HELM
 (use-package helm
@@ -952,10 +993,20 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
                          (inhibit-same-window . t)
                          (window-height . 0.4)))
 
-  :after (tramp) ;; PARA EVITAR EL ERROR Symbols's value as variable is void: tramp-methods
+  :after (tramp helm-icons) ;; PARA EVITAR EL ERROR Symbols's value as variable is void: tramp-methods
+  :bind
+      (("M-x"  . helm-M-x))
+      (("<menu>"  . helm-M-x))
+      (("C-x C-f"  . helm-find-files))
+      (("<f6>"  . helm-mini))
+      (("M-y"  . helm-show-kill-ring))
+      (("C-x r b"  . helm-filtered-bookmarks))
+
   )
 
 (use-package helm-posframe
+  :ensure t
+  :defer t
   :config
   (setq helm-posframe-parameters '(:internal-border-width 40 :internal-border-color "pink"))
   (setq helm-posframe-border-width 2)
@@ -980,6 +1031,10 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   (setq helm-swoop-split-window-function 'helm-display-buffer-in-own-frame)
 
   :after (helm)
+  :bind
+      (("C-f" . helm-swoop))
+      (("C-S-f" . helm-multi-swoop-all))
+
 )
 
 #+end_src
@@ -1030,6 +1085,9 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 
 #+end_src
 
+#+RESULTS:
+: t
+
 
 *** Paquete =ox-epub=
 
@@ -1042,6 +1100,9 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 
 #+end_src
 
+#+RESULTS:
+: [nil 0 1 0 nil require (ox-epub nil t) idle 0]
+
 *** Paquete =org-re-reveal=
 #+begin_src emacs-lisp
 (use-package org-re-reveal
@@ -1049,6 +1110,8 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   :config
 )
 #+end_src
+
+#+RESULTS:
 
 
 *** Paquete =ox-reveal=
@@ -1124,8 +1187,8 @@ Cuando exporto un fichero =org= a =reveal.js= tengo problemas en la forma en que
 
 * Edición
 ** Acentos en KDE
-Desde que uso Plasma no funcionan bien los acentos:
-#+begin_src emacs-lisp
+Desde que uso Plasma no funcionan bien los acentos. Pero ahora sí que funcionan
+#+begin_src lisp
 (require 'iso-transl)
 #+end_src
 ** Expresiones regulares para find/replace
@@ -1134,6 +1197,8 @@ Desde que uso Plasma no funcionan bien los acentos:
   (use-package visual-regexp
     :defer 1
     :ensure t
+    :bind
+           (( "C-M-%" . vr/query-replace))
     )
 
 #+end_src
@@ -1248,6 +1313,10 @@ Retroceder en la historia de disposición de ventanas y búferes
 (use-package winner
   :ensure t
   :defer 1 
+  :bind
+  (("M-<left>" . winner-undo))
+  (("M-<right>" . winner-redo))
+
   :config
     (winner-mode 1))
 #+end_src
@@ -1269,12 +1338,15 @@ El ratón también puede utilizarse en un =xterm=
    #+end_src
 
 ** Previsualización de ficheros en Helm
-Se me cuelga a veces, está desactivado
-#+begin_src emacs-lisp
+#+begin_src lisp
 (use-package helm-file-preview
+  :ensure t
+  :defer 1
   :config
+  (setq helm-file-preview-only-when-line-numbers nil)
   (helm-file-preview-mode 1))
 #+end_src
+
 
 ** Líneas muy largas
 Avoid performance issues in files with very long lines.
@@ -1287,11 +1359,8 @@ Avoid performance issues in files with very long lines.
 #+begin_src emacs-lisp
 
 
-(add-to-list 'load-path "/home/alvaro/github/centaur-tabs")
-
-
 (use-package centaur-tabs
-  :ensure nil
+  :ensure t
   :defer 1
   :config
 
@@ -1433,9 +1502,16 @@ Tanto la señal auditiva como la visual
 ** /flycheck/ 
 Marca errores en el fichero
 #+begin_src emacs-lisp
-;; VALIDACIONES
 (add-hook 'after-init-hook #'global-flycheck-mode)
 ;(setq flycheck-shellcheck-follow-sources nil)
+
+(use-package flycheck-inline
+  :ensure t
+  :defer 1
+  :config
+    (with-eval-after-load 'flycheck
+      (add-hook 'flycheck-mode-hook #'turn-on-flycheck-inline))
+)
 #+end_src
 
 ** /scroll/
@@ -1607,14 +1683,6 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
   ;; MIS TECLAS
   (defvar mis-teclas-minor-mode-map
     (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "C-e") 'er/expand-region)
-      (define-key map (kbd "C-S-e") 'er/contract-region)
-      (define-key map (kbd "M-<up>") 'er/expand-region)
-      (define-key map (kbd "M-<down>") 'er/contract-region)
-
-      (define-key map (kbd "M-<left>") 'winner-undo)
-      (define-key map (kbd "M-<right>") 'winner-redo)
-
 
       (define-key map (kbd "C-z") 'undo )
       (define-key map (kbd "C-x C-d") 'dired)
@@ -1622,8 +1690,6 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
       (define-key map (kbd "C-x C-b") 'ibuffer)
       (define-key map (kbd "C-x b") 'ibuffer)
       ;(define-key map (kbd "C-f") 'swiper-helm)
-      (define-key map (kbd "C-f") 'helm-swoop)
-      (define-key map (kbd "C-S-f") 'helm-multi-swoop-all)
       (define-key map (kbd "C-<f5>") 'reveal-y-pdf)
       ;define-key map (kbd "<backtab>") 'psw-switch-buffer)
       (define-key map (kbd "M-I") 'popup-imenu)
@@ -1633,53 +1699,8 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
       (define-key map (kbd "M-S-<down>") 'shrink-window)
       (define-key map (kbd "M-S-<left>") 'shrink-window-horizontally)
       (define-key map (kbd "M-S-<right>") 'enlarge-window-horizontally)
-
-      (define-key map (kbd "<f5>") 'transpose-frame)
-
-      (define-key map (kbd "<f9>") 'magit-status)
-
-
-      (define-key map (kbd "C-S-c C-S-c") 'mc/edit-lines)
-      (define-key map (kbd "C->") 'mc/mark-next-like-this)
-      (define-key map (kbd "C-<") 'mc/mark-previous-like-this)
-      (define-key map (kbd "C-S-<mouse-1>") 'mc/add-cursor-on-click)
-      (define-key map (kbd "C-S-c C-S-v") 'mc/mark-all-like-this)
-
-      (define-key map (kbd "M-x") 'helm-M-x)
       (define-key map (kbd "C-x M-x") 'execute-extended-command)
-
-      (define-key map (kbd "<menu>") 'helm-M-x)
-      (define-key map (kbd "C-x C-f") 'helm-find-files)
-      (define-key map (kbd "<f6>") 'helm-mini)
-      (define-key map (kbd "M-y") 'helm-show-kill-ring)
-      (define-key map (kbd "C-x r b") 'helm-filtered-bookmarks)
-
-      ;(define-key map (kbd "<f8>") 'neotree-project-root-dir-or-current-dir)
-      (define-key map (kbd "<f8>") 'treemacs)
-      (define-key map (kbd "C-<f8>") 'ibuffer-sidebar-toggle-sidebar)
-
-      (define-key map (kbd "C-x o") 'switch-window)
-
-      (define-key map (kbd "C-.") 'company-complete)
-
-
       (define-key map (kbd "C-S-l") 'toggle-truncate-lines)
-
-      (define-key map (kbd "<C-f2>") 'bm-toggle)
-      (define-key map (kbd "<f2>")  'my/bookmark-or-edit )
-      (define-key map (kbd "<S-f2>") 'bm-previous)
-
-      (define-key map (kbd "C-M-%") 'vr/query-replace)
-
-      (define-key map (kbd "<C-return>") 'origami-recursively-toggle-node)
-      (define-key map (kbd "<C-S-return>") 'origami-reset)
-      (define-key map (kbd "<M-return>") 'origami-close-all-nodes)
-
-
-
-      
-
-
       map)
     "mis-teclas-minor-mode keymap")
 
@@ -1698,6 +1719,78 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
 
 * Utilidades
+
+** =sudo-edit=
+   #+begin_src emacs-lisp
+(use-package sudo-edit
+  :ensure t
+  :defer 1
+  :config
+  (defun abrir-como-root()
+    (interactive)
+    (sudo-edit))
+)
+
+   #+end_src
+
+   #+RESULTS:
+   : t
+
+** =helpful=
+
+#+begin_src emacs-lisp
+(use-package helpful
+  :ensure t
+
+  :bind
+  (("C-h k" . helpful-key))
+  (("C-h v" . helpful-variable))
+  (("C-h f" . helpful-function))
+  (("C-h o" . helpful-symbol))
+
+)
+#+end_src
+
+#+RESULTS:
+: helpful-symbol
+
+
+** Deshabilitar posframe en terminal
+#+begin_src emacs-lisp
+(defun my/disable-posframe ()
+  (interactive)
+  (helm-posframe-disable)
+  (which-key-posframe-mode -1))
+
+(defun my/enable-posframe ()
+  (interactive)
+  (helm-posframe-enable)
+  (which-key-posframe-mode 1))
+
+(defun my/disable-or-enable-posframe ()
+  "Enable or disable integrations with posframe."
+  (interactive)
+  (message "EN TIMER")
+  (unless (posframe-workable-p) (my/disable-posframe))
+  (when (posframe-workable-p) (my/enable-posframe)))
+
+
+#+end_src
+
+
+** =magit=
+
+   #+begin_src emacs-lisp
+(use-package magit
+  :ensure t
+  :defer 1
+  :bind
+      (("<f9>" . magit-status))
+
+)
+
+
+   #+end_src
 
 ** =vdiff-magit=
 #+begin_src emacs-lisp
@@ -1729,6 +1822,9 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
     (setq vdiff-magit-stage-is-2way nil)
     )
 #+end_src
+
+#+RESULTS:
+: t
 
 
 ** Convertir un fichero =gift= en un examen =pdf=
@@ -1763,6 +1859,9 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
       (delete-window))
     (display-buffer-pop-up-frame buffer nil)))
 #+end_src
+
+#+RESULTS:
+: sacar-a-nueva-frame
 
 
 ** Inicio de una selección rectangular usando el ratón (lo uso poco, prefiero =C-x spc=)
@@ -1836,70 +1935,6 @@ With a prefix ARG always prompt for command to use."
     (browse-url (concat "http://localhost:" (number-to-string port) "/")))
 #+end_src
 
-
-** Al visitar un fichero, reabrir el bufer como root, incluso a través de tramp. Hay una versión para emacs25 y otra para emacs26.
-#+begin_src emacs-lisp
-(defun abrir-como-root-emacs25 ()
-  "Reabre el fichero actual como root, incluso via tramp."
-  (interactive)
-  (let*
-    ((sudo (/= (call-process "sudo" nil nil "-n true") 0))
-      (file-name
-        (if (tramp-tramp-file-p buffer-file-name)
-          (with-parsed-tramp-file-name buffer-file-name parsed
-            (tramp-make-tramp-file-name
-              (if sudo "sudo" "su")
-              "root"
-              parsed-host
-              parsed-localname
-              (let ((tramp-postfix-host-format "|")
-                     (tramp-prefix-format))
-                (tramp-make-tramp-file-name
-                  parsed-method
-                  parsed-user
-                  parsed-host
-                  ""
-                  parsed-hop))))
-          (concat (if sudo
-                    "/sudo::"
-                    "/su::")
-            buffer-file-name))))
-    (find-alternate-file file-name)))
-
-
-;; REABRIR COMO ROOT
-(defun abrir-como-root ()
-  "Reabre el fichero actual como root, incluso via tramp."
-  (interactive)
-  (let*
-      ((sudo (/= (call-process "sudo" nil nil "-n true") 0))
-       (file-name
-        (if (tramp-tramp-file-p buffer-file-name)
-            (with-parsed-tramp-file-name buffer-file-name parsed
-              (tramp-make-tramp-file-name
-               (if sudo "sudo" "su")
-               "root"
-               nil ; domain
-               parsed-host
-               nil ; port
-               parsed-localname
-               (let ((tramp-postfix-host-format "|")
-                     (tramp-prefix-format))
-                 (tramp-make-tramp-file-name
-                  parsed-method
-                  parsed-user
-                  nil ; domain
-                  parsed-host
-                  nil ; PORT
-                  parsed-hop))))
-          
-          (concat (if sudo
-                      "/sudo::"
-                    "/su::")
-                  buffer-file-name))))
-    (find-alternate-file file-name)))
-
-#+end_src
 
 ** /Transmission/
 Cuando hay que añadir muchos torrents similares, es muy útil hacerlo desde un buffer de emacs.
@@ -2069,6 +2104,18 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
 
 
 * Apariencia
+** =mode-icons=
+Cambia la descripción del modo por un icono en la modeline
+   #+begin_src lisp
+(use-package mode-icons
+  :defer 1
+  :ensure t
+  :config
+  (mode-icons-mode)
+)
+   #+end_src
+
+   #+RESULTS:
 
 ** =origami=
 
@@ -2082,6 +2129,13 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
  (setq origami-fold-replacement "⤵⤵⤵")
  (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified)
  (set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
+
+  :bind
+      (("<C-return>" . origami-recursively-toggle-node))
+      (("<C-S-return>" . origami-reset))
+      (("<M-return>" . origami-close-all-nodes))
+
+
 
 )
 
@@ -2133,6 +2187,8 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
   (origami-predef-global-mode 1))
 #+end_src
 
+#+RESULTS:
+
 
 
 ** =imenu=
@@ -2145,6 +2201,8 @@ Reduzco el tamaño de todas las fuentes de =imenu=
    (set-face-attribute 'imenu-list-entry-face nil :height  0.8)
    (add-hook 'imenu-list-major-mode-hook (lambda () (message "IMENU MAJOR MODE")(linum-mode 1))))
    #+end_src
+
+   #+RESULTS:
 
 
 ** /Modeline/, =mini-frame= y =feebleline=
@@ -2164,6 +2222,9 @@ Mi línea de estado (modeline)
 
 (setq-default mode-line-format my-mode-line-format)
 #+end_src
+
+#+RESULTS:
+|   | ((:eval (mode-icons--read-only-status)) (:eval (mode-icons--modified-status))) | %[ | (%12b) | %] |   |   | (vc-mode vc-mode) |   | %m %n |   | %IB %Z |   | %l:%c %p | (:eval (unless (display-graphic-p) -%-)) |
 
 Pone en lo alto el minibuffer. No sé si me gusta, funciona algo raro, y lo mismo no va bien con =febbleline= y =mini-modeline=.
 #+begin_src lisp
@@ -2211,6 +2272,9 @@ Cursor como barra vertical
 (setq blink-cursor-blinks 0)
 #+end_src
 
+#+RESULTS:
+: 0
+
 ** Líneas vacías al final, como =vim=
 Creo que esto se hace mejor con la variable =indicate-empty-lines=
 #+begin_src lisp
@@ -2225,13 +2289,7 @@ Creo que esto se hace mejor con la variable =indicate-empty-lines=
 
 
 ** Indicación de cambios de /git/
-Utilizo /git/ para casi todos mis ficheros. =git-gutter= marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual. indico que se refresquen los buffers cada 10 segundos.
-#+begin_src lisp
-(global-git-gutter-mode +1)
-(setq git-gutter:update-interval 10)
-#+end_src
-
-Estoy probando =diff-hl=
+Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual. indico que se refresquen los buffers cada 10 segundos.
 
 #+BEGIN_SRC emacs-lisp
 (use-package diff-hl
@@ -2243,7 +2301,6 @@ Estoy probando =diff-hl=
 )
 #+END_SRC
 
-#+RESULTS:
 
 ** Saltos de página
 Mostrar =^L= (saltos de página) como una línea horizontal
@@ -2317,7 +2374,12 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
 
 #+begin_src emacs-lisp
   (setq  custom-safe-themes  (quote
-("a63355b90843b228925ce8b96f88c587087c3ee4f428838716505fd01cf741c8" "6e219d6b6a3f7e22888b203fd5492e12133ba40512be983858f05b42806fa573" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" default)))
+                              ("d916b686ba9f23a46ee9620c967f6039ca4ea0e682c1b9219450acee80e10e40" 
+                               "a63355b90843b228925ce8b96f88c587087c3ee4f428838716505fd01cf741c8"
+                               "6e219d6b6a3f7e22888b203fd5492e12133ba40512be983858f05b42806fa573"
+                               "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" 
+                               "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" 
+                               default)))
 
   (defvar my-dark-theme 'sanityinc-tomorrow-bright)
   (defvar my-light-theme 'intellij)
@@ -2337,7 +2399,6 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
 
 
 #+end_src
-
 
 
 Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna customización. Por lo visto, un tema siempre añade cambios, pero al quitarse no se deshacen  completamente. Algunas configuraciones solo se tienen en cuenta al reiniciar /Emacs/ o al reaplicar un modo: por ejemplo, los colores de =highlight-indent-guides= necesitan reabrir el buffer.
@@ -2375,6 +2436,8 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
 
 #+end_src
 
+#+RESULTS:
+
 * KMS
 
 Manual
@@ -2398,16 +2461,11 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - helm-xref
 - helm-icons
 - (use-package json-navigator) aa
-- flycheck-popup
 - wrap-region
-- helm-posframe
 - stripe-buffer
-- su-mode
-- helpful
 - (use-package autorevert :ensure nil :config (setq auto-revert-verbose nil global-auto-revert-mode t global-auto-revert-non-file-buffers t))
 -  (delete-by-moving-to-trash t)
 -  (fast-but-imprecise-scrolling t)
-- https://github.com/ryuslash/mode-icons
 - find-trace-paths
 - helm icons
 -  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images) 
@@ -2415,7 +2473,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - http://ergoemacs.org/emacs/emacs_list_and_set_font.html
 - https://github.com/lastquestion/explain-pause-mode
 - fancy-narrow
-- helm-treemacs-icons
 - lsp-latex
 - https://github.com/Borderliner/RME
 - feebleline
@@ -2426,7 +2483,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - asciinema
 
 - company-quickhelp-terminal
-- https://github.com/dgutov/diff-hl/blob/master/README.md
 - aftersave-add-hook
 - setq org-html-htmlize-output-type 'css)
 - (setq org-download-method 'attach)
@@ -2575,11 +2631,3 @@ Sleep + P.STD + Mute + Power
 
 You can press Channel Up/Down buttons to navigate between available options. To change their values, press Volume Up/Down buttons.
 
-
-* nada
-
-  #+begin_src emacs-lisp
-(tooltip-show "hola")
-  #+end_src
-
-  #+RESULTS:
