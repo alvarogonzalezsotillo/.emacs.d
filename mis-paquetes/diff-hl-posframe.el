@@ -68,7 +68,6 @@
            (ignore-command-p (eq this-command 'ignore))
            (command-in-posframe-p (eq last-event-frame diff-hl-posframe-frame))
            (keep-open-p (or invoking-command-p command-in-posframe-p ignore-command-p)))
-      (message "this-command:%s invoking-command:%s command-in-posframe:%s" this-command invoking-command-p command-in-posframe-p)
       (not keep-open-p))))
 
 
@@ -179,7 +178,9 @@ If not, it fallbacks to `diff-hl-diff-goto-hunk`."
 
 ;;;###autoload
 (define-minor-mode diff-hl-posframe-mode
-  "Enables the margin and fringe to show a posframe with vc diffs when clicked.
+  "Enables the margin and fringe to show a posframe with vc diffs when clicked. 
+By default, the posframe shows only the current hunk, and the line of the hunk that matches the current position is highlighted.
+The posframe face, border and other visual preferences are customizable.
 The posframe can be also invoked with the command `diff-hl-posframe-show`"
   :group diff-hl-posframe-group
 
@@ -187,7 +188,10 @@ The posframe can be also invoked with the command `diff-hl-posframe-show`"
     (error "Required packages not available: diff-hl-posframe-mode needs diff-hl and posframe"))
   )
 
+;;;###autoload
+(define-globalized-minor-mode diff-hl-posframe-global-mode
+  diff-hl-posframe-mode
+  diff-hl-posframe-mode)
+
 (provide 'diff-hl-posframe)
 ;;; diff-hl-posframe.el ends here
-
-
