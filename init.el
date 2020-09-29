@@ -40,16 +40,11 @@
 
   (message "Versión inicial de org:%s" (org-version))
   (message "Instalando org-plus-contrib para conseguir la última versión de org" )
-  (use-package org :ensure org-plus-contrib :pin org)
-  
-  (use-package org
-	       :ensure t
-	       :demand t
-	       :config
-	       (require 'ob-tangle))
-  
+  (use-package org :ensure org-plus-contrib :pin org
+    :config
+    (require 'ob-tangle)
+    )
   )
-
 ;;; Code:
 (defun my/carga-config-org (refresh debug)
   "Carga la configuración, refrescando la lista de paquetes si se indica REFRESH, con debug si se indica DEBUG"
@@ -66,6 +61,7 @@
   (message "Cargo el fichero org de configuración con org-version:%s" (org-version))
   
   (org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
+  ;;(load-file (expand-file-name "~/.emacs.d/config.el"))
 
   ;; DESACTIVAR EL DEBUG
   (setq debug-on-error nil))

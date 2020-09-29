@@ -6,16 +6,16 @@
 (require 'diff-hl)
 
 (defvar diff-hl-posframe-mode-map
-    (let ((map (make-sparse-keymap)))
-    (define-key global-map (kbd "<left-margin> <mouse-1>") 'diff-hl-posframe--click)
-    (define-key global-map (kbd "<right-margin> <mouse-1>") 'diff-hl-posframe--click)
-    (define-key global-map (kbd "<left-fringe> <mouse-1>") 'diff-hl-posframe--click)
-    (define-key global-map (kbd "<right-fringe> <mouse-1>") 'diff-hl-posframe--click)
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "<left-margin> <mouse-1>") 'diff-hl-posframe--click)
+    (define-key map (kbd "<right-margin> <mouse-1>") 'diff-hl-posframe--click)
+    (define-key map (kbd "<left-fringe> <mouse-1>") 'diff-hl-posframe--click)
+    (define-key map (kbd "<right-fringe> <mouse-1>") 'diff-hl-posframe--click)
     map)
-    "Keymap for diff-hl-posframe-mode.")
+  "Keymap for diff-hl-posframe-mode.")
 
 (defvar diff-hl-posframe-buffer-name "*diff-hl-posframe-hunk*" "Name of the posframe used by diff-hl-posframe.")
-(defvar diff-hl-posframe-frame nil "The postframe frame.")
+(defvar diff-hl-posframe-frame nil "The postframe frame used in diff-hl-posframe package.")
 
 (defgroup diff-hl-posframe-group nil
   "Show vc diffs in a posframe."
@@ -25,13 +25,15 @@
   "Regex that marks the boundary of a hunk in *vc-diff* buffer."
   :type 'string)
 
-(defcustom diff-hl-posframe-textscale 2
-  "Decrease of the diff-hl-posframe font."
-  :type 'integer)
 
 (defcustom diff-hl-posframe-internal-border-width 2
   "Internal border width of the posframe.  The color can be customized with `internal-border` face."
   :type 'integer)
+
+
+(defcustom diff-hl-posframe-internal-border-color "#00ffff"
+  "Internal border color of the posframe.  If it doesn't work, try with `internal-border` face."
+  :type 'color)
 
 (defcustom diff-hl-posframe-narrow t
   "Narrow the differences to the current hunk."
@@ -43,31 +45,37 @@
 
 (defcustom diff-hl-posframe-parameters nil
   "The frame parameters used by helm-posframe."
-  :group 'helm-posframe
   :type 'string)
 
 (defface diff-hl-posframe-clicked-line-face
   '((t (:inverse-video t)))
   "Face for the clicked line in the diff output.")
 
+(defface diff-hl-posframe-face
+  '((t (:height 0.8)))
+  "Face for the posframe.")
 
 (defun diff-hl-posframe--hide-handler  (_info)
   "Hide the posframe if the event is outside the posframe (after the posframe has been opened)."
 
   (if (not (frame-visible-p diff-hl-posframe-frame))
       t
-    (let* ((invoking-command-p (eq this-command 'diff-hl-posframe--click))
+    (let* ((invoking-command-p (or
+                                (eq this-command 'diff-hl-posframe--click)
+                                (eq this-command 'diff-hl-posframe-show)
+                                (eq this-command 'handle-switch-frame)
+                                ))
            (ignore-command-p (eq this-command 'ignore))
            (command-in-posframe-p (eq last-event-frame diff-hl-posframe-frame))
            (keep-open-p (or invoking-command-p command-in-posframe-p ignore-command-p)))
+      (message "this-command:%s invoking-command:%s command-in-posframe:%s" this-command invoking-command-p command-in-posframe-p)
       (not keep-open-p))))
 
 
 (defun diff-hl-posframe-buffer ()
-  "Create the buffer with the contents of the hunk at point.  The buffer has the point in the corresponding line of the hunk."
-
-  (unless (diff-hl-hunk-overlay-at (point))
-    (error "There is no modified hunk at pos %s" (point)))
+  "Create the buffer with the contents of the hunk at point.
+The buffer has the point in the corresponding line of the hunk.
+Returns a list with the buffer and the line number of the clicked line."
 
   (let ((content)
         (point-in-buffer)
@@ -75,7 +83,8 @@
         (overlay)
         (buffer (get-buffer-create diff-hl-posframe-buffer-name)))
     
-    
+
+    ;; Get differences
     (save-window-excursion
       (save-excursion
         (diff-hl-diff-goto-hunk)
@@ -99,26 +108,22 @@
       
 
       ;; Change face size
-      (text-scale-decrease diff-hl-posframe-textscale)
-      
+      (buffer-face-set 'diff-hl-posframe-face)
       
 
       ;;  Find the hunk and narrow to it
-      (re-search-backward diff-hl-posframe-hunk-boundary nil 1)
-      (forward-line 1)
-      
-
       (when diff-hl-posframe-narrow
+        (re-search-backward diff-hl-posframe-hunk-boundary nil 1)
+        (forward-line 1)
         (let* ((start (point)))
           (re-search-forward diff-hl-posframe-hunk-boundary nil 1)
           (move-beginning-of-line nil)
-          (narrow-to-region start (point))))
+          (narrow-to-region start (point)))
+        ;; Come back to the clicked line
+        (goto-char (overlay-start overlay)))
       
 
-      ;; Come back to the clicked line
-      (goto-char (overlay-start overlay))
-      (setq line (line-number-at-pos))
-      )
+      (setq line (line-number-at-pos)))
     
     (list buffer line)))
 
@@ -127,57 +132,59 @@
   "Called when user clicks on margins.  EVENT is click information."
   (interactive "event")
 
-  (when (posframe-workable-p)
+  ;; Go to clicked spot
+  (posn-set-point (event-start event))
+  (diff-hl-posframe-show))
 
-    (unless (vc-backend buffer-file-name)
-      (error "Buffer is not a file in version control"))
-    
-    (let* ((window) (buffer-and-line) (buffer) (line)
-           (start (event-start event))
-           (position (posn-point start)))
 
-      ;;; Move to the click nearest position
-      (posn-set-point (event-start event))
-      (setq buffer-and-line (diff-hl-posframe-buffer))
-      (setq buffer (elt buffer-and-line 0))
-      (setq line (elt buffer-and-line 1))
+(defun diff-hl-posframe-show ()
+  "Show a the diffs with vc last version in a posframe, if available.
+If not, it fallbacks to `diff-hl-diff-goto-hunk`."
+  (interactive)
+  (cond ((not (vc-backend buffer-file-name))
+         (message "The buffer is not under version control"))
+        ((not (diff-hl-hunk-overlay-at (point)))
+         (message "There is no modified hunk at pos %s" (point)))
+        ((not (posframe-workable-p))
+         (diff-hl-diff-goto-hunk))
+        (t
 
-      
-      ;;; Show posframe
-      (setq posframe-mouse-banish nil)
-      (setq
-       diff-hl-posframe-frame
-       (posframe-show buffer
-                      :position (point)
-                      :poshandler diff-hl-posframe-poshandler
-                      :internal-border-width diff-hl-posframe-internal-border-width
-                      :accept-focus  nil
-                      :internal-border-color "#00FFFF" ; Doesn't always work, better define internal-border face
-                      :hidehandler 'diff-hl-posframe--hide-handler
-                      :override-parameters diff-hl-posframe-parameters
-                      )
-       )
-      (setq window (window-main-window diff-hl-posframe-frame))
+         (let* ((buffer-and-line (diff-hl-posframe-buffer))
+                (buffer (elt buffer-and-line 0))
+                (line (elt buffer-and-line 1)))
+        
+           ;; Show posframe
+           (setq posframe-mouse-banish nil)
+           (setq
+            diff-hl-posframe-frame
+            (posframe-show buffer
+                           :position (point)
+                           :poshandler diff-hl-posframe-poshandler
+                           :internal-border-width diff-hl-posframe-internal-border-width
+                           :accept-focus  nil
+                           :internal-border-color diff-hl-posframe-internal-border-color ; Doesn't always work, better define internal-border face
+                           :hidehandler 'diff-hl-posframe--hide-handler
+                           :override-parameters diff-hl-posframe-parameters
+                           ))
 
-      ;;; Recenter arround point
-      (with-selected-frame diff-hl-posframe-frame
-        (with-current-buffer buffer
-          (goto-char (point-min))
-          (forward-line (1- line))
-          (select-window window)
-          (recenter)
-          ))
-      )
-    )
-  )
-
+           ;; Recenter arround point
+           (with-selected-frame diff-hl-posframe-frame
+             (with-current-buffer buffer
+               (goto-char (point-min))
+               (forward-line (1- line))
+               (select-window (window-main-window diff-hl-posframe-frame))
+               (recenter)))))))
 
 
 
 ;;;###autoload
 (define-minor-mode diff-hl-posframe-mode
-  "Enables the margin and fringe to show a posframe with vc diffs when clicked."
+  "Enables the margin and fringe to show a posframe with vc diffs when clicked.
+The posframe can be also invoked with the command `diff-hl-posframe-show`"
   :group diff-hl-posframe-group
+
+  (unless (and (featurep 'diff-hl) (featurep 'posframe) )
+    (error "Required packages not available: diff-hl-posframe-mode needs diff-hl and posframe"))
   )
 
 (provide 'diff-hl-posframe)
