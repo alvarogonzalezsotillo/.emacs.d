@@ -164,7 +164,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | helm-projectile                |                                                                |
 | helm-swoop                     |                                                                |
 | highlight-indent-guides        |                                                                |
-| htmlize                        |                                                                |
 | indent-guide                   |                                                                |
 | intellij-theme                 |                                                                |
 | literate-calc-mode             |                                                                |
@@ -177,9 +176,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | ob-typescript                  |                                                                |
 | ob-restclient                  |                                                                |
 | ob-rust                        |                                                                |
-| org                            |                                                                |
 | org-bullets                    |                                                                |
-| org-page                       |                                                                |
 | page-break-lines               |                                                                |
 | php-mode                       |                                                                |
 | plantuml-mode                  |                                                                |
@@ -311,6 +308,11 @@ Estoy usando =treemacs= en vez de =neotree=.
 
 #+begin_src emacs-lisp
 
+(use-package treemacs
+  :ensure t
+  :defer 1
+  :config
+
   (defun hacer-treemacs-resizable ()
     (if treemacs--width-is-locked
         (treemacs-toggle-fixed-width)))
@@ -320,37 +322,35 @@ Estoy usando =treemacs= en vez de =neotree=.
     (mapcar
      (lambda (face) (set-face-attribute face nil :height 0.8) )
      '(
-        treemacs-directory-face                
-        treemacs-directory-collapsed-face      
-        ;treemacs-file-face                     
-        treemacs-root-face                     
-        treemacs-root-unreadable-face          
-        treemacs-root-remote-face              
-        treemacs-root-remote-unreadable-face   
-        treemacs-root-remote-disconnected-face 
-        treemacs-tags-face                     
-        treemacs-help-title-face               
-        treemacs-help-column-face              
-        treemacs-git-unmodified-face
-        treemacs-git-modified-face
-        treemacs-git-renamed-face
-        treemacs-git-ignored-face
-        treemacs-git-untracked-face
-        treemacs-git-added-face
-        treemacs-git-conflict-face
-        treemacs-term-node-face                
-        treemacs-on-success-pulse-face         
-        ))
+       treemacs-directory-face                
+       treemacs-directory-collapsed-face      
+                                        ;treemacs-file-face                     
+       treemacs-root-face                     
+       treemacs-root-unreadable-face          
+       treemacs-root-remote-face              
+       treemacs-root-remote-unreadable-face   
+       treemacs-root-remote-disconnected-face 
+       treemacs-tags-face                     
+       treemacs-help-title-face               
+       treemacs-help-column-face              
+       treemacs-git-unmodified-face
+       treemacs-git-modified-face
+       treemacs-git-renamed-face
+       treemacs-git-ignored-face
+       treemacs-git-untracked-face
+       treemacs-git-added-face
+       treemacs-git-conflict-face
+       treemacs-term-node-face                
+       treemacs-on-success-pulse-face         
+       ))
     )
-  (use-package treemacs
-    :ensure t
-    :defer 1
-    :config
-      (add-hook 'treemacs-mode-hook #'hacer-treemacs-resizable)
-      (setq treemacs-silent-refresh t)
-      (cambiar-faces-de-treemacs)
-    :bind
-      (("<f8>" . treemacs))
+
+  
+  (add-hook 'treemacs-mode-hook #'hacer-treemacs-resizable)
+  (setq treemacs-silent-refresh t)
+  (cambiar-faces-de-treemacs)
+  :bind
+  (("<f8>" . treemacs))
 
 
   )
@@ -647,10 +647,24 @@ En =neotree=, quiero ver todos los ficheros, y no me importa el ancho fijo de la
 
       (setq neo-show-hidden-files t)
       (setq neo-window-fixed-size nil)
-      (setq neo-hidden-regexp-list (quote ("\\.pyc$" "~$" "^#.*#$" "\\.elc$"))))
+      (setq neo-hidden-regexp-list (quote ("\\.pyc$" "~$" "^#.*#$" "\\.elc$")))
+    :bind
+      (("M-<f8>" . neotree-toggle ))
+)
 #+end_src
 
+* =htmlize=
 
+#+begin_src emacs-lisp
+(use-package  htmlize
+  :ensure t
+  :defer 1
+  :config
+ (setq htmlize-force-inline-images t)
+ (setq htmlize-output-type 'inline-css)
+)
+#+end_src
+  
 ** Paquete =org=
 
 Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair-mode=
@@ -1611,6 +1625,7 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 #+end_src
 
+
 * Atajos de teclado
 
 
@@ -2295,14 +2310,23 @@ Creo que esto se hace mejor con la variable =indicate-empty-lines=
 Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual. indico que se refresquen los buffers cada 10 segundos.
 
 #+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/github/diff-hl")
 (use-package diff-hl
-    :defer 1
-    :ensure t
-    :config
-    (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
-    (global-diff-hl-mode 1)
+  :defer 1
+  ;;:ensure t
+  :config
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+  (global-diff-hl-mode 1)
+  )
+
+(use-package diff-hl-posframe
+  :defer 1
+  :config
+  (global-diff-hl-posframe-mode 1)
 )
 #+END_SRC
+
+#+RESULTS:
 
 
 ** Saltos de página
@@ -2405,7 +2429,7 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
 
 
 Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna customización. Por lo visto, un tema siempre añade cambios, pero al quitarse no se deshacen  completamente. Algunas configuraciones solo se tienen en cuenta al reiniciar /Emacs/ o al reaplicar un modo: por ejemplo, los colores de =highlight-indent-guides= necesitan reabrir el buffer.
-#+begin_src emacs-lisp
+#+begin_src lisp
 (tema-claro)
 (tema-oscuro)
 #+end_src

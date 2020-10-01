@@ -9,7 +9,7 @@
  '(magit-branch-remote ((t (:background "dark magenta" :foreground "DarkSeaGreen2"))))
  '(neo-dir-link-face ((t (:height 0.8))))
  '(neo-file-link-face ((t (:height 0.8))))
- '(org-level-1 ((t (:inherit outline-1 :box (:line-width 1 :style released-button) :height 2.0))))
+ '(org-level-1 ((t (:inherit outline-1 :box nil :height 2.0))))
  '(org-level-2 ((t (:inherit outline-2 :box nil :height 1.5))))
  '(org-block-begin-line ((t (:inherit org-meta-line :underline t))))
  '(org-block-end-line ((t (:inherit org-block-begin-line :overline t :underline nil))))
