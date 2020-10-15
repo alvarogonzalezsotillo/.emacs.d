@@ -177,7 +177,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | ob-restclient                  |                                                                |
 | ob-rust                        |                                                                |
 | org-bullets                    |                                                                |
-| page-break-lines               |                                                                |
 | php-mode                       |                                                                |
 | plantuml-mode                  |                                                                |
 | popup-imenu                    |                                                                |
@@ -2332,7 +2331,11 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
 ** Saltos de página
 Mostrar =^L= (saltos de página) como una línea horizontal
 #+begin_src emacs-lisp
-(global-page-break-lines-mode)
+(use-package page-break-lines
+  :defer t
+  :ensure t
+  :config
+  (global-page-break-lines-mode))
 #+end_src
 
 ** Modo proyección o modo trabajo
@@ -2364,9 +2367,8 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
   (if (>= emacs-major-version 26)
       (display-line-numbers-mode 1))
   (auto-highlight-symbol-mode 1)
-  ;(yafolding-mode 1)
-  (origami-mode 1)
-)
+  (electric-pair-local-mode 1)
+  (origami-mode 1))
 
 (defun bonito-para-latex()
   (interactive)
