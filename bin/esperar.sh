@@ -3,7 +3,7 @@
 
 for MINUTO in $(seq 0 $(("$1"-1)))
 do
-    figlet Quedan $(("$1"-"$MINUTO")) minutos
+    figlet -w 100 $(("$1"-"$MINUTO")) minutos
     sleep 1m
 done
 
