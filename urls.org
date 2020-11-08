@@ -6,8 +6,24 @@ F. +34 91 506 41 15
 
 * Moodle
 
+** 2019-2020
+   | Curso              | url                                                                                     |
+   |--------------------+-----------------------------------------------------------------------------------------|
+   | Avellaneda         | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/                       |
+   | Departamento       | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=56  |
+   | ASGBD              | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=65  |
+   | PAR                | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=72  |
+   | GBD                | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=189 |
+   | FCT                | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=190 |
+   | FCT tutores        | https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=264 |
+   | ED Jose Manuel     | https://fpdistancia.educa.madrid.org/course/view.php?id=484                             |
+   | ED distancia VIEJO | https://fpdistancia.educa.madrid.org/course/view.php?id=16                              |
+   | ED distancia MIO   | https://fpdistancia.educa.madrid.org/course/view.php?id=632                             |
 
 
+
+https://aulavirtual3.educa.madrid.org/ies.alonsodeavellan.alcala/course/view.php?id=264
+  
 ** 2018-2019
 :PROPERTIES:
 :VISIBILITY:all
