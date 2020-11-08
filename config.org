@@ -1809,7 +1809,8 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
   :ensure t
   :defer 1
   :bind
-      (("<f9>" . magit-status))
+      (("<f9>" . magit-status)
+       ("C-x g" . magit-status))
 
 )
 
