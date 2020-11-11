@@ -7,6 +7,16 @@ mis_ip(){
     cat <(echo 127.0.0.0/24) <(hostname -I)
 }
 
+grupo_alumnos(){
+    groupadd --force alumnos-sin-red
+}
+
+meter_usuario_en_grupo(){
+    USUARIO=$1
+    GRUPO=$2
+    usermod -a -G $GRUPO $USUARIO
+}
+
 SUDO(){
     echo "$*"
     sudo $*
