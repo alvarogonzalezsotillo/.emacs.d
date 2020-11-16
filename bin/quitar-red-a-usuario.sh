@@ -67,13 +67,18 @@ permitir_servidor_ssh(){
     permitir_puerto_entrada 22
 }
 
+
+
 permitir_usuario_root(){
     local msg="
       El usuario root tiene permitida cualquier comunicación de salida.
+      También los del grupo wheel, administrador de centos.
     "
     echo "$msg"
     
     iptables --append OUTPUT --match owner --uid-owner root --jump ACCEPT
+    iptables --append OUTPUT --match owner --uid-owner alvaro --jump ACCEPT
+    iptables --append OUTPUT --match owner --gid-owner wheel --jump ACCEPT
 }
 
 enviar_paquetes_salida_a_log(){
@@ -98,6 +103,20 @@ limpiar_iptables(){
     iptables -F
     iptables -X
 }
+
+permitir_ya_establecido(){
+    local msg="
+      Permitir conexiones ya establecidas
+    "
+    echo "$msg"
+    iptables -I INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+}
+
+if [ "$1" = "limpiar" ]
+then
+    limpiar_iptables
+    exit 1
+fi    
 
 limpiar_iptables
 permitir_loopback
