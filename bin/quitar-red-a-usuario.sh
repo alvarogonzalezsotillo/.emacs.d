@@ -1,49 +1,113 @@
 #!/bin/bash
 
-USUARIO="$1"
-OPERACION="$2"
-
 mis_ip(){
     cat <(echo 127.0.0.0/24) <(hostname -I)
 }
 
-grupo_alumnos(){
-    groupadd --force alumnos-sin-red
+prohibir_dos(){
+    local msg="
+      Evito algunos problemas de ataques DOS. 
+      Ver https://www.digitalocean.com/community/tutorials/how-to-set-up-a-basic-iptables-firewall-on-centos-6
+    "
+    echo "$msg"
+    iptables --append INPUT --protocol tcp --tcp-flags ALL NONE --jump DROP
+    iptables --append INPUT --protocol tcp ! --syn --match state --state NEW --jump DROP
+    iptables --append INPUT --protocol tcp --tcp-flags ALL ALL --jump DROP
 }
 
-meter_usuario_en_grupo(){
-    USUARIO=$1
-    GRUPO=$2
-    usermod -a -G $GRUPO $USUARIO
+permitir_loopback(){
+    local msg="
+      Toda la comunicación entrante y saliente por loopback se permite
+      Así consigo que una conexión ssh realice túneles a esta misma máquina
+    "
+    echo "$msg"
+    iptables --append INPUT --in-interface lo --jump ACCEPT
+    iptables --append OUTPUT --out-interface lo --jump ACCEPT    
 }
 
-SUDO(){
-    echo "$*"
-    sudo $*
+permitir_puerto_entrada(){
+    local PUERTO=$1
+    iptables --append INPUT --protocol tcp --match tcp --dport $PUERTO --jump ACCEPT
+}
+
+prohibir_entrada_y_salida(){
+    local msg="
+      Todas las comunicaciones tcp de entrada y salida se prohiben.
+      Esta es la última regla, así que si no se ha admitido antes un paquete, ya no se admite
+    "
+    echo "$msg"
+    iptables --append INPUT --protocol tcp --jump DROP
+    iptables --append OUTPUT --protocol tcp --jump DROP    
 }
 
 
-if [ "$USUARIO" = "" ]
-then
-    echo Se necesita usuario a limitar
-    exit 1
-fi
+permitir_servidor_web(){
+    local msg="
+      Permito puertos de servidor web: 80 y 443.
+    "
+    echo "$msg"
+    permitir_puerto_entrada 80
+    permitir_puerto_entrada 443
+}
 
-if [ "$OPERACION" = "" ]
-then
-    OPERACION=--append
-fi
+permitir_servidor_oracle(){
+    local msg="
+      Permito puertos de servidor oracle: 1521
+    "
+    echo "$msg"
+    permitir_puerto_entrada 1521
+}
 
-if [ "$OPERACION" != "--append" ] && [ "$OPERACION" != '--delete' ]
-then
-    echo "La operación tiene que ser --append (quitar red ) o --delete (devolver red)"
-    exit 2
-fi
 
-for IP in $(mis_ip)
-do
-    SUDO iptables "$OPERACION" OUTPUT --protocol all --destination "$IP" --match owner --uid-owner "$USUARIO" --jump ACCEPT
-done
-SUDO iptables "$OPERACION" OUTPUT --protocol all --match owner --uid-owner "$USUARIO" --jump DROP
+permitir_servidor_ssh(){
+    local msg="
+      Permito entrar por ssh: puerto 22
+    "
+    echo "$msg"
+    permitir_puerto_entrada 22
+}
 
-sudo iptables-save
+permitir_usuario_root(){
+    local msg="
+      El usuario root tiene permitida cualquier comunicación de salida.
+    "
+    echo "$msg"
+    
+    iptables --append OUTPUT --match owner --uid-owner root --jump ACCEPT
+}
+
+enviar_paquetes_salida_a_log(){
+    local msg="
+      Los paquetes que llegan los mando a syslog.
+      Se pueden consultar con tail -f /var/log/messages | grep -i iptables
+    "
+    echo "$msg"
+    iptables --append OUTPUT --match limit --limit 2/min --jump LOG --log-prefix "IPTables-output-dropped: " --log-level 4   
+}
+
+limpiar_iptables(){
+    local msg="
+      Limpio las tablas, todo está permitido
+    "
+    echo "$msg"
+    iptables -P INPUT ACCEPT
+    iptables -P FORWARD ACCEPT
+    iptables -P OUTPUT ACCEPT
+    iptables -t nat -F
+    iptables -t mangle -F
+    iptables -F
+    iptables -X
+}
+
+limpiar_iptables
+permitir_loopback
+prohibir_dos
+permitir_servidor_ssh
+permitir_servidor_web
+permitir_servidor_oracle
+permitir_usuario_root
+permitir_ya_establecido
+enviar_paquetes_salida_a_log
+prohibir_entrada_y_salida
+
+iptables-save > iptables-save
