@@ -402,6 +402,7 @@ Añado las siguientes reglas para hacer búsquedas simples con =dumb-jump= en fi
 #+begin_src emacs-lisp
   ;; ADITIONAL DUMBJUMB RULES
   (use-package dumb-jump
+    :after (helm)
     :ensure t
     :config
 
@@ -1019,7 +1020,6 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 #+end_src
 
 #+RESULTS:
-: helm-filtered-bookmarks
 
 Intento de colocar la ventana de helm siempre abajo, tiene problemas de redisplay
 #+begin_src lisp
@@ -1047,6 +1047,9 @@ Intento de colocar la ventana de helm siempre abajo, tiene problemas de redispla
   )
 #+end_src
 
+#+RESULTS:
+: t
+
 
 *** /Child frame/
 =helm= se muestra en una nueva ventana. Esta ventana puede estar en una nueva /child frame/ para no cambiar la disposición de la /frame/ original. Estas opción es bastante lenta en algunos sistemas de ventanas.
@@ -1067,6 +1070,7 @@ Intento de colocar la ventana de helm siempre abajo, tiene problemas de redispla
 ~helm-swoop~ no funciona bien con =helm-posframe=, al seleccionar una ocurrencia no salta a ella.
 #+begin_src emacs-lisp
 (use-package helm-swoop
+  :ensure t
   :config
   (setq helm-display-buffer-width 140)
   (setq helm-display-buffer-height 20)
@@ -1439,6 +1443,7 @@ Avoid performance issues in files with very long lines.
        (string-prefix-p "*help" name)
        (string-prefix-p "*Help" name)
        (string-prefix-p "*Helm" name)
+       (string-prefix-p "*diff-hl" name)
 
        )))
 
@@ -1455,8 +1460,6 @@ Avoid performance issues in files with very long lines.
 )
 #+end_src
 
-#+RESULTS:
-: t
 
 
 
@@ -1812,9 +1815,13 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
       (("<f9>" . magit-status)
        ("C-x g" . magit-status))
 
+  :config
+  (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
 )
-
-
    #+end_src
 
 ** =vdiff-magit=
@@ -2317,7 +2324,7 @@ Creo que esto se hace mejor con la variable =indicate-empty-lines=
 Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual. indico que se refresquen los buffers cada 10 segundos.
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "~/github/diff-hl")
+(add-to-list 'load-path "/home/alvaro/github/diff-hl")
 
 (use-package diff-hl
   :defer 1
@@ -2325,19 +2332,29 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
   :config
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
   (global-diff-hl-mode 1)
+  (setq vc-git-diff-switches nil)
   )
 
 (use-package diff-hl-margin
   :defer 1
   )
 
+(use-package diff-hl-flydiff
+  :config
+  (diff-hl-flydiff-mode 1))
 
 (use-package diff-hl-show-hunk
   :defer 1
   :config
+d  (setq diff-hl-show-hunk-function #'diff-hl-show-hunk-popup)
+  (require 'diff-hl-show-hunk-posframe)
+  (require 'diff-hl-show-hunk-popup)
   (global-diff-hl-show-hunk-mouse-mode 1))
 
 #+END_SRC
+
+#+RESULTS:
+: t
 
 
 ** Saltos de página
