@@ -855,7 +855,7 @@ Grabar en el propio fichero
 (auto-save-visited-mode 1)
 #+end_src
 
-** Latex
+** Latex 
 
 #+begin_src emacs-lisp
 (use-package latex
@@ -1100,7 +1100,9 @@ Intento de colocar la ventana de helm siempre abajo, tiene problemas de redispla
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
     (setq projectile-switch-project-action 'projectile-dired)
     (setq projectile-indexing-method 'hybrid)
-    (projectile-mode 1))
+
+    (projectile-mode 1)
+    (setq projectile-switch-project-action 'projectile-dired))
 
 (use-package helm-projectile
   :ensure t
@@ -2332,21 +2334,22 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
   :config
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
   (global-diff-hl-mode 1)
-  (setq vc-git-diff-switches nil)
   )
 
 (use-package diff-hl-margin
   :defer 1
+  :after (diff-hl)
   )
 
 (use-package diff-hl-flydiff
+  :after (diff-hl)
   :config
   (diff-hl-flydiff-mode 1))
 
 (use-package diff-hl-show-hunk
   :defer 1
+  :after (diff-hl)
   :config
-d  (setq diff-hl-show-hunk-function #'diff-hl-show-hunk-popup)
   (require 'diff-hl-show-hunk-posframe)
   (require 'diff-hl-show-hunk-popup)
   (global-diff-hl-show-hunk-mouse-mode 1))
