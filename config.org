@@ -980,12 +980,6 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 
 #+begin_src emacs-lisp
 
-(use-package helm-icons
-  :ensure t
-  :defer 1
-  :config
-  (helm-icons-enable)
-)
 
 ;; HELM
 (use-package helm
@@ -1007,7 +1001,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
     (setq helm-display-function 'helm-display-buffer-in-own-frame)
 
     
-  :after (tramp helm-icons) ;; PARA EVITAR EL ERROR Symbols's value as variable is void: tramp-methods
+  :after (tramp) ;; PARA EVITAR EL ERROR Symbols's value as variable is void: tramp-methods
   :bind
       (("M-x"  . helm-M-x))
       (("<menu>"  . helm-M-x))
