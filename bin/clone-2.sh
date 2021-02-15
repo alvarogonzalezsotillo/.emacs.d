@@ -1,10 +1,9 @@
-
 a33(){
     xrandr
 
     # OPTOMA
     # HDMI-2 connected 1280x800+1920+0 (normal left inverted right x axis y axis) 0mm x 0mm
-    
+
     # DELL   
     # HDMI-3 connected 1600x900+3200+0 (normal left inverted right x axis y axis) 443mm x 249mm
 
@@ -30,7 +29,5 @@ xrandr --output $OPTOMA --mode 1280x1024
 xrandr --output $MONITORPEQUENO --mode 1280x1024
 
 clonar_2_de_3 $OPTOMA $MONITORPEQUENO $MONITORGRANDE
-
-
 
 

@@ -140,7 +140,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | company-c-headers              |                                                                |
 | company-emoji                  |                                                                |
 | company-flx                    |                                                                |
-| company-lsp                    |                                                                |
 | company-quickhelp              |                                                                |
 | company-restclient             |                                                                |
 | company-shell                  |                                                                |
@@ -544,16 +543,14 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
   (defvar my-company-backends-prog-mode
     '(
-      company-lsp
       (
-       company-web-html
+       company-capf
        company-files
        company-dabbrev-code
-       company-capf
+       company-web-html
        company-keywords
        company-yasnippet
        company-emoji
-       company-capf
        )
       )
     )
@@ -979,6 +976,14 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 - ... y más
 
 #+begin_src emacs-lisp
+
+(when nil
+  (use-package helm-icons
+    :ensure t
+    :defer 1
+    :config
+    (helm-icons-enable)
+    ))
 
 
 ;; HELM
@@ -1873,6 +1878,8 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
          (shell-command comando)
          )
        )
+
+       (defalias 'trim-string 'string-trim) 
    #+end_src
 
    #+RESULTS:
@@ -2084,6 +2091,16 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
   (org-display-inline-images))
 #+end_src
 
+** Compilar todo ELPA
+   #+begin_src emacs-lisp
+(defun native-compile-all ()
+  (interactive)
+  (native-compile-async "~/.emacs.d/elpa" 'recursively))
+   #+end_src
+
+   #+RESULTS:
+   : native-compile-all
+
 ** Eliminar el resto de buffers y ventanas
 #+begin_src emacs-lisp
 (defun kill-other-buffers ()
@@ -2185,19 +2202,19 @@ Cambia la descripción del modo por un icono en la modeline
                                     "^\\s-*[[:alnum:]]+([()[:alnum:], >=]*)\\s-*{"
                                     "^\\s-*function\\s-*[[:alnum:]]+([()[:alnum:], >=]*)\\s-*{"
                                     )))
-  (add-hook 'js2-mode-hook #'origami-predef-javascript)
+  ;;(add-hook 'js2-mode-hook #'origami-predef-javascript)
 
   (defun origami-predef-lisp()
     "Close some predefined patterns, useful in elisp."
     (interactive)
     (origami-predef-apply-patterns '("defcustom" "defvar" "defface" "defgroup" "defun .*--")))
-  (add-hook 'emacs-lisp-mode-hook #'origami-predef-lisp)
+  ;;(add-hook 'emacs-lisp-mode-hook #'origami-predef-lisp)
 
   (defun origami-predef-java()
     "Close some predefined patterns, useful in java."
     (interactive)
     (origami-predef-apply-patterns '("private .*{" "protected .*{")))
-  (add-hook 'java-mode-hook #'origami-predef-java)
+  ;;(add-hook 'java-mode-hook #'origami-predef-java)
 
   (defun origami-predef-sql()
     "Close some predefined patterns, useful in SQL."
@@ -2245,6 +2262,7 @@ Mi línea de estado (modeline)
                " | %m %n "
                " | %IB %Z"
                " | %l:%c %p"
+               " | " '(:eval (format "Point:%d" (point)))
                mode-line-end-spaces
                ) )
 
@@ -2252,7 +2270,7 @@ Mi línea de estado (modeline)
 #+end_src
 
 #+RESULTS:
-|   | ((:eval (mode-icons--read-only-status)) (:eval (mode-icons--modified-status))) | %[ | (%12b) | %] |   |   | (vc-mode vc-mode) |   | %m %n |   | %IB %Z |   | %l:%c %p | (:eval (unless (display-graphic-p) -%-)) |
+|   | (%1* %1+) | %[ | (%12b) | %] |   |   | (vc-mode vc-mode) |   | %m %n |   | %IB %Z |   | %l:%c %p |   |   | (:eval (format Point:%d (point))) | (:eval (unless (display-graphic-p) -%-)) |
 
 Pone en lo alto el minibuffer. No sé si me gusta, funciona algo raro, y lo mismo no va bien con =febbleline= y =mini-modeline=.
 #+begin_src lisp
@@ -2335,17 +2353,30 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
   :after (diff-hl)
   )
 
+(use-package diff-hl-dired
+  :defer 1
+  :config
+  (diff-hl-dired-mode 1))
+
+
 (use-package diff-hl-flydiff
-  :after (diff-hl)
   :config
   (diff-hl-flydiff-mode 1))
 
 (use-package diff-hl-show-hunk
   :defer 1
-  :after (diff-hl)
   :config
   (require 'diff-hl-show-hunk-posframe)
-  (require 'diff-hl-show-hunk-popup)
+
+  (defun diff-hl-show-hunk-toggle-backend()
+    (interactive)
+    (if (eq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)
+        (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-inline-popup)
+      (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)))
+
+  (setq diff-hl-show-hunk-inline-popup-hide-hunk t)
+  (setq diff-hl-show-hunk-inline-popup-smart-lines nil)
+  
   (global-diff-hl-show-hunk-mouse-mode 1))
 
 #+END_SRC

@@ -9,6 +9,10 @@
 
 
   (message "Inicializo sistema de paquetes...")
+
+  (ignore-errors
+    (setq package-native-compile t))
+  
   (package-initialize nil)
   (setq package-check-signature nil)
   (setq package-archives
