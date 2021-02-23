@@ -976,6 +976,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 - ... y más
 
 #+begin_src emacs-lisp
+
 (when nil
   (use-package helm-icons
     :ensure t
@@ -983,6 +984,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
     :config
     (helm-icons-enable)
     ))
+
 
 ;; HELM
 (use-package helm
