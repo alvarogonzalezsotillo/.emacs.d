@@ -1096,7 +1096,8 @@ Intento de colocar la ventana de helm siempre abajo, tiene problemas de redispla
   :config
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
     (setq projectile-switch-project-action 'projectile-dired)
-    (setq projectile-indexing-method 'hybrid)
+    (setq projectile-indexing-method 'alien)
+    (setq projectile-enable-caching t)
 
     (projectile-mode 1)
     (setq projectile-switch-project-action 'projectile-dired))
@@ -2333,49 +2334,50 @@ Creo que esto se hace mejor con la variable =indicate-empty-lines=
 
 
 ** Indicación de cambios de /git/
-Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual. indico que se refresquen los buffers cada 10 segundos.
+Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual. 
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "/home/alvaro/github/diff-hl")
-
 (use-package diff-hl
-  :defer 1
-  :ensure nil
+  :ensure t
   :config
+
+  (use-package diff-hl-margin
+    :defer 1
+    :after (diff-hl)
+    )
+
+  (use-package diff-hl-dired
+    :config
+    (diff-hl-dired-mode 1))
+
+  (use-package diff-hl-ammend
+    :config
+    (global-diff-hl-amend-mode 1))
+
+
+  (use-package diff-hl-flydiff
+    :config
+    (diff-hl-flydiff-mode 1))
+
+  (use-package diff-hl-show-hunk
+    :config
+    (require 'diff-hl-show-hunk-posframe)
+
+    (defun diff-hl-show-hunk-toggle-backend()
+      (interactive)
+      (if (eq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)
+          (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-inline-popup)
+        (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)))
+
+    (setq diff-hl-show-hunk-inline-popup-hide-hunk t)
+    (setq diff-hl-show-hunk-inline-popup-smart-lines nil)
+    
+    (global-diff-hl-show-hunk-mouse-mode 1))
+  
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
   (global-diff-hl-mode 1)
   )
 
-(use-package diff-hl-margin
-  :defer 1
-  :after (diff-hl)
-  )
-
-(use-package diff-hl-dired
-  :defer 1
-  :config
-  (diff-hl-dired-mode 1))
-
-
-(use-package diff-hl-flydiff
-  :config
-  (diff-hl-flydiff-mode 1))
-
-(use-package diff-hl-show-hunk
-  :defer 1
-  :config
-  (require 'diff-hl-show-hunk-posframe)
-
-  (defun diff-hl-show-hunk-toggle-backend()
-    (interactive)
-    (if (eq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)
-        (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-inline-popup)
-      (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)))
-
-  (setq diff-hl-show-hunk-inline-popup-hide-hunk t)
-  (setq diff-hl-show-hunk-inline-popup-smart-lines nil)
-  
-  (global-diff-hl-show-hunk-mouse-mode 1))
 
 #+END_SRC
 
@@ -2457,36 +2459,35 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
 
 
 #+begin_src emacs-lisp
-  (setq  custom-safe-themes  (quote
-                              ("d916b686ba9f23a46ee9620c967f6039ca4ea0e682c1b9219450acee80e10e40" 
-                               "a63355b90843b228925ce8b96f88c587087c3ee4f428838716505fd01cf741c8"
-                               "6e219d6b6a3f7e22888b203fd5492e12133ba40512be983858f05b42806fa573"
-                               "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" 
-                               "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" 
-                               default)))
+(setq  custom-safe-themes  (quote
+                            ("d916b686ba9f23a46ee9620c967f6039ca4ea0e682c1b9219450acee80e10e40" 
+                             "a63355b90843b228925ce8b96f88c587087c3ee4f428838716505fd01cf741c8"
+                             "6e219d6b6a3f7e22888b203fd5492e12133ba40512be983858f05b42806fa573"
+                             "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" 
+                             "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" 
+                             default)))
 
-  (defvar my-dark-theme 'sanityinc-tomorrow-bright)
-  (defvar my-light-theme 'intellij)
+(defvar my-dark-theme 'sanityinc-tomorrow-bright)
+(defvar my-light-theme 'intellij)
 
 
-       (defun tema-claro()
-         (interactive)
-         (disable-theme my-dark-theme)
-         (load-theme my-light-theme)
-         (load-theme 'alvaro t))
+(defun tema-claro()
+  (interactive)
+  (disable-theme my-dark-theme)
+  (load-theme my-light-theme)
+  (load-theme 'alvaro t))
 
-       (defun tema-oscuro ()
-         (interactive)
-         (disable-theme my-light-theme)
-         (load-theme my-dark-theme t)
-         (load-theme 'alvaro t))
-
+(defun tema-oscuro ()
+  (interactive)
+  (disable-theme my-light-theme)
+  (load-theme my-dark-theme t)
+  (load-theme 'alvaro t))
 
 #+end_src
 
 
 Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna customización. Por lo visto, un tema siempre añade cambios, pero al quitarse no se deshacen  completamente. Algunas configuraciones solo se tienen en cuenta al reiniciar /Emacs/ o al reaplicar un modo: por ejemplo, los colores de =highlight-indent-guides= necesitan reabrir el buffer.
-#+begin_src lisp
+#+begin_src emacs-lisp
 (tema-claro)
 (tema-oscuro)
 #+end_src
