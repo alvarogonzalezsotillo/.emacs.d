@@ -2340,22 +2340,15 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
 
 #+BEGIN_SRC emacs-lisp
 (use-package diff-hl
+  :defer 1
   :ensure t
   :config
 
-  (use-package diff-hl-margin
-    :defer 1
-    :after (diff-hl)
-    )
+  (use-package diff-hl-margin)
 
   (use-package diff-hl-dired
     :config
     (diff-hl-dired-mode 1))
-
-  (use-package diff-hl-ammend
-    :config
-    (global-diff-hl-amend-mode 1))
-
 
   (use-package diff-hl-flydiff
     :config
@@ -2370,6 +2363,15 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
       (if (eq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)
           (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-inline-popup)
         (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)))
+ 
+    (defun diff-hl-show-hunk-toggle-style()
+      (interactive)
+      (if diff-hl-show-hunk-inline-popup-hide-hunk
+          (progn
+            (setq diff-hl-show-hunk-inline-popup-hide-hunk nil)
+            (setq diff-hl-show-hunk-inline-popup-smart-lines t))
+        (setq diff-hl-show-hunk-inline-popup-hide-hunk t)
+        (setq diff-hl-show-hunk-inline-popup-smart-lines nil)))
 
     (setq diff-hl-show-hunk-inline-popup-hide-hunk t)
     (setq diff-hl-show-hunk-inline-popup-smart-lines nil)
@@ -2377,8 +2379,7 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
     (global-diff-hl-show-hunk-mouse-mode 1))
   
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
-  (global-diff-hl-mode 1)
-  )
+  (global-diff-hl-mode 1))
 
 
 #+END_SRC
@@ -2493,6 +2494,8 @@ Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna c
 (tema-claro)
 (tema-oscuro)
 #+end_src
+
+
 
 
 
