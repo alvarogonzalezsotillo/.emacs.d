@@ -7,6 +7,7 @@
  '(minimap-active-region-background ((t (:inverse-video t))))
  '(magit-branch-local ((t (:background "dark red" :foreground "LightSkyBlue1"))))
  '(magit-branch-remote ((t (:background "dark magenta" :foreground "DarkSeaGreen2"))))
+ '(helm-bookmark-file-not-found ((t (:extend t :foreground "spring green"))))
  '(neo-dir-link-face ((t (:height 0.8))))
  '(neo-file-link-face ((t (:height 0.8))))
  '(org-level-1 ((t (:inherit outline-1 :box nil :height 2.0))))

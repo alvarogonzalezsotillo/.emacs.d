@@ -991,34 +991,36 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   :ensure t
   :defer 1
   :config
-    (setq helm-split-window-inside-p t)
-    (setq helm-display-header-line nil)
-    (setq helm-autoresize-max-height 40)
-    (setq helm-autoresize-min-height 30)
-    (helm-autoresize-mode 1)
-    (helm-mode 1)
-    (helm-flx-mode +1)
-    (setq helm-echo-input-in-header-line t)
-    (setq helm-display-buffer-reuse-frame t)
-    (setq helm-use-undecorated-frame-option t)
+  (setq helm-split-window-inside-p t)
+  (setq helm-display-header-line nil)
+  (setq helm-autoresize-max-height 40)
+  (setq helm-autoresize-min-height 30)
+  (helm-autoresize-mode 1)
+  (helm-mode 1)
+  (helm-flx-mode +1)
+  (setq helm-display-buffer-reuse-frame t)
+  (setq helm-use-undecorated-frame-option t)
+  (setq helm-display-function 'helm-display-buffer-in-own-frame)
+
+  ;; PROBLEMAS DE REDISPLAY: hasta que no doy una tecla no se muestra nada
+  (defun my/try-to-redisplay-helm ()
+    (redisplay t))
+  (add-hook 'helm-minibuffer-set-up-hook 'my/try-to-redisplay-helm)
 
 
-    (setq helm-display-function 'helm-display-buffer-in-own-frame)
-
-    
+  
   :after (tramp) ;; PARA EVITAR EL ERROR Symbols's value as variable is void: tramp-methods
   :bind
-      (("M-x"  . helm-M-x))
-      (("<menu>"  . helm-M-x))
-      (("C-x C-f"  . helm-find-files))
-      (("<f6>"  . helm-mini))
-      (("M-y"  . helm-show-kill-ring))
-      (("C-x r b"  . helm-filtered-bookmarks))
+  (("M-x"  . helm-M-x))
+  (("<menu>"  . helm-M-x))
+  (("C-x C-f"  . helm-find-files))
+  (("<f6>"  . helm-mini))
+  (("M-y"  . helm-show-kill-ring))
+  (("C-x r b"  . helm-filtered-bookmarks))
 
   )
 #+end_src
 
-#+RESULTS:
 
 Intento de colocar la ventana de helm siempre abajo, tiene problemas de redisplay
 #+begin_src lisp
@@ -1624,9 +1626,11 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 
   (defun my/dired-hook ()
+    (interactive)
     (all-the-icons-dired-mode 1)
     (dired-hide-details-mode 1)
     (auto-revert-mode 1)
+    (diff-hl-dired-mode 1)
     (setq  indent-line-function 'dired-subtree-toggle))
 
   (add-hook 'dired-mode-hook 'my/dired-hook)
@@ -1635,6 +1639,9 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 
 #+end_src
+
+#+RESULTS:
+: t
 
 
 * Atajos de teclado
@@ -2099,8 +2106,6 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
   (native-compile-async "~/.emacs.d/elpa" 'recursively))
    #+end_src
 
-   #+RESULTS:
-   : native-compile-all
 
 ** Eliminar el resto de buffers y ventanas
 #+begin_src emacs-lisp
@@ -2263,7 +2268,7 @@ Mi línea de estado (modeline)
                " | %m %n "
                " | %IB %Z"
                " | %l:%c %p"
-               " | " '(:eval (format "Point:%d" (point)))
+               ;;" | " '(:eval (format "Point:%d" (point)))
                mode-line-end-spaces
                ) )
 
@@ -2345,6 +2350,7 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
   :config
 
   (use-package diff-hl-margin)
+  
 
   (use-package diff-hl-dired
     :config
@@ -2490,7 +2496,7 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
 
 
 Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna customización. Por lo visto, un tema siempre añade cambios, pero al quitarse no se deshacen  completamente. Algunas configuraciones solo se tienen en cuenta al reiniciar /Emacs/ o al reaplicar un modo: por ejemplo, los colores de =highlight-indent-guides= necesitan reabrir el buffer.
-#+begin_src emacs-lisp
+#+begin_src lisp
 (tema-claro)
 (tema-oscuro)
 #+end_src
@@ -2638,6 +2644,8 @@ Actualmente desactivado
   (call-interactively #'use-ttf-install-fonts)
   (call-interactively #'use-ttf-set-default-font)
 #+END_SRC
+
+
 
 * Opciones Latex para el PDF :noexport:
 # COLORES
