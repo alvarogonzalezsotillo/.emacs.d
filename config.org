@@ -162,6 +162,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | helm-posframe                  |                                                                |
 | helm-projectile                |                                                                |
 | helm-swoop                     |                                                                |
+| helm-tramp                     |                                                                |
 | highlight-indent-guides        |                                                                |
 | indent-guide                   |                                                                |
 | intellij-theme                 |                                                                |
@@ -191,6 +192,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | scad-preview                   |                                                                |
 | scala-mode                     |                                                                |
 | skewer-mode                    |                                                                |
+| stripe-buffer                  |                                                                |
 | swiper-helm                    |                                                                |
 | systemd                        |                                                                |
 | transmission                   |                                                                |
@@ -844,6 +846,7 @@ Tampoco me interesan los ficheros de /lock/.
 (setq auto-save-file-name-transforms
       `((".*" "~/.saves" t)))
 
+(setq delete-by-moving-to-trash t)
 #+end_src
 
 Grabar en el propio fichero
@@ -1048,8 +1051,17 @@ Intento de colocar la ventana de helm siempre abajo, tiene problemas de redispla
   )
 #+end_src
 
-#+RESULTS:
-: t
+=helm-preview=
+#+begin_src lisp
+(use-package helm-file-preview
+  :ensure t
+  :defer t
+  :after (helm)
+  :config
+  (helm-file-preview-mode 1)
+  (setq helm-file-preview-only-when-line-numbers nil)
+  (setq helm-file-preview-preview-only t))
+#+end_src
 
 
 *** /Child frame/
@@ -2059,9 +2071,13 @@ Este es mi horario lectivo (sin incluir guardias y otras horas que no son de doc
 #+begin_src emacs-lisp
 (defun horario()
   (interactive)
-  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/ags.iesavellaneda%40gmail.com/private-8d8f10c04ef7daee164d8d8a8f4707d5/basic.ics"))
+  (cfw:open-ical-calendar "https://calendar.google.com/calendar/ical/am7ho5i6q1t325t195e5jfikr4%40group.calendar.google.com/private-0d7934327f65cd42fbe73d7161d521c8/basic.ics"))
+
 
 #+end_src
+
+#+RESULTS:
+: horario
 
 ** Proxy de educamadrid
 Durante una temporada, en los colegios de la Comunidad de Madrid era obligatorio el uso de un proxy.
@@ -2319,7 +2335,11 @@ Prefiero =mini-modeline= para quitar la modeline.
 ** Cursor
 Cursor como barra vertical
 #+begin_src emacs-lisp
-(set-default 'cursor-type 'box)
+(set-default 'cursor-type 'bar)
+(set-default 'cursor-in-non-selected-windows 'hollow)
+(defun my/change-cursor-when-overwrite ()
+  (setq cursor-type (if overwrite-mode 'bar 'box)))
+(add-hook 'overwrite-mode-hook #'my/change-cursor-when-overwrite)
 (blink-cursor-mode 1)
 (setq blink-cursor-blinks 0)
 #+end_src
@@ -2557,34 +2577,23 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - helm-xref
 - helm-icons
 - (use-package json-navigator) aa
-- wrap-region
-- stripe-buffer
 - (use-package autorevert :ensure nil :config (setq auto-revert-verbose nil global-auto-revert-mode t global-auto-revert-non-file-buffers t))
--  (delete-by-moving-to-trash t)
+-  
 -  (fast-but-imprecise-scrolling t)
 - find-trace-paths
-- helm icons
 -  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images) 
 - https://github.com/manateelazycat/awesome-tray
 - http://ergoemacs.org/emacs/emacs_list_and_set_font.html
 - https://github.com/lastquestion/explain-pause-mode
-- fancy-narrow
-- lsp-latex
 - https://github.com/Borderliner/RME
 - feebleline
 - vlfi ficheros grandes
-- mini-frame
-
-
 - asciinema
 
 - company-quickhelp-terminal
 - aftersave-add-hook
-- setq org-html-htmlize-output-type 'css)
 - (setq org-download-method 'attach)
 - bandwich
-- git-auto-commit-mode 1
-
 - https://github.com/jakubroztocil/httpie/blob/master/README.rst
 - https://github.com/honmaple/emacs-maple-minibuffer/blob/master/README.org
 - http://blog.binchen.org/posts/effective-git-blame-in-emacs.html
@@ -2597,7 +2606,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - magithub
 - google-this
 - emamux
-- helm-tramp
 - https://gitlab.com/LazyLama/emacs_latex_class
 - https://github.com/patrickt/emacs/blob/master/init.el
 - https://melpa.org/#/helm-file-preview
