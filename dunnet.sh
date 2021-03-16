@@ -49,7 +49,7 @@ clean_up(){
 set_up_fifo(){
     rm dunnet.in
     mkfifo dunnet.in
-    sleep 30m > dunnet.in & #keep fifo open
+    sleep 60m > dunnet.in & #keep fifo open
 }
 
 send_to_fifo(){
@@ -195,28 +195,44 @@ start_dunnet(){
          nil)
       (dunnet))"
 
-    emacs --no-init-file --batch --eval "$lisp" < dunnet.in | tee "$DUNNETOUT" &
+    emacs --no-init-file --batch --eval "$lisp" < dunnet.in | line_by_line_as_teletype | tee "$DUNNETOUT" &
 
     wait_until_dunnet_start
 }
 
-computer_colors(){
-    echo  -en # "\e[37m\e[40m"
+PAUSE_BEFORE_TYPING=2s
+PAUSE_BETWEN_KEYSTROKES=0.05s
+PAUSE_BEFORE_ENTER_KEY=1s
+
+letter_by_letter_as_teletype(){
+    local string="$*"
+    sleep $PAUSE_BEFORE_TYPING
+    for (( i=0; i<${#string}; i++ ))
+    do
+        printf "$txReverse$txBold"
+        echo -n "${string:$i:1}"
+        printf "$txReset"
+        sleep $PAUSE_BETWEN_KEYSTROKES
+    done
+    sleep $PAUSE_BEFORE_ENTER_KEY
 }
 
-normal_colors(){
-    echo  -en # "\e[30m\e[47m"
+line_by_line_as_teletype(){
+    while IFS='' read -r line || [[ -n "$line" ]]
+    do
+        printf "%s" "$line"
+        sleep 0.2s
+        printf "\n"
+    done
 }
-
 
 
 send_to_fifo_with_echo(){
-    init_tput
     local TO_FIFO=$1
     local PROMPT=${2:-""}
-    printf "$txBold$txUnderline%s%s$txReset\n\n" "$PROMPT" "$TO_FIFO"
+    letter_by_letter_as_teletype "$PROMPT" "$TO_FIFO"
+    printf "$txReset\n\n\n"
     #sleep 1
-    printf "\n"
     send_to_fifo $TO_FIFO
 }
 
@@ -233,16 +249,20 @@ linea_a_linea(){
             get_pc_combination
         elif [[ $line == \#* ]]
         then
-            printf "${fgBlue}COMMENT TO MYSELF: %s$txReset\n" "$line"
+            printf " ${fgBlue}COMMENT TO MYSELF: %s$txReset\n" "$line"
+            printf ">"
         elif [[ "$line" != "" ]]
         then
-            send_to_fifo_with_echo "$line"
+            send_to_fifo_with_echo " $line"
             get_egg
             responde_pregunta
         fi
 
     done 
 }
+
+
+init_tput
 
 set_up
 
