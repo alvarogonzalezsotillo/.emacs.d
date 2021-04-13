@@ -3,6 +3,14 @@
 DUNNETOUT=dunnet.out
 DUNNETLOG=dunnet.log
 
+PAUSE_FACTOR=1
+PAUSE_BEFORE_TYPING=$(echo "2.0 * $PAUSE_FACTOR" | bc )
+PAUSE_BETWEN_KEYSTROKES=$(echo "0.05 * $PAUSE_FACTOR" | bc )
+PAUSE_BEFORE_ENTER_KEY=$(echo "1.0 * $PAUSE_FACTOR" | bc )
+PAUSE_BETWEEN_LINES=$(echo "10 * 0.2 * $PAUSE_FACTOR" | bc )
+LINE_JUST_PRINTED=true
+
+
 init_tput(){
     bgBlack=$(tput setab 0) # black
     bgRed=$(tput setab 1) # red
@@ -200,9 +208,6 @@ start_dunnet(){
     wait_until_dunnet_start
 }
 
-PAUSE_BEFORE_TYPING=2s
-PAUSE_BETWEN_KEYSTROKES=0.05s
-PAUSE_BEFORE_ENTER_KEY=1s
 
 letter_by_letter_as_teletype(){
     local string="$*"
@@ -220,12 +225,37 @@ letter_by_letter_as_teletype(){
 line_by_line_as_teletype(){
     while IFS='' read -r line || [[ -n "$line" ]]
     do
-        printf "%s" "$line"
-        sleep 0.2s
-        printf "\n"
+        printf "%s\n" "$line" 
+        LINE_JUST_PRINTED=true
+        printf "JUST_PRINTED $LINE_JUST_PRINTED"
+        sleep $PAUSE_BETWEEN_LINES
     done
 }
 
+set_line_just_printed(){
+    if [ $1 == true ]
+    then
+        touch line-just-printed-file
+    else
+        rm line-just-printed-file
+    fi
+}
+
+check_line_just_printed(){
+    test -e line-just-printed-file
+}
+
+wait_until_pause_in_line_by_line(){
+    printf "ESPERO?$LINE_JUST_PRINTED"
+    while [ "$LINE_JUST_PRINTED" = "true" ]
+    do
+        printf "ESPERO................"
+        LINE_JUST_PRINTED=false
+        sleep $PAUSE_BETWEEN_LINES
+        sleep $PAUSE_BETWEEN_LINES
+    done
+    printf "YANOESPERO"
+}
 
 send_to_fifo_with_echo(){
     local TO_FIFO=$1
@@ -240,6 +270,7 @@ linea_a_linea(){
     while IFS='' read -r line || [[ -n "$line" ]]
     do
 
+        
         #sleep 1
         
         if [[ $line == \>* ]]
@@ -258,6 +289,7 @@ linea_a_linea(){
             responde_pregunta
         fi
 
+        wait_until_pause_in_line_by_line
     done 
 }
 
