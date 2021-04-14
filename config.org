@@ -2574,6 +2574,8 @@ https://github.com/elarkasi/raspi-kms
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
+- good-scroll
+- emacs-hl-block-mode
 - helm-xref
 - helm-icons
 - (use-package json-navigator) aa
