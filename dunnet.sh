@@ -3,6 +3,14 @@
 DUNNETOUT=dunnet.out
 DUNNETLOG=dunnet.log
 
+PAUSE_FACTOR=1
+PAUSE_BEFORE_TYPING=$(echo "2.0 * $PAUSE_FACTOR" | bc )
+PAUSE_BETWEN_KEYSTROKES=$(echo "0.05 * $PAUSE_FACTOR" | bc )
+PAUSE_BEFORE_ENTER_KEY=$(echo "1.0 * $PAUSE_FACTOR" | bc )
+PAUSE_BETWEEN_LINES=$(echo "10 * 0.2 * $PAUSE_FACTOR" | bc )
+LINE_JUST_PRINTED=true
+
+
 init_tput(){
     bgBlack=$(tput setab 0) # black
     bgRed=$(tput setab 1) # red
@@ -49,7 +57,7 @@ clean_up(){
 set_up_fifo(){
     rm dunnet.in
     mkfifo dunnet.in
-    sleep 30m > dunnet.in & #keep fifo open
+    sleep 60m > dunnet.in & #keep fifo open
 }
 
 send_to_fifo(){
@@ -195,28 +203,66 @@ start_dunnet(){
          nil)
       (dunnet))"
 
-    emacs --no-init-file --batch --eval "$lisp" < dunnet.in | tee "$DUNNETOUT" &
+    emacs --no-init-file --batch --eval "$lisp" < dunnet.in | line_by_line_as_teletype | tee "$DUNNETOUT" &
 
     wait_until_dunnet_start
 }
 
-computer_colors(){
-    echo  -en # "\e[37m\e[40m"
+
+letter_by_letter_as_teletype(){
+    local string="$*"
+    sleep $PAUSE_BEFORE_TYPING
+    for (( i=0; i<${#string}; i++ ))
+    do
+        printf "$txReverse$txBold"
+        echo -n "${string:$i:1}"
+        printf "$txReset"
+        sleep $PAUSE_BETWEN_KEYSTROKES
+    done
+    sleep $PAUSE_BEFORE_ENTER_KEY
 }
 
-normal_colors(){
-    echo  -en # "\e[30m\e[47m"
+line_by_line_as_teletype(){
+    while IFS='' read -r line || [[ -n "$line" ]]
+    do
+        printf "%s\n" "$line" 
+        LINE_JUST_PRINTED=true
+        printf "JUST_PRINTED $LINE_JUST_PRINTED"
+        sleep $PAUSE_BETWEEN_LINES
+    done
 }
 
+set_line_just_printed(){
+    if [ $1 == true ]
+    then
+        touch line-just-printed-file
+    else
+        rm line-just-printed-file
+    fi
+}
 
+check_line_just_printed(){
+    test -e line-just-printed-file
+}
+
+wait_until_pause_in_line_by_line(){
+    printf "ESPERO?$LINE_JUST_PRINTED"
+    while [ "$LINE_JUST_PRINTED" = "true" ]
+    do
+        printf "ESPERO................"
+        LINE_JUST_PRINTED=false
+        sleep $PAUSE_BETWEEN_LINES
+        sleep $PAUSE_BETWEEN_LINES
+    done
+    printf "YANOESPERO"
+}
 
 send_to_fifo_with_echo(){
-    init_tput
     local TO_FIFO=$1
     local PROMPT=${2:-""}
-    printf "$txBold$txUnderline%s%s$txReset\n\n" "$PROMPT" "$TO_FIFO"
+    letter_by_letter_as_teletype "$PROMPT" "$TO_FIFO"
+    printf "$txReset\n\n\n"
     #sleep 1
-    printf "\n"
     send_to_fifo $TO_FIFO
 }
 
@@ -224,6 +270,7 @@ linea_a_linea(){
     while IFS='' read -r line || [[ -n "$line" ]]
     do
 
+        
         #sleep 1
         
         if [[ $line == \>* ]]
@@ -233,16 +280,21 @@ linea_a_linea(){
             get_pc_combination
         elif [[ $line == \#* ]]
         then
-            printf "${fgBlue}COMMENT TO MYSELF: %s$txReset\n" "$line"
+            printf " ${fgBlue}COMMENT TO MYSELF: %s$txReset\n" "$line"
+            printf ">"
         elif [[ "$line" != "" ]]
         then
-            send_to_fifo_with_echo "$line"
+            send_to_fifo_with_echo " $line"
             get_egg
             responde_pregunta
         fi
 
+        wait_until_pause_in_line_by_line
     done 
 }
+
+
+init_tput
 
 set_up
 

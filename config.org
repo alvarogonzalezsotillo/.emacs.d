@@ -1,3 +1,4 @@
+
 #+TITLE: Configuración Emacs
 #+author: Álvaro González (@alvarogonzalez)
 #+OPTIONS: toc:2 h:4 author:t
@@ -133,7 +134,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | bind-key                       |                                                                |
 | calfw                          |                                                                |
 | calfw-ical                     |                                                                |
-| cargo                          |                                                                |
 | color-theme-sanityinc-tomorrow |                                                                |
 | company                        |                                                                |
 | company-auctex                 |                                                                |
@@ -184,7 +184,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | posframe                       |                                                                |
 | prettier-js                    |                                                                |
 | quickrun                       | Ejecuta el buffer actual con el intérprete/compilador adecuado |
-| racer                          |                                                                |
 | rectangle-utils                |                                                                |
 | restclient                     |                                                                |
 | restclient-helm                |                                                                |
@@ -264,11 +263,14 @@ Añado algunos /mime-type/ al servidor HTTP
 (use-package toml-mode
   :ensure t)
 
-(use-package rust-mode
+(use-package rustic
   :ensure t
   :defer 1
   :config
 
+  (use-package cargo
+    :ensure t)
+  
   (defun my-enable-lsp ()
      (interactive)
      (lsp)
@@ -551,7 +553,6 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
        company-dabbrev-code
        company-web-html
        company-keywords
-       company-yasnippet
        company-emoji
        )
       )
@@ -565,7 +566,6 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
        company-dabbrev-code
        company-dabbrev
        company-keywords
-       company-yasnippet
        company-emoji
        company-capf
        )
@@ -665,7 +665,6 @@ En =neotree=, quiero ver todos los ficheros, y no me importa el ancho fijo de la
 #+end_src
   
 ** Paquete =org=
-
 Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair-mode=
 #+begin_src emacs-lisp
 (use-package org
@@ -676,7 +675,7 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
   (setq org-ellipsis "⤵⤵⤵")
   (set-face-attribute 'org-ellipsis nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
   
-
+  (setq org-hide-emphasis-markers t)
   
   ;;Trying to fix indentation behaviour within code blocks.
   
@@ -736,19 +735,25 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
      (dot . t)
      (plantuml . t)
      ;(scala . t)
+     (maxima . t)
      (ammonite . t)
      (typescript . t)
      (rust . t)
      (shell . t)))
 #+end_src
 
+#+RESULTS:
+
 
  Además, no pido confirmación para varios lenguajes                                                                                                           
  #+begin_src emacs-lisp
  (defun my-org-confirm-babel-evaluate (lang body)
-   (not (member lang '("dot" "emacs-lisp" "shell" "plantuml"))))
+   (not (member lang '("dot" "emacs-lisp" "shell" "plantuml" "maxima"))))
  (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
 #+end_src
+
+#+RESULTS:
+: my-org-confirm-babel-evaluate
 
    
 *** Listas alfabéticas
@@ -1563,7 +1568,10 @@ El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminale
       scroll-step 1
       scroll-conservatively 10000
       scroll-preserve-screen-position 1)
+(setq jit-lock-defer-time 0.1)
+(setq fast-but-imprecise-scrolling t)
 #+end_src
+
 
 ** Barras de desplazamiento, de herramientas y menú
 La barra de menú y la de herramientas es de lo primero que se quita al personalizar /emacs/, lo mismo que esa pantalla de inicio.
@@ -2489,14 +2497,15 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
 
 #+begin_src emacs-lisp
 (setq  custom-safe-themes  (quote
-                            ("d916b686ba9f23a46ee9620c967f6039ca4ea0e682c1b9219450acee80e10e40" 
+                            ("fc6697788f00629cd01f4d2cc23f1994d08edb3535e4c0facef6b7247b41f5c7"
+                             "d916b686ba9f23a46ee9620c967f6039ca4ea0e682c1b9219450acee80e10e40" 
                              "a63355b90843b228925ce8b96f88c587087c3ee4f428838716505fd01cf741c8"
                              "6e219d6b6a3f7e22888b203fd5492e12133ba40512be983858f05b42806fa573"
                              "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" 
                              "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" 
                              default)))
 
-(defvar my-dark-theme 'sanityinc-tomorrow-bright)
+(defvar my-dark-theme 'tangotango)
 (defvar my-light-theme 'intellij)
 
 
@@ -2580,8 +2589,7 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - helm-icons
 - (use-package json-navigator) aa
 - (use-package autorevert :ensure nil :config (setq auto-revert-verbose nil global-auto-revert-mode t global-auto-revert-non-file-buffers t))
--  
--  (fast-but-imprecise-scrolling t)
+--  (fast-but-imprecise-scrolling t)
 - find-trace-paths
 -  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images) 
 - https://github.com/manateelazycat/awesome-tray
@@ -2591,7 +2599,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - feebleline
 - vlfi ficheros grandes
 - asciinema
-
 - company-quickhelp-terminal
 - aftersave-add-hook
 - (setq org-download-method 'attach)
@@ -2611,8 +2618,6 @@ En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Ema
 - https://gitlab.com/LazyLama/emacs_latex_class
 - https://github.com/patrickt/emacs/blob/master/init.el
 - https://melpa.org/#/helm-file-preview
-- color-rg
-- - org-hide-emphasis-markers is a
 - openwith
 - calctex
 - dot-mode
