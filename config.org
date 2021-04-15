@@ -1374,7 +1374,6 @@ El ratón también puede utilizarse en un =xterm=
 
 
 * Visualización
-
 ** Velocidad de la rueda de ratón
 [[https://stackoverflow.com/questions/445873/how-can-i-make-emacs-mouse-scrolling-slower-and-smoother]]
    #+begin_src emacs-lisp
@@ -1564,6 +1563,11 @@ Marca errores en el fichero
 ** /scroll/
 El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminales modo texto que costaba refrescar. Con los ordenadores actuales, mejor un /scroll/ suave
 #+begin_src emacs-lisp
+(use-package good-scroll
+  :ensure t
+  :config
+  (good-scroll-mode 1))
+
 (setq scroll-margin 0
       scroll-step 1
       scroll-conservatively 10000
