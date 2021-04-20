@@ -675,7 +675,7 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
   (setq org-ellipsis "⤵⤵⤵")
   (set-face-attribute 'org-ellipsis nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
   
-  (setq org-hide-emphasis-markers t)
+  ;;(setq org-hide-emphasis-markers t)
   
   ;;Trying to fix indentation behaviour within code blocks.
   
@@ -1008,7 +1008,7 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
   (helm-flx-mode +1)
   (setq helm-display-buffer-reuse-frame t)
   (setq helm-use-undecorated-frame-option t)
-  (setq helm-display-function 'helm-display-buffer-in-own-frame)
+  ;(setq helm-display-function 'helm-display-buffer-in-own-frame)
 
   ;; PROBLEMAS DE REDISPLAY: hasta que no doy una tecla no se muestra nada
   (defun my/try-to-redisplay-helm ()
@@ -1080,7 +1080,6 @@ Intento de colocar la ventana de helm siempre abajo, tiene problemas de redispla
   ;; helm-popup-frame debería tener el foco
 
   (setq swiper-helm-display-function 'helm-posframe-display) ;'helm-display-function)
-  (setq helm-swoop-split-window-function 'helm-display-buffer-in-own-frame)
 )
 #+end_src
 
@@ -1092,8 +1091,7 @@ Intento de colocar la ventana de helm siempre abajo, tiene problemas de redispla
   :config
   (setq helm-display-buffer-width 140)
   (setq helm-display-buffer-height 20)
-  (setq helm-swoop-split-window-function 'helm-display-buffer-in-own-frame)
-
+  (setq helm-swoop-split-window-function 'helm-default-display-buffer)
   :after (helm)
   :bind
       (("C-f" . helm-swoop))
@@ -1556,16 +1554,18 @@ El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminale
   :config
   (good-scroll-mode 1))
 
-(setq scroll-step 1)
 
-;;(setq scroll-margin 0
-;;      scroll-step 1
-;;      scroll-conservatively 10000
-;;      scroll-preserve-screen-position 1)
+(setq scroll-margin 0
+     scroll-step 1
+     scroll-conservatively 10000
+     scroll-preserve-screen-position 1)
 
 (setq jit-lock-defer-time 0.1)
 (setq fast-but-imprecise-scrolling t)
 #+end_src
+
+#+RESULTS:
+: t
 
 #+begin_src emacs-lisp
 (setq scroll-error-top-bottom t)
@@ -2308,8 +2308,6 @@ Mi línea de estado (modeline)
 (setq-default mode-line-format my-mode-line-format)
 #+end_src
 
-#+RESULTS:
-|   | (%1* %1+) | %[ | (%12b) | %] |   |   | (vc-mode vc-mode) |   | %m %n |   | %IB %Z |   | %l:%c %p |   |   | (:eval (format Point:%d (point))) | (:eval (unless (display-graphic-p) -%-)) |
 
 Pone en lo alto el minibuffer. No sé si me gusta, funciona algo raro, y lo mismo no va bien con =febbleline= y =mini-modeline=.
 #+begin_src lisp
@@ -2355,7 +2353,7 @@ Cursor como barra vertical
 (set-default 'cursor-type 'bar)
 (set-default 'cursor-in-non-selected-windows 'hollow)
 (defun my/change-cursor-when-overwrite ()
-  (setq cursor-type (if overwrite-mode 'bar 'box)))
+  (setq cursor-type (if overwrite-mode 'box 'bar)))
 (add-hook 'overwrite-mode-hook #'my/change-cursor-when-overwrite)
 (blink-cursor-mode 1)
 (setq blink-cursor-blinks 0)
@@ -2514,7 +2512,7 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
                              "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" 
                              default)))
 
-(defvar my-dark-theme 'tangotango)
+(defvar my-dark-theme 'my-tangotango)
 (defvar my-light-theme 'intellij)
 
 
@@ -2531,6 +2529,9 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
   (load-theme 'alvaro t))
 
 #+end_src
+
+#+RESULTS:
+: tema-oscuro
 
 
 Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna customización. Por lo visto, un tema siempre añade cambios, pero al quitarse no se deshacen  completamente. Algunas configuraciones solo se tienen en cuenta al reiniciar /Emacs/ o al reaplicar un modo: por ejemplo, los colores de =highlight-indent-guides= necesitan reabrir el buffer.
