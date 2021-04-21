@@ -69,6 +69,7 @@ set_up(){
     echo > "$DUNNETLOG"
     log "Comienza script"
     trap clean_up EXIT
+    set_line_just_printed    
 }
 
 
@@ -226,14 +227,13 @@ line_by_line_as_teletype(){
     while IFS='' read -r line || [[ -n "$line" ]]
     do
         printf "%s\n" "$line" 
-        LINE_JUST_PRINTED=true
-        printf "JUST_PRINTED $LINE_JUST_PRINTED"
+        set_line_just_printed "true"
         sleep $PAUSE_BETWEEN_LINES
     done
 }
 
 set_line_just_printed(){
-    if [ $1 == true ]
+    if [ "$1" == "true" ]
     then
         touch line-just-printed-file
     else
@@ -241,20 +241,18 @@ set_line_just_printed(){
     fi
 }
 
-check_line_just_printed(){
+is_line_just_printed(){
     test -e line-just-printed-file
 }
 
 wait_until_pause_in_line_by_line(){
-    printf "ESPERO?$LINE_JUST_PRINTED"
-    while [ "$LINE_JUST_PRINTED" = "true" ]
+    while is_line_just_printed
     do
         printf "ESPERO................"
-        LINE_JUST_PRINTED=false
+        set_line_just_printed "false"
         sleep $PAUSE_BETWEEN_LINES
         sleep $PAUSE_BETWEEN_LINES
     done
-    printf "YANOESPERO"
 }
 
 send_to_fifo_with_echo(){
