@@ -42,6 +42,27 @@ Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplement
 
 
 
+* Optimizaciones
+  #+begin_src emacs-lisp
+;; Disabling bidirectional text rendering gives a performance boost.
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
+
+;; Increase memory usage, but increase performance. No thank you, font compacting!
+(setq inhibit-compacting-font-caches t)
+
+;; Here's where we handle the GC
+
+(use-package gcmh
+  :ensure t
+  :config
+  (setq gcmh-idle-delay 5
+        gc-cons-threshold (* 500 1024 1024) 
+        gcmh-high-cons-threshold (* 1000 1024 1024))  )
+
+  #+end_src
+
 * Utilidades externas al /PATH/
 En el directorio =~/.emacs.d/bin/= guardo algunas utilidades que me interesa tener en todos los entornos de trabajo. Lo siguiente es para que estén disponibles desde las /shells/ que arranque desde emacs.
 
@@ -1289,9 +1310,12 @@ Una de las ventajas de Emacs es su /kill ring/, donde se guarda la historia del 
 Encuentro más conveniente que los ficheros se recarguen si un programa externo los modifica, sin preguntas.
 
 #+begin_src emacs-lisp
-(global-auto-revert-mode 1)
-(setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil)
+(use-package autorevert
+  :ensure nil
+  :config
+  (global-auto-revert-mode 1)
+  (setq global-auto-revert-non-file-buffers t)
+  (setq auto-revert-verbose nil))
 #+end_src
 
 ** Comandos que se consideran /avanzados/
@@ -1560,7 +1584,7 @@ El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminale
      scroll-conservatively 10000
      scroll-preserve-screen-position 1)
 
-(setq jit-lock-defer-time 0.1)
+(setq jit-lock-defer-time 0)
 (setq fast-but-imprecise-scrolling t)
 #+end_src
 
@@ -2593,14 +2617,6 @@ https://github.com/elarkasi/raspi-kms
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
-;; Disabling bidirectional text rendering gives a performance boost.
-(setq-default bidi-display-reordering 'left-to-right
-              bidi-paragraph-direction 'left-to-right)
-(setq bidi-inhibit-bpa t)
-
-;; Increase memory usage, but increase performance. No thank you, font compacting!
-(setq inhibit-compacting-font-caches t)
-
 
 
 ;; If we're talking about fonts, you gotta have emojis
@@ -2625,10 +2641,6 @@ global-set-key (kbd "C-c h w") 'helm-wikipedia-suggest)
                               ("png" . "sxiv")
                               ("mkv" . "mpv")
                               ("mp4" . "mpv")))
-;; Here's where we handle the GC
-(setq gcmh-idle-delay 5
-      gc-cons-threshold (* 500 1024 1024) ;; 500mb
-      gcmh-high-cons-threshold (* 1000 1024 1024))  ;; 1000mb
 
 
 
@@ -2637,7 +2649,7 @@ global-set-key (kbd "C-c h w") 'helm-wikipedia-suggest)
 - helm-xref
 - helm-icons
 - (use-package json-navigator) aa
-- (use-package autorevert :ensure nil :config (setq auto-revert-verbose nil global-auto-revert-mode t global-auto-revert-non-file-buffers t))
+- 
 --  (fast-but-imprecise-scrolling t)
 - find-trace-paths
 -  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images) 
