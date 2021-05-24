@@ -2593,6 +2593,47 @@ https://github.com/elarkasi/raspi-kms
 
 * Futuras adiciones
 En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
+;; Disabling bidirectional text rendering gives a performance boost.
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
+
+;; Increase memory usage, but increase performance. No thank you, font compacting!
+(setq inhibit-compacting-font-caches t)
+
+
+
+;; If we're talking about fonts, you gotta have emojis
+(use-package emojify
+  :hook (after-init . global-emojify-mode))
+
+
+global-set-key (kbd "C-c h w") 'helm-wikipedia-suggest)
+    (global-set-key (kbd "C-c h g") 'helm-google-suggest)
+
+(use-package peep-dired)
+
+;; Copy and paste files
+(use-package dired-ranger
+  :bind (:map dired-mode-map
+              ("W" . dired-ranger-copy)
+              ("X" . dired-ranger-move)
+              ("Y" . dired-ranger-paste)))
+
+(setq dired-open-extensions '(("gif" . "sxiv")
+                              ("jpg" . "sxiv")
+                              ("png" . "sxiv")
+                              ("mkv" . "mpv")
+                              ("mp4" . "mpv")))
+;; Here's where we handle the GC
+(setq gcmh-idle-delay 5
+      gc-cons-threshold (* 500 1024 1024) ;; 500mb
+      gcmh-high-cons-threshold (* 1000 1024 1024))  ;; 1000mb
+
+
+
+- good-scroll
+- emacs-hl-block-mode
 - helm-xref
 - helm-icons
 - (use-package json-navigator) aa
