@@ -1051,15 +1051,15 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 #+end_src
 
 
-Intento de colocar la ventana de helm siempre abajo, tiene problemas de redisplay
-#+begin_src lisp
+Intento de colocar la ventana de helm siempre abajo
+#+begin_src emacs-lisp
     ;;https://www.reddit.com/r/emacs/comments/345vtl/make_helm_window_at_the_bottom_without_using_any/
     ;;HELM SIEMPRE ABAJO CON ANCHO COMPLETO
     (add-to-list 'display-buffer-alist
                     `(,(rx bos "*helm" (* not-newline) "*" eos)
                          (display-buffer-in-side-window)
                          (inhibit-same-window . t)
-                         (window-height . 0.4)))
+                         (window-height . 0.3)))
 #+end_src
 
 =helm-posframe= muestra las ventanas de helm en una frame nueva, pero no funciona del todo bien (tabulador)
