@@ -53,13 +53,13 @@ Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplement
 (setq inhibit-compacting-font-caches t)
 
 ;; Here's where we handle the GC
-
 (use-package gcmh
   :ensure t
   :config
   (setq gcmh-idle-delay 5
         gc-cons-threshold (* 500 1024 1024) 
-        gcmh-high-cons-threshold (* 1000 1024 1024))  )
+        gcmh-high-cons-threshold (* 1000 1024 1024))
+  (gcmh-mode 1))
 
   #+end_src
 
@@ -217,7 +217,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | systemd                        |                                                                |
 | transmission                   |                                                                |
 | transpose-frame                |                                                                |
-| treemacs                       |                                                                |
 | treemacs-projectile            |                                                                |
 | typescript-mode                |                                                                |
 | use-package                    |                                                                |
@@ -371,6 +370,8 @@ Estoy usando =treemacs= en vez de =neotree=.
   
   (add-hook 'treemacs-mode-hook #'hacer-treemacs-resizable)
   (setq treemacs-silent-refresh t)
+  (treemacs-git-mode -1)
+  
   (cambiar-faces-de-treemacs)
   :bind
   (("<f8>" . treemacs))
@@ -1651,7 +1652,7 @@ Arranco el servidor para utilizar /emacsclient/
  (setq minimap-hide-fringes t)
  (setq minimap-major-modes '(org-mode tex-mode prog-mode))
  (setq minimap-window-location 'right)
- ;(minimap-mode 0) si el minimap no está activo da un error de timer nil
+ (minimap-mode -1)
 
 )
 #+end_src
@@ -2587,8 +2588,8 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
     :ensure t
     :config
     (setq desktop-load-locked-desktop t)
-    ;(setq desktop-save t)
-    ;(desktop-save-mode 1)
+    (setq desktop-save t)
+    (desktop-save-mode 1)
     ;(when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
     ;    (desktop-read))
   )
