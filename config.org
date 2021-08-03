@@ -9,7 +9,7 @@
 #+latex: \begin{center}
 La última versión de esta configuración puede encontrarse en [[https://github.com/alvarogonzalezsotillo/.emacs.d][https://github.com/alvarogonzalezsotillo/.emacs.d]].
 #+latex: \end{center}
-#+html: </div>
+#+html: </div><>
 
 * Cómo funciona este fichero
 
@@ -2592,7 +2592,43 @@ https://github.com/elarkasi/raspi-kms
 
 
 * Futuras adiciones
-En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
+
+(use-package helpful
+  :ensure t
+  :defer t
+  :bind
+  ([remap describe-callable]    . helpful-callable)
+  ([remap describe-function]    . helpful-function)
+  ([remap describe-variable]    . helpful-variable)
+  ([remap describe-key]         . helpful-key)
+  ([remap view-emacs-debugging] . helpful-at-point))
+
+
+  (use-package highlight-indent-guides
+  :hook ((prog-mode text-mode conf-mode) . highlight-indent-guides-mode)
+  :init
+  (setq highlight-indent-guides-method 'character
+        highlight-indent-guides-supress-auto-error t))
+
+(use-package tree-sitter-langs)
+(use-package tree-sitter
+  :config
+  (require 'tree-sitter-langs)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+(provide 'treesitter-rcp)
+
+
+
+vi-tilde-fringe
+
+dired-kill-when-opening-new-dired-buffer.
+
+
+        
+
+
+  En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
 ;; Disabling bidirectional text rendering gives a performance boost.
 (setq-default bidi-display-reordering 'left-to-right
               bidi-paragraph-direction 'left-to-right)
