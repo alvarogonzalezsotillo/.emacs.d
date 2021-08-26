@@ -72,7 +72,10 @@ Añado también el directorio de =cargo= para =rust=.
 (let 
   (  
      (exec-path-separator  (if (string-equal system-type "windows-nt") ";" ":"))
-     (paths `(,(concat (expand-file-name user-emacs-directory) "bin") ,(concat (expand-file-name "~/") ".cargo/bin") ) )
+     (paths `(
+              ,(concat (expand-file-name user-emacs-directory) "bin")
+              ,(concat (expand-file-name "~/") ".cargo/bin")
+              "/opt/scala/bin" ))
   )
   (dolist (path paths)
     (message "path: %s" path)
@@ -85,6 +88,9 @@ Añado también el directorio de =cargo= para =rust=.
 )
 
 #+end_src
+
+#+RESULTS:
+: exec-path (/opt/scala/bin /home/alvaro/.emacs.d/bin /home/alvaro/.local/bin /home/alvaro/.cargo/bin /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /usr/games /usr/local/games /snap/bin /usr/local/libexec/emacs/28.0.50/x86_64-pc-linux-gnu)
 
 
 
@@ -912,6 +918,8 @@ Grabar en el propio fichero
 ; En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
 (setq TeX-view-program-selection '((output-pdf "Okular")))
 (setq TeX-source-correlate-mode t)
+(add-hook 'latex-mode-hook 'TeX-source-correlate-mode)
+
 (setq TeX-source-correlate-start-server t)
 
 
