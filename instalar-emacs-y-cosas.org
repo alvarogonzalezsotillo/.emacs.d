@@ -1,0 +1,30 @@
+* Mis cosas
+  #+begin_src bash
+sudo apt install zsh texlive-full inkscape htop tmux git iftop tcpdump curl silversearcher-ag
+git clone https://github.com/alvarogonzalezsotillo/.emacs.d.git
+wget https://github.com/xournalpp/xournalpp/releases/download/1.1.0/xournalpp-1.1.0-Ubuntu-focal-x86_64.deb
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+PROMPT="%{$fg[blue]%}%T %{$fg[cyan]%}%n%{$fg[blue]%}@%{$fg[cyan]%}%m ${PROMPT}"
+
+git config --global user.email "alvaro@a37"
+git config --global user.name "alvaro@a37"
+
+  #+end_src  
+
+
+
+* emacs
+
+  #+begin_src bash
+git clone git://git.sv.gnu.org/emacs.git
+sudo apt-get install libtiff-dev
+sudo apt-get install build-essential
+sudo apt-get install libgtk-3-dev libtiff5-dev libgif-dev libjpeg-dev libpng-dev libxpm-dev libncurses-dev
+sudo apt install autoconf
+sudo apt install texinfo
+sudo apt install libgnutls28-dev
+./autogen.sh 
+./configure
+  #+end_src
+
+
