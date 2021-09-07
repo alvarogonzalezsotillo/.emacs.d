@@ -1839,18 +1839,16 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 #+begin_src emacs-lisp
 (use-package helpful
   :ensure t
-
   :bind
-  (("C-h k" . helpful-key))
-  (("C-h v" . helpful-variable))
-  (("C-h f" . helpful-function))
-  (("C-h o" . helpful-symbol))
+  ([remap describe-symbol]      . helpful-symbol)
+  ([remap describe-callable]    . helpful-callable)
+  ([remap describe-function]    . helpful-function)
+  ([remap describe-variable]    . helpful-variable)
+  ([remap describe-key]         . helpful-key)
+  ([remap view-emacs-debugging] . helpful-at-point))
 
 )
 #+end_src
-
-#+RESULTS:
-: helpful-symbol
 
 
 ** Deshabilitar posframe en terminal
@@ -2447,7 +2445,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 (defun bonito-para-codigo()
   (interactive)
   (toggle-truncate-lines 1)
-  (highlight-indent-guides-mode 0)
+  (highlight-indent-guides-mode 1)
   (toggle-word-wrap 1)
   (if (>= emacs-major-version 26)
       (display-line-numbers-mode 1))
@@ -2578,16 +2576,6 @@ https://github.com/elarkasi/raspi-kms
 * Futuras adiciones
 
 
-(use-package helpful
-  :ensure t
-  :defer t
-  :bind
-  ([remap describe-callable]    . helpful-callable)
-  ([remap describe-function]    . helpful-function)
-  ([remap describe-variable]    . helpful-variable)
-  ([remap describe-key]         . helpful-key)
-  ([remap view-emacs-debugging] . helpful-at-point))
-
 
   (use-package highlight-indent-guides
   :hook ((prog-mode text-mode conf-mode) . highlight-indent-guides-mode)
@@ -2614,16 +2602,6 @@ dired-kill-when-opening-new-dired-buffer.
 
 
   En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
-;; Disabling bidirectional text rendering gives a performance boost.
-(setq-default bidi-display-reordering 'left-to-right
-              bidi-paragraph-direction 'left-to-right)
-(setq bidi-inhibit-bpa t)
-
-;; Increase memory usage, but increase performance. No thank you, font compacting!
-(setq inhibit-compacting-font-caches t)
-
-
-En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
 
 
 
