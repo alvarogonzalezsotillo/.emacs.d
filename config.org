@@ -9,7 +9,7 @@
 #+latex: \begin{center}
 La última versión de esta configuración puede encontrarse en [[https://github.com/alvarogonzalezsotillo/.emacs.d][https://github.com/alvarogonzalezsotillo/.emacs.d]].
 #+latex: \end{center}
-#+html: </div><>
+#+html: </div>
 
 * Cómo funciona este fichero
 
@@ -1955,19 +1955,6 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
    #+RESULTS:
    : gifttolatex
 
-** Convierto el buffer actual a una frame nueva
-#+begin_src emacs-lisp
-(defun sacar-a-nueva-frame()
-  (interactive)
-  (let ((buffer (current-buffer)))
-    (unless (one-window-p)
-      (delete-window))
-    (display-buffer-pop-up-frame buffer nil)))
-#+end_src
-
-#+RESULTS:
-: sacar-a-nueva-frame
-
 
 ** Inicio de una selección rectangular usando el ratón (lo uso poco, prefiero =C-x spc=)
 #+begin_src emacs-lisp
@@ -1985,42 +1972,6 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
         (mouse-set-point drag-event)))))
 
 (global-set-key (kbd "S-<down-mouse-1>") #'mouse-start-rectangle)
-
-#+end_src
-
-** Abrir el fichero del buffer actual con un programa externo
-#+begin_src emacs-lisp
-;; http://pages.sachachua.com/.emacs.d/Sacha.html
-(defun abrir-programa-externo (arg)
-  "Open visited file in default external program.
-
-With a prefix ARG always prompt for command to use."
-  (interactive "P")
-  (when buffer-file-name
-    (async-shell-command (concat
-                          "setsid -w "
-                          (cond
-                           ((and (not arg) (eq system-type 'darwin)) "open")
-                           ((and (not arg) (member system-type '(gnu gnu/linux gnu/kfreebsd))) "xdg-open")
-                           (t (read-shell-command "Open current file with: ")))
-                          " "
-                          (shell-quote-argument buffer-file-name)))
-    (run-at-time "2" nil
-                 (lambda() (winner-undo)))))
-#+end_src
-
-** Copiar el nombre del fichero actual al portapapeles
-#+begin_src emacs-lisp
-;; http://pages.sachachua.com/.emacs.d/Sacha.html
-(defun copiar-nombre-fichero-actual ()
-  "Copy the current buffer file name to the clipboard."
-  (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (kill-new filename)
-      (message "Copied buffer file name '%s' to the clipboard." filename))))
 
 #+end_src
 
