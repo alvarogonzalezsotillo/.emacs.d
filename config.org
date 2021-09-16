@@ -101,24 +101,36 @@ ls ~/.emacs.d/bin
 
 #+RESULTS:
 | addtopath.sh                 |
+| bfg-1.13.0.jar               |
+| clonar-2-de-3.sh             |
+| clone-2.sh                   |
 | colores-terminal.sh          |
 | colores-tty.sh               |
+| dataurl.sh                   |
 | disable-gnome-animations.sh  |
 | ec                           |
+| esperar.sh                   |
 | ghpages.sh                   |
 | gifttolatex                  |
 | githubclone.sh               |
 | install-emacs-as-service.org |
 | invert.sh                    |
+| iptables-save                |
 | keymon.sh                    |
+| monitoriza-logins.sh         |
 | pdf2svg.sh                   |
 | plantuml.1.2018.11.jar       |
+| promt-en-zsh.sh              |
+| quitar-red-a-usuario.sh      |
+| reducir-video.sh             |
 | rmtemplatex.sh               |
 | rotate-screen.sh             |
+| screen-to-serial.sh          |
 | shellcheck                   |
 | shrinkpdf.sh                 |
 | svg2pdf.sh                   |
 | texlab                       |
+| video-to-gif.sh              |
 | video-to-whatsapp.sh         |
 | vncserver.sh                 |
 | wake-alvarogonzalez.sh       |
@@ -152,15 +164,12 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 #+NAME: mis-paquetes
 |--------------------------------+----------------------------------------------------------------|
 | 2048-game                      |                                                                |
-| ac-js2                         |                                                                |
 | adaptive-wrap                  | Indentación visual de las líneas respecto a su prefijo         |
 | ag                             |                                                                |
 | all-the-icons                  |                                                                |
 | all-the-icons-dired            |                                                                |
 | auto-highlight-symbol          | Resalte automático del símbolo bajo el cursor                  |
 | bind-key                       |                                                                |
-| calfw                          |                                                                |
-| calfw-ical                     |                                                                |
 | color-theme-sanityinc-tomorrow |                                                                |
 | company                        |                                                                |
 | company-auctex                 |                                                                |
@@ -177,7 +186,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | dired-subtree                  |                                                                |
 | flycheck                       |                                                                |
 | flycheck-plantuml              |                                                                |
-| flycheck-rust                  |                                                                |
 | gift-mode                      |                                                                |
 | gitignore-mode                 |                                                                |
 | git-timemachine                |                                                                |
@@ -209,16 +217,13 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | popup-imenu                    |                                                                |
 | popup-switcher                 |                                                                |
 | posframe                       |                                                                |
-| prettier-js                    |                                                                |
 | quickrun                       | Ejecuta el buffer actual con el intérprete/compilador adecuado |
-| rectangle-utils                |                                                                |
 | restclient                     |                                                                |
 | restclient-helm                |                                                                |
 | scad-mode                      |                                                                |
 | scad-preview                   |                                                                |
 | scala-mode                     |                                                                |
 | skewer-mode                    |                                                                |
-| stripe-buffer                  |                                                                |
 | swiper-helm                    |                                                                |
 | systemd                        |                                                                |
 | transmission                   |                                                                |
@@ -352,7 +357,7 @@ Estoy usando =treemacs= en vez de =neotree=.
      '(
        treemacs-directory-face                
        treemacs-directory-collapsed-face      
-                                        ;treemacs-file-face                     
+       ;;treemacs-file-face                     
        treemacs-root-face                     
        treemacs-root-unreadable-face          
        treemacs-root-remote-face              
@@ -400,7 +405,7 @@ Estoy usando =treemacs= en vez de =neotree=.
 
 ** Paquete =swoop=
 Búsqueda con previsualización. Lo configuro para que no seleccione el símbolo en en cursor, sino la seleción
-#+begin_src emacs-lisp
+#+begin_src lisp
   (use-package swoop
     :ensure t
     :defer 1
@@ -531,7 +536,7 @@ Lo he deshabilitado porque lo uso muy rara vez, y tarda bastante en actualizarse
 
 ** Paquete =smartparents=
 Este modo cierra automáticamente los paréntesis y otros bloques. Aunque lo tengo desactivado siguen apareciendo, no sé quién los pone.
-#+begin_src emacs
+#+begin_src lisp
 (use-package smartparens
   :ensure t
   :config
@@ -2510,6 +2515,8 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
   (load-theme my-dark-theme t)
   (load-theme 'alvaro t))
 
+
+(tema-oscuro)
 #+end_src
 
 #+RESULTS:
