@@ -99,8 +99,7 @@ sudo apt install uswsusp pm-tools
 
 Tras instalarlo, y montar una unidad de /swap/ suficientemente grande como para guardar toda la memoria RAM, =pm-hibernate= consigue hibernar el ordenador sin problemas.
 
-Para poder hibernar cómodamente, he añadido =pm-hibernate= y =s2disk= al fichero de =sudoers=, de forma que no se necesite contraseña
-
+Para poder hibernar cómodamente, he añadido =pm-hibernate= y =s2disk= al fichero de =sudoers=, de forma que no se necesite contraseña. Invoco estos comandos con =krunner= (se invoca con =alt-espacio= o =alt-f2=).
 #+begin_src bash
 alvaro ALL=(ALL) NOPASSWD: /usr/sbin/pm-hibernate
 alvaro ALL=(ALL) NOPASSWD: /usr/sbin/s2disk
