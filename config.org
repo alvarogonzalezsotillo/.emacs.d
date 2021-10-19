@@ -1613,6 +1613,10 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 #+begin_src emacs-lisp
 (use-package dired-x)
 
+(use-package dired
+  :config
+  (setq dired-kill-when-opening-new-dired-buffer t))
+
 (use-package dired-subtree 
   :ensure t
   :defer 1
@@ -2541,7 +2545,7 @@ https://github.com/elarkasi/raspi-kms
 
 vi-tilde-fringe
 
-dired-kill-when-opening-new-dired-buffer.
+.
 
 
         
