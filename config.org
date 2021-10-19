@@ -2576,13 +2576,11 @@ global-set-key (kbd "C-c h w") 'helm-wikipedia-suggest)
 
 
 
-- good-scroll
 - emacs-hl-block-mode
 - helm-xref
 - helm-icons
 - (use-package json-navigator) aa
 - 
---  (fast-but-imprecise-scrolling t)
 - find-trace-paths
 -  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images) 
 - https://github.com/manateelazycat/awesome-tray
