@@ -212,6 +212,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | ob-restclient                  |                                                                |
 | ob-rust                        |                                                                |
 | org-bullets                    |                                                                |
+| org-page                       |                                                                |
 | php-mode                       |                                                                |
 | plantuml-mode                  |                                                                |
 | popup-imenu                    |                                                                |
@@ -1612,6 +1613,10 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 #+begin_src emacs-lisp
 (use-package dired-x)
 
+(use-package dired
+  :config
+  (setq dired-kill-when-opening-new-dired-buffer t))
+
 (use-package dired-subtree 
   :ensure t
   :defer 1
@@ -2491,9 +2496,9 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
     :config
     (setq desktop-load-locked-desktop t)
     (setq desktop-save t)
-    (desktop-save-mode 1)
-    ;(when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
-    ;    (desktop-read))
+    ;;(desktop-save-mode 1)
+    ;;(when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
+    ;;    (desktop-read))
   )
 
 #+end_src
@@ -2540,7 +2545,7 @@ https://github.com/elarkasi/raspi-kms
 
 vi-tilde-fringe
 
-dired-kill-when-opening-new-dired-buffer.
+.
 
 
         
@@ -2575,13 +2580,11 @@ global-set-key (kbd "C-c h w") 'helm-wikipedia-suggest)
 
 
 
-- good-scroll
 - emacs-hl-block-mode
 - helm-xref
 - helm-icons
 - (use-package json-navigator) aa
 - 
---  (fast-but-imprecise-scrolling t)
 - find-trace-paths
 -  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images) 
 - https://github.com/manateelazycat/awesome-tray
