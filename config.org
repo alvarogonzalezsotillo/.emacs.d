@@ -1341,6 +1341,14 @@ El ratón también puede utilizarse en un =xterm=
 
 * Visualización
 
+** emojis
+
+   #+begin_src emacs-lisp
+   (use-package emojify
+     :ensure t
+     :hook (after-init . global-emojify-mode))
+
+   #+end_src
 ** Previsualización de ficheros en Helm
 #+begin_src lisp
 (use-package helm-file-preview
@@ -2378,7 +2386,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
   (bonito-para-codigo)
   (adaptive-wrap-prefix-mode 1)
   (toggle-truncate-lines -1)
-  (highlight-indent-guides-mode 0)
+  ;;(highlight-indent-guides-mode 0)
   (if (>= emacs-major-version 26)
       (display-line-numbers-mode 0))
   (org-display-inline-images))
@@ -2393,7 +2401,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 (defun bonito-para-codigo()
   (interactive)
   (toggle-truncate-lines 1)
-  (highlight-indent-guides-mode 1)
+  ;;(highlight-indent-guides-mode 1)
   (toggle-word-wrap 1)
   (if (>= emacs-major-version 26)
       (display-line-numbers-mode 1))
@@ -2541,9 +2549,10 @@ https://github.com/elarkasi/raspi-kms
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 (provide 'treesitter-rcp)
 
-
-
 vi-tilde-fringe
+
+
+
 
 .
 
