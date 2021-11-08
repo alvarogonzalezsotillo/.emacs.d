@@ -1343,7 +1343,7 @@ El ratón también puede utilizarse en un =xterm=
 
 ** emojis
 
-   #+begin_src emacs-lisp
+   #+begin_src lisp
    (use-package emojify
      :ensure t
      :hook (after-init . global-emojify-mode))
