@@ -2533,12 +2533,12 @@ https://github.com/elarkasi/raspi-kms
 * Futuras adiciones
 
 
+(defun org-export-deterministic-reference (references)
+    (let ((new 0))
+       (while (rassq new references) (setq new (+ new 1))) 
+       new))
+ (advice-add #'org-export-new-reference :override #'org-export-deterministic-reference)
 
-  (use-package highlight-indent-guides
-  :hook ((prog-mode text-mode conf-mode) . highlight-indent-guides-mode)
-  :init
-  (setq highlight-indent-guides-method 'character
-        highlight-indent-guides-supress-auto-error t))
 
 (use-package tree-sitter-langs
   :ensure t)
@@ -2551,10 +2551,6 @@ https://github.com/elarkasi/raspi-kms
 (provide 'treesitter-rcp)
 
 vi-tilde-fringe
-
-
-        
-
 
   En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
 
