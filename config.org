@@ -2339,6 +2339,7 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
 
     (defun diff-hl-show-hunk-toggle-backend()
       (interactive)
+      (setq diff-hl-show-hunk-posframe-poshandler 'posframe-poshandler-point-window-center)
       (if (eq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)
           (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-inline-popup)
         (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)))
@@ -2363,8 +2364,6 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
 
 #+END_SRC
 
-#+RESULTS:
-: t
 
 
 ** Saltos de página
@@ -2541,8 +2540,10 @@ https://github.com/elarkasi/raspi-kms
   (setq highlight-indent-guides-method 'character
         highlight-indent-guides-supress-auto-error t))
 
-(use-package tree-sitter-langs)
+(use-package tree-sitter-langs
+  :ensure t)
 (use-package tree-sitter
+  :ensure t
   :config
   (require 'tree-sitter-langs)
   (global-tree-sitter-mode)
@@ -2550,11 +2551,6 @@ https://github.com/elarkasi/raspi-kms
 (provide 'treesitter-rcp)
 
 vi-tilde-fringe
-
-
-
-
-.
 
 
         
