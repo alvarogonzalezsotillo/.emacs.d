@@ -212,6 +212,7 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | ob-restclient                  |                                                                |
 | ob-rust                        |                                                                |
 | org-bullets                    |                                                                |
+| org-page                       |                                                                |
 | php-mode                       |                                                                |
 | plantuml-mode                  |                                                                |
 | popup-imenu                    |                                                                |
@@ -1340,6 +1341,14 @@ El ratón también puede utilizarse en un =xterm=
 
 * Visualización
 
+** emojis
+
+   #+begin_src emacs-lisp
+   (use-package emojify
+     :ensure t
+     :hook (after-init . global-emojify-mode))
+
+   #+end_src
 ** Previsualización de ficheros en Helm
 #+begin_src lisp
 (use-package helm-file-preview
@@ -2495,9 +2504,9 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
     :config
     (setq desktop-load-locked-desktop t)
     (setq desktop-save t)
-    (desktop-save-mode 1)
-    ;(when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
-    ;    (desktop-read))
+    ;;(desktop-save-mode 1)
+    ;;(when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
+    ;;    (desktop-read))
   )
 
 #+end_src
@@ -2540,9 +2549,10 @@ https://github.com/elarkasi/raspi-kms
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 (provide 'treesitter-rcp)
 
-
-
 vi-tilde-fringe
+
+
+
 
 
 
@@ -2578,13 +2588,11 @@ global-set-key (kbd "C-c h w") 'helm-wikipedia-suggest)
 
 
 
-- good-scroll
 - emacs-hl-block-mode
 - helm-xref
 - helm-icons
 - (use-package json-navigator) aa
 - 
---  (fast-but-imprecise-scrolling t)
 - find-trace-paths
 -  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images) 
 - https://github.com/manateelazycat/awesome-tray

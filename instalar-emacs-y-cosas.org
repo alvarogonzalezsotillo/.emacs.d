@@ -1,105 +1,170 @@
-* Mis cosas
-  #+begin_src bash
-sudo apt install zsh texlive-full inkscape htop tmux git iftop iotop tcpdump curl silversearcher-ag graphviz virtualbox pandoc
-git clone https://github.com/alvarogonzalezsotillo/.emacs.d.git
-wget https://github.com/xournalpp/xournalpp/releases/download/1.1.0/xournalpp-1.1.0-Ubuntu-focal-x86_64.deb
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-PROMPT="%{$fg[blue]%}%T %{$fg[cyan]%}%n%{$fg[blue]%}@%{$fg[cyan]%}%m ${PROMPT}"
+Recientemente he jubilado mi Vaio e14 por un Thinkpad e14.
 
+Aunque el hardware ya no aguantaba mucho más, había estado configurándolo a mi gusto durante 8 años, y quería reproducir el mismo entorno de trabajo en el nuevo ordenador. Esta es una lista más o menos completa de los pasos que he seguido, por si necesito volver a configurarlo en el futuro.
+
+* Instalación de base
+Windows no es una opción una vez que se ha probado la experiencia de no tener publicidad, ni antivirus, ni indexación de ficheros, ni actualizaciones que interrumpen el trabajo. Es posible que un Mac solucionase todos estos problemas, pero el presupuesto y sobre todo la cabezonería no dan para más.
+
+Ubuntu suele ser la mejor opción para el soporte del hardware, aunque Gnome no es de mi gusto. KDE permite una mayor personalización, así que la elección final es Kubuntu.
+
+El nuevo ordenador tiene dos discos nve. He utilizado el disco pequeño para el sistema, y el disco mayor para el directorio =/home= y =/opt=.
+
+Para montar un directorio utilizo un =mount --bind= en el fichero =fstab=
+
+#+begin_src conf
+UUID=ca42fe72-45ec-4b58-85f3-a0c3bbabb84d /         ext4    errors=remount-ro 0 1
+UUID=9125dd39-2a6b-4e30-a1a2-d6e5ae9c356c /datos-1T ext4    errors=remount-ro 0 1
+/datos-1T/home                            /home     none    defaults,bind     0 0
+/datos-1T/opt                             /opt      note    defaults,bind     0 0
 #+end_src
 
-#+begin_src bash
+* /Shell/
+=zsh= supone una mejora en muchos aspectos a =bash=. Yo lo uso principalmente por la mejor autocomplección y el mejor manejo de la historia de comandos.
 
+Utilizo el tema por defecto, cambiando el =PROPMT= para que muestre la hora, usuario, nombre de host y directorio actual.
+
+#+begin_src bash
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+PROMPT="%{$fg[blue]%}%T %{$fg[cyan]%}%n%{$fg[blue]%}@%{$fg[cyan]%}%m ${PROMPT}"
+#+end_src
+
+* Mis cosas
+Muchos de los programas que utilizo pueden instalarse mediante =apt=, o con un un paquete =.deb=
+  #+begin_src bash
+sudo apt install zsh texlive-full inkscape htop tmux git iftop \
+                 iotop tcpdump curl silversearcher-ag graphviz \
+
+                 virtualbox pandoc pdftk krita wxmaxima gdebi \
+                 kmail korganizer obs-studio kdenlive
+wget https://github.com/xournalpp/xournalpp/releases/download/1.1.0/xournalpp-1.1.0-Ubuntu-focal-x86_64.deb
+gdebi xournalpp-1.1.0-Ubuntu-focal-x86_64.deb
 git config --global user.email "alvaro@thinkpad"
 git config --global user.name "alvaro@thinkpad"
-
   #+end_src  
-
-  #+RESULTS:
-
 
 
 * emacs
 
+La versión de =emacs= incluida en =ubuntu= no está demasiado actualizada. La compilación de =lisp= a código nativo mejora bastante el (mediocre) rendimiento de =emacs=.
   #+begin_src bash
 git clone git://git.sv.gnu.org/emacs.git
-sudo apt-get install libtiff-dev build-essential libgtk-3-dev libtiff5-dev libgif-dev libjpeg-dev libpng-dev libxpm-dev libncurses-dev autoconf texinfo libgnutls28-dev libxml2-dev libjansson-dev libgccjit-dev
+cd emacs
+sudo apt-get install libtiff-dev build-essential libgtk-3-dev \
+                     libtiff5-dev libgif-dev libjpeg-dev libpng-dev \
+                     libxpm-dev libncurses-dev autoconf texinfo \
+                     libgnutls28-dev libxml2-dev libjansson-dev libgccjit-dev
 ./autogen.sh 
 ./configure --with-native-compilation
+make
+sudo make install
   #+end_src
 
-* zsh
-  #+begin_src bash
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-PROMPT="%{$fg[blue]%}%T %{$fg[cyan]%}%n%{$fg[blue]%}@%{$fg[cyan]%}%m ${PROMPT}"
-  #+end_src
+  para que los ficheros de texto se abran con emacs:
+
+  xdg-mime default /usr/local/share/applications/emacsclient.desktop text/plain
+
+  si no funciona, fichero por fichero: mimeopen -d instalaciones.org 
 
 
-* owncloud educamadrid
-  #+begin_src bash
-wget -nv https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Ubuntu_20.04/Release.key -O - | sudo apt-key add -
-echo 'deb https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Ubuntu_20.04/ /' | sudo tee -a /etc/apt/sources.list.d/owncloud.list
-sudo apt install owncloud-client owncloud-client-dolphin
-
-  #+end_src
   
-* onedrive
-Fichero =~/.config/onedrive/config/=
+  
+[[https://github.com/alvarogonzalezsotillo/.emacs.d][Mi configuración de ~emacs~]] la guardo en un repositorio de =Github=.
 
-#+begin_src conf
-# Configuration for OneDrive Linux Client
-# This file contains the list of supported configuration fields
-# with their default values.
-# All values need to be enclosed in quotes
-# When changing a config option below, remove the '#' from the start of the line
-# For explanations of all config options below see docs/USAGE.md or the man page.
-#
-sync_dir = "~/cloud/OneDrive"
-# skip_file = "~*|.~*|*.tmp"
-# monitor_interval = "300"
-# skip_dir = ""
-# log_dir = "/var/log/onedrive/"
-# drive_id = ""
-# upload_only = "false"
-# check_nomount = "false"
-# check_nosync = "false"
-# download_only = "false"
-# disable_notifications = "false"
-# disable_upload_validation = "false"
-# enable_logging = "false"
-# force_http_2 = "false"
-# local_first = "false"
-# no_remote_delete = "false"
-# skip_symlinks = "false"
-# debug_https = "false"
-# skip_dotfiles = "false"
-# dry_run = "false"
-# min_notify_changes = "5"
-# monitor_log_frequency = "5"
-# monitor_fullscan_frequency = "10"
-# sync_root_files = "false"
-# classify_as_big_delete = "1000"
-# user_agent = ""
-# remove_source_files = "false"
-# skip_dir_strict_match = "false"
-# application_id = ""
-# resync = "false"
-# bypass_data_preservation = "false"
-# azure_ad_endpoint = ""
-# azure_tenant_id = "common"
-# sync_business_shared_folders = "false"
-# sync_dir_permissions = "700"
-# sync_file_permissions = "600"
-# rate_limit = "131072"
+#+begin_src bash
+cd $HOME
+git clone https://github.com/alvarogonzalezsotillo/.emacs.d.git
 #+end_src
 
 
-* Hibernar
-  uswsusp
+* educamadrid y PIM
+Como profesor de secundaria, utilizo a diario los servicios de =educamadrid=.
 
+La /nube/ está basada en =onwcloud=, pero prefiero utilizar la interfaz web solo en caso de emergencia. Por lo general, sincronizo mis ficheros con un directorio local.
+
+  #+begin_src bash
+KEY=https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Ubuntu_20.04/Release.key
+wget -nv $KEY -O - | sudo apt-key add -
+REPO='deb https://download.owncloud.com/desktop/ownCloud/stable/latest/linux/Ubuntu_20.04/ /'
+echo $REPO | sudo tee -a /etc/apt/sources.list.d/owncloud.list
+sudo apt install owncloud-client owncloud-client-dolphin
+  #+end_src
+
+El otro servicio que uso diariamente es el correo. Para ello utilizo el cliente de escritorio =kmail= conectado a los servidores de =pop= e =imap=.
+
+Los contactos y calendario están sincronizados con =Google= y =korganizer=.
+
+* Autofirma
+
+Utilizo autofirma para firmar PDFs. No consigo que encuentre mis certificados, así que cada vez tengo que encontrar el fichero de claves. 
+
+#+begin_src bash
+  wget https://estaticos.redsara.es/comunes/autofirma/1/6/5/AutoFirma_Linux.zip
+  unzip AutoFirma_Linux.zip
+  sudo gdebi AutoFirma_1_6_5.deb
+#+end_src
+
+He cambiado la plantilla de la firma visible, porque aunque la firma es igual de válida a veces se me quejan de que no tiene tantos /numeritos/ como la que pone el Acrobat. Para saber qué variables se pueden utilizar, hay que recurrir al [[https://github.com/ctt-gob-es/clienteafirma/blob/master/afirma-crypto-pdf/src/main/java/es/gob/afirma/signers/pades/PdfExtraParams.java][código fuente de autofirma]].
+
+#+begin_example
+Firmado por $$SUBJECTCN$$ el día $$SIGNDATE=dd/MM/yyyy$$ con un certificado emitido por $$ISSUERCN$$ con número de serie $$CERTSERIAL$$
+#+end_example
+
+
+
+* Ficheros personales
+Dispongo de varias cuentas de =office365= que me dan la posibilidad de usar 1TB de disco en la nube. Lamentablemente, la sincronización en =linux= no está demasiado bien resuelta. Tanto =rclone= como =onedrive= son demasiado lentos, y tienen múltiples problemas de /throthling/.
+
+He acabado contratando un hosting de ficheros. =HiDrive= ofrece la posibilidad de acceso =rsync=, =sftp= y =cifs= (carpeta compartida de Windows). Esto resuelve el problema de la sincronización (=rsync=) y el acceso desde cualquier sistema operativo.
+
+* Hibernar
+Es una realidad incómoda que la hibernación en =linux= no está nada resuelta. Por suerte, tanto en mi antiguo ordenador como en el nuevo funciona bastante bien =uswsusp=.
+
+
+  #+begin_src bash
+sudo apt install uswsusp pm-tools
+  #+end_src
+
+Tras instalarlo, y montar una unidad de /swap/ suficientemente grande como para guardar toda la memoria RAM, =pm-hibernate= consigue hibernar el ordenador sin problemas.
+
+Para poder hibernar cómodamente, he añadido =pm-hibernate= y =s2disk= al fichero de =sudoers=, de forma que no se necesite contraseña. Invoco estos comandos con =krunner= (se invoca con =alt-espacio= o =alt-f2=).
+#+begin_src bash
+alvaro ALL=(ALL) NOPASSWD: /usr/sbin/pm-hibernate
+alvaro ALL=(ALL) NOPASSWD: /usr/sbin/s2disk
+#+end_src
+
+
+* /Gestures/
+Envidio la facilidad para cambiar de /workspace/ con un simple gesto que tienen los Mac. Se puede conseguir algo muy parecido con [[https://github.com/bulletmark/libinput-gestures][=libinput-gestures=]]
+
+#+begin_src bash
+sudo apt-get install wmctrl xdotool  
+git clone https://github.com/bulletmark/libinput-gestures.git
+cd libinput-gestures
+sudo make install
+#+end_src
+
+
+He cambiado los /gestures/ por defecto para que los /workspaces/ se cambien horizontalmente, y el pellizco se integre con KDE.
+
+#+begin_example
+gesture pinch in	xdotool key ctrl+F9
+gesture pinch out	xdotool key ctrl+F9
+gesture swipe right	_internal ws_up
+gesture swipe left	_internal ws_down
+#+end_example
+
+  
 
 * SQLDeveloper y packettracer
-  Descomprimir y gdebi, con openjdk-11-jdk
+  Son herramientas que utilizo en clase de redes y bases de datos. Basta con descargar, Descomprimir y gdebi. Para SQLDeveloper se necesita openjdk-11-jdk
+
+  #+begin_src bash
+sudo apt install openjdk-11-jdk
+wget https://download.oracle.com/otn/java/sqldeveloper/sqldeveloper-21.2.1.204.1703-no-jre.zip #necesita login
+unzip sqldeveloper-21.2.1.204.1703-no-jre.zip
+wget https://gni-prod-resources.s3.us-west-1.amazonaws.com/resources/Packet%20Tracer%20Resources/PT%20Desktop/v8.0.1/CiscoPacketTracer_801_Ubuntu_64bit.deb #necesita login
+gdebi CiscoPacketTracer_801_Ubuntu_64bit.deb
+  #+end_src
 
 * Office 2010
 Tengo un /prefix/ de Wine con Office 2010 instalado, que llevo arrastrando ya varios años, y que suele funcionar sin más que descomprimirlo
@@ -113,28 +178,25 @@ sudo apt install winbind
 sudo apt install --install-recommends winehq-stable
   #+end_src
 
-  #+RESULTS:
 
-* PIM
-  kmail y korganizer
+* Mensajería
+He instalado los clientes de =telegram= y =teams=
 
-  Cuenta de correo de educamadrid y de Google
-  
-
-
-* Video
-obs-studio y kdenlive
-
-
-* chats
-
-  https://desktop.telegram.org/
-  https://www.microsoft.com/en-us/microsoft-teams/download-app#desktopAppDownloadregion
+- [[https://desktop.telegram.org/][https://desktop.telegram.org/]]
+- [[https://www.microsoft.com/en-us/microsoft-teams/download-app#desktopAppDownloadregion][https://www.microsoft.com/en-us/microsoft-teams/download-app#desktopAppDownloadregion]]
 
 * Lenguajes de programación
-  
-https://rustup.rs/ --> curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+** =rust=
 
-sudo sh -c '(echo "#!/usr/bin/env sh" && curl -L https://github.com/com-lihaoyi/Ammonite/releases/download/2.4.0/2.12-2.4.0) > /usr/local/bin/amm && chmod +x /usr/local/bin/amm' && amm
+   Instalado mediante =rustup=
+#+begin_src bash   
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+#+end_src
 
+** =scala=
 Por alguna razón, me funciona ammonite pero scala con =sudo apt install --install-recommends scala= no 🤷‍♂️
+
+   #+begin_src bash
+sudo sh -c '(echo "#!/usr/bin/env sh" && curl -L https://github.com/com-lihaoyi/Ammonite/releases/download/2.4.0/2.12-2.4.0) > /usr/local/bin/amm && chmod +x /usr/local/bin/amm' && amm
+   #+end_src   
+
