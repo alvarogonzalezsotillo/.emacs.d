@@ -1612,6 +1612,10 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 #+begin_src emacs-lisp
 (use-package dired-x)
 
+(use-package dired
+  :config
+  (setq dired-kill-when-opening-new-dired-buffer t))
+
 (use-package dired-subtree 
   :ensure t
   :defer 1
@@ -2373,7 +2377,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
   (bonito-para-codigo)
   (adaptive-wrap-prefix-mode 1)
   (toggle-truncate-lines -1)
-  (highlight-indent-guides-mode 0)
+  ;;(highlight-indent-guides-mode 0)
   (if (>= emacs-major-version 26)
       (display-line-numbers-mode 0))
   (org-display-inline-images))
@@ -2388,7 +2392,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 (defun bonito-para-codigo()
   (interactive)
   (toggle-truncate-lines 1)
-  (highlight-indent-guides-mode 1)
+  ;;(highlight-indent-guides-mode 1)
   (toggle-word-wrap 1)
   (if (>= emacs-major-version 26)
       (display-line-numbers-mode 1))
@@ -2521,12 +2525,12 @@ https://github.com/elarkasi/raspi-kms
 * Futuras adiciones
 
 
+(defun org-export-deterministic-reference (references)
+    (let ((new 0))
+       (while (rassq new references) (setq new (+ new 1))) 
+       new))
+ (advice-add #'org-export-new-reference :override #'org-export-deterministic-reference)
 
-  (use-package highlight-indent-guides
-  :hook ((prog-mode text-mode conf-mode) . highlight-indent-guides-mode)
-  :init
-  (setq highlight-indent-guides-method 'character
-        highlight-indent-guides-supress-auto-error t))
 
 (use-package tree-sitter-langs)
 (use-package tree-sitter
@@ -2540,7 +2544,6 @@ https://github.com/elarkasi/raspi-kms
 
 vi-tilde-fringe
 
-dired-kill-when-opening-new-dired-buffer.
 
 
         
