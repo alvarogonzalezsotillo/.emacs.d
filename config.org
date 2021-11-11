@@ -705,6 +705,14 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
   :ensure t
   :defer 5
   :config
+
+
+  (defun my-org-export-deterministic-reference (references)
+    (let ((new (length references)))
+      (while (rassq new references) (setq new (+ new 1))) 
+      new))
+  (advice-add #'org-export-new-reference :override #'my-org-export-deterministic-reference)
+  
   
   (setq org-ellipsis "⤵⤵⤵")
   (set-face-attribute 'org-ellipsis nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
@@ -725,7 +733,7 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
   (modify-syntax-entry ?* "(*" org-mode-syntax-table)
   (modify-syntax-entry ?/ "(/" org-mode-syntax-table)
 
-   ;; https://stackoverflow.com/questions/40110927/how-to-export-a-reference-to-a-begin-src-block-to-latex/40689439#40689439
+  ;; https://stackoverflow.com/questions/40110927/how-to-export-a-reference-to-a-begin-src-block-to-latex/40689439#40689439
   (setq org-latex-prefer-user-labels t)
 
 
@@ -2533,11 +2541,6 @@ https://github.com/elarkasi/raspi-kms
 * Futuras adiciones
 
 
-(defun org-export-deterministic-reference (references)
-    (let ((new 0))
-       (while (rassq new references) (setq new (+ new 1))) 
-       new))
- (advice-add #'org-export-new-reference :override #'org-export-deterministic-reference)
 
 
 (use-package tree-sitter-langs
