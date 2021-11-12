@@ -1846,6 +1846,29 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 )
    #+end_src
 
+** =blamer=
+Muestra el autor del último cambio, y si se pincha muestra los cambios de ese commit.
+
+   
+   #+begin_src emacs-lisp
+(use-package blamer
+  :ensure t
+  :defer 1
+  :config
+  (global-blamer-mode 1)
+  (defun blamer-callback-show-commit-diff (commit-info)
+    (interactive)
+    (let ((commit-hash (plist-get commit-info :commit-hash)))
+      (when commit-hash
+        (magit-show-commit commit-hash))))
+
+  (setq blamer-bindings '(("<mouse-1>" . blamer-callback-show-commit-diff)))
+  )
+   #+end_src
+
+   #+RESULTS:
+   : t
+
 ** =vdiff-magit=
 #+begin_src emacs-lisp
   (use-package vdiff-magit
