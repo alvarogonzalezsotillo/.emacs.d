@@ -1870,6 +1870,7 @@ Muestra el autor del último cambio, y si se pincha muestra los cambios de ese c
       (when commit-hash
         (magit-show-commit commit-hash))))
 
+  (set-face-attribute 'blamer-face nil :height 0.7)
   (setq blamer-bindings '(("<mouse-1>" . blamer-callback-show-commit-diff)))
   )
    #+end_src
