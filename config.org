@@ -1864,14 +1864,35 @@ Muestra el autor del último cambio, y si se pincha muestra los cambios de ese c
   :defer 1
   :config
   (global-blamer-mode 1)
+  (setq blamer-view 'overlay-right)
+
   (defun blamer-callback-show-commit-diff (commit-info)
     (interactive)
     (let ((commit-hash (plist-get commit-info :commit-hash)))
       (when commit-hash
         (magit-show-commit commit-hash))))
 
-  (set-face-attribute 'blamer-face nil :height 0.7)
-  (setq blamer-bindings '(("<mouse-1>" . blamer-callback-show-commit-diff)))
+  (defun blamer-callback-magit-log-file (commit-info)
+    (interactive)
+    (magit-log-buffer-file)
+    (let ((commit-hash (plist-get commit-info :commit-hash)))
+      (when commit-hash
+        ;; For some reason, only works after a while
+        (run-with-idle-timer 1 nil (lambda (commit-hash)
+                                     (goto-char (point-min))
+                                     (search-forward (substring commit-hash 0 7))
+                                     (set-mark (point-at-bol))
+                                     (goto-char (point-at-eol)))
+                             commit-hash))))
+
+  (defun blamer-callback-timemachine (commit-info)
+    (interactive)
+    (git-timemachine))
+
+  (set-face-attribute 'blamer-face nil :height 0.7) 
+  (setq blamer-bindings '(("<mouse-1>" . blamer-callback-magit-log-file)
+                          ("<mouse-2>" . blamer-callback-show-commit-diff)
+                          ("<mouse-3>" . blamer-callback-timemachine)))
   )
    #+end_src
 
