@@ -1859,12 +1859,14 @@ Muestra el autor del último cambio, y si se pincha muestra los cambios de ese c
 
    
    #+begin_src emacs-lisp
+(add-to-list 'load-path "~/repos/blamer.el")
+
 (use-package blamer
-  :ensure t
   :defer 1
   :config
   (global-blamer-mode 1)
   (setq blamer-view 'overlay-right)
+  (setq blamer-tooltip-function 'blamer-tooltip-keybindings)
 
   (defun blamer-callback-show-commit-diff (commit-info)
     (interactive)
@@ -1878,11 +1880,11 @@ Muestra el autor del último cambio, y si se pincha muestra los cambios de ese c
     (let ((commit-hash (plist-get commit-info :commit-hash)))
       (when commit-hash
         ;; For some reason, only works after a while
-        (run-with-idle-timer 1 nil (lambda (commit-hash)
+        (run-with-idle-timer 0.01 nil (lambda (commit-hash)
                                      (goto-char (point-min))
                                      (search-forward (substring commit-hash 0 7))
-                                     (set-mark (point-at-bol))
-                                     (goto-char (point-at-eol)))
+                                     (recenter)
+                                     (pulse-momentary-highlight-one-line))
                              commit-hash))))
 
   (defun blamer-callback-timemachine (commit-info)
@@ -1895,9 +1897,6 @@ Muestra el autor del último cambio, y si se pincha muestra los cambios de ese c
                           ("<mouse-3>" . blamer-callback-timemachine)))
   )
    #+end_src
-
-   #+RESULTS:
-   : t
 
 ** =vdiff-magit=
 #+begin_src emacs-lisp
