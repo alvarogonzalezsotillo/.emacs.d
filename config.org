@@ -1337,7 +1337,10 @@ Retroceder en la historia de disposición de ventanas y búferes
   :ensure t
   :defer 1 
   :config
-    (winner-mode 1))
+    (setq winner-dont-bind-my-keys nil)
+    (winner-mode 1)
+    (define-key winner-mode-map (kbd "M-<left>") #'winner-undo)
+    (define-key winner-mode-map (kbd "M-<right>") #'winner-redo))
 #+end_src
 
 * Ratón en =xterm=
@@ -1631,7 +1634,7 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 (use-package dired
   :config
-  (setq dired-kill-when-opening-new-dired-buffer t))
+  (setq dired-kill-when-opening-new-dired-buffer nil))
 
 (use-package dired-subtree 
   :ensure t
@@ -1859,10 +1862,9 @@ Muestra el autor del último cambio, y si se pincha muestra los cambios de ese c
 
    
    #+begin_src emacs-lisp
-(add-to-list 'load-path "~/repos/blamer.el")
-
 (use-package blamer
   :defer 1
+  :ensure t
   :config
   (global-blamer-mode 1)
   (setq blamer-view 'overlay-right)
@@ -2543,6 +2545,16 @@ Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna c
 
 
 
+
+** =same-window-regexps=
+Los buffers que se abran que casen con estas expresiones se abren en las mismas ventanas
+#+begin_src emacs-lisp
+(setq same-window-regexps '((".*")))
+(setq org-src-window-setup 'plain)
+#+end_src
+
+#+RESULTS:
+: plain
 
 * Escritorio
 Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago al final, para que se carguen ahora los buferes previos.
