@@ -1395,7 +1395,7 @@ Avoid performance issues in files with very long lines.
       (read-number "height: " 0.8)))
 
     (mapcar
-     (lambda (face) (set-face-attribute face nil :height (or height 0.8)) )
+     (lambda (face) (set-face-attribute face nil :height (or height 100)) )
      '(
        centaur-tabs-active-bar-face
        centaur-tabs-default
@@ -1410,7 +1410,7 @@ Avoid performance issues in files with very long lines.
        centaur-tabs-modified-marker-unselected
        ))
 
-    (setq centaur-tabs-height 10)
+    (setq centaur-tabs-height 20)
     (setq centaur-tabs-bar-height (+ 8 centaur-tabs-height)))
 
 
@@ -1458,6 +1458,9 @@ Avoid performance issues in files with very long lines.
 
 )
 #+end_src
+
+#+RESULTS:
+: t
 
 
 
