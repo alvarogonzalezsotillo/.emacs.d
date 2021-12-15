@@ -705,6 +705,14 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
   :ensure t
   :defer 5
   :config
+
+
+  (defun my-org-export-deterministic-reference (references)
+    (let ((new (length references)))
+      (while (rassq new references) (setq new (+ new 1))) 
+      new))
+  (advice-add #'org-export-new-reference :override #'my-org-export-deterministic-reference)
+  
   
   (setq org-ellipsis "⤵⤵⤵")
   (set-face-attribute 'org-ellipsis nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
@@ -725,7 +733,7 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
   (modify-syntax-entry ?* "(*" org-mode-syntax-table)
   (modify-syntax-entry ?/ "(/" org-mode-syntax-table)
 
-   ;; https://stackoverflow.com/questions/40110927/how-to-export-a-reference-to-a-begin-src-block-to-latex/40689439#40689439
+  ;; https://stackoverflow.com/questions/40110927/how-to-export-a-reference-to-a-begin-src-block-to-latex/40689439#40689439
   (setq org-latex-prefer-user-labels t)
 
 
@@ -1329,7 +1337,10 @@ Retroceder en la historia de disposición de ventanas y búferes
   :ensure t
   :defer 1 
   :config
-    (winner-mode 1))
+    (setq winner-dont-bind-my-keys nil)
+    (winner-mode 1)
+    (define-key winner-mode-map (kbd "M-<left>") #'winner-undo)
+    (define-key winner-mode-map (kbd "M-<right>") #'winner-redo))
 #+end_src
 
 * Ratón en =xterm=
@@ -1341,6 +1352,14 @@ El ratón también puede utilizarse en un =xterm=
 
 * Visualización
 
+** emojis
+
+   #+begin_src lisp
+   (use-package emojify
+     :ensure t
+     :hook (after-init . global-emojify-mode))
+
+   #+end_src
 ** Previsualización de ficheros en Helm
 #+begin_src lisp
 (use-package helm-file-preview
@@ -1376,7 +1395,7 @@ Avoid performance issues in files with very long lines.
       (read-number "height: " 0.8)))
 
     (mapcar
-     (lambda (face) (set-face-attribute face nil :height (or height 0.8)) )
+     (lambda (face) (set-face-attribute face nil :height (or height 100)) )
      '(
        centaur-tabs-active-bar-face
        centaur-tabs-default
@@ -1391,7 +1410,7 @@ Avoid performance issues in files with very long lines.
        centaur-tabs-modified-marker-unselected
        ))
 
-    (setq centaur-tabs-height 10)
+    (setq centaur-tabs-height 20)
     (setq centaur-tabs-bar-height (+ 8 centaur-tabs-height)))
 
 
@@ -1439,6 +1458,9 @@ Avoid performance issues in files with very long lines.
 
 )
 #+end_src
+
+#+RESULTS:
+: t
 
 
 
@@ -1615,7 +1637,7 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 (use-package dired
   :config
-  (setq dired-kill-when-opening-new-dired-buffer t))
+  (setq dired-kill-when-opening-new-dired-buffer nil))
 
 (use-package dired-subtree 
   :ensure t
@@ -1836,6 +1858,49 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
 )
+   #+end_src
+
+** =blamer=
+Muestra el autor del último cambio, y si se pincha muestra los cambios de ese commit.
+
+   
+   #+begin_src emacs-lisp
+(use-package blamer
+  :defer 1
+  :ensure t
+  :config
+  (global-blamer-mode 1)
+  (setq blamer-view 'overlay-right)
+  (setq blamer-tooltip-function 'blamer-tooltip-keybindings)
+
+  (defun blamer-callback-show-commit-diff (commit-info)
+    (interactive)
+    (let ((commit-hash (plist-get commit-info :commit-hash)))
+      (when commit-hash
+        (magit-show-commit commit-hash))))
+
+  (defun blamer-callback-magit-log-file (commit-info)
+    (interactive)
+    (magit-log-buffer-file)
+    (let ((commit-hash (plist-get commit-info :commit-hash)))
+      (when commit-hash
+        ;; For some reason, only works after a while
+        (run-with-idle-timer 0.01 nil (lambda (commit-hash)
+                                     (goto-char (point-min))
+                                     (search-forward (substring commit-hash 0 7))
+                                     (recenter)
+                                     (pulse-momentary-highlight-one-line))
+                             commit-hash))))
+
+  (defun blamer-callback-timemachine (commit-info)
+    (interactive)
+    (git-timemachine))
+
+  (set-face-attribute 'blamer-face nil :height 0.7) 
+  (setq blamer-bindings '(("<mouse-1>" . blamer-callback-magit-log-file)
+                          ("<mouse-2>" . blamer-callback-show-commit-diff)
+                          ("<mouse-3>" . blamer-callback-timemachine)))
+  )
    #+end_src
 
 ** =vdiff-magit=
@@ -2331,6 +2396,7 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
 
     (defun diff-hl-show-hunk-toggle-backend()
       (interactive)
+      (setq diff-hl-show-hunk-posframe-poshandler 'posframe-poshandler-point-window-center)
       (if (eq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)
           (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-inline-popup)
         (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)))
@@ -2355,8 +2421,6 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
 
 #+END_SRC
 
-#+RESULTS:
-: t
 
 
 ** Saltos de página
@@ -2485,6 +2549,16 @@ Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna c
 
 
 
+** =same-window-regexps=
+Los buffers que se abran que casen con estas expresiones se abren en las mismas ventanas
+#+begin_src emacs-lisp
+(setq same-window-regexps '((".*")))
+(setq org-src-window-setup 'plain)
+#+end_src
+
+#+RESULTS:
+: plain
+
 * Escritorio
 Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago al final, para que se carguen ahora los buferes previos.
 #+begin_src emacs-lisp
@@ -2527,29 +2601,18 @@ https://github.com/elarkasi/raspi-kms
 
 
 
-  (use-package highlight-indent-guides
-  :hook ((prog-mode text-mode conf-mode) . highlight-indent-guides-mode)
-  :init
-  (setq highlight-indent-guides-method 'character
-        highlight-indent-guides-supress-auto-error t))
 
-(use-package tree-sitter-langs)
+(use-package tree-sitter-langs
+  :ensure t)
 (use-package tree-sitter
+  :ensure t
   :config
   (require 'tree-sitter-langs)
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 (provide 'treesitter-rcp)
 
-
-
 vi-tilde-fringe
-
-.
-
-
-        
-
 
   En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
 
