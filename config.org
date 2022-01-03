@@ -1869,7 +1869,6 @@ Muestra el autor del último cambio, y si se pincha muestra los cambios de ese c
   :defer 1
   :ensure t
   :config
-  (global-blamer-mode 1)
   (setq blamer-view 'overlay-right)
   (setq blamer-tooltip-function 'blamer-tooltip-keybindings)
 
@@ -2456,6 +2455,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 
 (defun bonito-para-codigo()
   (interactive)
+  (global-blamer-mode 1)
   (toggle-truncate-lines 1)
   ;;(highlight-indent-guides-mode 1)
   (toggle-word-wrap 1)
