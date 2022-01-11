@@ -2,6 +2,9 @@
 #+TITLE: Configuración Emacs
 #+author: Álvaro González (@alvarogonzalez)
 #+OPTIONS: toc:2 h:4 author:t
+#+EXPORT_EXCLUDE_TAGS: noexport
+
+ho
 
 
 #+latex: \newpage
@@ -171,15 +174,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | auto-highlight-symbol          | Resalte automático del símbolo bajo el cursor                  |
 | bind-key                       |                                                                |
 | color-theme-sanityinc-tomorrow |                                                                |
-| company                        |                                                                |
-| company-auctex                 |                                                                |
-| company-c-headers              |                                                                |
-| company-emoji                  |                                                                |
-| company-flx                    |                                                                |
-| company-quickhelp              |                                                                |
-| company-restclient             |                                                                |
-| company-shell                  |                                                                |
-| company-web                    |                                                                |
 | default-text-scale             |                                                                |
 | diffview                       |                                                                |
 | dired-narrow                   |                                                                |
@@ -544,112 +538,80 @@ Este modo cierra automáticamente los paréntesis y otros bloques. Aunque lo ten
     (smartparens-global-mode 1))
 #+end_src
 
-** Paquete =company=
-Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de programación y =org-mode=.
 
+** COMMENT =Corfu=
 #+begin_src emacs-lisp
-  (require 'company)
-  (company-flx-mode +1)
-
-
-  (defun my-js2-mode-hook()
-    (interactive)
-    (setq ac-js2-evaluate-calls t)
-    (auto-highlight-symbol-mode 0)
-    (js2-highlight-unused-variables-mode 1)
-
-    (defvar my-company-backends-js2-mode
-      '(
-        (
-         company-files
-         ac-js2-company
-         company-dabbrev-code
-         company-capf
-         )
-        )
-      )
-
-    (set (make-local-variable 'company-backends) my-company-backends-js2-mode))
-
-
-
-  (add-hook 'js2-mode-hook #'my-js2-mode-hook)
-
-
-
-
-
-  (defvar my-company-backends-prog-mode
-    '(
-      (
-       company-capf
-       company-files
-       company-dabbrev-code
-       company-web-html
-       company-keywords
-       company-emoji
-       )
-      )
-    )
-
-
-  (defvar my-company-backends-org-mode
-    '(
-      (
-       company-files
-       company-dabbrev-code
-       company-dabbrev
-       company-keywords
-       company-emoji
-       company-capf
-       )
-      )
-    )
-
-  (defvar my-company-backends my-company-backends-org-mode)
-
-  ;; set default `company-backends'
-  (setq company-backends my-company-backends)
-
-  (add-hook 'after-init-hook 'global-company-mode)
-
-  (company-quickhelp-mode 1)
-
-  (defun my-company-backends-org-mode-function ()
-    (interactive)
-    (set (make-local-variable 'company-backends) my-company-backends-org-mode))
-
-  (add-hook 'org-mode-hook #'my-company-backends-org-mode-function)
-
-  (defun my-company-backends-prog-mode-function ()
-    (interactive)
-    (set (make-local-variable 'company-backends) my-company-backends-prog-mode))
-
-
-  (add-hook 'prog-mode-hook #'my-company-backends-prog-mode-function)
-
-  (global-set-key (kbd "C-.") 'company-complete)
-  (define-key company-active-map [escape] 'company-abort)
-  (global-company-mode)
-#+end_src
-
-
-Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta el /case/
-#+begin_src emacs-lisp
-  (setq company-dabbrev-code-everywhere t)
-  (setq company-dabbrev-code-ignore-case nil)
-  (setq company-dabbrev-everywhere t)
-  (setq company-dabbrev-ignore-case 'keep-prefix)
-  (setq company-dabbrev-downcase nil)
-#+end_src
-
-=company-box= parecía una buena idea, pero no me gusta el alto de la lista.
-
-#+begin_src lisp
-(use-package company-box
+(use-package corfu
   :ensure t
-  :defer 1
-  :hook (company-mode . company-box-mode))
+  :custom
+  (corfu-cycle t)             ;; Enable cycling for `corfu-next/previous'
+  (corfu-preselect-first nil) ;; Disable candidate preselection
+
+  ;; Use TAB for cycling, default is `corfu-complete'.
+  :bind
+  (:map corfu-map
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous))
+
+  ;; Optional customizations
+  ;; :custom
+  ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  ;; (corfu-auto t)                 ;; Enable auto completion
+  ;; (corfu-commit-predicate nil)   ;; Do not commit selected candidates on next input
+  ;; (corfu-quit-at-boundary t)     ;; Automatically quit at word boundary
+  ;; (corfu-quit-no-match t)        ;; Automatically quit if there is no match
+  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-preselect-first nil)    ;; Disable candidate preselection
+  ;; (corfu-echo-documentation nil) ;; Disable documentation in the echo area
+  ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+
+  ;; You may want to enable Corfu only for certain modes.
+  ;; :hook ((prog-mode . corfu-mode)
+  ;;        (shell-mode . corfu-mode)
+  ;;        (eshell-mode . corfu-mode))
+
+  ;; Recommended: Enable Corfu globally.
+  ;; This is recommended since dabbrev can be used globally (M-/).
+  :init
+  (corfu-global-mode)
+)
+
+
+(use-package cape
+  :ensure t
+  ;; Bind dedicated completion commands
+  ;; :bind (("C-c p p" . completion-at-point) ;; capf
+  ;;        ("C-c p t" . complete-tag)        ;; etags
+  ;;        ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
+  ;;        ("C-c p f" . cape-file)
+  ;;        ("C-c p k" . cape-keyword)
+  ;;        ("C-c p s" . cape-symbol)
+  ;;        ("C-c p a" . cape-abbrev)
+  ;;        ("C-c p i" . cape-ispell)
+  ;;        ("C-c p l" . cape-line)
+  ;;        ("C-c p w" . cape-dict)
+  ;;        ("C-c p \\" . cape-tex)
+  ;;        ("C-c p &" . cape-sgml)
+  ;;        ("C-c p r" . cape-rfc1345))
+  
+  :init
+  ;; Add `completion-at-point-functions', used by `completion-at-point'.
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-tex)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
+  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
+  ;;(add-to-list 'completion-at-point-functions #'cape-ispell)
+  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
+  ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
+  ;;(add-to-list 'completion-at-point-functions #'cape-line)
+)
+
+
 #+end_src
 
 ** Paquete =neotree=
@@ -1732,12 +1694,10 @@ A veces es fácil perderse entre comandos a medio introducir y ventanas popup. M
   (interactive)
   (keyboard-escape-quit)
   (keyboard-quit)
-  (company-abort)
   (abort-recursive-edit)
   (setq quit-flag t))
 (define-key global-map [escape] 'super-escape)
 (define-key minibuffer-local-map [escape] 'super-escape)
-(define-key company-active-map [escape] 'company-abort)
 #+end_src
 
 
@@ -2469,7 +2429,6 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
   (interactive)
   (toggle-truncate-lines -1)
   (setq magic-latex-enable-suscript nil)
-  (company-auctex-init)
   (magic-latex-buffer 1))
 
 

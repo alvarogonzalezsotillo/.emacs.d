@@ -53,26 +53,28 @@
     )
   )
 ;;; Code:
-(defun my/carga-config-org (refresh debug)
+(defun my/carga-config-org (debug)
   "Carga la configuración, refrescando la lista de paquetes si se indica REFRESH, con debug si se indica DEBUG"
   (interactive
    (list
-    (y-or-n-p "Refresh packages? ")
     (y-or-n-p "Enable debug? ")
     )
    
    )
   (setq debug-on-error debug)
-  (my/setup-use-package refresh)
 
   (message "Cargo el fichero org de configuración con org-version:%s" (org-version))
   
-  (org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
-  ;;(load-file (expand-file-name "~/.emacs.d/config.el"))
+  ;;(org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
+  (load-file (expand-file-name "~/.emacs.d/config.el"))
 
   ;; DESACTIVAR EL DEBUG
   (setq debug-on-error nil))
 
-(my/carga-config-org nil nil)
+(my/setup-use-package nil)
+
+
+(org-babel-tangle-file  (expand-file-name "~/.emacs.d/config.org") (expand-file-name "~/.emacs.d/config.el") "emacs-lisp\\|elisp")
+;;(my/carga-config-org t)
 
 
