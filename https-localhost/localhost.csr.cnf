@@ -1,0 +1,15 @@
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+distinguished_name = dn
+
+[dn]
+C=ES
+ST=Madrid
+L=Alcalá de Henares
+O=IES Avellaneda
+OU=Álvaro González Sotillo
+emailAddress=alvaro.gonzalezsotillo@educa.madrid.org
+CN = localhost
+

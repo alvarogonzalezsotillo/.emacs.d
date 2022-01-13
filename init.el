@@ -17,9 +17,12 @@
   (setq package-check-signature nil)
   (setq package-archives
         '(
-          ("org" . "http://orgmode.org/elpa/")
+          ("melpa" . "http://melpa.org/packages/") 
           ("gnu" . "http://elpa.gnu.org/packages/")
-          ("melpa" . "http://melpa.org/packages/") ) )
+          ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+	        ("org" . "http://orgmode.org/elpa/")
+          )
+ )
   (package-initialize t)
   (message "Comprobando si use-package está instalado...")
   (when (or refresh (not (require 'use-package nil t)))

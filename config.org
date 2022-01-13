@@ -42,6 +42,27 @@ Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplement
 
 
 
+* Optimizaciones
+  #+begin_src emacs-lisp
+;; Disabling bidirectional text rendering gives a performance boost.
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
+
+;; Increase memory usage, but increase performance. No thank you, font compacting!
+(setq inhibit-compacting-font-caches t)
+
+;; Here's where we handle the GC
+(use-package gcmh
+  :ensure t
+  :config
+  (setq gcmh-idle-delay 5
+        gc-cons-threshold (* 500 1024 1024) 
+        gcmh-high-cons-threshold (* 1000 1024 1024))
+  (gcmh-mode 1))
+
+  #+end_src
+
 * Utilidades externas al /PATH/
 En el directorio =~/.emacs.d/bin/= guardo algunas utilidades que me interesa tener en todos los entornos de trabajo. Lo siguiente es para que estén disponibles desde las /shells/ que arranque desde emacs.
 
@@ -51,7 +72,10 @@ Añado también el directorio de =cargo= para =rust=.
 (let 
   (  
      (exec-path-separator  (if (string-equal system-type "windows-nt") ";" ":"))
-     (paths `(,(concat (expand-file-name user-emacs-directory) "bin") ,(concat (expand-file-name "~/") ".cargo/bin") ) )
+     (paths `(
+              ,(concat (expand-file-name user-emacs-directory) "bin")
+              ,(concat (expand-file-name "~/") ".cargo/bin")
+              "/opt/scala/bin" ))
   )
   (dolist (path paths)
     (message "path: %s" path)
@@ -65,6 +89,9 @@ Añado también el directorio de =cargo= para =rust=.
 
 #+end_src
 
+#+RESULTS:
+: exec-path (/opt/scala/bin /home/alvaro/.emacs.d/bin /home/alvaro/.local/bin /home/alvaro/.cargo/bin /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /usr/games /usr/local/games /snap/bin /usr/local/libexec/emacs/28.0.50/x86_64-pc-linux-gnu)
+
 
 
 Las utilidades pueden consultarse en el [[https://github.com/alvarogonzalezsotillo/.emacs.d/tree/master/bin][repositorio en github]], y son:
@@ -74,24 +101,36 @@ ls ~/.emacs.d/bin
 
 #+RESULTS:
 | addtopath.sh                 |
+| bfg-1.13.0.jar               |
+| clonar-2-de-3.sh             |
+| clone-2.sh                   |
 | colores-terminal.sh          |
 | colores-tty.sh               |
+| dataurl.sh                   |
 | disable-gnome-animations.sh  |
 | ec                           |
+| esperar.sh                   |
 | ghpages.sh                   |
 | gifttolatex                  |
 | githubclone.sh               |
 | install-emacs-as-service.org |
 | invert.sh                    |
+| iptables-save                |
 | keymon.sh                    |
+| monitoriza-logins.sh         |
 | pdf2svg.sh                   |
 | plantuml.1.2018.11.jar       |
+| promt-en-zsh.sh              |
+| quitar-red-a-usuario.sh      |
+| reducir-video.sh             |
 | rmtemplatex.sh               |
 | rotate-screen.sh             |
+| screen-to-serial.sh          |
 | shellcheck                   |
 | shrinkpdf.sh                 |
 | svg2pdf.sh                   |
 | texlab                       |
+| video-to-gif.sh              |
 | video-to-whatsapp.sh         |
 | vncserver.sh                 |
 | wake-alvarogonzalez.sh       |
@@ -125,15 +164,12 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 #+NAME: mis-paquetes
 |--------------------------------+----------------------------------------------------------------|
 | 2048-game                      |                                                                |
-| ac-js2                         |                                                                |
 | adaptive-wrap                  | Indentación visual de las líneas respecto a su prefijo         |
 | ag                             |                                                                |
 | all-the-icons                  |                                                                |
 | all-the-icons-dired            |                                                                |
 | auto-highlight-symbol          | Resalte automático del símbolo bajo el cursor                  |
 | bind-key                       |                                                                |
-| calfw                          |                                                                |
-| calfw-ical                     |                                                                |
 | color-theme-sanityinc-tomorrow |                                                                |
 | company                        |                                                                |
 | company-auctex                 |                                                                |
@@ -150,7 +186,6 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | dired-subtree                  |                                                                |
 | flycheck                       |                                                                |
 | flycheck-plantuml              |                                                                |
-| flycheck-rust                  |                                                                |
 | gift-mode                      |                                                                |
 | gitignore-mode                 |                                                                |
 | git-timemachine                |                                                                |
@@ -177,26 +212,23 @@ Esta tabla contiene los paquetes que utilizo sin configuración adicional
 | ob-restclient                  |                                                                |
 | ob-rust                        |                                                                |
 | org-bullets                    |                                                                |
+| org-page                       |                                                                |
 | php-mode                       |                                                                |
 | plantuml-mode                  |                                                                |
 | popup-imenu                    |                                                                |
 | popup-switcher                 |                                                                |
 | posframe                       |                                                                |
-| prettier-js                    |                                                                |
 | quickrun                       | Ejecuta el buffer actual con el intérprete/compilador adecuado |
-| rectangle-utils                |                                                                |
 | restclient                     |                                                                |
 | restclient-helm                |                                                                |
 | scad-mode                      |                                                                |
 | scad-preview                   |                                                                |
 | scala-mode                     |                                                                |
 | skewer-mode                    |                                                                |
-| stripe-buffer                  |                                                                |
 | swiper-helm                    |                                                                |
 | systemd                        |                                                                |
 | transmission                   |                                                                |
 | transpose-frame                |                                                                |
-| treemacs                       |                                                                |
 | treemacs-projectile            |                                                                |
 | typescript-mode                |                                                                |
 | use-package                    |                                                                |
@@ -326,7 +358,7 @@ Estoy usando =treemacs= en vez de =neotree=.
      '(
        treemacs-directory-face                
        treemacs-directory-collapsed-face      
-                                        ;treemacs-file-face                     
+       ;;treemacs-file-face                     
        treemacs-root-face                     
        treemacs-root-unreadable-face          
        treemacs-root-remote-face              
@@ -350,6 +382,8 @@ Estoy usando =treemacs= en vez de =neotree=.
   
   (add-hook 'treemacs-mode-hook #'hacer-treemacs-resizable)
   (setq treemacs-silent-refresh t)
+  (treemacs-git-mode -1)
+  
   (cambiar-faces-de-treemacs)
   :bind
   (("<f8>" . treemacs))
@@ -372,7 +406,7 @@ Estoy usando =treemacs= en vez de =neotree=.
 
 ** Paquete =swoop=
 Búsqueda con previsualización. Lo configuro para que no seleccione el símbolo en en cursor, sino la seleción
-#+begin_src emacs-lisp
+#+begin_src lisp
   (use-package swoop
     :ensure t
     :defer 1
@@ -503,7 +537,7 @@ Lo he deshabilitado porque lo uso muy rara vez, y tarda bastante en actualizarse
 
 ** Paquete =smartparents=
 Este modo cierra automáticamente los paréntesis y otros bloques. Aunque lo tengo desactivado siguen apareciendo, no sé quién los pone.
-#+begin_src emacs
+#+begin_src lisp
 (use-package smartparens
   :ensure t
   :config
@@ -671,6 +705,14 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
   :ensure t
   :defer 5
   :config
+
+
+  (defun my-org-export-deterministic-reference (references)
+    (let ((new (length references)))
+      (while (rassq new references) (setq new (+ new 1))) 
+      new))
+  (advice-add #'org-export-new-reference :override #'my-org-export-deterministic-reference)
+  
   
   (setq org-ellipsis "⤵⤵⤵")
   (set-face-attribute 'org-ellipsis nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
@@ -691,7 +733,7 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
   (modify-syntax-entry ?* "(*" org-mode-syntax-table)
   (modify-syntax-entry ?/ "(/" org-mode-syntax-table)
 
-   ;; https://stackoverflow.com/questions/40110927/how-to-export-a-reference-to-a-begin-src-block-to-latex/40689439#40689439
+  ;; https://stackoverflow.com/questions/40110927/how-to-export-a-reference-to-a-begin-src-block-to-latex/40689439#40689439
   (setq org-latex-prefer-user-labels t)
 
 
@@ -890,6 +932,8 @@ Grabar en el propio fichero
 ; En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
 (setq TeX-view-program-selection '((output-pdf "Okular")))
 (setq TeX-source-correlate-mode t)
+(add-hook 'latex-mode-hook 'TeX-source-correlate-mode)
+
 (setq TeX-source-correlate-start-server t)
 
 
@@ -1030,15 +1074,15 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 #+end_src
 
 
-Intento de colocar la ventana de helm siempre abajo, tiene problemas de redisplay
-#+begin_src lisp
+Intento de colocar la ventana de helm siempre abajo
+#+begin_src emacs-lisp
     ;;https://www.reddit.com/r/emacs/comments/345vtl/make_helm_window_at_the_bottom_without_using_any/
     ;;HELM SIEMPRE ABAJO CON ANCHO COMPLETO
     (add-to-list 'display-buffer-alist
                     `(,(rx bos "*helm" (* not-newline) "*" eos)
                          (display-buffer-in-side-window)
                          (inhibit-same-window . t)
-                         (window-height . 0.4)))
+                         (window-height . 0.3)))
 #+end_src
 
 =helm-posframe= muestra las ventanas de helm en una frame nueva, pero no funciona del todo bien (tabulador)
@@ -1161,71 +1205,6 @@ Intento de colocar la ventana de helm siempre abajo, tiene problemas de redispla
 #+RESULTS:
 
 
-*** Paquete =ox-reveal=
-Cuando exporto un fichero =org= a =reveal.js= tengo problemas en la forma en que se escapan los caracteres =>= y =<= de los bloques de código. Con esta redefinición de la función =org-reveal-src-block= queda solucionado
-
-#+begin_src lisp
-  ;; ESCAPE HTML IN REVEAL
-  (setq mi-org-html-protect-char-alist
-        '(("&" . "&amp;")
-          ("<" . "&lt;")
-          (">" . "&gt;")
-          ("\\%" . "&#37;")))
-
-  (defun mi-org-html-encode-plain-text (text)
-    "Convert plain text characters from TEXT to HTML equivalent.
-  Possible conversions are set in `org-html-protect-char-alist'."
-    (dolist (pair org-html-protect-char-alist text)
-      (setq text (replace-regexp-in-string (car pair) (cdr pair) text t t))))
-
-  (use-package ox-reveal
-    :ensure t
-    :defer 1
-    :config
-  
-    (defun org-reveal-src-block (src-block contents info)
-      "Transcode a SRC-BLOCK element from Org to Reveal.
-       CONTENTS holds the contents of the item.  INFO is a plist holding
-       contextual information."
-      (if (org-export-read-attribute :attr_html src-block :textarea)
-          (org-html--textarea-block src-block)
-        (let* ((use-highlight (org-reveal--using-highlight.js info))
-               (lang (org-element-property :language src-block))
-               (caption (org-export-get-caption src-block))
-               (not-escaped-code (if (not use-highlight)
-                                     (org-html-format-code src-block info)
-                                   (cl-letf (((symbol-function 'org-html-htmlize-region-for-paste)
-                                              #'buffer-substring))
-                                     (org-html-format-code src-block info))))
-               (code (mi-org-html-encode-plain-text not-escaped-code))
-                                          ;(code  not-escaped-code)
-             
-               (frag (org-export-read-attribute :attr_reveal src-block :frag))
-               (code-attribs (or (org-export-read-attribute
-                                  :attr_reveal src-block :code_attribs) ""))
-               (label (let ((lbl (org-element-property :name src-block)))
-                        (if (not lbl) ""
-                          (format " id=\"%s\"" lbl)))))
-          (if (not lang)
-              (format "<pre %s%s>\n%s</pre>"
-                      (or (frag-class frag info) " class=\"example\"")
-                      label
-                      code)
-            (format
-             "<div class=\"org-src-container\">\n%s%s\n</div>"
-             (if (not caption) ""
-               (format "<label class=\"org-src-name\">%s</label>"
-                       (org-export-data caption info)))
-             (if use-highlight
-                 (format "\n<pre%s%s><code class=\"%s\" %s>%s</code></pre>"
-                         (or (frag-class frag info) "")
-                         label lang code-attribs code)
-               (format "\n<pre %s%s>%s</pre>"
-                       (or (frag-class frag info)
-                           (format " class=\"src src-%s\"" lang))
-                       label code))))))))
-#+end_src
-
 
 
 
@@ -1289,9 +1268,12 @@ Una de las ventajas de Emacs es su /kill ring/, donde se guarda la historia del 
 Encuentro más conveniente que los ficheros se recarguen si un programa externo los modifica, sin preguntas.
 
 #+begin_src emacs-lisp
-(global-auto-revert-mode 1)
-(setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil)
+(use-package autorevert
+  :ensure nil
+  :config
+  (global-auto-revert-mode 1)
+  (setq global-auto-revert-non-file-buffers t)
+  (setq auto-revert-verbose nil))
 #+end_src
 
 ** Comandos que se consideran /avanzados/
@@ -1355,7 +1337,10 @@ Retroceder en la historia de disposición de ventanas y búferes
   :ensure t
   :defer 1 
   :config
-    (winner-mode 1))
+    (setq winner-dont-bind-my-keys nil)
+    (winner-mode 1)
+    (define-key winner-mode-map (kbd "M-<left>") #'winner-undo)
+    (define-key winner-mode-map (kbd "M-<right>") #'winner-redo))
 #+end_src
 
 * Ratón en =xterm=
@@ -1367,6 +1352,14 @@ El ratón también puede utilizarse en un =xterm=
 
 * Visualización
 
+** emojis
+
+   #+begin_src lisp
+   (use-package emojify
+     :ensure t
+     :hook (after-init . global-emojify-mode))
+
+   #+end_src
 ** Previsualización de ficheros en Helm
 #+begin_src lisp
 (use-package helm-file-preview
@@ -1402,7 +1395,7 @@ Avoid performance issues in files with very long lines.
       (read-number "height: " 0.8)))
 
     (mapcar
-     (lambda (face) (set-face-attribute face nil :height (or height 0.8)) )
+     (lambda (face) (set-face-attribute face nil :height (or height 100)) )
      '(
        centaur-tabs-active-bar-face
        centaur-tabs-default
@@ -1417,7 +1410,7 @@ Avoid performance issues in files with very long lines.
        centaur-tabs-modified-marker-unselected
        ))
 
-    (setq centaur-tabs-height 10)
+    (setq centaur-tabs-height 20)
     (setq centaur-tabs-bar-height (+ 8 centaur-tabs-height)))
 
 
@@ -1465,6 +1458,9 @@ Avoid performance issues in files with very long lines.
 
 )
 #+end_src
+
+#+RESULTS:
+: t
 
 
 
@@ -1560,7 +1556,7 @@ El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminale
      scroll-conservatively 10000
      scroll-preserve-screen-position 1)
 
-(setq jit-lock-defer-time 0.1)
+(setq jit-lock-defer-time 0)
 (setq fast-but-imprecise-scrolling t)
 #+end_src
 
@@ -1627,7 +1623,7 @@ Arranco el servidor para utilizar /emacsclient/
  (setq minimap-hide-fringes t)
  (setq minimap-major-modes '(org-mode tex-mode prog-mode))
  (setq minimap-window-location 'right)
- ;(minimap-mode 0) si el minimap no está activo da un error de timer nil
+ (minimap-mode -1)
 
 )
 #+end_src
@@ -1638,6 +1634,10 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 #+begin_src emacs-lisp
 (use-package dired-x)
+
+(use-package dired
+  :config
+  (setq dired-kill-when-opening-new-dired-buffer nil))
 
 (use-package dired-subtree 
   :ensure t
@@ -1806,18 +1806,16 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 #+begin_src emacs-lisp
 (use-package helpful
   :ensure t
-
   :bind
-  (("C-h k" . helpful-key))
-  (("C-h v" . helpful-variable))
-  (("C-h f" . helpful-function))
-  (("C-h o" . helpful-symbol))
+  ([remap describe-symbol]      . helpful-symbol)
+  ([remap describe-callable]    . helpful-callable)
+  ([remap describe-function]    . helpful-function)
+  ([remap describe-variable]    . helpful-variable)
+  ([remap describe-key]         . helpful-key)
+  ([remap view-emacs-debugging] . helpful-at-point)
 
 )
 #+end_src
-
-#+RESULTS:
-: helpful-symbol
 
 
 ** Deshabilitar posframe en terminal
@@ -1860,6 +1858,48 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
 )
+   #+end_src
+
+** =blamer=
+Muestra el autor del último cambio, y si se pincha muestra los cambios de ese commit.
+
+   
+   #+begin_src emacs-lisp
+(use-package blamer
+  :defer 1
+  :ensure t
+  :config
+  (setq blamer-view 'overlay-right)
+  (setq blamer-tooltip-function 'blamer-tooltip-keybindings)
+
+  (defun blamer-callback-show-commit-diff (commit-info)
+    (interactive)
+    (let ((commit-hash (plist-get commit-info :commit-hash)))
+      (when commit-hash
+        (magit-show-commit commit-hash))))
+
+  (defun blamer-callback-magit-log-file (commit-info)
+    (interactive)
+    (magit-log-buffer-file)
+    (let ((commit-hash (plist-get commit-info :commit-hash)))
+      (when commit-hash
+        ;; For some reason, only works after a while
+        (run-with-idle-timer 0.01 nil (lambda (commit-hash)
+                                     (goto-char (point-min))
+                                     (search-forward (substring commit-hash 0 7))
+                                     (recenter)
+                                     (pulse-momentary-highlight-one-line))
+                             commit-hash))))
+
+  (defun blamer-callback-timemachine (commit-info)
+    (interactive)
+    (git-timemachine))
+
+  (set-face-attribute 'blamer-face nil :height 0.7) 
+  (setq blamer-bindings '(("<mouse-1>" . blamer-callback-magit-log-file)
+                          ("<mouse-2>" . blamer-callback-show-commit-diff)
+                          ("<mouse-3>" . blamer-callback-timemachine)))
+  )
    #+end_src
 
 ** =vdiff-magit=
@@ -1922,19 +1962,6 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
    #+RESULTS:
    : gifttolatex
 
-** Convierto el buffer actual a una frame nueva
-#+begin_src emacs-lisp
-(defun sacar-a-nueva-frame()
-  (interactive)
-  (let ((buffer (current-buffer)))
-    (unless (one-window-p)
-      (delete-window))
-    (display-buffer-pop-up-frame buffer nil)))
-#+end_src
-
-#+RESULTS:
-: sacar-a-nueva-frame
-
 
 ** Inicio de una selección rectangular usando el ratón (lo uso poco, prefiero =C-x spc=)
 #+begin_src emacs-lisp
@@ -1952,42 +1979,6 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
         (mouse-set-point drag-event)))))
 
 (global-set-key (kbd "S-<down-mouse-1>") #'mouse-start-rectangle)
-
-#+end_src
-
-** Abrir el fichero del buffer actual con un programa externo
-#+begin_src emacs-lisp
-;; http://pages.sachachua.com/.emacs.d/Sacha.html
-(defun abrir-programa-externo (arg)
-  "Open visited file in default external program.
-
-With a prefix ARG always prompt for command to use."
-  (interactive "P")
-  (when buffer-file-name
-    (async-shell-command (concat
-                          "setsid -w "
-                          (cond
-                           ((and (not arg) (eq system-type 'darwin)) "open")
-                           ((and (not arg) (member system-type '(gnu gnu/linux gnu/kfreebsd))) "xdg-open")
-                           (t (read-shell-command "Open current file with: ")))
-                          " "
-                          (shell-quote-argument buffer-file-name)))
-    (run-at-time "2" nil
-                 (lambda() (winner-undo)))))
-#+end_src
-
-** Copiar el nombre del fichero actual al portapapeles
-#+begin_src emacs-lisp
-;; http://pages.sachachua.com/.emacs.d/Sacha.html
-(defun copiar-nombre-fichero-actual ()
-  "Copy the current buffer file name to the clipboard."
-  (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (kill-new filename)
-      (message "Copied buffer file name '%s' to the clipboard." filename))))
 
 #+end_src
 
@@ -2137,6 +2128,9 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
 (defun native-compile-all ()
   (interactive)
   (native-compile-async "~/.emacs.d/elpa" 'recursively))
+
+(setq native-comp-async-report-warnings-errors 'silent)
+(setq warning-minimum-level :error)
    #+end_src
 
 
@@ -2401,6 +2395,7 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
 
     (defun diff-hl-show-hunk-toggle-backend()
       (interactive)
+      (setq diff-hl-show-hunk-posframe-poshandler 'posframe-poshandler-point-window-center)
       (if (eq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)
           (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-inline-popup)
         (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)))
@@ -2425,8 +2420,6 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
 
 #+END_SRC
 
-#+RESULTS:
-: t
 
 
 ** Saltos de página
@@ -2448,7 +2441,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
   (bonito-para-codigo)
   (adaptive-wrap-prefix-mode 1)
   (toggle-truncate-lines -1)
-  (highlight-indent-guides-mode 0)
+  ;;(highlight-indent-guides-mode 0)
   (if (>= emacs-major-version 26)
       (display-line-numbers-mode 0))
   (org-display-inline-images))
@@ -2462,8 +2455,9 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 
 (defun bonito-para-codigo()
   (interactive)
+  (global-blamer-mode 1)
   (toggle-truncate-lines 1)
-  (highlight-indent-guides-mode 0)
+  ;;(highlight-indent-guides-mode 1)
   (toggle-word-wrap 1)
   (if (>= emacs-major-version 26)
       (display-line-numbers-mode 1))
@@ -2528,6 +2522,8 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
   (load-theme my-dark-theme t)
   (load-theme 'alvaro t))
 
+
+(tema-oscuro)
 #+end_src
 
 #+RESULTS:
@@ -2553,6 +2549,16 @@ Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna c
 
 
 
+** =same-window-regexps=
+Los buffers que se abran que casen con estas expresiones se abren en las mismas ventanas
+#+begin_src emacs-lisp
+(setq same-window-regexps '((".*")))
+(setq org-src-window-setup 'plain)
+#+end_src
+
+#+RESULTS:
+: plain
+
 * Escritorio
 Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago al final, para que se carguen ahora los buferes previos.
 #+begin_src emacs-lisp
@@ -2563,10 +2569,10 @@ Grabar la disposición de bufers y ventanas para la siguiente sesión. Lo hago a
     :ensure t
     :config
     (setq desktop-load-locked-desktop t)
-    ;(setq desktop-save t)
-    ;(desktop-save-mode 1)
-    ;(when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
-    ;    (desktop-read))
+    (setq desktop-save t)
+    ;;(desktop-save-mode 1)
+    ;;(when (y-or-n-p-with-timeout "¿Cargar el escritorio (5 segundos)? " 5 t)
+    ;;    (desktop-read))
   )
 
 #+end_src
@@ -2592,12 +2598,56 @@ https://github.com/elarkasi/raspi-kms
 
 
 * Futuras adiciones
-En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
+
+
+
+
+(use-package tree-sitter-langs
+  :ensure t)
+(use-package tree-sitter
+  :ensure t
+  :config
+  (require 'tree-sitter-langs)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+(provide 'treesitter-rcp)
+
+vi-tilde-fringe
+
+  En https://github.com/caisah/emacs.dz hay una colección de configuraciones /Emacs/ muy interesantes. Esta es una lista de paquetes a investigar, extraída de los que se usan en esas configuraciones
+
+
+
+;; If we're talking about fonts, you gotta have emojis
+(use-package emojify
+  :hook (after-init . global-emojify-mode))
+
+
+global-set-key (kbd "C-c h w") 'helm-wikipedia-suggest)
+    (global-set-key (kbd "C-c h g") 'helm-google-suggest)
+
+(use-package peep-dired)
+
+;; Copy and paste files
+(use-package dired-ranger
+  :bind (:map dired-mode-map
+              ("W" . dired-ranger-copy)
+              ("X" . dired-ranger-move)
+              ("Y" . dired-ranger-paste)))
+
+(setq dired-open-extensions '(("gif" . "sxiv")
+                              ("jpg" . "sxiv")
+                              ("png" . "sxiv")
+                              ("mkv" . "mpv")
+                              ("mp4" . "mpv")))
+
+
+
+- emacs-hl-block-mode
 - helm-xref
 - helm-icons
 - (use-package json-navigator) aa
-- (use-package autorevert :ensure nil :config (setq auto-revert-verbose nil global-auto-revert-mode t global-auto-revert-non-file-buffers t))
---  (fast-but-imprecise-scrolling t)
+- 
 - find-trace-paths
 -  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images) 
 - https://github.com/manateelazycat/awesome-tray

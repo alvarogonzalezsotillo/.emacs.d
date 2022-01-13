@@ -1,0 +1,105 @@
+
+
+Ejecutar este fichero dentro de Emacs con =org-babel-execute-buffer=
+
+* Servidor HTTPS en localhost
+
+Borrar lo anterior
+#+begin_src sh
+rm localhost.crt localhost.csr localhost.csr.cnf localhost.key localhost.pem rootCA.key rootCA.pem rootCA.srl v3.ext
+#+end_src
+
+#+RESULTS:
+
+
+Crear una clave para el certificado raíz
+#+begin_src sh
+openssl genrsa -des3 -passout "pass:1234" -out rootCA.key 2048 
+#+end_src
+
+#+RESULTS:
+
+
+Crear el certificado raíz. Hay que añadirlo a las raíces de confianza de los navegadores.
+#+begin_src sh
+openssl req -x509 -new -nodes -key rootCA.key -passin "pass:1234" -sha256 -subj "/C=ES/ST=Madrid/L=Alcalá de Henares/O=Álvaro González/CN=localhost"  -days 1024 -out rootCA.pem
+#+end_src
+
+#+RESULTS:
+
+Fichero de configuración para crear el /certificate signing request/
+#+begin_src bash
+cat > localhost.csr.cnf <<EOF
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+distinguished_name = dn
+
+[dn]
+C=ES
+ST=Madrid
+L=Alcalá de Henares
+O=IES Avellaneda
+OU=Álvaro González Sotillo
+emailAddress=alvaro.gonzalezsotillo@educa.madrid.org
+CN = localhost
+
+EOF
+#+end_src
+
+#+RESULTS:
+
+
+Crear un /certificate key/ y un /certificate signing request/
+#+begin_src bash
+openssl req -new -sha256 -nodes -out localhost.csr -newkey rsa:2048 -keyout localhost.key -config <( cat localhost.csr.cnf )
+#+end_src
+
+#+RESULTS:
+
+
+Fichero  de configuración para firmar el /certificate signing request/
+#+begin_src bash
+cat > v3.ext <<EOF
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = localhost
+DNS.2 = localhost.localdomain
+
+EOF
+#+end_src
+
+#+RESULTS:
+
+Firmar el certificado de /localhost/
+
+#+begin_src sh
+openssl x509 -req -in localhost.csr -CA rootCA.pem -CAkey rootCA.key -passin "pass:1234" -CAcreateserial -out localhost.crt -days 500 -sha256 -extfile v3.ext
+#+end_src
+
+#+RESULTS:
+
+
+Concatenar certificado y clave  para hacer el fichero /pem/
+#+begin_src bash
+cat localhost.crt localhost.key > localhost.pem
+#+end_src
+
+#+RESULTS:
+
+
+
+Servidor simple de https, en Python3
+#+include: "./simple-https-server.py" src python
+
+
+* Referencias
+- https://www.freecodecamp.org/news/how-to-get-https-working-on-your-local-development-environment-in-5-minutes-7af615770eec/
+- https://superuser.com/questions/226192/avoid-password-prompt-for-keys-and-prompts-for-dn-information
+- https://stackoverflow.com/questions/19705785/python-3-simple-https-server
+  
