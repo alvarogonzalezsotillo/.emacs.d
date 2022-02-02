@@ -1909,6 +1909,7 @@ Muestra el autor del último cambio, y si se pincha muestra los cambios de ese c
   :defer 1
   :config
   ;; TODO: Ver lo customizable de magit-todos
+  (setq magit-todos-scanner 'magit-todos--scan-with-git-grep)
   (magit-todos-mode 1))
 
 #+end_src
