@@ -1910,6 +1910,9 @@ Muestra el autor del último cambio, y si se pincha muestra los cambios de ese c
   :config
   ;; TODO: Ver lo customizable de magit-todos
   (setq magit-todos-scanner 'magit-todos--scan-with-git-grep)
+  (setq magit-todos-auto-group-items 'always)
+  (setq magit-todos-exclude-globs '(".git/" "common/reveal.js*" "**/jquery-ui*" "**/qrcode.sty" "common/mathjax/"))
+
   (magit-todos-mode 1))
 
 #+end_src
