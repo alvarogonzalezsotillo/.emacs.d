@@ -1902,7 +1902,17 @@ Muestra el autor del último cambio, y si se pincha muestra los cambios de ese c
   )
    #+end_src
 
-** =vdiff-magit=
+** =magit-todo=
+#+begin_src emacs-lisp
+(use-package magit-todos
+  :ensure t
+  :defer 1
+  :config
+  ;; TODO: Ver lo customizable de magit-todos
+  (magit-todos-mode 1))
+
+#+end_src
+* =vdiff-magit=
 #+begin_src emacs-lisp
   (use-package vdiff-magit
     :ensure t
@@ -2450,12 +2460,12 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
   (interactive)
   (bonito-para-proyector)
   (org-bullets-mode 1)
+  (blamer-mode -1)
   (electric-pair-local-mode 1))
-
 
 (defun bonito-para-codigo()
   (interactive)
-  (global-blamer-mode 1)
+  (blamer-mode 1)
   (toggle-truncate-lines 1)
   ;;(highlight-indent-guides-mode 1)
   (toggle-word-wrap 1)
