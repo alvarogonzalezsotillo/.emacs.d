@@ -1915,7 +1915,123 @@ Muestra el autor del último cambio, y si se pincha muestra los cambios de ese c
   )
    #+end_src
 
-** =vdiff-magit=
+** =magit-todo=
+TODOMAGITTODO: Igual puedo automatizar los tags con
+#+begin_src bash
+ag --nofilename --nonumbers --silent -o "^[[:space:]]*(\;+[[:space:]]+|\#+[[:space:]]+|//+[[:space:]]+)?[[:space:]]*\K[A-Z][A-Z][A-Z]+(?=(\: ))" * | sort  |uniq
+#+end_src
+
+#+RESULTS:
+| ADDENDUM      |
+| ALL           |
+| ASCII         |
+| AUTHOR        |
+| BTC           |
+| BTN           |
+| BUFFER        |
+| BUG           |
+| CANDIDATES    |
+| CATEGORY      |
+| CAVEAT        |
+| CLOCKSUM      |
+| COLLAPSE      |
+| COMENTARIO    |
+| COMMAND       |
+| CONTEXT       |
+| DEADLINE      |
+| DEFAULT       |
+| DEPTH         |
+| DESCRIPTION   |
+| DIRS          |
+| END           |
+| ERROR         |
+| ESS           |
+| FILE          |
+| FILENAME      |
+| FIXME         |
+| FLAGS         |
+| FUTURE        |
+| HACK          |
+| HEADLINE      |
+| IMPORTANT     |
+| INCOMPLETE    |
+| INDEX         |
+| ITEM          |
+| ITER          |
+| KEY           |
+| KEYS          |
+| KEYWORDS      |
+| KLDUGE        |
+| KLUDGE        |
+| LEVEL         |
+| LINES         |
+| LINK          |
+| LIST          |
+| MAIN          |
+| MAYBE         |
+| MUNGE         |
+| NAME          |
+| NODE          |
+| NOTE          |
+| NOTICE        |
+| PARENT        |
+| PATH          |
+| PATHS         |
+| POINT         |
+| POS           |
+| PREFIX        |
+| PREV          |
+| PROJECT       |
+| PROMPT        |
+| PROPERTIES    |
+| RATE          |
+| README        |
+| RECURSIVE     |
+| SCHEDULED     |
+| SELF          |
+| SKIP          |
+| START         |
+| STATES        |
+| STATUS        |
+| SVG           |
+| TAGS          |
+| TECLEO        |
+| TIME          |
+| TIMEOUT       |
+| TIMESTAMP     |
+| TIP           |
+| TITLE         |
+| TMP           |
+| TODO          |
+| TODOMAGITTODO |
+| TRICKY        |
+| UID           |
+| UPDATE        |
+| URI           |
+| URL           |
+| VALUE         |
+| VALUES        |
+| WARN          |
+| WARNING       |
+| WORK          |
+| WORKAROUND    |
+| XXX           |
+| YES           |
+
+
+#+begin_src emacs-lisp
+(use-package magit-todos
+  :ensure t
+  :defer 1
+  :config
+  (setq magit-todos-scanner 'magit-todos--scan-with-git-grep)
+  (setq magit-todos-auto-group-items 'always)
+  (setq magit-todos-exclude-globs '(".git/" "common/reveal.js*" "**/jquery-ui*" "**/qrcode.sty" "common/mathjax/"))
+
+  (magit-todos-mode 1))
+
+#+end_src
+* =vdiff-magit=
 #+begin_src emacs-lisp
   (use-package vdiff-magit
     :ensure t
@@ -2467,12 +2583,12 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
   (interactive)
   (bonito-para-proyector)
   (org-bullets-mode 1)
+  (blamer-mode -1)
   (electric-pair-local-mode 1))
-
 
 (defun bonito-para-codigo()
   (interactive)
-  (global-blamer-mode 1)
+  (blamer-mode 1)
   (toggle-truncate-lines 1)
   ;;(highlight-indent-guides-mode 1)
   (toggle-word-wrap 1)

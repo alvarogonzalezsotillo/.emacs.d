@@ -26,6 +26,7 @@ permitir_loopback(){
 permitir_puerto_entrada(){
     local PUERTO=$1
     iptables --append INPUT --protocol tcp --match tcp --dport $PUERTO --jump ACCEPT
+    iptables --append OUTPUT --protocol tcp --match tcp --sport $PUERTO --jump ACCEPT    
 }
 
 prohibir_entrada_y_salida(){
@@ -40,9 +41,10 @@ prohibir_entrada_y_salida(){
 
 permitir_servidor_web(){
     echo "
-      Permito puertos de servidor web: 80 y 443.
+      Permito puertos de servidor web: 80, 8080 y 443.
     "
     permitir_puerto_entrada 80
+    permitir_puerto_entrada 8080
     permitir_puerto_entrada 443
 }
 
@@ -120,3 +122,5 @@ enviar_paquetes_salida_a_log
 prohibir_entrada_y_salida
 
 iptables-save > iptables-save
+
+service iptables save
