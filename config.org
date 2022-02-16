@@ -548,8 +548,20 @@ Este modo cierra automáticamente los paréntesis y otros bloques. Aunque lo ten
 Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de programación y =org-mode=.
 
 #+begin_src emacs-lisp
-  (require 'company)
+(use-package company-posframe
+  :ensure t
+  :after (company)
+  
+  (company-posframe-mode 1)
+  )
+
+
+(use-package company
+  :ensure t
+  :config
+  
   (company-flx-mode +1)
+  (setq company-tooltip-minimum-width 70)
 
 
   (defun my-js2-mode-hook()
@@ -631,6 +643,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
   (global-set-key (kbd "C-.") 'company-complete)
   (define-key company-active-map [escape] 'company-abort)
   (global-company-mode)
+  )
 #+end_src
 
 
@@ -1392,7 +1405,7 @@ Avoid performance issues in files with very long lines.
   (defun my-centaur-tabs-font-sizes (&optional height)
     (interactive
      (list 
-      (read-number "height: " 0.8)))
+      (read-number "height: " 0.9)))
 
     (mapcar
      (lambda (face) (set-face-attribute face nil :height (or height 100)) )
@@ -1410,7 +1423,7 @@ Avoid performance issues in files with very long lines.
        centaur-tabs-modified-marker-unselected
        ))
 
-    (setq centaur-tabs-height 20)
+    (setq centaur-tabs-height 40)
     (setq centaur-tabs-bar-height (+ 8 centaur-tabs-height)))
 
 
@@ -1857,7 +1870,7 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
-)
+  )
    #+end_src
 
 ** =blamer=
@@ -1869,7 +1882,6 @@ Muestra el autor del último cambio, y si se pincha muestra los cambios de ese c
   :defer 1
   :ensure t
   :config
-  (global-blamer-mode 1)
   (setq blamer-view 'overlay-right)
   (setq blamer-tooltip-function 'blamer-tooltip-keybindings)
 
@@ -1903,7 +1915,123 @@ Muestra el autor del último cambio, y si se pincha muestra los cambios de ese c
   )
    #+end_src
 
-** =vdiff-magit=
+** =magit-todo=
+TODOMAGITTODO: Igual puedo automatizar los tags con
+#+begin_src bash
+ag --nofilename --nonumbers --silent -o "^[[:space:]]*(\;+[[:space:]]+|\#+[[:space:]]+|//+[[:space:]]+)?[[:space:]]*\K[A-Z][A-Z][A-Z]+(?=(\: ))" * | sort  |uniq
+#+end_src
+
+#+RESULTS:
+| ADDENDUM      |
+| ALL           |
+| ASCII         |
+| AUTHOR        |
+| BTC           |
+| BTN           |
+| BUFFER        |
+| BUG           |
+| CANDIDATES    |
+| CATEGORY      |
+| CAVEAT        |
+| CLOCKSUM      |
+| COLLAPSE      |
+| COMENTARIO    |
+| COMMAND       |
+| CONTEXT       |
+| DEADLINE      |
+| DEFAULT       |
+| DEPTH         |
+| DESCRIPTION   |
+| DIRS          |
+| END           |
+| ERROR         |
+| ESS           |
+| FILE          |
+| FILENAME      |
+| FIXME         |
+| FLAGS         |
+| FUTURE        |
+| HACK          |
+| HEADLINE      |
+| IMPORTANT     |
+| INCOMPLETE    |
+| INDEX         |
+| ITEM          |
+| ITER          |
+| KEY           |
+| KEYS          |
+| KEYWORDS      |
+| KLDUGE        |
+| KLUDGE        |
+| LEVEL         |
+| LINES         |
+| LINK          |
+| LIST          |
+| MAIN          |
+| MAYBE         |
+| MUNGE         |
+| NAME          |
+| NODE          |
+| NOTE          |
+| NOTICE        |
+| PARENT        |
+| PATH          |
+| PATHS         |
+| POINT         |
+| POS           |
+| PREFIX        |
+| PREV          |
+| PROJECT       |
+| PROMPT        |
+| PROPERTIES    |
+| RATE          |
+| README        |
+| RECURSIVE     |
+| SCHEDULED     |
+| SELF          |
+| SKIP          |
+| START         |
+| STATES        |
+| STATUS        |
+| SVG           |
+| TAGS          |
+| TECLEO        |
+| TIME          |
+| TIMEOUT       |
+| TIMESTAMP     |
+| TIP           |
+| TITLE         |
+| TMP           |
+| TODO          |
+| TODOMAGITTODO |
+| TRICKY        |
+| UID           |
+| UPDATE        |
+| URI           |
+| URL           |
+| VALUE         |
+| VALUES        |
+| WARN          |
+| WARNING       |
+| WORK          |
+| WORKAROUND    |
+| XXX           |
+| YES           |
+
+
+#+begin_src emacs-lisp
+(use-package magit-todos
+  :ensure t
+  :defer 1
+  :config
+  (setq magit-todos-scanner 'magit-todos--scan-with-git-grep)
+  (setq magit-todos-auto-group-items 'always)
+  (setq magit-todos-exclude-globs '(".git/" "common/reveal.js*" "**/jquery-ui*" "**/qrcode.sty" "common/mathjax/"))
+
+  (magit-todos-mode 1))
+
+#+end_src
+* =vdiff-magit=
 #+begin_src emacs-lisp
   (use-package vdiff-magit
     :ensure t
@@ -1941,23 +2069,27 @@ Muestra el autor del último cambio, y si se pincha muestra los cambios de ese c
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
    #+begin_src emacs-lisp
-     (defun gifttolatex (titulo porcentajetest parametros)
-       "ejecuta giftolatex en el buffer actual."
-       (interactive
-        (list 
-         (read-string "Título: " (buffer-name))
-         (read-number "Porcentaje del test: " 60)
-         (read-string "Otros parámetros:" "-k"))
-        )
-  
-       (let
-           ((comando (format "sh -c 'gifttolatex %s -t \"%s\" -q \"%s\" \"%s\"'" parametros titulo porcentajetest buffer-file-name))
-            )
-         (shell-command comando)
-         )
-       )
 
-       (defalias 'trim-string 'string-trim) 
+(defvar gifttolatex-titulo nil)
+(defvar gifttolatex-porcentajetest nil)
+(defvar gifttolatex-parametros nil)
+
+(defun gifttolatex (titulo porcentajetest parametros)
+  "ejecuta giftolatex en el buffer actual."
+  (interactive
+   (list 
+    (read-string "Título: " (or gifttolatex-titulo (buffer-name)))
+    (read-number "Porcentaje del test: " (or gifttolatex-porcentajetest 60))
+    (read-string "Otros parámetros:" (or gifttolatex-parametros "-k" ))))
+  
+  (setq gifttolatex-titulo titulo)
+  (setq gifttolatex-porcentajetest porcentajetest)
+  (setq gifttolatex-parametros parametros)
+  
+  (let ((comando (format "sh -c 'gifttolatex %s -t \"%s\" -q \"%s\" \"%s\"'" parametros titulo porcentajetest buffer-file-name)))
+    (shell-command comando)))
+
+(defalias 'trim-string 'string-trim) 
    #+end_src
 
    #+RESULTS:
@@ -2451,11 +2583,12 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
   (interactive)
   (bonito-para-proyector)
   (org-bullets-mode 1)
+  (blamer-mode -1)
   (electric-pair-local-mode 1))
-
 
 (defun bonito-para-codigo()
   (interactive)
+  (blamer-mode 1)
   (toggle-truncate-lines 1)
   ;;(indent-guide-mode 1)
   (toggle-word-wrap 1)
