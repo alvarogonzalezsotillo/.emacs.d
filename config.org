@@ -1366,8 +1366,14 @@ El ratón también puede utilizarse en un =xterm=
 
 * Visualización
 
-** emojis
+** Números de línea
 
+#+begin_src emacs-lisp
+(setq display-line-numbers-width 3)
+#+end_src
+
+** emojis
+En alguna versión de emacs dejó de hacer falta
    #+begin_src lisp
    (use-package emojify
      :ensure t
@@ -1590,6 +1596,13 @@ Scroll con teclas de avance de página hasta el extremo del fichero. Sin esta op
 (setq mouse-wheel-progressive-speed nil)
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil))) 
    #+end_src
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "<mouse-6>") (lambda() (interactive) (scroll-right 10)))
+(global-set-key (kbd "<mouse-7>") (lambda() (interactive) (scroll-left 10)))
+(put 'scroll-left 'disabled nil)
+(put 'scroll-right 'disabled nil)
+#+end_src
 
 
 ** Barras de desplazamiento, de herramientas y menú
