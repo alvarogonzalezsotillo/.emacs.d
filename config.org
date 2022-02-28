@@ -2666,24 +2666,8 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
   (load-theme my-dark-theme t)
   (load-theme 'alvaro t))
 
-
-(tema-oscuro)
+(run-with-idle-timer 2 nil #'tema-oscuro)
 #+end_src
-
-#+RESULTS:
-: tema-oscuro
-
-
-Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna customización. Por lo visto, un tema siempre añade cambios, pero al quitarse no se deshacen  completamente. Algunas configuraciones solo se tienen en cuenta al reiniciar /Emacs/ o al reaplicar un modo: por ejemplo, los colores de =highlight-indent-guides= necesitan reabrir el buffer.
-#+begin_src lisp
-(tema-claro)
-(tema-oscuro)
-#+end_src
-
-
-
-
-
 
 
 
