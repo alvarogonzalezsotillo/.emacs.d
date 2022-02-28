@@ -2627,11 +2627,10 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 
 
 ** /Fringes/
-Prefiero ocultar las flechas que indican que una línea se sale de la pantalla, y solo mostrar las de la derecha.
-
+Antes ocultaba los fringes, ahora los dejo para =diff-hl=
 #+begin_src emacs-lisp
 (if (display-graphic-p)
-  (fringe-mode '(0 . nil)))
+  (fringe-mode '(nil . nil)))
 #+end_src
 
 ** Temas
