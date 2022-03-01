@@ -1309,6 +1309,13 @@ Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones
 
 * Navegación
 
+#+begin_src emacs-lisp
+(use-package deadgrep)
+  :ensure t
+  :defer 1
+  :config )
+#+end_src
+
 Modo de ficheros recientes
 #+begin_src emacs-lisp
 (recentf-mode 1)
