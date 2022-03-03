@@ -1310,7 +1310,7 @@ Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones
 * Navegación
 
 #+begin_src emacs-lisp
-(use-package deadgrep)
+(use-package deadgrep
   :ensure t
   :defer 1
   :config )
