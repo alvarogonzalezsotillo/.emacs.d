@@ -1508,7 +1508,6 @@ Avoid performance issues in files with very long lines.
   :config
   (add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
   (add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
-
   (add-hook 'text-mode-hook #'region-occurrences-highlighter-mode)
 
   (define-key region-occurrences-highlighter-nav-mode-map "\M-n" 'region-occurrences-highlighter-next)
