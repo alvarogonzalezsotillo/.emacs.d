@@ -1312,6 +1312,13 @@ Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones
 
 * Navegación
 
+#+begin_src emacs-lisp
+(use-package deadgrep
+  :ensure t
+  :defer 1
+  :config )
+#+end_src
+
 Modo de ficheros recientes
 #+begin_src emacs-lisp
 (recentf-mode 1)
@@ -1369,8 +1376,14 @@ El ratón también puede utilizarse en un =xterm=
 
 * Visualización
 
-** emojis
+** Números de línea
 
+#+begin_src emacs-lisp
+(setq display-line-numbers-width 3)
+#+end_src
+
+** emojis
+En alguna versión de emacs dejó de hacer falta
    #+begin_src lisp
    (use-package emojify
      :ensure t
@@ -1594,6 +1607,13 @@ Scroll con teclas de avance de página hasta el extremo del fichero. Sin esta op
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil))) 
    #+end_src
 
+#+begin_src emacs-lisp
+(global-set-key (kbd "<mouse-6>") (lambda() (interactive) (scroll-right 10)))
+(global-set-key (kbd "<mouse-7>") (lambda() (interactive) (scroll-left 10)))
+(put 'scroll-left 'disabled nil)
+(put 'scroll-right 'disabled nil)
+#+end_src
+
 
 ** Barras de desplazamiento, de herramientas y menú
 La barra de menú y la de herramientas es de lo primero que se quita al personalizar /emacs/, lo mismo que esa pantalla de inicio.
@@ -1601,7 +1621,7 @@ La barra de menú y la de herramientas es de lo primero que se quita al personal
 (setq inhibit-startup-message t)
 (ignore-errors (menu-bar-mode -1))
 (ignore-errors (tool-bar-mode -1))
-(ignore-errors (scroll-bar-mode -1))
+(ignore-errors (scroll-bar-mode 1))
 #+end_src
 
 ** Ancho de la página de =man=
@@ -1934,7 +1954,6 @@ ag --nofilename --nonumbers --silent -o "^[[:space:]]*(\;+[[:space:]]+|\#+[[:spa
 | BTN           |
 | BUFFER        |
 | BUG           |
-| CANDIDATES    |
 | CATEGORY      |
 | CAVEAT        |
 | CLOCKSUM      |
@@ -1958,7 +1977,6 @@ ag --nofilename --nonumbers --silent -o "^[[:space:]]*(\;+[[:space:]]+|\#+[[:spa
 | HACK          |
 | HEADLINE      |
 | IMPORTANT     |
-| INCOMPLETE    |
 | INDEX         |
 | ITEM          |
 | ITER          |
@@ -2030,7 +2048,7 @@ ag --nofilename --nonumbers --silent -o "^[[:space:]]*(\;+[[:space:]]+|\#+[[:spa
   :config
   (setq magit-todos-scanner 'magit-todos--scan-with-git-grep)
   (setq magit-todos-auto-group-items 'always)
-  (setq magit-todos-exclude-globs '(".git/" "common/reveal.js*" "**/jquery-ui*" "**/qrcode.sty" "common/mathjax/"))
+  (setq magit-todos-exclude-globs '(".git/" "common/reveal.js*" "**/jquery-ui*" "**/qrcode.sty" "common/mathjax/" "themes/alvaro/resources/"))
 
   (magit-todos-mode 1))
 
@@ -2619,11 +2637,10 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 
 
 ** /Fringes/
-Prefiero ocultar las flechas que indican que una línea se sale de la pantalla, y solo mostrar las de la derecha.
-
+Antes ocultaba los fringes, ahora los dejo para =diff-hl=
 #+begin_src emacs-lisp
 (if (display-graphic-p)
-  (fringe-mode '(0 . nil)))
+  (fringe-mode '(nil . nil)))
 #+end_src
 
 ** Temas
