@@ -551,6 +551,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 (use-package company-posframe
   :ensure t
   :after (company)
+  :config
   
   (company-posframe-mode 1)
   )
@@ -645,6 +646,9 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
   (global-company-mode)
   )
 #+end_src
+
+#+RESULTS:
+: t
 
 
 Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta el /case/
