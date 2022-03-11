@@ -1649,7 +1649,7 @@ Arranco el servidor para utilizar /emacsclient/
 
 
 ** =minimap=
-#+begin_src emacs-lisp
+#+begin_src lisp
 (use-package minimap
   :ensure t
   :defer 1
@@ -1665,6 +1665,16 @@ Arranco el servidor para utilizar /emacsclient/
 )
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package demap
+  :ensure t
+  :defer 1
+  :bind
+  (( "M-<f7>" . demap-toggle))
+  :config
+
+)
+#+end_src
 
 ** =dired=
 Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
