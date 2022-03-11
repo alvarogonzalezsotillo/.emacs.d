@@ -1464,6 +1464,7 @@ Avoid performance issues in files with very long lines.
        (string-prefix-p " *Mini" name)
        (string-prefix-p "*Mini" name)
        (string-prefix-p "*help" name)
+       (string-prefix-p "*Ilist" name)
        (string-prefix-p "*Help" name)
        (string-prefix-p "*Helm" name)
        (string-prefix-p "*diff-hl" name)
