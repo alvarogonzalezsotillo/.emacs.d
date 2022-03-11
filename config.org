@@ -1268,13 +1268,6 @@ Al copiar la  selección, mantener la selección
 #+end_src
 
 
-** Línea nueva al final de fichero
-Los ficheros deben tener una línea nueva al final. Además, indicar el fin de fichero como en =vim=.
-#+begin_src emacs-lisp
-(setq indicate-empty-lines t require-final-newline t)
-#+end_src
-
-
 ** Historia del portapapeles
 Una de las ventajas de Emacs es su /kill ring/, donde se guarda la historia del portapapeles. Con esta opción, añado a esta historia el portapapeles del sistema. Descubierto en [[https://writequit.org/org/settings.html#sec-1-33][https://writequit.org/org/settings.html#sec-1-33]]
 #+begin_src emacs-lisp
@@ -1469,6 +1462,7 @@ Avoid performance issues in files with very long lines.
        (string-prefix-p "*Flycheck" name)
        (string-prefix-p "*tramp" name)
        (string-prefix-p " *Mini" name)
+       (string-prefix-p "*Mini" name)
        (string-prefix-p "*help" name)
        (string-prefix-p "*Help" name)
        (string-prefix-p "*Helm" name)
@@ -1682,6 +1676,15 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 #+begin_src emacs-lisp
 (use-package dired-x)
 
+;; Copy and paste files
+(use-package dired-ranger
+  :ensure t
+  :defer t
+  :bind (:map dired-mode-map
+              ("W" . dired-ranger-copy)
+              ("X" . dired-ranger-move)
+              ("Y" . dired-ranger-paste)))
+
 (use-package dired
   :config
   (setq dired-kill-when-opening-new-dired-buffer nil))
@@ -1715,9 +1718,6 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 
 #+end_src
-
-#+RESULTS:
-: t
 
 
 * Atajos de teclado
@@ -2528,6 +2528,12 @@ Creo que esto se hace mejor con la variable =indicate-empty-lines=
 (add-hook 'org-mode-hook 'vim-empty-lines-mode)
 #+end_src
 
+Los ficheros deben tener una línea nueva al final. Además, indicar el fin de fichero como en =vim=.
+#+begin_src emacs-lisp
+(setq indicate-empty-lines t require-final-newline t)
+#+end_src
+
+
 ** Nivel de indentación
 #+begin_src emacs-lisp
 (setq highlight-indent-guides-method 'fill)
@@ -2776,18 +2782,6 @@ global-set-key (kbd "C-c h w") 'helm-wikipedia-suggest)
 
 (use-package peep-dired)
 
-;; Copy and paste files
-(use-package dired-ranger
-  :bind (:map dired-mode-map
-              ("W" . dired-ranger-copy)
-              ("X" . dired-ranger-move)
-              ("Y" . dired-ranger-paste)))
-
-(setq dired-open-extensions '(("gif" . "sxiv")
-                              ("jpg" . "sxiv")
-                              ("png" . "sxiv")
-                              ("mkv" . "mpv")
-                              ("mp4" . "mpv")))
 
 
 
@@ -2831,28 +2825,8 @@ global-set-key (kbd "C-c h w") 'helm-wikipedia-suggest)
 - didyoumean.el 
 - BAT cat
 - statusbar.el
-- dired-single
 - https://www.wezm.net/technical/2019/10/useful-command-line-tools/
 
-
-
-
-#+begin_src lisp
-(add-to-list 'load-path "~/.emacs.d/mis-paquetes/lsp-latex")
-(require 'lsp-latex)
-;; "texlab" must be located at a directory contained in `exec-path'.
-;; If you want to put "texlab" somewhere else,
-;; you can specify the path to "texlab" as follows:
-;; (setq lsp-latex-texlab-executable "/path/to/texlab")
-
-(with-eval-after-load "tex-mode"
- (add-hook 'tex-mode-hook 'lsp)
- (add-hook 'latex-mode-hook 'lsp))
-
-;; For YaTeX
-(with-eval-after-load "yatex"
- (add-hook 'yatex-mode-hook 'lsp))
-#+end_src
 
 * usettf
 
