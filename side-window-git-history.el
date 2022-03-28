@@ -15,22 +15,23 @@
       (concat (shell-command-to-string command) "\n"))))
 
 (defun history-of-file--internal (buffer)
-  (if (string-equal (vc-backend buffer-file-name) "Git")
-      (progn
-        (setq history-of-file--current-buffer buffer
-        
-        (let* ((history (history-of-file--string history-of-file--current-buffer))
-               (history-buffer (get-buffer-create "*History of file*"))
-               (history-window (display-buffer-in-side-window history-buffer `((side . left) (slot . 0)))))
-          (setq history-of-file--history-buffer history-buffer)
-          (setq history-of-file--history-window history-window)
-          (window-resize history-window (- 0 (- (window-width history-window) 30)) t)
-          (with-current-buffer history-buffer
-            (setq buffer-read-only nil)
-            (erase-buffer)
-            (insert history)
-            (history-of-file-mode))))
-    (message "Current buffer is not under git version control")))
+  (with-current-buffer buffer
+    (if (string-equal (vc-backend buffer-file-name) "Git")
+        (progn
+          (setq history-of-file--current-buffer buffer
+                
+                (let* ((history (history-of-file--string history-of-file--current-buffer))
+                       (history-buffer (get-buffer-create "*History of file*"))
+                       (history-window (display-buffer-in-side-window history-buffer `((side . left) (slot . 0)))))
+                  (setq history-of-file--history-buffer history-buffer)
+                  (setq history-of-file--history-window history-window)
+                  (window-resize history-window (- 0 (- (window-width history-window) 30)) t)
+                  (with-current-buffer history-buffer
+                    (setq buffer-read-only nil)
+                    (erase-buffer)
+                    (insert history)
+                    (history-of-file-mode)))))
+      (message "Current buffer %s is not under git version control" buffer))))
 
 (defun history-of-file()
   (interactive)
