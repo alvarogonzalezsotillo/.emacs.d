@@ -2,7 +2,8 @@
 ;; git log --all --branches --remotes --format=oneline --abbrev-commit --date=human pruebas-oracle-common.sh
 
 
-(defvar history-of-file--current-buffer nil "The buffer which history is actually shown")
+(defvar history-of-file--current-buffer nil "The buffer which history is currently shown")
+(defvar history-of-file--current-window nil "The window where `history-of-file--current-buffer' is shown")
 (defvar history-of-file--history-buffer nil "The buffer where the history is shown")
 (defvar history-of-file--history-window nil "The window where `history-of-file--history-buffer' is shown'")
 
@@ -14,40 +15,48 @@
                             file)))
       (concat (shell-command-to-string command) "\n"))))
 
-(defun history-of-file--internal (buffer)
+(defun history-of-file--internal (buffer window)
   (with-current-buffer buffer
     (if (string-equal (vc-backend buffer-file-name) "Git")
         (progn
-          (setq history-of-file--current-buffer buffer
-                
-                (let* ((history (history-of-file--string history-of-file--current-buffer))
-                       (history-buffer (get-buffer-create "*History of file*"))
-                       (history-window (display-buffer-in-side-window history-buffer `((side . left) (slot . 0)))))
-                  (setq history-of-file--history-buffer history-buffer)
-                  (setq history-of-file--history-window history-window)
-                  (window-resize history-window (- 0 (- (window-width history-window) 30)) t)
-                  (with-current-buffer history-buffer
-                    (setq buffer-read-only nil)
-                    (erase-buffer)
-                    (insert history)
-                    (history-of-file-mode)))))
+          (setq history-of-file--current-buffer buffer)
+          (setq history-of-file--current-window window)
+          
+          (let* ((history (history-of-file--string history-of-file--current-buffer))
+                 (history-buffer (get-buffer-create "*History of file*"))
+                 (history-window (display-buffer-in-side-window history-buffer `((side . left) (slot . 0)))))
+            (setq history-of-file--history-buffer history-buffer)
+            (setq history-of-file--history-window history-window)
+            (window-resize history-window (- 0 (- (window-width history-window) 30)) t)
+            (with-current-buffer history-buffer
+              (setq buffer-read-only nil)
+              (erase-buffer)
+              (insert history)
+              (history-of-file-mode))))
       (message "Current buffer %s is not under git version control" buffer))))
 
 (defun history-of-file()
   (interactive)
 
-  (history-of-file--internal (current-buffer)))
+  (history-of-file--internal (current-buffer) (selected-window)))
 
 
 (defun history-of-file--do (file-name prev-hash hash next-hash)
-  (message "BACKEND:%s" (vc-backend file-name))
-  (diff-hl-set-reference-rev hash))
+  (message "history-of-file--do: file-name:%s prev-hash:%s hash:%s next-hash:%s" file-name prev-hash hash next-hash)
+  ;; (diff-hl-set-reference-rev hash)
+  (select-window history-of-file--current-window)
+  (let* ((reva prev-hash)
+         (revb hash)
+         (filea file-name)
+         (fileb file-name))
+    (vdiff-magit-compare reva revb filea fileb))
+)
 
 
 (defun history-of-file--keyboard-rev-selected()
   (interactive)
   (with-current-buffer "*History of file*"
-    (let* ((file-name (with-current-buffer history-of-file--history-buffer buffer-file-name))
+    (let* ((file-name (with-current-buffer history-of-file--current-buffer buffer-file-name))
            (line (thing-at-point 'line t))
            (prev-line (save-excursion (forward-line -1) (thing-at-point 'line t)))
            (next-line (save-excursion (forward-line 1) (thing-at-point 'line t)))
@@ -63,7 +72,7 @@
       
       (message "file-name:%s prev-hash:%s hash:%s next-hash:%s" file-name prev-hash hash next-hash)
       (if (and hash (not (string-equal hash "")) (not (string-equal hash "\n")))
-          (with-current-buffer buffer-of-history
+          (with-current-buffer history-of-file--current-buffer
             (history-of-file--do file-name prev-hash hash next-hash))
         (message "Not in a revision")))))
       
