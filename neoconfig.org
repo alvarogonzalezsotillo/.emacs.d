@@ -1,0 +1,740 @@
+
+#+TITLE: Configuración Emacs
+#+author: Álvaro González (@alvarogonzalez)
+#+OPTIONS: toc:2 h:4 author:t
+
+
+#+latex: \newpage
+#+html: <div style="margin:auto; text-align:center; font-size:1.5em">
+#+latex: \begin{center}
+La última versión de esta configuración puede encontrarse en [[https://github.com/alvarogonzalezsotillo/.emacs.d][https://github.com/alvarogonzalezsotillo/.emacs.d]].
+#+latex: \end{center}
+#+html: </div>
+
+
+
+* =init.el=
+Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplemente inicializa el sistema de paquetes y carga el paquete =org=, que es el que permite a Emacs manejar este tipo de ficheros. Después, carga este fichero interpretando los bloques de código.
+
+#+include: "~/.emacs.d/init.el" src lisp
+
+El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entornos y mejor integración con el control de versiones.
+  #+begin_src emacs-lisp
+  (setq custom-file "~/.emacs.d/custom-file.el")
+  #+end_src
+
+  
+* Optimizaciones
+  #+begin_src emacs-lisp
+;; Disabling bidirectional text rendering gives a performance boost.
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
+
+;; Increase memory usage, but increase performance. No thank you, font compacting!
+(setq inhibit-compacting-font-caches t)
+
+;; Here's where we handle the GC
+(use-package gcmh
+  :ensure t
+  :config
+  (setq gcmh-idle-delay 5
+        gc-cons-threshold (* 500 1024 1024) 
+        gcmh-high-cons-threshold (* 1000 1024 1024))
+  (gcmh-mode 1))
+  #+end_src
+
+
+
+  
+* Utilidades externas al /PATH/
+En el directorio =~/.emacs.d/bin/= guardo algunas utilidades que me interesa tener en todos los entornos de trabajo. Lo siguiente es para que estén disponibles desde las /shells/ que arranque desde emacs. Las utilidades pueden consultarse en el [[https://github.com/alvarogonzalezsotillo/.emacs.d/tree/master/bin][repositorio en github]].
+
+Añado también el directorio de =cargo= para =rust=.
+#+begin_src emacs-lisp
+
+(let 
+  (  (exec-path-separator  (if (string-equal system-type "windows-nt") ";" ":"))
+     (paths `(
+              ,(concat (expand-file-name user-emacs-directory) "bin")
+              ,(concat (expand-file-name "~/") ".cargo/bin")
+              "/opt/scala/bin" )) )
+  (dolist (path paths)
+    (message "path: %s" path)
+    (setenv "PATH" (concat path exec-path-separator (getenv "PATH")))
+    (add-to-list 'exec-path path))
+
+  (message "PATH %s" (getenv "PATH"))
+  (message "exec-path %s" exec-path))
+
+#+end_src
+
+
+* Carga de paquetes
+
+Utilizo tres repositorios de paquetes:
+- *melpa*: el más habitual
+- *gnu*: me hizo falta para algo que no recuerdo, lo tengo actualmente deshabilitado.
+- *org*: las versiones nuevas de org-mode se publican antes en este repositorio
+
+
+
+** =use-package=
+
+=use-package= es una utilidad para la carga y configuración de paquetes con las siguientes ventajas:
+- Puede definir dependencias entre paquetes (=requires= y =after=)
+- Permite la carga diferida, lo que acelera el arranque y el uso de memoria
+- Agrupa la configuración de cada paquete
+- Instala el paquete si no está instalado
+
+
+** =expand-region=
+#+begin_src emacs-lisp
+(use-package expand-region
+  :ensure t
+  :defer 1
+  :bind
+      (( "C-e" . 'er/expand-region))
+      (( "C-S-e" . 'er/contract-region))
+      (( "M-<up>" . 'er/expand-region))
+      (( "M-<down>" . 'er/contract-region))
+)
+#+end_src
+
+** =bm=
+Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
+#+BEGIN_SRC emacs-lisp
+  (defun ags/bookmark-or-edit ()
+    (interactive)
+
+    (if (string= major-mode "dired-mode")
+        (progn
+          (all-the-icons-dired-mode -1)
+          (wdired-change-to-wdired-mode))
+        (bm-next)))
+
+
+    (use-package bm
+      :ensure t
+      :bind
+      (( "<C-f2>" . bm-toggle))
+      (( "<f2>" . ags/bookmark-or-edit ))
+      (( "<S-f2>" . bm-previous))
+
+    )
+#+END_SRC
+
+
+** =multiple-cursors=
+
+#+BEGIN_SRC emacs-lisp
+  (use-package multiple-cursors
+    :ensure t
+    :custom (mc/always-run-for-all t)
+    :bind
+
+      (("C-S-c C-S-c" . mc/edit-lines ))
+      (("C->" . mc/mark-next-like-this ))
+      (("C-<" . mc/mark-previous-like-this ))
+      (("C-S-<mouse-1>" . mc/add-cursor-on-click ))
+      (("C-S-c C-S-v" . mc/mark-all-like-this ))
+)
+#+END_SRC
+
+
+** =demap=
+#+begin_src emacs-lisp
+(use-package demap
+  :ensure t
+  :defer 1
+  :bind
+  (( "M-<f7>" . demap-toggle))
+  :config
+)
+#+end_src
+
+** =all-the-icons=
+#+begin_src emacs-lisp
+(use-package all-the-icons
+  :ensure t
+  :defer t)
+(use-package all-the-icons-dired
+  :ensure t
+  :defer t)
+#+end_src
+
+
+** =dired=, =dired-ranger=, =dired-subtree=
+Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
+
+#+begin_src emacs-lisp
+  (use-package dired-x)
+
+  ;; Copy and paste files
+  (use-package dired-ranger
+    :ensure t
+    :defer t
+    :bind (:map dired-mode-map
+                ("W" . dired-ranger-copy)
+                ("X" . dired-ranger-move)
+                ("Y" . dired-ranger-paste)))
+
+  (use-package dired
+    :config
+    (setq dired-kill-when-opening-new-dired-buffer nil)
+
+    (setq dired-listing-switches "-aBhl --group-directories-first")
+
+
+    (defun ags/dired-hook ()
+      (interactive)
+      (all-the-icons-dired-mode 1)
+      (dired-hide-details-mode 1)
+      (auto-revert-mode 1)
+      (diff-hl-dired-mode 1)
+      (setq  indent-line-function 'dired-subtree-toggle))
+
+    (add-hook 'dired-mode-hook 'ags/dired-hook)
+    )
+
+  (use-package dired-subtree 
+    :ensure t
+    :defer 1
+    :config
+
+    (set-face-attribute 'dired-subtree-depth-1-face nil :background 'unspecified)
+    (set-face-attribute 'dired-subtree-depth-2-face nil :background 'unspecified)
+    (set-face-attribute 'dired-subtree-depth-3-face nil :background 'unspecified)
+    (set-face-attribute 'dired-subtree-depth-4-face nil :background 'unspecified)
+    (set-face-attribute 'dired-subtree-depth-5-face nil :background 'unspecified)
+    (set-face-attribute 'dired-subtree-depth-6-face nil :background 'unspecified)
+
+    )
+
+
+#+end_src
+
+#+RESULTS:
+
+
+** =good-scroll=
+El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminales modo texto que costaba refrescar. Con los ordenadores actuales, mejor un /scroll/ suave
+#+begin_src emacs-lisp
+(use-package good-scroll
+  :ensure t
+  :config
+  (good-scroll-mode 1))
+
+
+#+end_src
+
+
+#+begin_src emacs-lisp
+(setq scroll-error-top-bottom t)
+#+end_src
+
+
+** =flycheck=
+Marca errores en el fichero
+#+begin_src emacs-lisp
+
+  (use-package flycheck-inline
+    :ensure t
+    :defer 1
+    :config
+      (with-eval-after-load 'flycheck
+        (add-hook 'flycheck-mode-hook #'turn-on-flycheck-inline))
+    (add-hook 'after-init-hook #'global-flycheck-mode)
+    ;;(setq flycheck-shellcheck-follow-sources nil)
+  )
+#+end_src
+
+
+
+** =simple-httpd=
+Añado algunos /mime-type/ al servidor HTTP
+#+BEGIN_SRC emacs-lisp
+(use-package simple-httpd
+  :defer 1
+  :ensure t
+  :config
+  (add-to-list 'httpd-mime-types '("mjs" . "text/javascript") )
+  (add-to-list 'httpd-mime-types '("wasm" . "application/wasm") )
+  )
+#+END_SRC
+
+** =treemacs=
+Estoy usando =treemacs= en vez de =neotree=.
+
+#+begin_src emacs-lisp
+
+(use-package treemacs
+  :ensure t
+  :defer 1
+  :config
+
+  (defun ags/hacer-treemacs-resizable ()
+    (if treemacs--width-is-locked
+        (treemacs-toggle-fixed-width)))
+
+  (defun ags/cambiar-faces-de-treemacs ()
+    ;; Cambio el tamaño por defecto del face
+    (mapcar
+     (lambda (face) (set-face-attribute face nil :height 0.8) )
+     '(
+       treemacs-directory-face                
+       treemacs-directory-collapsed-face      
+       ;;treemacs-file-face                     
+       treemacs-root-face                     
+       treemacs-root-unreadable-face          
+       treemacs-root-remote-face              
+       treemacs-root-remote-unreadable-face   
+       treemacs-root-remote-disconnected-face 
+       treemacs-tags-face                     
+       treemacs-help-title-face               
+       treemacs-help-column-face              
+       treemacs-git-unmodified-face
+       treemacs-git-modified-face
+       treemacs-git-renamed-face
+       treemacs-git-ignored-face
+       treemacs-git-untracked-face
+       treemacs-git-added-face
+       treemacs-git-conflict-face
+       treemacs-term-node-face                
+       treemacs-on-success-pulse-face         
+       ))
+    )
+
+  
+  (add-hook 'treemacs-mode-hook #'ags/hacer-treemacs-resizable)
+  (setq treemacs-silent-refresh t)
+  (treemacs-git-mode -1)
+  
+  (ags/cambiar-faces-de-treemacs)
+  :bind
+  (("<f8>" . treemacs))
+  )
+#+end_src
+
+#+RESULTS:
+: treemacs
+
+
+** =dumb-jump=
+Añado las siguientes reglas para hacer búsquedas simples con =dumb-jump= en ficheros =sql= y =org=.
+#+begin_src emacs-lisp
+  ;; ADITIONAL DUMBJUMB RULES
+  (use-package dumb-jump
+    :ensure t
+    :config
+
+  ;;   (add-to-list 'dumb-jump-find-rules
+  ;;                '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "sql"
+  ;;                        :regex ": \\bJJJ\\j"))
+  ;;   (add-to-list 'dumb-jump-find-rules
+  ;;                '(:type "something" :supports ("ag" "grep" "rg" "git-grep") :language "org"
+  ;;                        :regex ": \\bJJJ\\j"))
+  ;;   (add-to-list 'dumb-jump-language-file-exts
+  ;;                '(:language "javascript" :ext "mjs" :agtype "js" :rgtype "js")))
+
+
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+#+end_src
+
+#+RESULTS:
+: t
+** =projectile=
+=projectile= necesita conocer su tecla de prefijo (utilizo la tradicional).
+#+begin_src emacs-lisp
+  (use-package projectile
+    :ensure t
+    :config
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (setq projectile-switch-project-action 'projectile-dired)
+    (setq projectile-indexing-method 'alien)
+    (setq projectile-enable-caching t)
+
+    (projectile-mode 1)
+    (setq projectile-switch-project-action 'projectile-dired)
+
+    (use-package ibuffer-projectile
+      :ensure t
+      :defer 1
+      :config
+      (add-hook 'ibuffer-hook #'ibuffer-projectile-set-filter-groups)
+      (add-hook 'ibuffer-sidebar-mode-hook #'ibuffer-projectile-set-filter-groups)
+      (add-hook 'ibuffer-mode-hook (lambda () (ibuffer-auto-mode 1)))
+      )
+    )
+
+
+#+end_src
+
+#+RESULTS:
+: t
+
+
+
+
+
+
+
+** =ox-epub=
+Para crear libros electrónicos a partir de org
+#+begin_src emacs-lisp
+(use-package ox-epub
+  :ensure t
+  :defer 1)
+#+end_src
+
+
+** =org-re-reveal=
+#+begin_src emacs-lisp
+(use-package org-re-reveal
+  :ensure t
+  :config
+)
+#+end_src
+
+** =visual-regexp=
+
+#+begin_src emacs-lisp
+(use-package visual-regexp
+  :defer 1
+  :ensure t
+  :bind
+  (( "C-M-%" . vr/query-replace))
+  )
+#+end_src
+
+  
+
+
+
+** =dead-grep=
+#+begin_src emacs-lisp
+(use-package deadgrep
+  :ensure t
+  :defer 1
+  :config )
+#+end_src
+
+** =Popwin=
+Algunas ventanas tienen menor /importancia/ que otras, ya que tienden a ser temporales (por ejemplo, las ventanas de ayuda). Con =popwin=, estas ventanas ocupan menos espacio en pantalla y desaparecen con =C-g=. Actualmente lo he quitado.
+#+begin_src lisp
+(use-package popwin
+  :ensure t
+  :defer 1
+  :config
+    (popwin-mode 1))
+#+end_src
+
+** =winner=
+Retroceder en la historia de disposición de ventanas y búferes
+#+begin_src emacs-lisp
+(use-package winner
+  :ensure t
+  :defer 1 
+  :config
+    (setq winner-dont-bind-my-keys nil)
+    (winner-mode 1)
+    (define-key winner-mode-map (kbd "M-<left>") #'winner-undo)
+    (define-key winner-mode-map (kbd "M-<right>") #'winner-redo))
+#+end_src
+
+#+RESULTS:
+: t
+
+** =region-occurrences-highlighter=
+Marcar las ocurrencias de la selección
+#+begin_src emacs-lisp
+  (use-package region-occurrences-highlighter 
+    :ensure t
+    :defer 1
+    :config
+    ;;(add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
+    ;;(add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
+    ;;(add-hook 'text-mode-hook #'region-occurrences-highlighter-mode)
+    (global-region-occurrences-highlighter-mode 1)
+    (define-key region-occurrences-highlighter-nav-mode-map "\M-n" 'region-occurrences-highlighter-next)
+    (define-key region-occurrences-highlighter-nav-mode-map "\M-p" 'region-occurrences-highlighter-prev))
+#+end_src
+
+#+RESULTS:
+
+
+** =smartscan=
+Utilizo =smartscan= para localizar ocurrencias de símbolos.
+Las teclas rápidas son M-n y M-p, que entran en conflicto con las de region-occurrences-highlighter-nav-mode-map.
+Cargo este paquete después para que en minor-mode-map-alist aparezca antes el keymap de region-occurrences.
+#+begin_src emacs-lisp
+(use-package smartscan
+  :ensure t
+  :defer 1
+  :config
+    (setq smartscan-symbol-selector "symbol")
+    (global-smartscan-mode 1))
+#+end_src
+
+#+RESULTS:
+
+** =helm=
+=helm= es un sistema para seleccionar una opción entre varias posibilidades, que se puede usar para casi todo
+- Buscar un comando
+- Cambiar de buffer
+- Navegar por la historia del portapapeles
+- Visualizar las ocurrencias de un patrón en un buffer
+- ... y más
+
+#+begin_src emacs-lisp
+  ;; HELM
+  (use-package helm
+    :ensure t
+    :defer 1
+    :config
+    (setq helm-split-window-inside-p t)
+    (setq helm-display-header-line nil)
+    (setq helm-autoresize-max-height 40)
+    (setq helm-autoresize-min-height 30)
+    (setq helm-autoresize-min-width 100)
+    (helm-autoresize-mode 1)
+    (helm-mode 1)
+    (helm-flx-mode +1)
+    (setq helm-display-buffer-reuse-frame t)
+    (setq helm-use-undecorated-frame-option t)
+
+    (setq helm-display-function 'helm-display-buffer-in-own-frame)
+    (setq helm-display-buffer-width 120)
+
+    ;; PROBLEMAS DE REDISPLAY: hasta que no doy una tecla no se muestra nada
+    ;;(defun ags/try-to-redisplay-helm ()
+    ;;  (redisplay t))
+    ;;(add-hook 'helm-minibuffer-set-up-hook 'ags/try-to-redisplay-helm)
+
+    (use-package dumb-jump
+      :config
+      (setq dumb-jump-selector 'helm)
+      )
+
+    (use-package helm-projectile
+      :ensure t
+      :defer 1
+      :config 
+      (helm-projectile-on)
+      (setq projectile-completion-system 'helm)
+      )
+
+    (use-package helm-swoop
+      :ensure t
+      :config
+      (setq helm-display-buffer-width 140)
+      (setq helm-display-buffer-height 20)
+      (setq helm-swoop-split-window-function helm-display-function)
+      :after (helm)
+      :bind
+	  (("C-f" . helm-swoop))
+	  (("C-S-f" . helm-multi-swoop-all))
+    )
+
+    :bind
+    (("M-x"  . helm-M-x))
+    (("<menu>"  . helm-M-x))
+    (("C-x C-f"  . helm-find-files))
+    (("<f6>"  . helm-mini))
+    (("M-y"  . helm-show-kill-ring))
+    (("C-x r b"  . helm-filtered-bookmarks))
+
+    )
+#+end_src
+
+#+RESULTS:
+: helm-filtered-bookmarks
+
+
+
+
+
+
+
+* Edición
+
+** Tabuladores /vs/ espacios
+No utilizo tabuladores en las indentaciones. 
+#+begin_src emacs-lisp
+(setq-default indent-tabs-mode nil)
+(setq tab-width 2)
+#+end_src
+
+** Comportamiento de la selección
+Al comenzar a escribir con una selección, se borra lo seleccionado. 
+#+begin_src emacs-lisp
+(delete-selection-mode 1)
+#+end_src
+
+Al copiar la  selección, mantener la selección 
+#+begin_src emacs-lisp
+(defadvice ags/kill-ring-save (after keep-transient-mark-active ())
+  "Override the deactivation of the mark."
+  (setq deactivate-mark nil))
+(ad-activate 'ags/kill-ring-save)
+#+end_src
+
+
+** Historia del portapapeles
+Una de las ventajas de Emacs es su /kill ring/, donde se guarda la historia del portapapeles. Con esta opción, añado a esta historia el portapapeles del sistema. Descubierto en [[https://writequit.org/org/settings.html#sec-1-33][https://writequit.org/org/settings.html#sec-1-33]]
+#+begin_src emacs-lisp
+(setq save-interprogram-paste-before-kill t)
+#+end_src
+
+** Recarga de ficheros modificados
+Encuentro más conveniente que los ficheros se recarguen si un programa externo los modifica, sin preguntas.
+
+#+begin_src emacs-lisp
+(use-package autorevert
+  :ensure nil
+  :config
+  (global-auto-revert-mode 1)
+  (setq global-auto-revert-non-file-buffers t)
+  (setq auto-revert-verbose nil))
+#+end_src
+
+** Comandos que se consideran /avanzados/
+Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones útiles que prefiero que estén activadas por defecto.
+#+begin_src emacs-lisp
+(put 'narrow-to-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+#+end_src
+
+
+* Navegación
+** Modo de ficheros recientes
+#+begin_src emacs-lisp
+(recentf-mode 1)
+(setq recentf-max-saved-items 2000)
+#+end_src
+** Ratón en =xterm=
+El ratón también puede utilizarse en un =xterm=
+#+begin_src emacs-lisp
+(xterm-mouse-mode)
+#+end_src
+
+** Guardar el fichero de bookmarks cada vez que se modifiquen
+#+begin_src emacs-lisp
+(setq bookmark-save-flag 1)
+#+end_src
+
+
+* Visualización
+
+** /scroll/
+#+begin_src emacs-lisp
+  (setq scroll-margin 0
+       scroll-step 1
+       scroll-conservatively 10000
+       scroll-preserve-screen-position 1)
+
+  (setq jit-lock-defer-time 0)
+  (setq fast-but-imprecise-scrolling t)
+
+
+#+end_src
+
+** Ratón
+Scroll con teclas de avance de página hasta el extremo del fichero.
+Sin esta opción, /Emacs/ no avanza hasta la primera línea si al dar a =RePag= no quedan páginas por retroceder.
+   
+[[https://stackoverflow.com/questions/445873/how-can-i-make-emacs-mouse-scrolling-slower-and-smoother]]
+   #+begin_src emacs-lisp
+     (setq scroll-error-top-bottom t)
+     (setq mouse-wheel-progressive-speed nil)
+     (setq mouse-wheel-scroll-amount '(1 ((shift) . 2) ((control) . nil))) 
+   #+end_src
+
+Scroll lateral con el touchpad   
+#+begin_src emacs-lisp
+(global-set-key (kbd "<mouse-6>") (lambda() (interactive) (scroll-right 10)))
+(global-set-key (kbd "<mouse-7>") (lambda() (interactive) (scroll-left 10)))
+(put 'scroll-left 'disabled nil)
+(put 'scroll-right 'disabled nil)
+#+end_src
+
+#+RESULTS:
+
+
+** Números de línea
+
+#+begin_src emacs-lisp
+(setq display-line-numbers-width 3)
+#+end_src
+
+** Líneas muy largas
+Avoid performance issues in files with very long lines.
+#+begin_src emacs-lisp
+(unless (version<= emacs-version "27")
+  (global-so-long-mode 1))
+#+end_src
+
+** Resaltar términos buscados
+=isearch= resalta las coincidencias con la búsqueda, pero se quitan al acabar de buscar. Con esto, las coincidencias quedan resaltadas hasta la siguiente búsqueda o hasta ejecutar =lazy-highlight-cleanup=
+#+begin_src emacs-lisp
+(setq lazy-highlight-cleanup nil)
+(setq lazy-highlight-max-at-a-time nil)
+(setq lazy-highlight-initial-delay 0)
+#+end_src
+
+** Cambiar el tamaño de fuente de todo /emacs/ (no solo el buffer actual)
+#+begin_src emacs-lisp
+(default-text-scale-mode 1)
+(setq frame-resize-pixelwise t)
+#+end_src
+
+** Respuestas de confirmación más cortas
+#+begin_src emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+#+end_src
+
+** Desactivar la campana (/bell/)
+Tanto la señal auditiva como la visual
+#+begin_src emacs-lisp
+(setq visible-bell 1)
+(setq ring-bell-function 'ignore)
+#+end_src
+
+** Barras de desplazamiento, de herramientas y menú
+La barra de menú y la de herramientas es de lo primero que se quita al personalizar /emacs/, lo mismo que esa pantalla de inicio.
+#+begin_src emacs-lisp
+(setq inhibit-startup-message t)
+(ignore-errors (menu-bar-mode -1))
+(ignore-errors (tool-bar-mode -1))
+(ignore-errors (scroll-bar-mode 1))
+#+end_src
+
+** Ancho de la página de =man=
+#+begin_src emacs-lisp
+(setenv "MANWIDTH" "80")
+#+end_src
+
+** Mostrar paréntesis asociados
+#+begin_src emacs-lisp
+(show-paren-mode)
+#+end_src
+
+** Servidor emacs
+Arranco el servidor para utilizar /emacsclient/
+#+begin_src emacs-lisp
+  (use-package server
+    :config
+    (setenv "EDITOR" "emacsclient -c")
+    (unless (server-running-p)
+      (server-start))
+    )
+#+end_src
+
+* Javascript
+
+Añado a la lista de extensiones la de los módulos.
+   #+begin_src emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.mjs\\'" . js2-mode))
+   #+end_src
+

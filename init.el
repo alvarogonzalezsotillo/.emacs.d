@@ -1,6 +1,6 @@
 
 
-(defun my/setup-use-package (&optional refresh)
+(defun ags/setup-use-package (&optional refresh)
   (interactive
    (list
     (y-or-n-p "Refresh packages? ")
@@ -17,12 +17,12 @@
   (setq package-check-signature nil)
   (setq package-archives
         '(
-          ("melpa" . "http://melpa.org/packages/") 
+          ("melpa" . "http://melpa.org/packages/")
           ("gnu" . "http://elpa.gnu.org/packages/")
           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-	        ("org" . "http://orgmode.org/elpa/")
+	  ("org" . "http://orgmode.org/elpa/")
           )
- )
+        )
   (package-initialize t)
   (message "Comprobando si use-package está instalado...")
   (when (or refresh (not (require 'use-package nil t)))
@@ -53,7 +53,7 @@
     )
   )
 ;;; Code:
-(defun my/carga-config-org (refresh debug)
+(defun ags/carga-config-org (config.org refresh debug)
   "Carga la configuración, refrescando la lista de paquetes si se indica REFRESH, con debug si se indica DEBUG"
   (interactive
    (list
@@ -63,16 +63,20 @@
    
    )
   (setq debug-on-error debug)
-  (my/setup-use-package refresh)
+  (ags/setup-use-package refresh)
 
   (message "Cargo el fichero org de configuración con org-version:%s" (org-version))
+
   
-  (org-babel-load-file (expand-file-name "~/.emacs.d/config.org"))
+  (org-babel-load-file (expand-file-name config.org))
   ;;(load-file (expand-file-name "~/.emacs.d/config.el"))
 
   ;; DESACTIVAR EL DEBUG
   (setq debug-on-error nil))
 
-(my/carga-config-org nil nil)
-
+(find-file "~/.emacs.d/config.org")
+(find-file "~/.emacs.d/neoconfig.org")
+(find-file "~/.emacs.d/init.el")
+;(ags/carga-config-org "~/.emacs.d/config.org" nil nil)
+(ags/carga-config-org "~/.emacs.d/neoconfig.org" nil nil)
 
