@@ -74,9 +74,9 @@
   ;; DESACTIVAR EL DEBUG
   (setq debug-on-error nil))
 
-(find-file "~/.emacs.d/config.org")
-(find-file "~/.emacs.d/neoconfig.org")
-(find-file "~/.emacs.d/init.el")
+
+
 ;(ags/carga-config-org "~/.emacs.d/config.org" nil nil)
 (ags/carga-config-org "~/.emacs.d/neoconfig.org" nil nil)
 
+(find-file "~/.emacs.d/")

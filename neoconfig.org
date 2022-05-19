@@ -88,6 +88,27 @@ Utilizo tres repositorios de paquetes:
 - Instala el paquete si no está instalado
 
 
+** =quickrun=
+=Quickrun= ejecuta el buffer actual. Aumento el tiempo límite de la ejecución antes de matar el proceso.
+#+begin_src emacs-lisp
+(use-package quickrun
+  :ensure t
+  :config 
+    (setq quickrun-timeout-seconds 100))
+#+end_src
+** =htmlize=
+
+#+begin_src emacs-lisp
+(use-package  htmlize
+  :ensure t
+  :defer 1
+  :config
+ (setq htmlize-force-inline-images t)
+ (setq htmlize-output-type 'inline-css)
+)
+#+end_src
+
+
 ** =expand-region=
 #+begin_src emacs-lisp
 (use-package expand-region
@@ -436,7 +457,7 @@ Retroceder en la historia de disposición de ventanas y búferes
   :ensure t
   :defer 1 
   :config
-    (setq winner-dont-bind-my-keys nil)
+    (setq winner-dont-bind-ags/keys nil)
     (winner-mode 1)
     (define-key winner-mode-map (kbd "M-<left>") #'winner-undo)
     (define-key winner-mode-map (kbd "M-<right>") #'winner-redo))
@@ -556,7 +577,271 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 
 
 
+
+** Paquete =expand-region=
+#+begin_src emacs-lisp
+(use-package expand-region
+  :ensure t
+  :defer 1
+  :bind
+      (( "C-e" . 'er/expand-region))
+      (( "C-S-e" . 'er/contract-region))
+      (( "M-<up>" . 'er/expand-region))
+      (( "M-<down>" . 'er/contract-region))
+)
+#+end_src
+
+** Paquete =bm=
+Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
+#+BEGIN_SRC emacs-lisp
+  (defun my/bookmark-or-edit ()
+    (interactive)
+
+    (if (string= major-mode "dired-mode")
+        (progn
+          (all-the-icons-dired-mode -1)
+          (wdired-change-to-wdired-mode))
+        (bm-next)))
+
+
+    (use-package bm
+      :ensure t
+      :bind
+      (( "<C-f2>" . bm-toggle))
+      (( "<f2>" . my/bookmark-or-edit ))
+      (( "<S-f2>" . bm-previous))
+
+    )
+#+END_SRC
+
+
+** Paquete =multiple-cursors=
+
+#+BEGIN_SRC emacs-lisp
+  (use-package multiple-cursors
+    :ensure t
+    :custom (mc/always-run-for-all t)
+    :bind
+
+      (("C-S-c C-S-c" . mc/edit-lines ))
+      (("C->" . mc/mark-next-like-this ))
+      (("C-<" . mc/mark-previous-like-this ))
+      (("C-S-<mouse-1>" . mc/add-cursor-on-click ))
+      (("C-S-c C-S-v" . mc/mark-all-like-this ))
+)
+#+END_SRC
+
+
+
+** Paquete =expand-region=
+#+begin_src emacs-lisp
+(use-package expand-region
+  :ensure t
+  :defer 1
+  :bind
+      (( "C-e" . 'er/expand-region))
+      (( "C-S-e" . 'er/contract-region))
+      (( "M-<up>" . 'er/expand-region))
+      (( "M-<down>" . 'er/contract-region))
+)
+#+end_src
+
+** Paquete =bm=
+Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
+#+BEGIN_SRC emacs-lisp
+  (defun my/bookmark-or-edit ()
+    (interactive)
+
+    (if (string= major-mode "dired-mode")
+        (progn
+          (all-the-icons-dired-mode -1)
+          (wdired-change-to-wdired-mode))
+        (bm-next)))
+
+
+    (use-package bm
+      :ensure t
+      :bind
+      (( "<C-f2>" . bm-toggle))
+      (( "<f2>" . my/bookmark-or-edit ))
+      (( "<S-f2>" . bm-previous))
+
+    )
+#+END_SRC
+
+
+** Paquete =multiple-cursors=
+
+#+BEGIN_SRC emacs-lisp
+  (use-package multiple-cursors
+    :ensure t
+    :custom (mc/always-run-for-all t)
+    :bind
+
+      (("C-S-c C-S-c" . mc/edit-lines ))
+      (("C->" . mc/mark-next-like-this ))
+      (("C-<" . mc/mark-previous-like-this ))
+      (("C-S-<mouse-1>" . mc/add-cursor-on-click ))
+      (("C-S-c C-S-v" . mc/mark-all-like-this ))
+)
+#+END_SRC
+
+
+** Paquete =company=
+Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de programación y =org-mode=.
+
+#+begin_src emacs-lisp
+  (use-package company-posframe
+    :ensure t
+    :after (company)
+    :config
+
+    (company-posframe-mode 1)
+    )
+
+  (use-package company-auctex
+    :ensure t
+    :after (company)
+    :defer 1
+    :config)
+
+  (use-package company-c-headers
+    :ensure t
+    :after (company)
+    :defer 1
+    :config)
+
+  (use-package company-emoji
+    :ensure t
+    :after (company)
+    :defer 1
+    :config)
+
+  (use-package company-flx
+    :ensure t
+    :after (company)
+    :defer 1
+    :config
+      (company-flx-mode +1)
+  )
+  (use-package company-quickhelp
+    :ensure t
+    :after (company)
+    :defer 1
+    :config
+      (company-quickhelp-mode 1) )
+
+  (use-package company-web
+    :ensure t
+    :defer 1
+    :after (company)
+    :config)
+
+  (use-package company
+    :ensure t
+    :config
+
+    (setq company-tooltip-minimum-width 70)
+
+
+    (defvar ags/company-backends-prog-mode
+      '(
+        (
+         company-capf
+         company-files
+         company-dabbrev-code
+         company-web-html
+         company-keywords
+         company-emoji
+         )
+        )
+      )
+
+
+    (defvar ags/company-backends-org-mode
+      '(
+        (
+         company-files
+         company-dabbrev-code
+         company-dabbrev
+         company-keywords
+         company-emoji
+         company-capf
+         )
+        )
+      )
+
+    (defvar ags/company-backends ags/company-backends-org-mode)
+
+    ;; set default `company-backends'
+    (setq company-backends ags/company-backends)
+
+
+
+    (defun ags/company-backends-org-mode-function ()
+      (interactive)
+      (set (make-local-variable 'company-backends) ags/company-backends-org-mode))
+
+    (add-hook 'org-mode-hook #'ags/company-backends-org-mode-function)
+
+    (defun ags/company-backends-prog-mode-function ()
+      (interactive)
+      (set (make-local-variable 'company-backends) ags/company-backends-prog-mode))
+
+
+    (add-hook 'prog-mode-hook #'ags/company-backends-prog-mode-function)
+
+    (global-set-key (kbd "C-.") 'company-complete)
+    (define-key company-active-map [escape] 'company-abort)
+
+
+
+  (setq company-dabbrev-code-everywhere t)
+  (setq company-dabbrev-code-ignore-case nil)
+  (setq company-dabbrev-everywhere t)
+  (setq company-dabbrev-ignore-case 'keep-prefix)
+  (setq company-dabbrev-downcase nil)
+
+    
+    (global-company-mode)
+    )
+#+end_src
+
+#+RESULTS:
+: t
+
 * Edición
+
+
+** /Backup/ de ficheros
+Emacs guarda una copia de seguridad de los ficheros editados. Si no se configura, crea la copia en el mismo directorio.
+
+Las copias de seguridad son interesantes aunque se utilice un control de versiones. Por ejemplo, se guardan versiones de ficheros del sistema y de los editados con Tramp.
+
+Prefiero guardar todas las copias en un directorio, manteniendo varias versiones de cada fichero.
+
+Tampoco me interesan los ficheros de /lock/.
+#+begin_src emacs-lisp
+(setq backup-directory-alist `(("." . "~/.saves")))
+(setq backup-by-copying t)
+(setq delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)
+
+(setq create-lockfiles nil)
+
+(setq auto-save-file-name-transforms
+      `((".*" "~/.saves" t)))
+
+(setq delete-by-moving-to-trash t)
+#+end_src
+
+Grabar en el propio fichero
+#+begin_src emacs-lisp
+(setq auto-save-visited-interval 60)
+(auto-save-visited-mode 1)
+#+end_src
 
 ** Tabuladores /vs/ espacios
 No utilizo tabuladores en las indentaciones. 
@@ -607,7 +892,31 @@ Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones
 #+end_src
 
 
+
+
 * Navegación
+** =tramp=
+=tramp= intenta optimizar las conexiones, enviando en línea los ficheros pequeños. Esto me da problemas en algunos sistemas, así que indico que los ficheros se copien a partir de 1 byte de tamaño:
+#+begin_src emacs-lisp
+(setq tramp-copy-size-limit 1)
+(setq tramp-debug-buffer nil)
+(setq tramp-verbose 1)
+#+end_src
+
+En ocasiones, =tramp= no consigue conectar con un usuario que tiene =zsh= como shell. Para ello, hay que añadir lo siguiente al fichero =.zshrc= remoto:
+#+begin_src sh
+# EN .zshrc PARA QUE FUNCIONE tramp
+if [[ "$TERM" == "dumb" ]]
+then
+  unsetopt zle
+  unsetopt prompt_cr
+  unsetopt prompt_subst
+  unfunction precmd
+  unfunction preexec
+  PS1='$ '
+fi
+#+end_src
+
 ** Modo de ficheros recientes
 #+begin_src emacs-lisp
 (recentf-mode 1)
@@ -624,8 +933,30 @@ El ratón también puede utilizarse en un =xterm=
 (setq bookmark-save-flag 1)
 #+end_src
 
+** Correo electrónico
+Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smarthost/)
+#+begin_src emacs-lisp
+k(setq send-mail-function (quote sendmail-send-it))
+#+end_src
+
+#+RESULTS:
+: sendmail-send-it
 
 * Visualización
+
+** Paquete =doc-view=
+Para visualizar documentos desde Emacs, aumento su resolución y anchura.
+#+begin_src emacs-lisp
+(use-package doc-view
+  :config
+  (setq doc-view-continuous t)
+  (setq doc-view-image-width 1600)
+  (setq doc-view-resolution 400))
+#+end_src
+
+#+RESULTS:
+: t
+
 
 ** /scroll/
 #+begin_src emacs-lisp
@@ -730,6 +1061,149 @@ Arranco el servidor para utilizar /emacsclient/
       (server-start))
     )
 #+end_src
+
+
+* OrgMode
+
+Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair-mode=
+
+#+begin_src emacs-lisp
+  (use-package org
+    :ensure t
+    :defer 1
+    :config
+    (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
+    (modify-syntax-entry ?= "(=" org-mode-syntax-table)
+    (modify-syntax-entry ?_ "(_" org-mode-syntax-table)
+    (modify-syntax-entry ?* "(*" org-mode-syntax-table)
+    (modify-syntax-entry ?/ "(/" org-mode-syntax-table)
+    )
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package org
+    :ensure t
+    :defer 1
+    :config
+
+    (use-package org-bullets
+      :ensure t
+      :defer t
+      :config
+      (org-bullets-mode 1))
+
+
+    (defun ags/org-export-deterministic-reference (references)
+      (let ((new (length references)))
+        (while (rassq new references) (setq new (+ new 1))) 
+        new))
+    (advice-add #'org-export-new-reference :override #'ags/org-export-deterministic-reference)
+
+
+    (setq org-ellipsis "⤵⤵⤵")
+    (set-face-attribute 'org-ellipsis nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
+    (setq org-list-allow-alphabetical t)
+    
+    ;;(setq org-hide-emphasis-markers t)
+
+    ;;Trying to fix indentation behaviour within code blocks.
+    (setq org-edit-src-content-indentation 0)
+    (setq org-src-fontify-natively t)
+    (setq org-src-tab-acts-natively t)
+    (setq org-src-preserve-indentation t)
+
+    ;; https://stackoverflow.com/questions/40110927/how-to-export-a-reference-to-a-begin-src-block-to-latex/40689439#40689439
+    (setq org-latex-prefer-user-labels t)
+
+
+    ;; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
+    (ignore-errors
+      (require 'org-tempo)
+
+      ;; si no existe org-tempo no se llega aquí, lo cual está bien porque lo siguiente solo hay que hacerlo para org-tempo
+      (setq org-structure-template-alist 
+            '(("n" . "notes")
+              ("a" . "export ascii")
+              ("c" . "center")
+              ("C" . "comment")
+              ("e" . "example")
+              ("E" . "export")
+              ("h" . "export html")
+              ("l" . "export latex")
+              ("q" . "quote")
+              ("s" . "src")
+              ("v" . "verse")))
+
+      )
+    )
+#+end_src
+
+
+
+
+** Lenguajes =org-babel=
+
+| ob-ammonite                    |                                                                |
+| ob-typescript                  |                                                                |
+| ob-restclient                  |                                                                |
+| ob-rust                        |                                                                |
+
+Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
+#+begin_src emacs-lisp
+(use-package ob-ammonite
+  :ensure t
+  :defer 1)
+
+(use-package ob-typescript
+  :ensure t
+  :defer 1)
+
+(use-package ob-restclient
+  :ensure t
+  :defer 1)
+
+(if
+    (file-exists-p "/usr/share/plantuml/plantuml.jar")
+    (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar")
+  (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.1.2018.11.jar")))
+
+(setq plantuml-jar-path org-plantuml-jar-path)
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   (C . t )
+   (dot . t)
+   (plantuml . t)
+   (maxima . t)
+   (ammonite . t)
+   (typescript . t)
+   (restclient . t )
+   (shell . t)))
+#+end_src
+
+
+ Además, no pido confirmación para varios lenguajes                                                                                                           
+ #+begin_src emacs-lisp
+ (defun ags/org-confirm-babel-evaluate (lang body)
+   (not (member lang '("dot" "emacs-lisp" "shell" "plantuml" "maxima"))))
+ (setq org-confirm-babel-evaluate 'ags/org-confirm-babel-evaluate)
+#+end_src
+
+
+
+** Listados /Latex/
+Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
+#+begin_src emacs-lisp
+(setq org-latex-listings t)
+#+end_src
+
+** Selección con mayúsculas 
+#+begin_src emacs-lisp
+(setq org-support-shift-select 'always)
+#+end_src
+
+
 
 * Javascript
 
