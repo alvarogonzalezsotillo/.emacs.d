@@ -64,11 +64,11 @@
                    (string-match "\\(^[^ ]*\\)" line)
                    (match-string 1 line)))
            (prev-hash (progn
-                   (string-match "\\(^[^ ]*\\)" prev-line)
-                   (match-string 1 prev-line)))
-           (next-hash (progn
                    (string-match "\\(^[^ ]*\\)" next-line)
-                   (match-string 1 next-line))))
+                   (match-string 1 next-line)))
+           (next-hash (progn
+                   (string-match "\\(^[^ ]*\\)" prev-line)
+                   (match-string 1 prev-line))))
       
       (message "file-name:%s prev-hash:%s hash:%s next-hash:%s" file-name prev-hash hash next-hash)
       (if (and hash (not (string-equal hash "")) (not (string-equal hash "\n")))
