@@ -1018,7 +1018,8 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
     :ensure t
     :config
       (setq ahs-idle-interval 3.0)
-      (setq ahs-default-range 'ahs-range-display))
+      (setq ahs-default-range 'ahs-range-display)
+      (global-auto-highlight-symbol-mode))
 #+end_src
 
 

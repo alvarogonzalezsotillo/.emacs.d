@@ -164,6 +164,7 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 
 
 ** =demap=
+Muestra un /minimap/ del fichero
 #+begin_src emacs-lisp
 (use-package demap
   :ensure t
@@ -362,8 +363,7 @@ Añado las siguientes reglas para hacer búsquedas simples con =dumb-jump= en fi
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 #+end_src
 
-#+RESULTS:
-: t
+
 ** =projectile=
 =projectile= necesita conocer su tecla de prefijo (utilizo la tradicional).
 #+begin_src emacs-lisp
@@ -524,8 +524,8 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
     (setq helm-display-buffer-reuse-frame t)
     (setq helm-use-undecorated-frame-option t)
 
-    (setq helm-display-function 'helm-display-buffer-in-own-frame)
-    (setq helm-display-buffer-width 120)
+    ;;(setq helm-display-function 'helm-display-buffer-in-own-frame)
+    ;;(setq helm-display-buffer-width 120)
 
     ;; PROBLEMAS DE REDISPLAY: hasta que no doy una tecla no se muestra nada
     ;;(defun ags/try-to-redisplay-helm ()
@@ -568,8 +568,15 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
     )
 #+end_src
 
-#+RESULTS:
-: helm-filtered-bookmarks
+#+begin_src emacs-lisp
+    ;;https://www.reddit.com/r/emacs/comments/345vtl/make_helm_window_at_the_bottom_without_using_any/
+    ;;HELM SIEMPRE ABAJO CON ANCHO COMPLETO
+    (add-to-list 'display-buffer-alist
+                    `(,(rx bos "*helm" (* not-newline) "*" eos)
+                         (display-buffer-in-side-window)
+                         (inhibit-same-window . t)
+                         (window-height . 0.3)))
+#+end_src
 
 
 
@@ -578,7 +585,9 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 
 
 
-** Paquete =expand-region=
+
+
+**  =expand-region=
 #+begin_src emacs-lisp
 (use-package expand-region
   :ensure t
@@ -591,7 +600,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 )
 #+end_src
 
-** Paquete =bm=
+**  =bm=
 Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 #+BEGIN_SRC emacs-lisp
   (defun my/bookmark-or-edit ()
@@ -615,7 +624,7 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 #+END_SRC
 
 
-** Paquete =multiple-cursors=
+**  =multiple-cursors=
 
 #+BEGIN_SRC emacs-lisp
   (use-package multiple-cursors
@@ -633,7 +642,7 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 
 
 
-** Paquete =expand-region=
+** =expand-region=
 #+begin_src emacs-lisp
 (use-package expand-region
   :ensure t
@@ -646,7 +655,7 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 )
 #+end_src
 
-** Paquete =bm=
+** =bm=
 Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 #+BEGIN_SRC emacs-lisp
   (defun my/bookmark-or-edit ()
@@ -670,7 +679,7 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 #+END_SRC
 
 
-** Paquete =multiple-cursors=
+** =multiple-cursors=
 
 #+BEGIN_SRC emacs-lisp
   (use-package multiple-cursors
@@ -687,7 +696,65 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 #+END_SRC
 
 
-** Paquete =company=
+** =which-key=
+
+Ayuda interactiva de teclado. En el popup-type por defecto entra en conflicto con treemacs.
+#+begin_src emacs-lisp
+(use-package which-key
+  :ensure t
+  :config
+    (which-key-mode t)
+    (setq which-key-idle-delay 3.0)
+)
+
+(use-package which-key-posframe
+  :ensure t
+  :config
+  (which-key-posframe-mode)
+
+)
+#+end_src
+
+** =auto-highlight-symbol=
+Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en todo el buffer, para que se pueda navegar por todas las ocurrencias del fichero, pero ralentizaba bastante. Ahora uso =smartscan=.
+#+begin_src emacs-lisp
+  (use-package auto-highlight-symbol
+    :ensure t
+    :config
+      (setq ahs-idle-interval 3.0)
+      (setq ahs-default-range 'ahs-range-display)
+      (global-auto-highlight-symbol-mode))
+#+end_src
+
+
+** =transpose-frame=
+
+   #+begin_src emacs-lisp
+
+(use-package transpose-frame 
+  :ensure t
+  :defer 1
+  :bind
+      (("<f5>" . transpose-frame))
+)
+
+   #+end_src
+
+** =psw=
+
+#+begin_src emacs-lisp
+(use-package popup-switcher
+  :ensure t
+  :bind
+  (("<M-f6>" . psw-switch-buffer))
+
+  )
+
+#+end_src
+
+
+
+** =company=
 Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de programación y =org-mode=.
 
 #+begin_src emacs-lisp
@@ -891,6 +958,107 @@ Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones
 (put 'downcase-region 'disabled nil)
 #+end_src
 
+** Cerrar buferes sin preguntar
+Cuando quiero cerrar un buffer, prefiero que no pregunte.
+#+begin_src emacs-lisp
+(defun kill-this-buffer-dont-ask ()
+  (interactive)
+  (kill-buffer (current-buffer)))
+(global-set-key (kbd "C-x k") 'kill-this-buffer-dont-ask)
+#+end_src
+
+
+** Búsqueda incremental
+Si empiezo una búsqueda con =C-s= o =C-r=, se empieza buscando la selección
+#+begin_src emacs-lisp
+;; https://www.reddit.com/r/emacs/comments/b7yjje/isearch_region_search/
+(defun ags/isearch-region (&optional not-regexp no-recursive-edit)
+  "If a region is active, make this the isearch default search pattern."
+  (interactive "P\np")
+  (when (use-region-p)
+    (let ((search (buffer-substring-no-properties
+                   (region-beginning)
+                   (region-end))))
+      ;;;(message "ags/ir: %s %d %d" search (region-beginning) (region-end))
+      (setq deactivate-mark t)
+      (isearch-yank-string search))))
+
+(advice-add 'isearch-forward-regexp :after 'ags/isearch-region)
+(advice-add 'isearch-forward :after 'ags/isearch-region)
+
+(advice-add 'isearch-backward-regexp :after 'ags/isearch-region)
+(advice-add 'isearch-backward :after 'ags/isearch-region)
+#+end_src
+
+
+En una búsqueda incremental, utilizo =C-p= y =C-n= para ir a otras búsquedas anteriores
+#+begin_src emacs-lisp
+  ;; set arrow keys in isearch. left/right is backward/forward, up/down is history. press Return to exit
+  (define-key isearch-mode-map (kbd "C-P") 'isearch-ring-retreat )
+  (define-key isearch-mode-map (kbd "C-N") 'isearch-ring-advance )
+
+  ;;(define-key isearch-mode-map (kbd "<left>") 'isearch-repeat-backward)
+  ;;(define-key isearch-mode-map (kbd "<right>") 'isearch-repeat-forward)
+
+  ;;(define-key minibuffer-local-isearch-map (kbd "<left>") 'isearch-reverse-exit-minibuffer)
+  ;;(define-key minibuffer-local-isearch-map (kbd "<right>") 'isearch-forward-exit-minibuffer)
+#+end_src
+
+** Cancelar acción actual
+A veces es fácil perderse entre comandos a medio introducir y ventanas popup. Me gusta que la tecla escape cancele cualquier acción. Con el siguiente código hago que se cancelen incluso más acciones que con =C-g=.
+#+begin_src emacs-lisp
+;;(define-key global-map [escape] 'keyboard-escape-quit)
+;; (define-key key-translation-map (kbd "ESC") (kbd "C-g")) // PROBLEMAS CON EL TERMINAL
+(defun super-escape()
+  (interactive)
+  (keyboard-escape-quit)
+  (keyboard-quit)
+  (company-abort)
+  (abort-recursive-edit)
+  (setq quit-flag t))
+(define-key global-map [escape] 'super-escape)
+(define-key minibuffer-local-map [escape] 'super-escape)
+(define-key company-active-map [escape] 'company-abort)
+#+end_src
+
+
+** Atajos de teclado varios
+Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por ejemplo, prefiero que =C-Z= sea "deshacer"). Para poder definir teclas con prioridad sobre los demás modos defino un modo con mis atajos.
+#+begin_src emacs-lisp
+
+  ;; MIS TECLAS
+  (defvar mis-teclas-minor-mode-map
+    (let ((map (make-sparse-keymap)))
+
+      (define-key map (kbd "C-z") 'undo )
+      (define-key map (kbd "C-x C-d") 'dired)
+      (define-key map (kbd "C-x d") 'dired-other-frame)
+      (define-key map (kbd "C-x C-b") 'ibuffer)
+      (define-key map (kbd "C-x b") 'ibuffer)
+      (define-key map (kbd "C-<f5>") 'reveal-y-pdf)
+      (define-key map (kbd "M-I") 'popup-imenu)
+      (define-key map (kbd "<f7>") 'imenu-list-smart-toggle)
+      (define-key map (kbd "<C-o>") 'psw-switch-projectile-files)
+
+      (define-key map (kbd "M-S-<up>") 'enlarge-window)
+      (define-key map (kbd "M-S-<down>") 'shrink-window)
+      (define-key map (kbd "M-S-<left>") 'shrink-window-horizontally)
+      (define-key map (kbd "M-S-<right>") 'enlarge-window-horizontally)
+      (define-key map (kbd "C-x M-x") 'execute-extended-command)
+      (define-key map (kbd "C-S-l") 'toggle-truncate-lines)
+      map)
+    "mis-teclas-minor-mode keymap")
+
+
+  (define-minor-mode mis-teclas-minor-mode
+    "A minor mode so that my key settings override annoying major modes."
+    :init-value t
+    :lighter "mis-teclas")
+
+  (mis-teclas-minor-mode 1)
+
+#+end_src
+
 
 
 
@@ -936,7 +1104,7 @@ El ratón también puede utilizarse en un =xterm=
 ** Correo electrónico
 Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smarthost/)
 #+begin_src emacs-lisp
-k(setq send-mail-function (quote sendmail-send-it))
+(setq send-mail-function (quote sendmail-send-it))
 #+end_src
 
 #+RESULTS:
@@ -970,6 +1138,9 @@ Para visualizar documentos desde Emacs, aumento su resolución y anchura.
 
 
 #+end_src
+
+#+RESULTS:
+: t
 
 ** Ratón
 Scroll con teclas de avance de página hasta el extremo del fichero.
@@ -1080,6 +1251,19 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
     )
 #+end_src
 
+Mejores tamaños de encabezados
+
+#+begin_src emacs-lisp
+  (use-package org
+    :ensure t
+    :defer 1
+    :config
+    (set-face-attribute 'org-level-1 nil :height 3.0)
+    (set-face-attribute 'org-level-2 nil :height 2.0)
+    (set-face-attribute 'org-level-3 nil :height 1.5)
+    )
+#+end_src    
+
 #+begin_src emacs-lisp
   (use-package org
     :ensure t
@@ -1142,12 +1326,6 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
 
 
 ** Lenguajes =org-babel=
-
-| ob-ammonite                    |                                                                |
-| ob-typescript                  |                                                                |
-| ob-restclient                  |                                                                |
-| ob-rust                        |                                                                |
-
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
 (use-package ob-ammonite
