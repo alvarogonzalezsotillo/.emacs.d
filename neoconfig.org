@@ -70,6 +70,133 @@ Añado también el directorio de =cargo= para =rust=.
 #+end_src
 
 
+** Convertir un fichero =gift= en un examen =pdf=
+Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
+   #+begin_src emacs-lisp
+
+(defvar gifttolatex-titulo nil)
+(defvar gifttolatex-porcentajetest nil)
+(defvar gifttolatex-parametros nil)
+
+(defun ags/gifttolatex (titulo porcentajetest parametros)
+  "ejecuta giftolatex en el buffer actual."
+  (interactive
+   (list 
+    (read-string "Título: " (or gifttolatex-titulo (buffer-name)))
+    (read-number "Porcentaje del test: " (or gifttolatex-porcentajetest 60))
+    (read-string "Otros parámetros:" (or gifttolatex-parametros "-k" ))))
+  
+  (setq gifttolatex-titulo titulo)
+  (setq gifttolatex-porcentajetest porcentajetest)
+  (setq gifttolatex-parametros parametros)
+  
+  (let ((comando (format "sh -c 'gifttolatex %s -t \"%s\" -q \"%s\" \"%s\"'" parametros titulo porcentajetest buffer-file-name)))
+    (shell-command comando)))
+
+(defalias 'trim-string 'string-trim) 
+   #+end_src
+
+
+** Arrancar el servidor http de emacs en el directorio actual
+#+begin_src emacs-lisp
+  (defun ags/servidor-httpd-aqui (directory host port)
+    "Abre un servidor http en un directorio."
+    (interactive   (list
+    (read-directory-name "Root directory: " default-directory nil t)
+    (read-string "Host: " "127.0.0.1" )
+    (read-number "Port: " 8080)))
+
+    (setq httpd-root directory)
+    (setq httpd-host host)
+    (setq httpd-port port)
+    (httpd-start)
+    (browse-url (concat "http://localhost:" (number-to-string port) "/")))
+#+end_src
+
+** Generar /reveal/ y PDF
+Generalmente utilizo un fichero orgmode para hacer transparencias y materiales para clase, y quiero generar a la vez las transparencias, la versión HTML y el PDF.
+#+begin_src emacs-lisp
+(defun ags/reveal-y-pdf ()
+  "Crea transparencias de reveal y hace el pdf a la vez."
+  (interactive)
+
+  (save-window-excursion
+    (ignore-errors
+      (org-html-export-to-html)
+      (let* (
+             (filename (buffer-file-name))
+             (html-filename (concat (file-name-sans-extension filename) ".html"))
+             (html-wp-filename (concat (file-name-sans-extension filename) ".wp.html")) )
+        (message "Copiando fichero: %s -> %s" html-filename html-wp-filename)
+        (copy-file html-filename html-wp-filename t) ))
+
+    (ignore-errors
+      (org-re-reveal-export-to-html)
+      (let* (
+             (filename (buffer-file-name))
+             (html-filename (concat (file-name-sans-extension filename) ".html"))
+             (html-reveal-filename (concat (file-name-sans-extension filename) ".reveal.html")) )
+        (message "renombrando fichero: %s -> %s" html-filename html-reveal-filename)
+        (rename-file html-filename html-reveal-filename t)))
+
+    (ignore-errors
+      (org-epub-export-to-epub))
+
+    (ignore-errors
+      (org-latex-export-to-pdf)
+      (let* (
+             (filename (buffer-file-name))
+             (tex-filename (concat (file-name-sans-extension filename) ".tex")))
+
+        
+        (message "Borrando fichero: %s" tex-filename)
+        (delete-file tex-filename) ) )))
+#+end_src
+
+
+** Función para decodificar una URL
+#+begin_src emacs-lisp
+(defun ags/url-decode-region (start end)
+  "Replace a region with the same contents, only URL decoded."
+  (interactive "r")
+  (let ((text (url-unhex-string (buffer-substring start end))))
+    (delete-region start end)
+    (insert text)))
+
+#+end_src
+
+** Convertir la selección en un bloque de código de =orgmode=
+#+begin_src emacs-lisp
+(defun ags/org-code-block-from-region (beg end &optional results-switches inline)
+  "Copiado de org-babel-examplify-region"
+  (interactive "*r")
+  (let ((maybe-cap
+	 (lambda (str)
+	   (if org-babel-uppercase-example-markers (upcase str) str))))
+    (if inline
+	(save-excursion
+	  (goto-char beg)
+	  (insert (format org-babel-inline-result-wrap
+			  (delete-and-extract-region beg end))))
+      (let ((size (count-lines beg end)))
+	(save-excursion
+	  (cond ((= size 0))	      ; do nothing for an empty result
+		(t
+		 (goto-char beg)
+		 (insert (if results-switches
+			     (format "%s%s\n"
+				     (funcall maybe-cap "#+begin_src")
+				     results-switches)
+			   (funcall maybe-cap "#+begin_src\n")))
+		 (let ((p (point)))
+		   (if (markerp end) (goto-char end) (forward-char (- end beg)))
+		   (org-escape-code-in-region p (point)))
+		 (insert (funcall maybe-cap "#+end_src\n")))))))))
+#+end_src
+
+
+
+
 * Carga de paquetes
 
 Utilizo tres repositorios de paquetes:
@@ -87,6 +214,157 @@ Utilizo tres repositorios de paquetes:
 - Agrupa la configuración de cada paquete
 - Instala el paquete si no está instalado
 
+
+
+
+
+** =diff-hl=
+Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual. 
+
+#+BEGIN_SRC emacs-lisp
+(use-package diff-hl
+  :defer 1
+  :ensure t
+  :config
+
+  (use-package diff-hl-margin)
+  
+
+  (use-package diff-hl-dired
+    :config
+    (diff-hl-dired-mode 1))
+
+  (use-package diff-hl-flydiff
+    :config
+    (diff-hl-flydiff-mode 1))
+
+  (use-package diff-hl-show-hunk
+    :config
+    (require 'diff-hl-show-hunk-posframe)
+
+    (defun ags/diff-hl-show-hunk-toggle-backend()
+      (interactive)
+      (setq diff-hl-show-hunk-posframe-poshandler 'posframe-poshandler-point-window-center)
+      (if (eq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)
+          (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-inline-popup)
+        (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)))
+ 
+    (defun ags/diff-hl-show-hunk-toggle-style()
+      (interactive)
+      (if diff-hl-show-hunk-inline-popup-hide-hunk
+          (progn
+            (setq diff-hl-show-hunk-inline-popup-hide-hunk nil)
+            (setq diff-hl-show-hunk-inline-popup-smart-lines t))
+        (setq diff-hl-show-hunk-inline-popup-hide-hunk t)
+        (setq diff-hl-show-hunk-inline-popup-smart-lines nil)))
+
+    (setq diff-hl-show-hunk-inline-popup-hide-hunk t)
+    (setq diff-hl-show-hunk-inline-popup-smart-lines nil)
+    
+    (global-diff-hl-show-hunk-mouse-mode 1))
+  
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+  (global-diff-hl-mode 1))
+
+
+#+END_SRC
+
+
+** =page-break-lines=
+Mostrar =^L= (saltos de página) como una línea horizontal
+#+begin_src emacs-lisp
+(use-package page-break-lines
+  :defer t
+  :ensure t
+  :config
+  (global-page-break-lines-mode))
+#+end_src
+
+** =gift-mode=
+#+begin_src emacs-lisp
+(use-package gift-mode
+  :defer t
+  :ensure t
+  :config
+)
+#+end_src
+
+
+** =origami=
+
+   #+begin_src emacs-lisp
+
+(use-package origami
+  :defer 1
+  :ensure t
+  :config
+ (setq origami-show-fold-header nil)
+ (setq origami-fold-replacement "⤵⤵⤵")
+ (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified)
+ (set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
+
+  :bind
+      (("<C-return>" . origami-recursively-toggle-node))
+      (("<C-S-return>" . origami-reset))
+      (("<M-return>" . origami-close-all-nodes))
+
+
+
+)
+
+   #+end_src
+
+   #+RESULTS:
+   : origami-close-all-nodes
+
+
+#+begin_src emacs-lisp
+(use-package origami-predef
+  :ensure t
+  :defer 1
+  :after (origami)
+  :config
+
+  (origami-predef-global-mode 1)
+
+  (defun origami-predef-javascript()
+    "Close some predefined patterns, useful in javascript."
+    (interactive)
+    (origami-predef-apply-patterns (list
+                                    "^\\s-*[[:alnum:]]+([()[:alnum:], >=]*)\\s-*{"
+                                    "^\\s-*function\\s-*[[:alnum:]]+([()[:alnum:], >=]*)\\s-*{"
+                                    )))
+  ;;(add-hook 'js2-mode-hook #'origami-predef-javascript)
+
+  (defun origami-predef-lisp()
+    "Close some predefined patterns, useful in elisp."
+    (interactive)
+    (origami-predef-apply-patterns '("defcustom" "defvar" "defface" "defgroup" "defun .*--")))
+  ;;(add-hook 'emacs-lisp-mode-hook #'origami-predef-lisp)
+
+  (defun origami-predef-java()
+    "Close some predefined patterns, useful in java."
+    (interactive)
+    (origami-predef-apply-patterns '("private .*{" "protected .*{")))
+  ;;(add-hook 'java-mode-hook #'origami-predef-java)
+
+  (defun origami-predef-sql()
+    "Close some predefined patterns, useful in SQL."
+    (interactive)
+    (origami-predef-apply-patterns '("create .*table" "create .*view" "begin")))
+  (add-hook 'sql-mode-hook #'origami-predef-sql)
+
+
+  (defun origami-predef-gift()
+    "Close some predefined patterns, useful in gift-mode (https://github.com/csrhodes/gift-mode)"
+    (interactive)
+    (origami-predef-apply-patterns "{" ))
+  (add-hook 'gift-mode-hook #'origami-predef-gift)
+  
+  (origami-predef-global-mode 1))
+#+end_src
+
+#+RESULTS:
 
 ** =quickrun=
 =Quickrun= ejecuta el buffer actual. Aumento el tiempo límite de la ejecución antes de matar el proceso.
@@ -146,6 +424,176 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 #+END_SRC
 
 
+** =sudo-edit=
+   #+begin_src emacs-lisp
+(use-package sudo-edit
+  :ensure t
+  :defer 1
+  :config
+  (defun abrir-como-root()
+    (interactive)
+    (sudo-edit))
+)
+
+   #+end_src
+
+   #+RESULTS:
+   : t
+
+** =helpful=
+
+#+begin_src emacs-lisp
+(use-package helpful
+  :ensure t
+  :bind
+  ([remap describe-symbol]      . helpful-symbol)
+  ([remap describe-callable]    . helpful-callable)
+  ([remap describe-function]    . helpful-function)
+  ([remap describe-variable]    . helpful-variable)
+  ([remap describe-key]         . helpful-key)
+  ([remap view-emacs-debugging] . helpful-at-point)
+
+)
+#+end_src
+
+
+** =magit=
+
+   #+begin_src emacs-lisp
+(use-package magit
+  :ensure t
+  :defer 1
+  :bind
+  (("<f9>" . magit-status)
+   ("C-x g" . magit-status))
+
+  :config
+  (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
+
+
+  (use-package magit-todos
+    :ensure t
+    :defer 1
+    :config
+    (setq magit-todos-scanner 'magit-todos--scan-with-git-grep)
+    (setq magit-todos-auto-group-items 'always)
+    (setq magit-todos-exclude-globs
+          '(".git/" "common/reveal.js*"
+            "**/jquery-ui*"
+            "**/qrcode.sty"
+            "common/mathjax/"
+            "themes/alvaro/resources/"
+            "**/reveal.js*"))
+
+    (magit-todos-mode 1)
+    )
+
+  (use-package vdiff-magit
+    :ensure t
+    :defer 1
+    :config
+
+    (define-key magit-mode-map "e" 'vdiff-magit-dwim)
+    (define-key magit-mode-map "E" 'vdiff-magit)
+    (transient-suffix-put 'magit-dispatch "e" :description "vdiff (dwim)")
+    (transient-suffix-put 'magit-dispatch "e" :command 'vdiff-magit-dwim)
+    (transient-suffix-put 'magit-dispatch "E" :description "vdiff")
+    (transient-suffix-put 'magit-dispatch "E" :command 'vdiff-magit)
+
+    ;; This flag will default to using ediff for merges.
+    (setq vdiff-magit-use-ediff-for-merges nil)
+
+    ;; Whether vdiff-magit-dwim runs show variants on hunks.  If non-nil,
+    ;; vdiff-magit-show-staged or vdiff-magit-show-unstaged are called based on what
+    ;; section the hunk is in.  Otherwise, vdiff-magit-dwim runs vdiff-magit-stage
+    ;; when point is on an uncommitted hunk.
+    ;; (setq vdiff-magit-dwim-show-on-hunks nil)
+
+    ;; Whether vdiff-magit-show-stash shows the state of the index.
+    ;; (setq vdiff-magit-show-stash-with-index t)
+
+    ;; Only use two buffers (working file and index) for vdiff-magit-stage
+    (setq vdiff-magit-stage-is-2way nil)
+    )
+
+
+  
+  )
+   #+end_src
+
+
+** =mode-icons=
+Cambia la descripción del modo por un icono en la modeline
+   #+begin_src lisp
+(use-package mode-icons
+  :defer 1
+  :ensure t
+  :config
+  (mode-icons-mode)
+)
+   #+end_src
+
+
+
+** =imenu=
+Reduzco el tamaño de todas las fuentes de =imenu=
+   #+begin_src emacs-lisp
+(use-package imenu-list
+  :defer 1
+  :ensure t
+  :config 
+   (set-face-attribute 'imenu-list-entry-face nil :height  0.8)
+   (add-hook 'imenu-list-major-mode-hook (lambda () (message "IMENU MAJOR MODE")(linum-mode 1))))
+   #+end_src
+
+   
+** =blamer=
+Muestra el autor del último cambio, y si se pincha muestra los cambios de ese commit.
+
+   
+   #+begin_src emacs-lisp
+(use-package blamer
+  :defer 1
+  :ensure t
+  :config
+  (setq blamer-view 'overlay-right)
+  (setq blamer-tooltip-function 'blamer-tooltip-keybindings)
+
+  (defun ags/blamer-callback-show-commit-diff (commit-info)
+    (interactive)
+    (let ((commit-hash (plist-get commit-info :commit-hash)))
+      (when commit-hash
+        (magit-show-commit commit-hash))))
+
+  (defun ags/blamer-callback-magit-log-file (commit-info)
+    (interactive)
+    (magit-log-buffer-file)
+    (let ((commit-hash (plist-get commit-info :commit-hash)))
+      (when commit-hash
+        ;; For some reason, only works after a while
+        (run-with-idle-timer 0.01 nil (lambda (commit-hash)
+                                     (goto-char (point-min))
+                                     (search-forward (substring commit-hash 0 7))
+                                     (recenter)
+                                     (pulse-momentary-highlight-one-line))
+                             commit-hash))))
+
+  (defun ags/blamer-callback-timemachine (commit-info)
+    (interactive)
+    (git-timemachine))
+
+  (set-face-attribute 'blamer-face nil :height 0.7) 
+  (setq blamer-bindings '(("<mouse-1>" . ags/blamer-callback-magit-log-file)
+                          ("<mouse-2>" . ags/blamer-callback-show-commit-diff)
+                          ("<mouse-3>" . ags/blamer-callback-timemachine)))
+  )
+   #+end_src
+
+   
 ** =multiple-cursors=
 
 #+BEGIN_SRC emacs-lisp
@@ -1035,7 +1483,7 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
       (define-key map (kbd "C-x d") 'dired-other-frame)
       (define-key map (kbd "C-x C-b") 'ibuffer)
       (define-key map (kbd "C-x b") 'ibuffer)
-      (define-key map (kbd "C-<f5>") 'reveal-y-pdf)
+      (define-key map (kbd "C-<f5>") 'ags/reveal-y-pdf)
       (define-key map (kbd "M-I") 'popup-imenu)
       (define-key map (kbd "<f7>") 'imenu-list-smart-toggle)
       (define-key map (kbd "<C-o>") 'psw-switch-projectile-files)
@@ -1111,6 +1559,89 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 : sendmail-send-it
 
 * Visualización
+** Pestañas
+#+begin_src emacs-lisp
+(use-package centaur-tabs
+  :ensure t
+  :defer 1
+  :init
+  (setq centaur-tabs-enable-key-bindings t)
+  :config
+
+  (defun ags/centaur-tabs-font-sizes (&optional height)
+    (interactive
+     (list 
+      (read-number "height: " 0.9)))
+
+    (mapcar
+     (lambda (face) (set-face-attribute face nil :height (or height 100)) )
+     '(
+       centaur-tabs-active-bar-face
+       centaur-tabs-default
+       centaur-tabs-unselected
+       centaur-tabs-selected
+       centaur-tabs-unselected-modified
+       centaur-tabs-selected-modified
+       centaur-tabs-close-unselected
+       centaur-tabs-close-selected
+       centaur-tabs-close-mouse-face
+       centaur-tabs-modified-marker-selected
+       centaur-tabs-modified-marker-unselected
+       ))
+
+    (setq centaur-tabs-height 40)
+    (setq centaur-tabs-bar-height (+ 8 centaur-tabs-height)))
+
+
+  (setq centaur-tabs-set-icons t)
+  (setq centaur-tabs-style "alternate")
+  (setq centaur-tabs-set-modified-marker t)
+  (setq centaur-tabs-gray-out-icons 'buffer)
+  (setq centaur-tabs-set-bar 'over)
+  (setq centaur-tabs-cycle-scope 'tabs)
+  (setq centaur-tabs-show-navigation-buttons t)
+  (setq centaur-tabs-hide-tabs-hooks '(reb-mode-hook completion-list-mode-hook))
+
+  (ags/centaur-tabs-font-sizes)
+
+  (centaur-tabs-mode t)
+  (centaur-tabs-group-by-projectile-project)
+
+
+)
+#+end_src
+
+
+
+** /Fringes/
+Antes ocultaba los fringes, ahora los dejo para =diff-hl=
+#+begin_src emacs-lisp
+(if (display-graphic-p)
+  (fringe-mode '(nil . nil)))
+#+end_src
+
+
+** /Modeline/
+Mi línea de estado (modeline)
+#+begin_src emacs-lisp
+(setq ags/mode-line-format
+              (list
+               " "
+               mode-line-modified
+               " %[" mode-line-buffer-identification " %] "
+               " | " '(vc-mode vc-mode)
+               " | %m %n "
+               " | %IB %Z"
+               " | %l:%c %p"
+               ;;" | " '(:eval (format "Point:%d" (point)))
+               mode-line-end-spaces
+               ) )
+
+(setq-default mode-line-format ags/mode-line-format)
+#+end_src
+
+#+RESULTS:
+|   | ((:eval (mode-icons--read-only-status)) (:eval (mode-icons--modified-status))) | %[ | (%12b) | %] |   |   | (vc-mode vc-mode) |   | %m %n |   | %IB %Z |   | %l:%c %p | (:eval (unless (display-graphic-p) -%-)) |
 
 ** Paquete =doc-view=
 Para visualizar documentos desde Emacs, aumento su resolución y anchura.
@@ -1122,9 +1653,24 @@ Para visualizar documentos desde Emacs, aumento su resolución y anchura.
   (setq doc-view-resolution 400))
 #+end_src
 
-#+RESULTS:
-: t
 
+** Cursor
+Cursor como barra vertical
+#+begin_src emacs-lisp
+(set-default 'cursor-type 'bar)
+(set-default 'cursor-in-non-selected-windows 'hollow)
+(defun ags/change-cursor-when-overwrite ()
+  (setq cursor-type (if overwrite-mode 'box 'bar)))
+(add-hook 'overwrite-mode-hook #'ags/change-cursor-when-overwrite)
+(blink-cursor-mode 1)
+(setq blink-cursor-blinks 0)
+#+end_src
+
+** Líneas vacías al final, como =vim=
+Los ficheros deben tener una línea nueva al final. Además, indicar el fin de fichero como en =vim=.
+#+begin_src emacs-lisp
+(setq indicate-empty-lines t require-final-newline t)
+#+end_src
 
 ** /scroll/
 #+begin_src emacs-lisp
@@ -1233,6 +1779,34 @@ Arranco el servidor para utilizar /emacsclient/
     )
 #+end_src
 
+* Temas
+Tengo dos temas, claro y oscuro. 
+
+Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas en =custom-safe-themes= (lo he copiado del fichero =custom-file.el=).
+
+
+#+begin_src emacs-lisp
+(setq  custom-safe-themes  (quote
+                            (
+                             "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" 
+                             default)))
+
+(defvar my-dark-theme 'my-tangotango)
+(defvar my-light-theme 'intellij)
+
+
+(defun ags/tema-claro()
+  (interactive)
+  (disable-theme my-dark-theme)
+  (load-theme my-light-theme t))
+
+(defun ags/tema-oscuro ()
+  (interactive)
+  (disable-theme my-light-theme)
+  (load-theme my-dark-theme t))
+
+(run-with-idle-timer 2 nil #'ags/tema-oscuro)
+#+end_src
 
 * OrgMode
 
@@ -1390,3 +1964,36 @@ Añado a la lista de extensiones la de los módulos.
 (add-to-list 'auto-mode-alist '("\\.mjs\\'" . js2-mode))
    #+end_src
 
+
+
+
+   
+* Opciones Latex para el PDF :noexport:
+# COLORES
+#+latex_header: \usepackage[usenames,dvipsnames]{color} % Required for custom colors
+
+# LISTADOS LATEX
+#+latex_header: \renewcommand{\ttdefault}{pcr} % MONOESPACIO CON NEGRITA
+#+latex_header: \usepackage{listings}
+#+latex_header: \usepackage{listingsutf8}
+#+latex_header: \usepackage{indentfirst}
+#+latex_header: \lstset{frame=single,inputencoding=utf8,basicstyle=\scriptsize\ttfamily,showstringspaces=false,numbers=none}
+#+latex_header: \definecolor{MyDarkGreen}{rgb}{0.0,0.4,0.0} % This is the color used for comments
+#+latex_header: \lstset{ breaklines=true, postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space}, keywordstyle=\bfseries, keywordstyle=[1]\color{Blue}\bfseries,  keywordstyle=[2]\color{Purple}\bfseries,  keywordstyle=[3]\color{Blue}\underbar,   identifierstyle=,   commentstyle=\color{MyDarkGreen},   stringstyle=\color{Purple},   showstringspaces=false,   tabsize=2,   morecomment=[l][\color{Blue}]{...} }
+#+latex_header: \lstset{literate=  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1   {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1   {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1   {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1   {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1   {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1   {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1   {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1   {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1   {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1   {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1   {€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1   {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1 } 
+
+# OPCIONES DE PÁGINA DE LATEX
+#+LATEX_CLASS: article
+#+LATEX_CLASS_OPTIONS:
+#+LATEX_HEADER: \usepackage[margin=2.5cm,includeheadfoot,includehead,includefoot]{geometry} 
+#+LATEX_HEADER: \hypersetup{colorlinks,linkcolor=black}
+
+# CABECERA Y PIE LATEX
+#+LATEX_HEADER: \usepackage{fancyhdr}
+#+LATEX_HEADER: \pagestyle{fancyplain}
+#+LATEX_HEADER: \chead{}
+#+LATEX_HEADER: \lhead{}
+#+LATEX_HEADER: \rhead{}
+#+LATEX_HEADER: \cfoot{}
+#+LATEX_HEADER: \lfoot{alvarogonzalezsotillo@gmail.com}
+#+LATEX_HEADER: \rfoot{\thepage}
