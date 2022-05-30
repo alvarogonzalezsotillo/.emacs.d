@@ -218,6 +218,60 @@ Utilizo tres repositorios de paquetes:
 
 
 
+** =centaur-tabs=
+#+begin_src emacs-lisp
+(use-package centaur-tabs
+  :ensure t
+  :defer 1
+  :init
+  (setq centaur-tabs-enable-key-bindings t)
+  :config
+
+  (defun ags/centaur-tabs-font-sizes (&optional height)
+    (interactive
+     (list 
+      (read-number "height: " 0.9)))
+
+    (mapcar
+     (lambda (face) (set-face-attribute face nil :height (or height 100)) )
+     '(
+       centaur-tabs-active-bar-face
+       centaur-tabs-default
+       centaur-tabs-unselected
+       centaur-tabs-selected
+       centaur-tabs-unselected-modified
+       centaur-tabs-selected-modified
+       centaur-tabs-close-unselected
+       centaur-tabs-close-selected
+       centaur-tabs-close-mouse-face
+       centaur-tabs-modified-marker-selected
+       centaur-tabs-modified-marker-unselected
+       ))
+
+    (setq centaur-tabs-height 40)
+    (setq centaur-tabs-bar-height (+ 8 centaur-tabs-height)))
+
+
+  (setq centaur-tabs-set-icons t)
+  (setq centaur-tabs-style "alternate")
+  (setq centaur-tabs-set-modified-marker t)
+  (setq centaur-tabs-gray-out-icons 'buffer)
+  (setq centaur-tabs-set-bar 'over)
+  (setq centaur-tabs-cycle-scope 'tabs)
+  (setq centaur-tabs-show-navigation-buttons t)
+  (setq centaur-tabs-hide-tabs-hooks '(reb-mode-hook completion-list-mode-hook))
+
+  (ags/centaur-tabs-font-sizes)
+
+  (centaur-tabs-mode t)
+  (centaur-tabs-group-by-projectile-project)
+
+
+)
+#+end_src
+
+
+
 ** =diff-hl=
 Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual. 
 
@@ -285,7 +339,11 @@ Mostrar =^L= (saltos de página) como una línea horizontal
 (use-package gift-mode
   :defer t
   :ensure t
+  :bind
+      (("C-c C-c" . ags/gifttolatex))
+
   :config
+  
 )
 #+end_src
 
@@ -313,9 +371,6 @@ Mostrar =^L= (saltos de página) como una línea horizontal
 )
 
    #+end_src
-
-   #+RESULTS:
-   : origami-close-all-nodes
 
 
 #+begin_src emacs-lisp
@@ -363,8 +418,6 @@ Mostrar =^L= (saltos de página) como una línea horizontal
   
   (origami-predef-global-mode 1))
 #+end_src
-
-#+RESULTS:
 
 ** =quickrun=
 =Quickrun= ejecuta el buffer actual. Aumento el tiempo límite de la ejecución antes de matar el proceso.
@@ -436,9 +489,6 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 )
 
    #+end_src
-
-   #+RESULTS:
-   : t
 
 ** =helpful=
 
@@ -684,8 +734,6 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 #+end_src
 
-#+RESULTS:
-
 
 ** =good-scroll=
 El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminales modo texto que costaba refrescar. Con los ordenadores actuales, mejor un /scroll/ suave
@@ -786,9 +834,6 @@ Estoy usando =treemacs= en vez de =neotree=.
   )
 #+end_src
 
-#+RESULTS:
-: treemacs
-
 
 ** =dumb-jump=
 Añado las siguientes reglas para hacer búsquedas simples con =dumb-jump= en ficheros =sql= y =org=.
@@ -838,9 +883,6 @@ Añado las siguientes reglas para hacer búsquedas simples con =dumb-jump= en fi
 
 
 #+end_src
-
-#+RESULTS:
-: t
 
 
 
@@ -911,9 +953,6 @@ Retroceder en la historia de disposición de ventanas y búferes
     (define-key winner-mode-map (kbd "M-<right>") #'winner-redo))
 #+end_src
 
-#+RESULTS:
-: t
-
 ** =region-occurrences-highlighter=
 Marcar las ocurrencias de la selección
 #+begin_src emacs-lisp
@@ -929,8 +968,6 @@ Marcar las ocurrencias de la selección
     (define-key region-occurrences-highlighter-nav-mode-map "\M-p" 'region-occurrences-highlighter-prev))
 #+end_src
 
-#+RESULTS:
-
 
 ** =smartscan=
 Utilizo =smartscan= para localizar ocurrencias de símbolos.
@@ -944,8 +981,6 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
     (setq smartscan-symbol-selector "symbol")
     (global-smartscan-mode 1))
 #+end_src
-
-#+RESULTS:
 
 ** =helm=
 =helm= es un sistema para seleccionar una opción entre varias posibilidades, que se puede usar para casi todo
@@ -980,6 +1015,11 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
     ;;  (redisplay t))
     ;;(add-hook 'helm-minibuffer-set-up-hook 'ags/try-to-redisplay-helm)
 
+    (defun ags/helm-hook()
+      (setq helm-truncate-lines t))
+
+    (add-hook 'helm-major-mode-hook #'ags/helm-hook)
+    
     (use-package dumb-jump
       :config
       (setq dumb-jump-selector 'helm)
@@ -1206,14 +1246,6 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de programación y =org-mode=.
 
 #+begin_src emacs-lisp
-  (use-package company-posframe
-    :ensure t
-    :after (company)
-    :config
-
-    (company-posframe-mode 1)
-    )
-
   (use-package company-auctex
     :ensure t
     :after (company)
@@ -1239,6 +1271,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     :config
       (company-flx-mode +1)
   )
+
   (use-package company-quickhelp
     :ensure t
     :after (company)
@@ -1322,9 +1355,6 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     )
 #+end_src
 
-#+RESULTS:
-: t
-
 * Edición
 
 
@@ -1369,14 +1399,15 @@ No utilizo tabuladores en las indentaciones.
 Al comenzar a escribir con una selección, se borra lo seleccionado. 
 #+begin_src emacs-lisp
 (delete-selection-mode 1)
+(transient-mark-mode 1)
 #+end_src
 
 Al copiar la  selección, mantener la selección 
 #+begin_src emacs-lisp
-(defadvice ags/kill-ring-save (after keep-transient-mark-active ())
+(defadvice kill-ring-save-advice (after keep-transient-mark-active ())
   "Override the deactivation of the mark."
   (setq deactivate-mark nil))
-(ad-activate 'ags/kill-ring-save)
+(ad-activate 'kill-ring-save-advice)
 #+end_src
 
 
@@ -1555,60 +1586,38 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 (setq send-mail-function (quote sendmail-send-it))
 #+end_src
 
-#+RESULTS:
-: sendmail-send-it
-
 * Visualización
-** Pestañas
+** Código fuente
+
 #+begin_src emacs-lisp
-(use-package centaur-tabs
-  :ensure t
-  :defer 1
-  :init
-  (setq centaur-tabs-enable-key-bindings t)
-  :config
-
-  (defun ags/centaur-tabs-font-sizes (&optional height)
-    (interactive
-     (list 
-      (read-number "height: " 0.9)))
-
-    (mapcar
-     (lambda (face) (set-face-attribute face nil :height (or height 100)) )
-     '(
-       centaur-tabs-active-bar-face
-       centaur-tabs-default
-       centaur-tabs-unselected
-       centaur-tabs-selected
-       centaur-tabs-unselected-modified
-       centaur-tabs-selected-modified
-       centaur-tabs-close-unselected
-       centaur-tabs-close-selected
-       centaur-tabs-close-mouse-face
-       centaur-tabs-modified-marker-selected
-       centaur-tabs-modified-marker-unselected
-       ))
-
-    (setq centaur-tabs-height 40)
-    (setq centaur-tabs-bar-height (+ 8 centaur-tabs-height)))
+(defun ags/bonito-para-codigo()
+  (interactive)
+  (blamer-mode -1)
+  (toggle-truncate-lines 1)
+  ;;(indent-guide-mode 1)
+  (toggle-word-wrap 1)
+  (if (>= emacs-major-version 26)
+      (display-line-numbers-mode 1))
+  (auto-highlight-symbol-mode 1)
+  (electric-pair-local-mode 1)
+  (origami-mode 1))
 
 
-  (setq centaur-tabs-set-icons t)
-  (setq centaur-tabs-style "alternate")
-  (setq centaur-tabs-set-modified-marker t)
-  (setq centaur-tabs-gray-out-icons 'buffer)
-  (setq centaur-tabs-set-bar 'over)
-  (setq centaur-tabs-cycle-scope 'tabs)
-  (setq centaur-tabs-show-navigation-buttons t)
-  (setq centaur-tabs-hide-tabs-hooks '(reb-mode-hook completion-list-mode-hook))
+  (add-hook 'prog-mode-hook 'ags/bonito-para-codigo)
+#+end_src
 
-  (ags/centaur-tabs-font-sizes)
+** LaTeX
+#+begin_src emacs-lisp
+(defun ags/bonito-para-latex()
+  (interactive)
+  (toggle-truncate-lines -1)
+  (setq magic-latex-enable-suscript nil)
+  (company-auctex-init)
+  (message "LATEX")
+  (magic-latex-buffer 1))
 
-  (centaur-tabs-mode t)
-  (centaur-tabs-group-by-projectile-project)
-
-
-)
+(add-hook 'LaTeX-mode-hook 'ags/bonito-para-latex)
+(add-hook 'tex-mode-hook 'ags/bonito-para-latex)
 #+end_src
 
 
@@ -1639,9 +1648,6 @@ Mi línea de estado (modeline)
 
 (setq-default mode-line-format ags/mode-line-format)
 #+end_src
-
-#+RESULTS:
-|   | ((:eval (mode-icons--read-only-status)) (:eval (mode-icons--modified-status))) | %[ | (%12b) | %] |   |   | (vc-mode vc-mode) |   | %m %n |   | %IB %Z |   | %l:%c %p | (:eval (unless (display-graphic-p) -%-)) |
 
 ** Paquete =doc-view=
 Para visualizar documentos desde Emacs, aumento su resolución y anchura.
@@ -1685,9 +1691,6 @@ Los ficheros deben tener una línea nueva al final. Además, indicar el fin de f
 
 #+end_src
 
-#+RESULTS:
-: t
-
 ** Ratón
 Scroll con teclas de avance de página hasta el extremo del fichero.
 Sin esta opción, /Emacs/ no avanza hasta la primera línea si al dar a =RePag= no quedan páginas por retroceder.
@@ -1706,8 +1709,6 @@ Scroll lateral con el touchpad
 (put 'scroll-left 'disabled nil)
 (put 'scroll-right 'disabled nil)
 #+end_src
-
-#+RESULTS:
 
 
 ** Números de línea
@@ -1788,7 +1789,8 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
 #+begin_src emacs-lisp
 (setq  custom-safe-themes  (quote
                             (
-                             "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2" 
+                             "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2"
+                             "d916b686ba9f23a46ee9620c967f6039ca4ea0e682c1b9219450acee80e10e40" 
                              default)))
 
 (defvar my-dark-theme 'my-tangotango)
@@ -1893,6 +1895,22 @@ Mejores tamaños de encabezados
               ("v" . "verse")))
 
       )
+
+      (defun ags/bonito-para-org()
+        (interactive)
+        (toggle-word-wrap 1)
+        (adaptive-wrap-prefix-mode 1)
+        (toggle-truncate-lines -1)
+        ;;(indent-guide-mode 0)
+        (if (>= emacs-major-version 26)
+            (display-line-numbers-mode 0))
+        (org-display-inline-images)
+        (auto-highlight-symbol-mode 1)
+        (org-bullets-mode 1)
+        (blamer-mode -1)
+        (electric-pair-local-mode 1))
+
+      (add-hook 'org-mode-hook 'ags/bonito-para-org)
     )
 #+end_src
 
@@ -1956,6 +1974,71 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 #+end_src
 
 
+
+
+* Latex 
+
+#+begin_src emacs-lisp
+(use-package latex
+  :ensure auctex
+  :config
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq TeX-save-query nil)
+(setq TeX-PDF-mode t)
+
+; Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
+
+(setq LaTeX-verbatim-environments
+      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql" "listadoshell" "listadojava"))
+
+
+(add-to-list 'auto-mode-alist '("\\.tex\\'" . latex-mode))
+
+
+; Para imenu, defino una macro de Latex que no hace nada, pero que detecto en imenu.
+(add-to-list 'TeX-outline-extra '("imenu" 2))
+(add-to-list 'TeX-outline-extra '("imenu1" 1))
+(add-to-list 'TeX-outline-extra '("imenu2" 2))
+(add-to-list 'TeX-outline-extra '("imenu3" 3))
+(add-to-list 'TeX-outline-extra '("imenu4" 4))
+
+; En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
+(setq TeX-view-program-selection '((output-pdf "Okular")))
+(setq TeX-source-correlate-mode t)
+(add-hook 'latex-mode-hook 'TeX-source-correlate-mode)
+
+(setq TeX-source-correlate-start-server t)
+
+
+
+; Modifico el comando Latex para incluir =-shell-escape=, de forma que Latex pueda arrancar programas de ayuda (por ejemplo, *Inkscape* para convertir SVG a PDF)
+
+(setq LaTeX-command-style
+   (quote (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
+
+
+; Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en el buffer de Emacs ([[https://www.gnu.org/software/auctex/manual/preview-latex.html][https://www.gnu.org/software/auctex/manual/preview-latex.html]])
+
+(eval-after-load "preview"
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t) )
+(eval-after-load "preview"
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
+(eval-after-load "preview"
+  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{homeworkProblem}" t) )
+
+; Añadir XeLatex
+(eval-after-load "tex"
+  '(add-to-list 'TeX-command-list
+     		'("XeLaTeX" "xelatex -interaction=nonstopmode %s"
+		  TeX-run-command t t :help "Run xelatex") t))
+
+;; En =Termux= se necesita especificar la camino a la /shell/ para ejecutar comandos de /Latex/
+(if
+      (file-exists-p "/data/data/com.termux/files/usr/bin/sh")
+      (setq TeX-shell  "/data/data/com.termux/files/usr/bin/sh"))
+)
+#+END_SRC
 
 * Javascript
 
