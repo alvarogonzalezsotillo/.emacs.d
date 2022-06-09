@@ -101,10 +101,11 @@ ls ~/.emacs.d/bin
 
 #+RESULTS:
 | addtopath.sh                 |
+| arrancar-emulador-android.sh |
+| arrancar-epoptes-en-clase.sh |
 | bfg-1.13.0.jar               |
 | clonar-2-de-3.sh             |
 | clone-2.sh                   |
-| colores-terminal.sh          |
 | colores-tty.sh               |
 | dataurl.sh                   |
 | disable-gnome-animations.sh  |
@@ -126,9 +127,11 @@ ls ~/.emacs.d/bin
 | rmtemplatex.sh               |
 | rotate-screen.sh             |
 | screen-to-serial.sh          |
+| set-cpu-low-freq.sh          |
 | shellcheck                   |
 | shrinkpdf.sh                 |
 | svg2pdf.sh                   |
+| sync-progress.sh             |
 | texlab                       |
 | video-to-gif.sh              |
 | video-to-whatsapp.sh         |
@@ -451,7 +454,6 @@ Añado las siguientes reglas para hacer búsquedas simples con =dumb-jump= en fi
                          :regex ": \\bJJJ\\j"))
 
     (add-to-list 'dumb-jump-language-file-exts
-
                  '(:language "javascript" :ext "mjs" :agtype "js" :rgtype "js")))
 
   (setq dumb-jump-selector 'helm)
@@ -1076,7 +1078,11 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
     (redisplay t))
   (add-hook 'helm-minibuffer-set-up-hook 'my/try-to-redisplay-helm)
 
+  (defun helm-bien()
+    (message "HELM-AG")
+    (setq helm-truncate-lines t)) 
 
+  (add-hook 'helm-major-mode-hook #'helm-bien)
   
   :after (tramp) ;; PARA EVITAR EL ERROR Symbols's value as variable is void: tramp-methods
   :bind
