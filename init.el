@@ -20,7 +20,7 @@
           ("melpa" . "http://melpa.org/packages/")
           ("gnu" . "http://elpa.gnu.org/packages/")
           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-	  ("org" . "http://orgmode.org/elpa/")
+	  ;;("org" . "http://orgmode.org/elpa/")
           )
         )
   (package-initialize t)
@@ -47,7 +47,7 @@
 
   (message "Versión inicial de org:%s" (org-version))
   (message "Instalando org-plus-contrib para conseguir la última versión de org" )
-  (use-package org :ensure org-plus-contrib :pin org
+  (use-package org :ensure org-contrib
     :config
     (require 'ob-tangle)
     )
