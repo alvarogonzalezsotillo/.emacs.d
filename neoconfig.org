@@ -453,29 +453,6 @@ Mostrar =^L= (saltos de página) como una línea horizontal
 )
 #+end_src
 
-** =bm=
-Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
-#+BEGIN_SRC emacs-lisp
-  (defun ags/bookmark-or-edit ()
-    (interactive)
-
-    (if (string= major-mode "dired-mode")
-        (progn
-          (all-the-icons-dired-mode -1)
-          (wdired-change-to-wdired-mode))
-        (bm-next)))
-
-
-    (use-package bm
-      :ensure t
-      :bind
-      (( "<C-f2>" . bm-toggle))
-      (( "<f2>" . ags/bookmark-or-edit ))
-      (( "<S-f2>" . bm-previous))
-
-    )
-#+END_SRC
-
 
 ** =sudo-edit=
    #+begin_src emacs-lisp
@@ -537,6 +514,7 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
             "**/qrcode.sty"
             "common/mathjax/"
             "themes/alvaro/resources/"
+            "site.educa.madrid.org/ies.alonsodeavellan.alcala/"
             "**/reveal.js*"))
 
     (magit-todos-mode 1)
@@ -575,17 +553,23 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
   )
    #+end_src
 
+   #+RESULTS:
+   : magit-status
+
 
 ** =mode-icons=
 Cambia la descripción del modo por un icono en la modeline
-   #+begin_src lisp
+   #+begin_src emacs-lisp
 (use-package mode-icons
   :defer 1
   :ensure t
   :config
-  (mode-icons-mode)
+  (mode-icons-mode 1)
 )
    #+end_src
+
+   #+RESULTS:
+   : t
 
 
 
@@ -760,10 +744,9 @@ Marca errores en el fichero
     :ensure t
     :defer 1
     :config
-      (with-eval-after-load 'flycheck
-        (add-hook 'flycheck-mode-hook #'turn-on-flycheck-inline))
-    (add-hook 'after-init-hook #'global-flycheck-mode)
-    ;;(setq flycheck-shellcheck-follow-sources nil)
+    (setq flycheck-shellcheck-follow-sources t)
+    (global-flycheck-mode 1)
+    (global-flycheck-inline-mode 1)
   )
 #+end_src
 
@@ -1053,8 +1036,14 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
     (("M-y"  . helm-show-kill-ring))
     (("C-x r b"  . helm-filtered-bookmarks))
 
+    :config
+    (add-to-list 'helm-commands-using-frame #'helm-M-x)
+
     )
 #+end_src
+
+#+RESULTS:
+: helm-filtered-bookmarks
 
 #+begin_src emacs-lisp
     ;;https://www.reddit.com/r/emacs/comments/345vtl/make_helm_window_at_the_bottom_without_using_any/
@@ -1071,62 +1060,6 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 
 
 
-
-
-
-
-**  =expand-region=
-#+begin_src emacs-lisp
-(use-package expand-region
-  :ensure t
-  :defer 1
-  :bind
-      (( "C-e" . 'er/expand-region))
-      (( "C-S-e" . 'er/contract-region))
-      (( "M-<up>" . 'er/expand-region))
-      (( "M-<down>" . 'er/contract-region))
-)
-#+end_src
-
-**  =bm=
-Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
-#+BEGIN_SRC emacs-lisp
-  (defun my/bookmark-or-edit ()
-    (interactive)
-
-    (if (string= major-mode "dired-mode")
-        (progn
-          (all-the-icons-dired-mode -1)
-          (wdired-change-to-wdired-mode))
-        (bm-next)))
-
-
-    (use-package bm
-      :ensure t
-      :bind
-      (( "<C-f2>" . bm-toggle))
-      (( "<f2>" . my/bookmark-or-edit ))
-      (( "<S-f2>" . bm-previous))
-
-    )
-#+END_SRC
-
-
-**  =multiple-cursors=
-
-#+BEGIN_SRC emacs-lisp
-  (use-package multiple-cursors
-    :ensure t
-    :custom (mc/always-run-for-all t)
-    :bind
-
-      (("C-S-c C-S-c" . mc/edit-lines ))
-      (("C->" . mc/mark-next-like-this ))
-      (("C-<" . mc/mark-previous-like-this ))
-      (("C-S-<mouse-1>" . mc/add-cursor-on-click ))
-      (("C-S-c C-S-v" . mc/mark-all-like-this ))
-)
-#+END_SRC
 
 
 
@@ -1404,10 +1337,10 @@ Al comenzar a escribir con una selección, se borra lo seleccionado.
 
 Al copiar la  selección, mantener la selección 
 #+begin_src emacs-lisp
-(defadvice kill-ring-save-advice (after keep-transient-mark-active ())
+(defadvice kill-ring-save (after keep-transient-mark-active ())
   "Override the deactivation of the mark."
   (setq deactivate-mark nil))
-(ad-activate 'kill-ring-save-advice)
+(ad-activate 'kill-ring-save)
 #+end_src
 
 
@@ -1636,6 +1569,8 @@ Mi línea de estado (modeline)
 (setq ags/mode-line-format
               (list
                " "
+               '(:eval (propertize "[☰]" 'local-map (make-mode-line-mouse-map 'mouse-1 'menu-bar-open)))
+               " "
                mode-line-modified
                " %[" mode-line-buffer-identification " %] "
                " | " '(vc-mode vc-mode)
@@ -1647,7 +1582,16 @@ Mi línea de estado (modeline)
                ) )
 
 (setq-default mode-line-format ags/mode-line-format)
+
+(use-package mode-icons
+  :ensure t
+  :defer 1
+  :config
+  (mode-icons-mode))
 #+end_src
+
+#+RESULTS:
+: t
 
 ** Paquete =doc-view=
 Para visualizar documentos desde Emacs, aumento su resolución y anchura.

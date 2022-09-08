@@ -52,6 +52,7 @@
     (require 'ob-tangle)
     )
   )
+
 ;;; Code:
 (defun ags/carga-config-org (config.org refresh debug)
   "Carga la configuración, refrescando la lista de paquetes si se indica REFRESH, con debug si se indica DEBUG"
@@ -69,7 +70,6 @@
 
   
   (org-babel-load-file (expand-file-name config.org))
-  ;;(load-file (expand-file-name "~/.emacs.d/config.el"))
 
   ;; DESACTIVAR EL DEBUG
   (setq debug-on-error nil))
