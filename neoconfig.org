@@ -391,30 +391,30 @@ Mostrar =^L= (saltos de página) como una línea horizontal
                                     )))
   ;;(add-hook 'js2-mode-hook #'origami-predef-javascript)
 
-  (defun origami-predef-lisp()
+  (defun ags/origami-predef-lisp()
     "Close some predefined patterns, useful in elisp."
     (interactive)
     (origami-predef-apply-patterns '("defcustom" "defvar" "defface" "defgroup" "defun .*--")))
-  ;;(add-hook 'emacs-lisp-mode-hook #'origami-predef-lisp)
+  ;;(add-hook 'emacs-lisp-mode-hook #'ags/origami-predef-lisp)
 
-  (defun origami-predef-java()
+  (defun ags/origami-predef-java()
     "Close some predefined patterns, useful in java."
     (interactive)
     (origami-predef-apply-patterns '("private .*{" "protected .*{")))
-  ;;(add-hook 'java-mode-hook #'origami-predef-java)
+  ;;(add-hook 'java-mode-hook #'ags/origami-predef-java)
 
-  (defun origami-predef-sql()
+  (defun ags/origami-predef-sql()
     "Close some predefined patterns, useful in SQL."
     (interactive)
     (origami-predef-apply-patterns '("create .*table" "create .*view" "begin")))
-  (add-hook 'sql-mode-hook #'origami-predef-sql)
+  (add-hook 'sql-mode-hook #'ags/origami-predef-sql)
 
 
-  (defun origami-predef-gift()
+  (defun ags/origami-predef-gift()
     "Close some predefined patterns, useful in gift-mode (https://github.com/csrhodes/gift-mode)"
     (interactive)
     (origami-predef-apply-patterns "{" ))
-  (add-hook 'gift-mode-hook #'origami-predef-gift)
+  (add-hook 'gift-mode-hook #'ags/origami-predef-gift)
   
   (origami-predef-global-mode 1))
 #+end_src
@@ -515,6 +515,7 @@ Mostrar =^L= (saltos de página) como una línea horizontal
             "common/mathjax/"
             "themes/alvaro/resources/"
             "site.educa.madrid.org/ies.alonsodeavellan.alcala/"
+            "charlas-motivacionales/informatica/1/reveal.js/plugin/markdown/plugin.js"
             "**/reveal.js*"))
 
     (magit-todos-mode 1)
