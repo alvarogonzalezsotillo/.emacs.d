@@ -44,7 +44,10 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
   (gcmh-mode 1))
   #+end_src
 
+#+begin_src emacs-lisp
+(setq  native-comp-async-report-warnings-errors 'silent)
 
+#+end_src
 
   
 * Utilidades externas al /PATH/
