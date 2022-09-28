@@ -73,6 +73,7 @@ permitir_usuario_root(){
     "
     iptables --append OUTPUT --match owner --uid-owner root --jump ACCEPT
     iptables --append OUTPUT --match owner --uid-owner alvaro --jump ACCEPT
+    iptables --append OUTPUT --match owner --uid-owner profesor --jump ACCEPT
     iptables --append OUTPUT --match owner --gid-owner wheel --jump ACCEPT
 }
 
