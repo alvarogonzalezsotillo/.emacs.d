@@ -548,8 +548,21 @@ Este modo cierra automáticamente los paréntesis y otros bloques. Aunque lo ten
 Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de programación y =org-mode=.
 
 #+begin_src emacs-lisp
-  (require 'company)
+(use-package company-posframe
+  :ensure t
+  :after (company)
+  :config
+  
+  (company-posframe-mode 1)
+  )
+
+
+(use-package company
+  :ensure t
+  :config
+  
   (company-flx-mode +1)
+  (setq company-tooltip-minimum-width 70)
 
 
   (defun my-js2-mode-hook()
@@ -631,7 +644,11 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
   (global-set-key (kbd "C-.") 'company-complete)
   (define-key company-active-map [escape] 'company-abort)
   (global-company-mode)
+  )
 #+end_src
+
+#+RESULTS:
+: t
 
 
 Prefiero que =dabbrev= funcione en comentarios y cadenas. Y que tenga en cuenta el /case/
@@ -1251,13 +1268,6 @@ Al copiar la  selección, mantener la selección
 #+end_src
 
 
-** Línea nueva al final de fichero
-Los ficheros deben tener una línea nueva al final. Además, indicar el fin de fichero como en =vim=.
-#+begin_src emacs-lisp
-(setq indicate-empty-lines t require-final-newline t)
-#+end_src
-
-
 ** Historia del portapapeles
 Una de las ventajas de Emacs es su /kill ring/, donde se guarda la historia del portapapeles. Con esta opción, añado a esta historia el portapapeles del sistema. Descubierto en [[https://writequit.org/org/settings.html#sec-1-33][https://writequit.org/org/settings.html#sec-1-33]]
 #+begin_src emacs-lisp
@@ -1294,6 +1304,13 @@ Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones
 
 
 * Navegación
+
+#+begin_src emacs-lisp
+(use-package deadgrep
+  :ensure t
+  :defer 1
+  :config )
+#+end_src
 
 Modo de ficheros recientes
 #+begin_src emacs-lisp
@@ -1352,8 +1369,14 @@ El ratón también puede utilizarse en un =xterm=
 
 * Visualización
 
-** emojis
+** Números de línea
 
+#+begin_src emacs-lisp
+(setq display-line-numbers-width 3)
+#+end_src
+
+** emojis
+En alguna versión de emacs dejó de hacer falta
    #+begin_src lisp
    (use-package emojify
      :ensure t
@@ -1392,7 +1415,7 @@ Avoid performance issues in files with very long lines.
   (defun my-centaur-tabs-font-sizes (&optional height)
     (interactive
      (list 
-      (read-number "height: " 0.8)))
+      (read-number "height: " 0.9)))
 
     (mapcar
      (lambda (face) (set-face-attribute face nil :height (or height 100)) )
@@ -1410,7 +1433,7 @@ Avoid performance issues in files with very long lines.
        centaur-tabs-modified-marker-unselected
        ))
 
-    (setq centaur-tabs-height 20)
+    (setq centaur-tabs-height 40)
     (setq centaur-tabs-bar-height (+ 8 centaur-tabs-height)))
 
 
@@ -1439,7 +1462,9 @@ Avoid performance issues in files with very long lines.
        (string-prefix-p "*Flycheck" name)
        (string-prefix-p "*tramp" name)
        (string-prefix-p " *Mini" name)
+       (string-prefix-p "*Mini" name)
        (string-prefix-p "*help" name)
+       (string-prefix-p "*Ilist" name)
        (string-prefix-p "*Help" name)
        (string-prefix-p "*Helm" name)
        (string-prefix-p "*diff-hl" name)
@@ -1577,6 +1602,13 @@ Scroll con teclas de avance de página hasta el extremo del fichero. Sin esta op
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil))) 
    #+end_src
 
+#+begin_src emacs-lisp
+(global-set-key (kbd "<mouse-6>") (lambda() (interactive) (scroll-right 10)))
+(global-set-key (kbd "<mouse-7>") (lambda() (interactive) (scroll-left 10)))
+(put 'scroll-left 'disabled nil)
+(put 'scroll-right 'disabled nil)
+#+end_src
+
 
 ** Barras de desplazamiento, de herramientas y menú
 La barra de menú y la de herramientas es de lo primero que se quita al personalizar /emacs/, lo mismo que esa pantalla de inicio.
@@ -1584,7 +1616,7 @@ La barra de menú y la de herramientas es de lo primero que se quita al personal
 (setq inhibit-startup-message t)
 (ignore-errors (menu-bar-mode -1))
 (ignore-errors (tool-bar-mode -1))
-(ignore-errors (scroll-bar-mode -1))
+(ignore-errors (scroll-bar-mode 1))
 #+end_src
 
 ** Ancho de la página de =man=
@@ -1612,7 +1644,7 @@ Arranco el servidor para utilizar /emacsclient/
 
 
 ** =minimap=
-#+begin_src emacs-lisp
+#+begin_src lisp
 (use-package minimap
   :ensure t
   :defer 1
@@ -1628,12 +1660,31 @@ Arranco el servidor para utilizar /emacsclient/
 )
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package demap
+  :ensure t
+  :defer 1
+  :bind
+  (( "M-<f7>" . demap-toggle))
+  :config
+
+)
+#+end_src
 
 ** =dired=
 Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 #+begin_src emacs-lisp
 (use-package dired-x)
+
+;; Copy and paste files
+(use-package dired-ranger
+  :ensure t
+  :defer t
+  :bind (:map dired-mode-map
+              ("W" . dired-ranger-copy)
+              ("X" . dired-ranger-move)
+              ("Y" . dired-ranger-paste)))
 
 (use-package dired
   :config
@@ -1668,9 +1719,6 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 
 #+end_src
-
-#+RESULTS:
-: t
 
 
 * Atajos de teclado
@@ -1857,7 +1905,7 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
-)
+  )
    #+end_src
 
 ** =blamer=
@@ -1902,7 +1950,121 @@ Muestra el autor del último cambio, y si se pincha muestra los cambios de ese c
   )
    #+end_src
 
-** =vdiff-magit=
+** =magit-todo=
+TODOMAGITTODO: Igual puedo automatizar los tags con
+#+begin_src bash
+ag --nofilename --nonumbers --silent -o "^[[:space:]]*(\;+[[:space:]]+|\#+[[:space:]]+|//+[[:space:]]+)?[[:space:]]*\K[A-Z][A-Z][A-Z]+(?=(\: ))" * | sort  |uniq
+#+end_src
+
+#+RESULTS:
+| ADDENDUM      |
+| ALL           |
+| ASCII         |
+| AUTHOR        |
+| BTC           |
+| BTN           |
+| BUFFER        |
+| BUG           |
+| CATEGORY      |
+| CAVEAT        |
+| CLOCKSUM      |
+| COLLAPSE      |
+| COMENTARIO    |
+| COMMAND       |
+| CONTEXT       |
+| DEADLINE      |
+| DEFAULT       |
+| DEPTH         |
+| DESCRIPTION   |
+| DIRS          |
+| END           |
+| ERROR         |
+| ESS           |
+| FILE          |
+| FILENAME      |
+| FIXME         |
+| FLAGS         |
+| FUTURE        |
+| HACK          |
+| HEADLINE      |
+| IMPORTANT     |
+| INDEX         |
+| ITEM          |
+| ITER          |
+| KEY           |
+| KEYS          |
+| KEYWORDS      |
+| KLDUGE        |
+| KLUDGE        |
+| LEVEL         |
+| LINES         |
+| LINK          |
+| LIST          |
+| MAIN          |
+| MAYBE         |
+| MUNGE         |
+| NAME          |
+| NODE          |
+| NOTE          |
+| NOTICE        |
+| PARENT        |
+| PATH          |
+| PATHS         |
+| POINT         |
+| POS           |
+| PREFIX        |
+| PREV          |
+| PROJECT       |
+| PROMPT        |
+| PROPERTIES    |
+| RATE          |
+| README        |
+| RECURSIVE     |
+| SCHEDULED     |
+| SELF          |
+| SKIP          |
+| START         |
+| STATES        |
+| STATUS        |
+| SVG           |
+| TAGS          |
+| TECLEO        |
+| TIME          |
+| TIMEOUT       |
+| TIMESTAMP     |
+| TIP           |
+| TITLE         |
+| TMP           |
+| TODO          |
+| TODOMAGITTODO |
+| TRICKY        |
+| UID           |
+| UPDATE        |
+| URI           |
+| URL           |
+| VALUE         |
+| VALUES        |
+| WARN          |
+| WARNING       |
+| WORK          |
+| WORKAROUND    |
+| XXX           |
+| YES           |
+
+
+#+begin_src emacs-lisp
+(use-package magit-todos
+  :ensure t
+  :defer 1
+  :config
+  (setq magit-todos-scanner 'magit-todos--scan-with-git-grep)
+  (setq magit-todos-auto-group-items 'always)
+  (setq magit-todos-exclude-globs '(".git/" "common/reveal.js*" "**/jquery-ui*" "**/qrcode.sty" "common/mathjax/" "themes/alvaro/resources/"))
+
+  (magit-todos-mode 1))
+
+#+end_src
+* =vdiff-magit=
 #+begin_src emacs-lisp
   (use-package vdiff-magit
     :ensure t
@@ -1940,23 +2102,27 @@ Muestra el autor del último cambio, y si se pincha muestra los cambios de ese c
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
    #+begin_src emacs-lisp
-     (defun gifttolatex (titulo porcentajetest parametros)
-       "ejecuta giftolatex en el buffer actual."
-       (interactive
-        (list 
-         (read-string "Título: " (buffer-name))
-         (read-number "Porcentaje del test: " 60)
-         (read-string "Otros parámetros:" "-k"))
-        )
-  
-       (let
-           ((comando (format "sh -c 'gifttolatex %s -t \"%s\" -q \"%s\" \"%s\"'" parametros titulo porcentajetest buffer-file-name))
-            )
-         (shell-command comando)
-         )
-       )
 
-       (defalias 'trim-string 'string-trim) 
+(defvar gifttolatex-titulo nil)
+(defvar gifttolatex-porcentajetest nil)
+(defvar gifttolatex-parametros nil)
+
+(defun gifttolatex (titulo porcentajetest parametros)
+  "ejecuta giftolatex en el buffer actual."
+  (interactive
+   (list 
+    (read-string "Título: " (or gifttolatex-titulo (buffer-name)))
+    (read-number "Porcentaje del test: " (or gifttolatex-porcentajetest 60))
+    (read-string "Otros parámetros:" (or gifttolatex-parametros "-k" ))))
+  
+  (setq gifttolatex-titulo titulo)
+  (setq gifttolatex-porcentajetest porcentajetest)
+  (setq gifttolatex-parametros parametros)
+  
+  (let ((comando (format "sh -c 'gifttolatex %s -t \"%s\" -q \"%s\" \"%s\"'" parametros titulo porcentajetest buffer-file-name)))
+    (shell-command comando)))
+
+(defalias 'trim-string 'string-trim) 
    #+end_src
 
    #+RESULTS:
@@ -2363,6 +2529,12 @@ Creo que esto se hace mejor con la variable =indicate-empty-lines=
 (add-hook 'org-mode-hook 'vim-empty-lines-mode)
 #+end_src
 
+Los ficheros deben tener una línea nueva al final. Además, indicar el fin de fichero como en =vim=.
+#+begin_src emacs-lisp
+(setq indicate-empty-lines t require-final-newline t)
+#+end_src
+
+
 ** Nivel de indentación
 #+begin_src emacs-lisp
 (setq highlight-indent-guides-method 'fill)
@@ -2441,7 +2613,7 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
   (bonito-para-codigo)
   (adaptive-wrap-prefix-mode 1)
   (toggle-truncate-lines -1)
-  ;;(highlight-indent-guides-mode 0)
+  ;;(indent-guide-mode 0)
   (if (>= emacs-major-version 26)
       (display-line-numbers-mode 0))
   (org-display-inline-images))
@@ -2450,14 +2622,14 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
   (interactive)
   (bonito-para-proyector)
   (org-bullets-mode 1)
+  (blamer-mode -1)
   (electric-pair-local-mode 1))
-
 
 (defun bonito-para-codigo()
   (interactive)
-  (global-blamer-mode 1)
+  (blamer-mode -1)
   (toggle-truncate-lines 1)
-  ;;(highlight-indent-guides-mode 1)
+  ;;(indent-guide-mode 1)
   (toggle-word-wrap 1)
   (if (>= emacs-major-version 26)
       (display-line-numbers-mode 1))
@@ -2482,11 +2654,10 @@ He deshabilitado la indentación en los modos de programación, ralentiza bastan
 
 
 ** /Fringes/
-Prefiero ocultar las flechas que indican que una línea se sale de la pantalla, y solo mostrar las de la derecha.
-
+Antes ocultaba los fringes, ahora los dejo para =diff-hl=
 #+begin_src emacs-lisp
 (if (display-graphic-p)
-  (fringe-mode '(0 . nil)))
+  (fringe-mode '(nil . nil)))
 #+end_src
 
 ** Temas
@@ -2522,24 +2693,8 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
   (load-theme my-dark-theme t)
   (load-theme 'alvaro t))
 
-
-(tema-oscuro)
+(run-with-idle-timer 2 nil #'tema-oscuro)
 #+end_src
-
-#+RESULTS:
-: tema-oscuro
-
-
-Pongo uno detrás de otro para "limpiar" lo que haya podido quedarse de alguna customización. Por lo visto, un tema siempre añade cambios, pero al quitarse no se deshacen  completamente. Algunas configuraciones solo se tienen en cuenta al reiniciar /Emacs/ o al reaplicar un modo: por ejemplo, los colores de =highlight-indent-guides= necesitan reabrir el buffer.
-#+begin_src lisp
-(tema-claro)
-(tema-oscuro)
-#+end_src
-
-
-
-
-
 
 
 
@@ -2628,18 +2783,6 @@ global-set-key (kbd "C-c h w") 'helm-wikipedia-suggest)
 
 (use-package peep-dired)
 
-;; Copy and paste files
-(use-package dired-ranger
-  :bind (:map dired-mode-map
-              ("W" . dired-ranger-copy)
-              ("X" . dired-ranger-move)
-              ("Y" . dired-ranger-paste)))
-
-(setq dired-open-extensions '(("gif" . "sxiv")
-                              ("jpg" . "sxiv")
-                              ("png" . "sxiv")
-                              ("mkv" . "mpv")
-                              ("mp4" . "mpv")))
 
 
 
@@ -2683,28 +2826,8 @@ global-set-key (kbd "C-c h w") 'helm-wikipedia-suggest)
 - didyoumean.el 
 - BAT cat
 - statusbar.el
-- dired-single
 - https://www.wezm.net/technical/2019/10/useful-command-line-tools/
 
-
-
-
-#+begin_src lisp
-(add-to-list 'load-path "~/.emacs.d/mis-paquetes/lsp-latex")
-(require 'lsp-latex)
-;; "texlab" must be located at a directory contained in `exec-path'.
-;; If you want to put "texlab" somewhere else,
-;; you can specify the path to "texlab" as follows:
-;; (setq lsp-latex-texlab-executable "/path/to/texlab")
-
-(with-eval-after-load "tex-mode"
- (add-hook 'tex-mode-hook 'lsp)
- (add-hook 'latex-mode-hook 'lsp))
-
-;; For YaTeX
-(with-eval-after-load "yatex"
- (add-hook 'yatex-mode-hook 'lsp))
-#+end_src
 
 * usettf
 
