@@ -1231,8 +1231,8 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
     (defvar ags/company-backends-prog-mode
       '(
-        (
-         company-capf
+        (company-capf :with company-yasnippet)
+         (
          company-files
          company-dabbrev-code
          company-web-html
@@ -1996,7 +1996,73 @@ Añado a la lista de extensiones la de los módulos.
    #+end_src
 
 
+* Rust
 
+#+begin_src emacs-lisp
+(use-package rustic
+  :ensure t
+  :defer 1
+  :config
+  
+  ;; uncomment for less flashiness
+  ;; (setq lsp-eldoc-hook nil)
+  ;; (setq lsp-enable-symbol-highlighting nil)
+  ;; (setq lsp-signature-auto-activate nil)
+
+  ;; comment to disable rustfmt on save
+  (setq rustic-format-on-save t)
+  
+  )
+
+#+end_src
+
+#+RESULTS:
+: t
+
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :ensure t
+  :defer 1
+  :commands lsp
+  :custom
+  ;; what to use when checking on-save. "check" is default, I prefer clippy
+  (lsp-rust-analyzer-cargo-watch-command "clippy")
+  (lsp-eldoc-render-all nil)
+  (lsp-idle-delay 0.6)
+  ;; enable / disable the hints as you prefer:
+  (lsp-rust-analyzer-server-display-inlay-hints t)
+  (lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial")
+  (lsp-rust-analyzer-display-chaining-hints t)
+  (lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names nil)
+  (lsp-rust-analyzer-display-closure-return-type-hints t)
+  (lsp-rust-analyzer-display-parameter-hints t)
+  (lsp-rust-analyzer-display-reborrow-hints t)
+  :config
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+  (push 'company-lsp company-backends)
+  (yas-reload-all)
+  (add-hook 'prog-mode-hook #'yas-minor-mode)
+  )
+  
+
+(use-package lsp-ui
+  :ensure t
+  :defer 1
+  :commands lsp-ui-mode
+  :custom
+  (lsp-ui-peek-always-show t)
+  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-doc-enable nil))
+
+(use-package helm-lsp
+  :ensure t
+  :defer 1)
+
+(use-package yasnippet
+  :ensure t
+  :defer 1)
+
+#+end_src
 
    
 * Opciones Latex para el PDF :noexport:
