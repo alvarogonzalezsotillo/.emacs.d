@@ -1,0 +1,36 @@
+
+#+begin_src bash
+
+
+eval "$(ssh-agent -s)"
+ssh-add 
+#+end_src
+
+
+
+#+begin_src bash
+PASSWD=$(echo 496465734164612a2e24323032300a | xxd -ps -r)
+sshpass -p "$PASSWD" ssh-copy-id -i .ssh/id_rsa profesor@a33pc01.local 
+sshpass -p "$PASSWD" ssh-copy-id -i .ssh/id_rsa profesor@a33pc02.local 
+sshpass -p "$PASSWD" ssh-copy-id -i .ssh/id_rsa profesor@a33pc03.local 
+sshpass -p "$PASSWD" ssh-copy-id -i .ssh/id_rsa profesor@a33pc04.local 
+sshpass -p "$PASSWD" ssh-copy-id -i .ssh/id_rsa profesor@a33pc05.local 
+sshpass -p "$PASSWD" ssh-copy-id -i .ssh/id_rsa profesor@a33pc06.local 
+sshpass -p "$PASSWD" ssh-copy-id -i .ssh/id_rsa profesor@a33pc07.local 
+sshpass -p "$PASSWD" ssh-copy-id -i .ssh/id_rsa profesor@a33pc08.local 
+sshpass -p "$PASSWD" ssh-copy-id -i .ssh/id_rsa profesor@a33pc09.local 
+sshpass -p "$PASSWD" ssh-copy-id -i .ssh/id_rsa profesor@a33pc10.local 
+sshpass -p "$PASSWD" ssh-copy-id -i .ssh/id_rsa profesor@a33pc11.local 
+sshpass -p "$PASSWD" ssh-copy-id -i .ssh/id_rsa profesor@a33pc12.local 
+sshpass -p "$PASSWD" ssh-copy-id -i .ssh/id_rsa profesor@a33pc13.local 
+sshpass -p "$PASSWD" ssh-copy-id -i .ssh/id_rsa profesor@a33pc14.local
+sshpass -p "$PASSWD" ssh-copy-id -i .ssh/id_rsa profesor@a33pc15.local
+sshpass -p "$PASSWD" ssh-copy-id -i .ssh/id_rsa profesor@a33pc16.local 
+#+end_src
+
+#+begin_src bash
+pdsh -l profesor -w a33pc10.local -R ssh 
+#+end_src
+
+
+
