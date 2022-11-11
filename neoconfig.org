@@ -1896,9 +1896,15 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
    (maxima . t)
    (ammonite . t)
    (typescript . t)
+   (js . t)
    (restclient . t )
    (shell . t)))
+
+(add-to-list 'org-babel-tangle-lang-exts '("js" . "js"))
 #+end_src
+
+#+RESULTS:
+: ((js . js) (rustic . rs) (typescript . ts) (amm . scala) (maxima . max) (D . d) (C++ . cpp) (emacs-lisp . el) (elisp . el))
 
 
  Además, no pido confirmación para varios lenguajes                                                                                                           
