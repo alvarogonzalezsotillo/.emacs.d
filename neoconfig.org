@@ -61,7 +61,8 @@ Añado también el directorio de =cargo= para =rust=.
      (paths `(
               ,(concat (expand-file-name user-emacs-directory) "bin")
               ,(concat (expand-file-name "~/") ".cargo/bin")
-              "/opt/scala/bin" )) )
+              "/opt/scala/bin"
+              "/opt/node/bin")) )
   (dolist (path paths)
     (message "path: %s" path)
     (setenv "PATH" (concat path exec-path-separator (getenv "PATH")))
@@ -71,6 +72,7 @@ Añado también el directorio de =cargo= para =rust=.
   (message "exec-path %s" exec-path))
 
 #+end_src
+
 
 
 ** Convertir un fichero =gift= en un examen =pdf=
@@ -263,6 +265,7 @@ Utilizo tres repositorios de paquetes:
   (setq centaur-tabs-cycle-scope 'tabs)
   (setq centaur-tabs-show-navigation-buttons t)
   (setq centaur-tabs-hide-tabs-hooks '(reb-mode-hook completion-list-mode-hook))
+  (setq centaur-tabs-show-count t)
 
   (ags/centaur-tabs-font-sizes)
 
@@ -585,8 +588,11 @@ Reduzco el tamaño de todas las fuentes de =imenu=
   :ensure t
   :config 
    (set-face-attribute 'imenu-list-entry-face nil :height  0.8)
-   (add-hook 'imenu-list-major-mode-hook (lambda () (message "IMENU MAJOR MODE")(linum-mode 1))))
+   (add-hook 'imenu-list-major-mode-hook (lambda () (message "IMENU MAJOR MODE")(display-line-numbers-mode 1))))
    #+end_src
+
+   #+RESULTS:
+   : t
 
    
 ** =blamer=
@@ -1487,6 +1493,16 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 (setq tramp-verbose 1)
 #+end_src
 
+Optimizaciones de https://www.reddit.com/r/emacs/comments/y92y4b/tramp_users_slowness_got_you_down_check/
+#+begin_src emacs-lisp
+(defun ags/vc-off-if-remote ()
+  (if (file-remote-p (buffer-file-name))
+      (setq-local vc-handled-backends nil)))
+(add-hook 'find-file-hook 'ags/vc-off-if-remote)
+
+(setq remote-file-name-inhibit-locks t)
+#+end_src
+
 En ocasiones, =tramp= no consigue conectar con un usuario que tiene =zsh= como shell. Para ello, hay que añadir lo siguiente al fichero =.zshrc= remoto:
 #+begin_src sh
 # EN .zshrc PARA QUE FUNCIONE tramp
@@ -1880,6 +1896,8 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
   :ensure t
   :defer 1)
 
+(require 'ob-js)
+
 (if
     (file-exists-p "/usr/share/plantuml/plantuml.jar")
     (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar")
@@ -1896,6 +1914,7 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
    (maxima . t)
    (ammonite . t)
    (typescript . t)
+   (js . t)
    (restclient . t )
    (shell . t)))
 #+end_src
