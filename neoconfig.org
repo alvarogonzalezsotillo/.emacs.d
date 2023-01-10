@@ -771,6 +771,7 @@ Añado algunos /mime-type/ al servidor HTTP
 ** =treemacs=
 Estoy usando =treemacs= en vez de =neotree=.
 
+
 #+begin_src emacs-lisp
 
 (use-package treemacs
@@ -817,7 +818,7 @@ Estoy usando =treemacs= en vez de =neotree=.
   
   (ags/cambiar-faces-de-treemacs)
   :bind
-  (("<f8>" . treemacs))
+  (("<f8>" . treemacs-add-and-display-current-project))
   )
 #+end_src
 
