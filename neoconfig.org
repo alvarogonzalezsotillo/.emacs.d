@@ -970,6 +970,75 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
     (global-smartscan-mode 1))
 #+end_src
 
+** =vertico=
+
+
+#+begin_src emacs-lisp
+
+(use-package swiper
+  :ensure t
+  :defer 1
+  :bind
+  (("C-f" . swiper)
+   ("C-S-f" . swiper-all)))
+
+(use-package marginalia
+  :ensure t
+  :defer 1
+  :custom
+  (marginalia-max-relative-age 0)
+  (marginalia-align 'right)
+  :init
+  (marginalia-mode))
+
+
+(use-package all-the-icons-completion
+  :ensure t
+  :defer 1
+  :after (marginalia all-the-icons)
+  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :init
+  (all-the-icons-completion-mode))
+
+(use-package vertico
+  :ensure t
+  :defer 1
+  :custom
+  (vertico-count 13)                    ; Number of candidates to display
+  (vertico-resize t)
+  (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
+  :bind
+  (("<f6>"  . switch-to-buffer))
+
+  :config
+  (vertico-mode))
+
+(use-package vertico-reverse-mode
+  :after vertico
+  :ensure nil
+  :config
+  (vertico-reverse-mode))
+
+(use-package vertico-posframe
+  :after vertico
+  :ensure t
+  :config
+  (vertico-posframe-mode 1))
+
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+
+(use-package consult
+  :ensure t)
+
+(use-package consult-projectile
+  :ensure t)
+
+#+end_src
 ** =helm=
 =helm= es un sistema para seleccionar una opción entre varias posibilidades, que se puede usar para casi todo
 - Buscar un comando
@@ -978,7 +1047,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 - Visualizar las ocurrencias de un patrón en un buffer
 - ... y más
 
-#+begin_src emacs-lisp
+#+begin_src lisp
   ;; HELM
   (use-package helm
     :ensure t
@@ -1050,7 +1119,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 #+RESULTS:
 : helm-filtered-bookmarks
 
-#+begin_src emacs-lisp
+#+begin_src lisp
     ;;https://www.reddit.com/r/emacs/comments/345vtl/make_helm_window_at_the_bottom_without_using_any/
     ;;HELM SIEMPRE ABAJO CON ANCHO COMPLETO
     (add-to-list 'display-buffer-alist
@@ -2060,10 +2129,6 @@ Añado a la lista de extensiones la de los módulos.
   (lsp-ui-peek-always-show t)
   (lsp-ui-sideline-show-hover t)
   (lsp-ui-doc-enable nil))
-
-(use-package helm-lsp
-  :ensure t
-  :defer 1)
 
 (use-package yasnippet
   :ensure t
