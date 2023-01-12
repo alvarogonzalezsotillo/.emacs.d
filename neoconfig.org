@@ -1007,8 +1007,6 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   (vertico-count 13)                    ; Number of candidates to display
   (vertico-resize t)
   (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
-  :bind
-  (("<f6>"  . switch-to-buffer))
 
   :config
   (vertico-mode))
@@ -1033,10 +1031,20 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 
 
 (use-package consult
-  :ensure t)
+  :ensure t
+  :bind
+  (("<f6>"  . consult-buffer))
+
+  :custom
+  (define-key minibuffer-mode-map (kbd "<f6>") 'previous-line-or-history-element)
+  (define-key minibuffer-mode-map (kbd "S-<f6>") 'next-line-or-history-element)
+
+)
 
 (use-package consult-projectile
   :ensure t)
+
+
 
 #+end_src
 ** =helm=
@@ -1495,15 +1503,16 @@ A veces es fácil perderse entre comandos a medio introducir y ventanas popup. M
 #+begin_src emacs-lisp
 ;;(define-key global-map [escape] 'keyboard-escape-quit)
 ;; (define-key key-translation-map (kbd "ESC") (kbd "C-g")) // PROBLEMAS CON EL TERMINAL
-(defun super-escape()
+(defun ags/super-escape()
   (interactive)
   (keyboard-escape-quit)
+  (minibuffer-keyboard-quit)
   (keyboard-quit)
   (company-abort)
   (abort-recursive-edit)
   (setq quit-flag t))
-(define-key global-map [escape] 'super-escape)
-(define-key minibuffer-local-map [escape] 'super-escape)
+(define-key global-map [escape] 'ags/super-escape)
+(define-key minibuffer-local-map [escape] 'ags/super-escape)
 (define-key company-active-map [escape] 'company-abort)
 #+end_src
 
