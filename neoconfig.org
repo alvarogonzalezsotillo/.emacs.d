@@ -1038,14 +1038,17 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   (("<f6>"  . consult-buffer))
 
   :custom
-  (define-key projectile-mode-map (kbd "C-c p s g") 'consult-git-grep)
-  (define-key minibuffer-mode-map (kbd "<f6>") 'previous-line-or-history-element)
-  (define-key minibuffer-mode-map (kbd "S-<f6>") 'next-line-or-history-element))
+  ;;(define-key minibuffer-mode-map (kbd "S-<f6>") 'previous-line-or-history-element)
+  ;;(define-key minibuffer-mode-map (kbd "<f6>") 'next-line-or-history-element)
+  (define-key projectile-mode-map (kbd "C-c p s g") 'consult-git-grep))
 
 (use-package consult-projectile
   :ensure t
   :after projectile
-  
+
+  :bind
+  (("C-<f6>"  . consult-projectile-switch-to-buffer))
+
   :custom
   (setq consult-projectile-use-projectile-switch-project t)
   (define-key projectile-mode-map (kbd "C-c p f") 'consult-projectile-find-file)
