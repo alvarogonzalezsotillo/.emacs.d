@@ -1005,7 +1005,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   :defer 1
   :custom
   (vertico-count 13)                    ; Number of candidates to display
-  (vertico-resize t)
+  (vertico-resize nil)
   (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
 
   :config
@@ -1015,7 +1015,8 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   :after vertico
   :ensure nil
   :config
-  (vertico-reverse-mode))
+  ;; No lo activo porque en las búsquedas sale al revés
+  (vertico-reverse-mode 0))
 
 (use-package vertico-posframe
   :after vertico
@@ -1031,18 +1032,26 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 
 
 (use-package consult
+  :after projectile
   :ensure t
   :bind
   (("<f6>"  . consult-buffer))
 
   :custom
+  (define-key projectile-mode-map (kbd "C-c p s g") 'consult-git-grep)
   (define-key minibuffer-mode-map (kbd "<f6>") 'previous-line-or-history-element)
-  (define-key minibuffer-mode-map (kbd "S-<f6>") 'next-line-or-history-element)
-
-)
+  (define-key minibuffer-mode-map (kbd "S-<f6>") 'next-line-or-history-element))
 
 (use-package consult-projectile
-  :ensure t)
+  :ensure t
+  :after projectile
+  
+  :custom
+  (setq consult-projectile-use-projectile-switch-project t)
+  (define-key projectile-mode-map (kbd "C-c p f") 'consult-projectile-find-file)
+  (define-key projectile-mode-map (kbd "C-c p p") 'consult-projectile-switch-project))
+
+
 
 
 
