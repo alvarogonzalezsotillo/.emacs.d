@@ -1035,7 +1035,10 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   :after projectile
   :ensure t
   :bind
-  (("<f6>"  . consult-buffer))
+  (("<f6>"  . consult-buffer)
+   ("C-x r b" . consult-bookmark)
+   ("M-y" . consult-yank-pop)
+   ("M-g g" . consult-goto-line) )
 
   :custom
   ;;(define-key minibuffer-mode-map (kbd "S-<f6>") 'previous-line-or-history-element)
@@ -1048,10 +1051,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   :after projectile
 
   :bind
-  (("C-<f6>"  . consult-projectile-switch-to-buffer)
-   ("C-x r b" . consult-bookmark)
-   ("M-y" . consult-yank-pop)
-   ("M-g g" . consult-goto-line)   )
+  (("C-<f6>"  . consult-projectile-switch-to-buffer) )
 
   :custom
   (setq consult-projectile-use-projectile-switch-project t)
