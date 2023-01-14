@@ -818,7 +818,7 @@ Estoy usando =treemacs= en vez de =neotree=.
   
   (ags/cambiar-faces-de-treemacs)
   :bind
-  (("<f8>" . treemacs-add-and-display-current-project))
+  (("<f8>" . treemacs-add-and-display-current-project-exclusively))
   )
 #+end_src
 
@@ -1035,30 +1035,40 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   :after projectile
   :ensure t
   :bind
-  (("<f6>"  . consult-buffer))
+  (("<f6>"  . consult-buffer)
+   ("C-x r b" . consult-bookmark)
+   ("M-y" . consult-yank-pop)
+   ("M-g g" . consult-goto-line) )
 
   :custom
   ;;(define-key minibuffer-mode-map (kbd "S-<f6>") 'previous-line-or-history-element)
   ;;(define-key minibuffer-mode-map (kbd "<f6>") 'next-line-or-history-element)
-  (define-key projectile-mode-map (kbd "C-c p s g") 'consult-git-grep))
+  (define-key projectile-command-map (kbd "s g") 'consult-git-grep)
+  )
 
 (use-package consult-projectile
   :ensure t
   :after projectile
 
   :bind
-  (("C-<f6>"  . consult-projectile-switch-to-buffer))
+  (("C-<f6>"  . consult-projectile-switch-to-buffer) )
 
   :custom
   (setq consult-projectile-use-projectile-switch-project t)
-  (define-key projectile-mode-map (kbd "C-c p f") 'consult-projectile-find-file)
-  (define-key projectile-mode-map (kbd "C-c p p") 'consult-projectile-switch-project))
-
-
-
+  (setq xref-show-xrefs-function #'consult-xref)
+  (setq xref-show-definitions-function #'consult-xref)
+  (setq consult-narrow-key "<")
+  (setq consult-widen-key ">")
+  (define-key projectile-command-map (kbd "f") 'consult-projectile-find-file)
+  (define-key projectile-command-map (kbd "p") 'consult-projectile-switch-project)
+  )
 
 
 #+end_src
+
+#+RESULTS:
+: consult-goto-line
+
 ** =helm=
 =helm= es un sistema para seleccionar una opción entre varias posibilidades, que se puede usar para casi todo
 - Buscar un comando
@@ -2136,9 +2146,9 @@ Añado a la lista de extensiones la de los módulos.
   (lsp-rust-analyzer-display-reborrow-hints t)
   :config
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-  (push 'company-lsp company-backends)
   (yas-reload-all)
   (add-hook 'prog-mode-hook #'yas-minor-mode)
+  (push 'company-lsp company-backends)
   )
   
 
