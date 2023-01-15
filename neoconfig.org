@@ -1,4 +1,4 @@
-
+ 
 #+TITLE: Configuración Emacs
 #+author: Álvaro González (@alvarogonzalez)
 #+OPTIONS: toc:2 h:4 author:t
@@ -1011,21 +1011,16 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   :config
   (vertico-mode))
 
-(use-package vertico-reverse-mode
-  :after vertico
-  :ensure nil
-  :config
-  ;; No lo activo porque en las búsquedas sale al revés
-  (vertico-reverse-mode 0))
-
 (use-package vertico-posframe
   :after vertico
   :ensure t
+  :defer 1
   :config
   (vertico-posframe-mode 1))
 
 (use-package orderless
   :ensure t
+  :defer 1
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
@@ -1034,6 +1029,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 (use-package consult
   :after projectile
   :ensure t
+  :defer 1
   :bind
   (("<f6>"  . consult-buffer)
    ("C-x r b" . consult-bookmark)
@@ -1048,12 +1044,13 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 
 (use-package consult-projectile
   :ensure t
+  :defer 1
   :after projectile
 
   :bind
   (("C-<f6>"  . consult-projectile-switch-to-buffer) )
 
-  :custom
+  :config
   (setq consult-projectile-use-projectile-switch-project t)
   (setq xref-show-xrefs-function #'consult-xref)
   (setq xref-show-definitions-function #'consult-xref)
@@ -1067,7 +1064,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 #+end_src
 
 #+RESULTS:
-: consult-goto-line
+: consult-projectile-switch-to-buffer
 
 ** =helm=
 =helm= es un sistema para seleccionar una opción entre varias posibilidades, que se puede usar para casi todo
