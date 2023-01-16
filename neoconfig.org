@@ -823,6 +823,7 @@ Estoy usando =treemacs= en vez de =neotree=.
   (treemacs-git-mode -1)
   
   (ags/cambiar-faces-de-treemacs)
+  
   :bind
   (("<f8>" . ags/treemacs-toggle))
   )
@@ -1044,8 +1045,9 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
    ("C-x r b" . consult-bookmark)
    ("M-y" . consult-yank-pop)
    ("M-g g" . consult-goto-line) )
+   ("C-c p s s" . consult-ripgrep)
 
-  :custom
+  :config
   ;;(define-key minibuffer-mode-map (kbd "S-<f6>") 'previous-line-or-history-element)
   ;;(define-key minibuffer-mode-map (kbd "<f6>") 'next-line-or-history-element)
   (define-key projectile-command-map (kbd "s g") 'consult-git-grep)
@@ -1065,8 +1067,9 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   (setq xref-show-definitions-function #'consult-xref)
   (setq consult-narrow-key "<")
   (setq consult-widen-key ">")
-  (define-key projectile-command-map (kbd "f") 'consult-projectile-find-file)
-  (define-key projectile-command-map (kbd "p") 'consult-projectile-switch-project)
+  (define-key projectile-command-map (kbd "f") #'consult-projectile-find-file)
+  (define-key projectile-command-map (kbd "p") #'consult-projectile-switch-project)
+  (define-key projectile-command-map (kbd "s s") #'consult-ripgrep)
   )
 
 
