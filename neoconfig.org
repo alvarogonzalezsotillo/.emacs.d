@@ -55,20 +55,21 @@ En el directorio =~/.emacs.d/bin/= guardo algunas utilidades que me interesa ten
 
 Añado también el directorio de =cargo= para =rust=.
 #+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (let 
+      (  (exec-path-separator  (if (string-equal system-type "windows-nt") ";" ":"))
+         (paths `(
+                  ,(concat (expand-file-name user-emacs-directory) "bin")
+                  ,(concat (expand-file-name "~/") ".cargo/bin")
+                  "/opt/scala/bin" )) )
+    (dolist (path paths)
+      (message "path: %s" path)
+      (setenv "PATH" (concat path exec-path-separator (getenv "PATH")))
+      (add-to-list 'exec-path path))
 
-(let 
-  (  (exec-path-separator  (if (string-equal system-type "windows-nt") ";" ":"))
-     (paths `(
-              ,(concat (expand-file-name user-emacs-directory) "bin")
-              ,(concat (expand-file-name "~/") ".cargo/bin")
-              "/opt/scala/bin" )) )
-  (dolist (path paths)
-    (message "path: %s" path)
-    (setenv "PATH" (concat path exec-path-separator (getenv "PATH")))
-    (add-to-list 'exec-path path))
-
-  (message "PATH %s" (getenv "PATH"))
-  (message "exec-path %s" exec-path))
+    (message "PATH %s" (getenv "PATH"))
+    (message "exec-path %s" exec-path)))
 
 #+end_src
 
@@ -96,7 +97,6 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
   (let ((comando (format "sh -c 'gifttolatex %s -t \"%s\" -q \"%s\" \"%s\"'" parametros titulo porcentajetest buffer-file-name)))
     (shell-command comando)))
 
-(defalias 'trim-string 'string-trim) 
    #+end_src
 
 
@@ -346,6 +346,7 @@ Mostrar =^L= (saltos de página) como una línea horizontal
       (("C-c C-c" . ags/gifttolatex))
 
   :config
+  (defalias 'trim-string 'string-trim) 
   
 )
 #+end_src
@@ -811,6 +812,11 @@ Estoy usando =treemacs= en vez de =neotree=.
        ))
     )
 
+  (defun ags/treemacs-toggle ()
+    (interactive)
+    (if (eq (treemacs-current-visibility) 'visible)
+        (delete-window (treemacs-get-local-window))
+      (treemacs-add-and-display-current-project-exclusively)))
   
   (add-hook 'treemacs-mode-hook #'ags/hacer-treemacs-resizable)
   (setq treemacs-silent-refresh t)
@@ -818,9 +824,12 @@ Estoy usando =treemacs= en vez de =neotree=.
   
   (ags/cambiar-faces-de-treemacs)
   :bind
-  (("<f8>" . treemacs-add-and-display-current-project-exclusively))
+  (("<f8>" . ags/treemacs-toggle))
   )
 #+end_src
+
+#+RESULTS:
+: ags/treemacs-toggle
 
 
 ** =dumb-jump=
@@ -1833,27 +1842,30 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
 
 
 #+begin_src emacs-lisp
-(setq  custom-safe-themes  (quote
-                            (
-                             "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2"
-                             "d916b686ba9f23a46ee9620c967f6039ca4ea0e682c1b9219450acee80e10e40" 
-                             default)))
+(use-package emacs
+  :config
+  (setq  custom-safe-themes  (quote
+                              (
+                               "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2"
+                               "d916b686ba9f23a46ee9620c967f6039ca4ea0e682c1b9219450acee80e10e40" 
+                               default)))
 
-(defvar my-dark-theme 'my-tangotango)
-(defvar my-light-theme 'intellij)
+  (defvar my-dark-theme 'my-tangotango)
+  (defvar my-light-theme 'intellij)
 
 
-(defun ags/tema-claro()
-  (interactive)
-  (disable-theme my-dark-theme)
-  (load-theme my-light-theme t))
+  (defun ags/tema-claro()
+    (interactive)
+    (disable-theme my-dark-theme)
+    (load-theme my-light-theme t))
 
-(defun ags/tema-oscuro ()
-  (interactive)
-  (disable-theme my-light-theme)
-  (load-theme my-dark-theme t))
+  (defun ags/tema-oscuro ()
+    (interactive)
+    (disable-theme my-light-theme)
+    (load-theme my-dark-theme t))
 
-(run-with-idle-timer 2 nil #'ags/tema-oscuro)
+  (run-with-idle-timer 2 nil #'ags/tema-oscuro)
+  )
 #+end_src
 
 * OrgMode
@@ -2145,7 +2157,6 @@ Añado a la lista de extensiones la de los módulos.
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
   (yas-reload-all)
   (add-hook 'prog-mode-hook #'yas-minor-mode)
-  (push 'company-lsp company-backends)
   )
   
 
