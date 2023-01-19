@@ -813,7 +813,7 @@ Estoy usando =treemacs= en vez de =neotree=.
   (defun ags/cambiar-faces-de-treemacs ()
     ;; Cambio el tamaño por defecto del face
     (mapcar
-     (lambda (face) (set-face-attribute face nil :height 0.8) )
+     (lambda (face) (set-face-attribute face nil :height 0.7) )
      '(
        treemacs-directory-face                
        treemacs-directory-collapsed-face      
@@ -854,9 +854,6 @@ Estoy usando =treemacs= en vez de =neotree=.
   (("<f8>" . ags/treemacs-toggle))
   )
 #+end_src
-
-#+RESULTS:
-: ags/treemacs-toggle
 
 
 ** =dumb-jump=
@@ -1669,9 +1666,14 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
   :ensure t
   :config
   (dashboard-setup-startup-hook)
+  (setq dashboard-startup-banner nil)  
+  (setq dashboard-items '((recents  . 10)
+                          (bookmarks . 5)
+                          (projects . 10)))
   (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
   )
 #+end_src
+
 
 
 
