@@ -74,6 +74,31 @@ Añado también el directorio de =cargo= para =rust=.
 
 #+end_src
 
+** Abrir todos los =org= de =apuntes-clase=
+
+#+begin_src emacs-lisp
+
+(defun es-presentacion-p (filename)
+  (let* ((contents (org-file-contents filename)))
+    (string-match-p "/common/footer.org" contents)))
+
+(defun lista-de-orgs (directory)
+  (directory-files-recursively directory ".*\.org$" ))
+
+
+(defun lista-de-presentaciones (directory)
+  (let* ((all-orgs (lista-de-orgs directory))
+         (presentations (seq-filter #'es-presentacion-p all-orgs)) )
+    presentations))
+
+(defun ags/abre-todas-las-presentaciones ()
+  (interactive)
+  (dolist (orgfile (lista-de-presentaciones "/home/alvaro/Cloud/hidrive/datos-alvaro/apuntes-clase/"))
+    (find-file orgfile)
+    ))
+
+
+#+end_src
 
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
@@ -1045,8 +1070,8 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
    ("M-y" . consult-yank-pop)
    ("M-g g" . consult-goto-line)
    ("C-c p s s" . consult-ripgrep)
-   ("C-f" . swiper)
-   ("C-S-f" . swiper-all)
+   ("C-f" . consult-line)
+   ("C-S-f" . consult-line-multi)
    ("M-<f7>" . consult-imenu )
    )
 
@@ -1638,6 +1663,18 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 #+end_src
 
 * Visualización
+** Pantalla inicial (/dashboard/)
+#+begin_src emacs-lisp
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook)
+  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+  )
+#+end_src
+
+
+
 ** Código fuente
 
 #+begin_src emacs-lisp
