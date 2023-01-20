@@ -1,4 +1,5 @@
- 
+
+
 #+TITLE: Configuración Emacs
 #+author: Álvaro González (@alvarogonzalez)
 #+OPTIONS: toc:2 h:4 author:t
@@ -73,6 +74,31 @@ Añado también el directorio de =cargo= para =rust=.
 
 #+end_src
 
+** Abrir todos los =org= de =apuntes-clase=
+
+#+begin_src emacs-lisp
+
+(defun es-presentacion-p (filename)
+  (let* ((contents (org-file-contents filename)))
+    (string-match-p "/common/footer.org" contents)))
+
+(defun lista-de-orgs (directory)
+  (directory-files-recursively directory ".*\.org$" ))
+
+
+(defun lista-de-presentaciones (directory)
+  (let* ((all-orgs (lista-de-orgs directory))
+         (presentations (seq-filter #'es-presentacion-p all-orgs)) )
+    presentations))
+
+(defun ags/abre-todas-las-presentaciones ()
+  (interactive)
+  (dolist (orgfile (lista-de-presentaciones "/home/alvaro/Cloud/hidrive/datos-alvaro/apuntes-clase/"))
+    (find-file orgfile)
+    ))
+
+
+#+end_src
 
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
@@ -787,7 +813,7 @@ Estoy usando =treemacs= en vez de =neotree=.
   (defun ags/cambiar-faces-de-treemacs ()
     ;; Cambio el tamaño por defecto del face
     (mapcar
-     (lambda (face) (set-face-attribute face nil :height 0.8) )
+     (lambda (face) (set-face-attribute face nil :height 0.7) )
      '(
        treemacs-directory-face                
        treemacs-directory-collapsed-face      
@@ -828,9 +854,6 @@ Estoy usando =treemacs= en vez de =neotree=.
   (("<f8>" . ags/treemacs-toggle))
   )
 #+end_src
-
-#+RESULTS:
-: ags/treemacs-toggle
 
 
 ** =dumb-jump=
@@ -987,10 +1010,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 
 (use-package swiper
   :ensure t
-  :defer 1
-  :bind
-  (("C-f" . swiper)
-   ("C-S-f" . swiper-all)))
+  :defer 1)
 
 (use-package marginalia
   :ensure t
@@ -1031,6 +1051,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   :ensure t
   :defer 1
   :config
+  (setq vertico-posframe-border-width 6)
   (vertico-posframe-mode 1))
 
 (use-package orderless
@@ -1049,8 +1070,12 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   (("<f6>"  . consult-buffer)
    ("C-x r b" . consult-bookmark)
    ("M-y" . consult-yank-pop)
-   ("M-g g" . consult-goto-line) )
+   ("M-g g" . consult-goto-line)
    ("C-c p s s" . consult-ripgrep)
+   ("C-f" . consult-line)
+   ("C-S-f" . consult-line-multi)
+   ("M-<f7>" . consult-imenu )
+   )
 
   :config
   ;;(define-key minibuffer-mode-map (kbd "S-<f6>") 'previous-line-or-history-element)
@@ -1249,6 +1274,7 @@ Ayuda interactiva de teclado. En el popup-type por defecto entra en conflicto co
 (use-package which-key-posframe
   :ensure t
   :config
+  (setq which-key-posframe-border-width 6)
   (which-key-posframe-mode)
 
 )
@@ -1639,6 +1665,23 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 #+end_src
 
 * Visualización
+** Pantalla inicial (/dashboard/)
+#+begin_src emacs-lisp
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-startup-banner nil)  
+  (setq dashboard-items '((recents  . 10)
+                          (bookmarks . 5)
+                          (projects . 10)))
+  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+  )
+#+end_src
+
+
+
+
 ** Código fuente
 
 #+begin_src emacs-lisp
@@ -2119,7 +2162,18 @@ Añado a la lista de extensiones la de los módulos.
 (add-to-list 'auto-mode-alist '("\\.mjs\\'" . js2-mode))
    #+end_src
 
+* kotlin
 
+#+begin_src emacs-lisp
+(use-package kotlin-mode
+  :ensure t
+  :defer 1
+  )
+#+end_src
+
+#+RESULTS:
+: [nil 0 1 0 nil require (kotlin-mode nil t) idle 0 nil]
+   
 * Rust
 
 #+begin_src emacs-lisp
