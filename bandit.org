@@ -134,7 +134,19 @@ grep millionth data.txt
 
 * Level 8
 #+begin_src bash :dir /ssh:bandit8@bandit.labs.overthewire.org#2220:
-ls -la
+file data.txt
+cat data.txt | uniq -c | sort | tail
 #+end_src
 
 #+RESULTS:
+| data.txt: | ASCII                            | text |
+|         1 | zM158VNouVckHhwQog1TJri2a9Ti5KA2 |      |
+|         2 | 5c8VjsZCxYC9eRLNFnXq58TBsS0oYnhl |      |
+|         2 | 91fDRLPBCgoAwhbIPBlW89hSnO4w2aRg |      |
+|         2 | aA1sWsHoBtYpvmO6F8jmyFk3QaDjA0UN |      |
+|         2 | fr6aEhWRa2YeQ2qEdjMyUpPqoJOem3Dq |      |
+|         2 | lSWSEpS1ElCfdW7Wei3dkUD7tB17vvGA |      |
+|         2 | p1dzDa5gJ8tpkgPW5hPHDRENabkbbYFV |      |
+|         2 | SeKkXFko6FrygYMn9nIoGIXM44b3hAdy |      |
+|         2 | wePNObl7lkLKQxIrR6xeAuUxHDIxiaW0 |      |
+|         2 | WMPIYAeOF4iIKjo4ZC9ux57X5Tzukk5W |      |
