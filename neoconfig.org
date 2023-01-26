@@ -1,4 +1,5 @@
- 
+
+
 #+TITLE: Configuración Emacs
 #+author: Álvaro González (@alvarogonzalez)
 #+OPTIONS: toc:2 h:4 author:t
@@ -55,23 +56,49 @@ En el directorio =~/.emacs.d/bin/= guardo algunas utilidades que me interesa ten
 
 Añado también el directorio de =cargo= para =rust=.
 #+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (let 
+      (  (exec-path-separator  (if (string-equal system-type "windows-nt") ";" ":"))
+         (paths `(
+                  ,(concat (expand-file-name user-emacs-directory) "bin")
+                  ,(concat (expand-file-name "~/") ".cargo/bin")
+                  "/opt/scala/bin" )) )
+    (dolist (path paths)
+      (message "path: %s" path)
+      (setenv "PATH" (concat path exec-path-separator (getenv "PATH")))
+      (add-to-list 'exec-path path))
 
-(let 
-  (  (exec-path-separator  (if (string-equal system-type "windows-nt") ";" ":"))
-     (paths `(
-              ,(concat (expand-file-name user-emacs-directory) "bin")
-              ,(concat (expand-file-name "~/") ".cargo/bin")
-              "/opt/scala/bin" )) )
-  (dolist (path paths)
-    (message "path: %s" path)
-    (setenv "PATH" (concat path exec-path-separator (getenv "PATH")))
-    (add-to-list 'exec-path path))
-
-  (message "PATH %s" (getenv "PATH"))
-  (message "exec-path %s" exec-path))
+    (message "PATH %s" (getenv "PATH"))
+    (message "exec-path %s" exec-path)))
 
 #+end_src
 
+** Abrir todos los =org= de =apuntes-clase=
+
+#+begin_src emacs-lisp
+
+(defun es-presentacion-p (filename)
+  (let* ((contents (org-file-contents filename)))
+    (string-match-p "/common/footer.org" contents)))
+
+(defun lista-de-orgs (directory)
+  (directory-files-recursively directory ".*\.org$" ))
+
+
+(defun lista-de-presentaciones (directory)
+  (let* ((all-orgs (lista-de-orgs directory))
+         (presentations (seq-filter #'es-presentacion-p all-orgs)) )
+    presentations))
+
+(defun ags/abre-todas-las-presentaciones ()
+  (interactive)
+  (dolist (orgfile (lista-de-presentaciones "/home/alvaro/Cloud/hidrive/datos-alvaro/apuntes-clase/"))
+    (find-file orgfile)
+    ))
+
+
+#+end_src
 
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
@@ -96,7 +123,6 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
   (let ((comando (format "sh -c 'gifttolatex %s -t \"%s\" -q \"%s\" \"%s\"'" parametros titulo porcentajetest buffer-file-name)))
     (shell-command comando)))
 
-(defalias 'trim-string 'string-trim) 
    #+end_src
 
 
@@ -346,6 +372,7 @@ Mostrar =^L= (saltos de página) como una línea horizontal
       (("C-c C-c" . ags/gifttolatex))
 
   :config
+  (defalias 'trim-string 'string-trim) 
   
 )
 #+end_src
@@ -786,7 +813,7 @@ Estoy usando =treemacs= en vez de =neotree=.
   (defun ags/cambiar-faces-de-treemacs ()
     ;; Cambio el tamaño por defecto del face
     (mapcar
-     (lambda (face) (set-face-attribute face nil :height 0.8) )
+     (lambda (face) (set-face-attribute face nil :height 0.7) )
      '(
        treemacs-directory-face                
        treemacs-directory-collapsed-face      
@@ -811,14 +838,20 @@ Estoy usando =treemacs= en vez de =neotree=.
        ))
     )
 
+  (defun ags/treemacs-toggle ()
+    (interactive)
+    (if (eq (treemacs-current-visibility) 'visible)
+        (delete-window (treemacs-get-local-window))
+      (treemacs-add-and-display-current-project-exclusively)))
   
   (add-hook 'treemacs-mode-hook #'ags/hacer-treemacs-resizable)
   (setq treemacs-silent-refresh t)
   (treemacs-git-mode -1)
   
   (ags/cambiar-faces-de-treemacs)
+  
   :bind
-  (("<f8>" . treemacs-add-and-display-current-project-exclusively))
+  (("<f8>" . ags/treemacs-toggle))
   )
 #+end_src
 
@@ -977,10 +1010,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 
 (use-package swiper
   :ensure t
-  :defer 1
-  :bind
-  (("C-f" . swiper)
-   ("C-S-f" . swiper-all)))
+  :defer 1)
 
 (use-package marginalia
   :ensure t
@@ -1011,11 +1041,17 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   :config
   (vertico-mode))
 
+(use-package vertico-mouse
+  :ensure nil
+  :config
+  )
+
 (use-package vertico-posframe
   :after vertico
   :ensure t
   :defer 1
   :config
+  (setq vertico-posframe-border-width 6)
   (vertico-posframe-mode 1))
 
 (use-package orderless
@@ -1034,9 +1070,14 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   (("<f6>"  . consult-buffer)
    ("C-x r b" . consult-bookmark)
    ("M-y" . consult-yank-pop)
-   ("M-g g" . consult-goto-line) )
+   ("M-g g" . consult-goto-line)
+   ("C-c p s s" . consult-ripgrep)
+   ("C-f" . consult-line)
+   ("C-S-f" . consult-line-multi)
+   ("M-<f7>" . consult-imenu )
+   )
 
-  :custom
+  :config
   ;;(define-key minibuffer-mode-map (kbd "S-<f6>") 'previous-line-or-history-element)
   ;;(define-key minibuffer-mode-map (kbd "<f6>") 'next-line-or-history-element)
   (define-key projectile-command-map (kbd "s g") 'consult-git-grep)
@@ -1056,8 +1097,9 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   (setq xref-show-definitions-function #'consult-xref)
   (setq consult-narrow-key "<")
   (setq consult-widen-key ">")
-  (define-key projectile-command-map (kbd "f") 'consult-projectile-find-file)
-  (define-key projectile-command-map (kbd "p") 'consult-projectile-switch-project)
+  (define-key projectile-command-map (kbd "f") #'consult-projectile-find-file)
+  (define-key projectile-command-map (kbd "p") #'consult-projectile-switch-project)
+  (define-key projectile-command-map (kbd "s s") #'consult-ripgrep)
   )
 
 
@@ -1232,6 +1274,7 @@ Ayuda interactiva de teclado. En el popup-type por defecto entra en conflicto co
 (use-package which-key-posframe
   :ensure t
   :config
+  (setq which-key-posframe-border-width 6)
   (which-key-posframe-mode)
 
 )
@@ -1622,6 +1665,23 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 #+end_src
 
 * Visualización
+** Pantalla inicial (/dashboard/)
+#+begin_src emacs-lisp
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-startup-banner nil)  
+  (setq dashboard-items '((recents  . 10)
+                          (bookmarks . 5)
+                          (projects . 10)))
+  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+  )
+#+end_src
+
+
+
+
 ** Código fuente
 
 #+begin_src emacs-lisp
@@ -1833,27 +1893,30 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
 
 
 #+begin_src emacs-lisp
-(setq  custom-safe-themes  (quote
-                            (
-                             "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2"
-                             "d916b686ba9f23a46ee9620c967f6039ca4ea0e682c1b9219450acee80e10e40" 
-                             default)))
+(use-package emacs
+  :config
+  (setq  custom-safe-themes  (quote
+                              (
+                               "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2"
+                               "d916b686ba9f23a46ee9620c967f6039ca4ea0e682c1b9219450acee80e10e40" 
+                               default)))
 
-(defvar my-dark-theme 'my-tangotango)
-(defvar my-light-theme 'intellij)
+  (defvar my-dark-theme 'my-tangotango)
+  (defvar my-light-theme 'intellij)
 
 
-(defun ags/tema-claro()
-  (interactive)
-  (disable-theme my-dark-theme)
-  (load-theme my-light-theme t))
+  (defun ags/tema-claro()
+    (interactive)
+    (disable-theme my-dark-theme)
+    (load-theme my-light-theme t))
 
-(defun ags/tema-oscuro ()
-  (interactive)
-  (disable-theme my-light-theme)
-  (load-theme my-dark-theme t))
+  (defun ags/tema-oscuro ()
+    (interactive)
+    (disable-theme my-light-theme)
+    (load-theme my-dark-theme t))
 
-(run-with-idle-timer 2 nil #'ags/tema-oscuro)
+  (run-with-idle-timer 2 nil #'ags/tema-oscuro)
+  )
 #+end_src
 
 * OrgMode
@@ -2099,7 +2162,18 @@ Añado a la lista de extensiones la de los módulos.
 (add-to-list 'auto-mode-alist '("\\.mjs\\'" . js2-mode))
    #+end_src
 
+* kotlin
 
+#+begin_src emacs-lisp
+(use-package kotlin-mode
+  :ensure t
+  :defer 1
+  )
+#+end_src
+
+#+RESULTS:
+: [nil 0 1 0 nil require (kotlin-mode nil t) idle 0 nil]
+   
 * Rust
 
 #+begin_src emacs-lisp
@@ -2145,7 +2219,6 @@ Añado a la lista de extensiones la de los módulos.
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
   (yas-reload-all)
   (add-hook 'prog-mode-hook #'yas-minor-mode)
-  (push 'company-lsp company-backends)
   )
   
 
