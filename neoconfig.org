@@ -233,7 +233,25 @@ Utilizo tres repositorios de paquetes:
 - *gnu*: me hizo falta para algo que no recuerdo, lo tengo actualmente deshabilitado.
 - *org*: las versiones nuevas de org-mode se publican antes en este repositorio
 
+** =straight=
 
+#+begin_src emacs-lisp
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+#+end_src
+
+#+RESULTS:
+: t
 
 ** =use-package=
 
@@ -1336,13 +1354,15 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     :defer 1
     :config)
 
-  (use-package company-flx
+  (use-package company-fuzzy
     :ensure t
-    :after (company)
     :defer 1
+    :hook (company-mode . company-fuzzy-mode)
     :config
-      (company-flx-mode +1)
-  )
+    (setq company-fuzzy-sorting-backend 'flx
+          company-fuzzy-prefix-on-top t
+          company-fuzzy-show-annotation nil
+          company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")))
 
   (use-package company-quickhelp
     :ensure t
@@ -1365,67 +1385,81 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
 
     (defvar ags/company-backends-prog-mode
-      '(
-        (company-capf :with company-yasnippet)
-         (
-         company-files
-         company-dabbrev-code
-         company-web-html
-         company-keywords
-         company-emoji
-         )
-        )
-      )
+      '((company-capf :with
+                      company-dabbrev-code
+                      company-files
+                      company-web-html
+                      company-keywords
+                      company-emoji
+                      company-yasnippet)))
 
 
     (defvar ags/company-backends-org-mode
-      '(
-        (
-         company-files
-         company-dabbrev-code
-         company-dabbrev
-         company-keywords
-         company-emoji
-         company-capf
-         )
-        )
-      )
+      '((company-capf :with
+                      company-files
+                      company-dabbrev
+                      company-keywords
+                      company-emoji
+                      company-yasnippet)))
 
+    (defvar ags/company-backends-tex-mode
+      '((company-capf :with
+                      company-auctex
+                      company-files
+                      company-dabbrev
+                      company-keywords
+                      company-emoji
+                      company-yasnippet)))
+
+    
     (defvar ags/company-backends ags/company-backends-org-mode)
 
     ;; set default `company-backends'
     (setq company-backends ags/company-backends)
 
-
-
     (defun ags/company-backends-org-mode-function ()
       (interactive)
-      (set (make-local-variable 'company-backends) ags/company-backends-org-mode))
+      (set (make-local-variable 'company-backends) ags/company-backends-org-mode)
+      (company-fuzzy-mode 1))
 
     (add-hook 'org-mode-hook #'ags/company-backends-org-mode-function)
 
     (defun ags/company-backends-prog-mode-function ()
       (interactive)
-      (set (make-local-variable 'company-backends) ags/company-backends-prog-mode))
-
+      (set (make-local-variable 'company-backends) ags/company-backends-prog-mode)
+      (company-fuzzy-mode 1))
 
     (add-hook 'prog-mode-hook #'ags/company-backends-prog-mode-function)
 
+    (defun ags/company-backends-tex-mode-function ()
+      (interactive)
+      (set (make-local-variable 'company-backends) ags/company-backends-tex-mode)
+      (company-fuzzy-mode 1))
+
+    (add-hook 'prog-mode-hook #'ags/company-backends-tex-mode-function)
+    
     (global-set-key (kbd "C-.") 'company-complete)
     (define-key company-active-map [escape] 'company-abort)
 
+    (setq company-transformers '(delete-consecutive-dups company-sort-by-occurrence))
 
-
-  (setq company-dabbrev-code-everywhere t)
-  (setq company-dabbrev-code-ignore-case nil)
-  (setq company-dabbrev-everywhere t)
-  (setq company-dabbrev-ignore-case 'keep-prefix)
-  (setq company-dabbrev-downcase nil)
-
+    (setq company-dabbrev-code-everywhere t)
+    (setq company-dabbrev-minimum-length 2)
+    (setq company-dabbrev-code-ignore-case nil)
+    (setq company-dabbrev-everywhere t)
+    (setq company-dabbrev-ignore-case 'keep-prefix)
+    (setq company-dabbrev-downcase nil)
+    (setq company-require-match nil)
     
     (global-company-mode)
+
+    (define-key company-active-map (kbd "C-.") 'company-other-backend)
+
     )
 #+end_src
+
+#+RESULTS:
+: t
 
 * Edición
 
@@ -1615,6 +1649,23 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
 
 * Navegación
+** =file-info=
+#+begin_src emacs-lisp
+(use-package file-info
+  :straight (:host github :repo "artawower/file-info.el")
+  :bind (("C-c d" . 'file-info-show))
+  :config
+  (setq hydra-hint-display-type 'posframe)
+  (setq hydra-posframe-show-params `(:poshandler posframe-poshandler-frame-center
+                                               :internal-border-width 2
+                                               :internal-border-color "#61AFEF"
+                                               :left-fringe 16
+                                               :right-fringe 16)))
+#+end_src
+
+#+RESULTS:
+: file-info-show
+
 ** =tramp=
 =tramp= intenta optimizar las conexiones, enviando en línea los ficheros pequeños. Esto me da problemas en algunos sistemas, así que indico que los ficheros se copien a partir de 1 byte de tamaño:
 #+begin_src emacs-lisp
@@ -1676,6 +1727,18 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 
 
 
+
+** /wrap/ adaptativo
+
+#+begin_src emacs-lisp
+(use-package adaptive-wrap
+  :ensure t
+  :defer 1
+  )
+#+end_src
+
+#+RESULTS:
+: [nil 0 1 0 nil require (adaptive-wrap nil t) idle 0 nil]
 
 ** Código fuente
 
@@ -1835,8 +1898,11 @@ Avoid performance issues in files with very long lines.
 
 ** Cambiar el tamaño de fuente de todo /emacs/ (no solo el buffer actual)
 #+begin_src emacs-lisp
-(default-text-scale-mode 1)
-(setq frame-resize-pixelwise t)
+  (use-package default-text-scale
+  :config
+    (setq frame-resize-pixelwise t)
+    (default-text-scale-mode 1)
+    )
 #+end_src
 
 ** Respuestas de confirmación más cortas
@@ -2024,10 +2090,6 @@ Mejores tamaños de encabezados
 ** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
-(use-package ob-ammonite
-  :ensure t
-  :defer 1)
-
 (use-package ob-typescript
   :ensure t
   :defer 1)
@@ -2050,7 +2112,6 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
    (dot . t)
    (plantuml . t)
    (maxima . t)
-   (ammonite . t)
    (typescript . t)
    (js . t)
    (restclient . t )
@@ -2060,7 +2121,6 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 #+end_src
 
 #+RESULTS:
-: ((js . js) (rustic . rs) (typescript . ts) (amm . scala) (maxima . max) (D . d) (C++ . cpp) (emacs-lisp . el) (elisp . el))
 
 
  Además, no pido confirmación para varios lenguajes                                                                                                           
