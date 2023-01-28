@@ -93,6 +93,6 @@
 
 
 ;(ags/carga-config-org "~/.emacs.d/config.org" nil nil)
-(ags/carga-config-org "~/.emacs.d/neoconfig.org" nil nil)
+(ags/carga-config-org "~/.emacs.d/neoconfig.org" nil t)
 
 (find-file "~/.emacs.d/")
