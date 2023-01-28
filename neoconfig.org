@@ -1059,6 +1059,11 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   :config
   (vertico-mode))
 
+(use-package vertico-mouse
+  :ensure nil
+  :config
+  )
+
 (use-package vertico-posframe
   :after vertico
   :ensure t
