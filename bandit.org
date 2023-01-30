@@ -133,20 +133,122 @@ grep millionth data.txt
 | millionth  | TESKZC0XvTetK0S9xNwm25STk5iWrBvP |         |         |         |     |    |       |              |
 
 * Level 8
-#+begin_src bash :dir /ssh:bandit8@bandit.labs.overthewire.org#2220:
+#+begin_src bash :dir /ssh:bandit8@bandit.labs.overthewire.org#2220: :results output verbatim
 file data.txt
-cat data.txt | uniq -c | sort | tail
+cat data.txt | sort | uniq -c | sort -n | head
 #+end_src
 
 #+RESULTS:
-| data.txt: | ASCII                            | text |
-|         1 | zM158VNouVckHhwQog1TJri2a9Ti5KA2 |      |
-|         2 | 5c8VjsZCxYC9eRLNFnXq58TBsS0oYnhl |      |
-|         2 | 91fDRLPBCgoAwhbIPBlW89hSnO4w2aRg |      |
-|         2 | aA1sWsHoBtYpvmO6F8jmyFk3QaDjA0UN |      |
-|         2 | fr6aEhWRa2YeQ2qEdjMyUpPqoJOem3Dq |      |
-|         2 | lSWSEpS1ElCfdW7Wei3dkUD7tB17vvGA |      |
-|         2 | p1dzDa5gJ8tpkgPW5hPHDRENabkbbYFV |      |
-|         2 | SeKkXFko6FrygYMn9nIoGIXM44b3hAdy |      |
-|         2 | wePNObl7lkLKQxIrR6xeAuUxHDIxiaW0 |      |
-|         2 | WMPIYAeOF4iIKjo4ZC9ux57X5Tzukk5W |      |
+#+begin_example
+data.txt: ASCII text
+      1 EN632PlfYiZbn3PhVK3XOGSlNInNE00t
+     10 0nWWiILKIHjVQhAySQCVA1OO4pRFzm0g
+     10 0Ri9uiagQoqbkaeFEKyT5GksBWdCxTLr
+     10 1jzHQ5uo7b0MsA2rjZfwO1u63LVQrOR5
+     10 1LSHp948yXLwKZKQHuG7vRbRZ2BiIIoF
+     10 20CZYbTfkf0soLqNB3fxk7nyrFPhHjeb
+     10 3AKdLZMTOprIKLKt2k70jJvjwzWN5Ver
+     10 3BIPRNUpnWyXoLsg9nWQqV5hVFEKpL46
+     10 3v5ftmuNblcHE7OgMLu28Rk0a4ZfR5UQ
+     10 4LMsh6PCDJVLecGZYNzLupTNylExWhcW
+#+end_example
+
+* Level 9
+#+begin_src bash :dir /ssh:bandit9@bandit.labs.overthewire.org#2220: :results output verbatim
+strings data.txt | grep -e "==*"
+#+end_src
+
+#+RESULTS:
+#+begin_example
+c========== the
+I2=Z
+K=y3>
+!=j$u
+h;========== password
+========== isT
+E=XQ
+[Qi#Z=c
+i=|V
+!/=j>:]zx
+r>i"=
+XZ>~=
+n.E========== G7w8LIi6J3kTb8A7j9LgrywtEUlyyp6s
+~UtFS=
+eY4<={_
+#+end_example
+
+* Level 10
+#+begin_src bash :dir /ssh:bandit10@bandit.labs.overthewire.org#2220: :results output verbatim
+base64 -d data.txt
+#+end_src
+
+#+RESULTS:
+: The password is 6zPeziLdR2RKNdNYFNb6nVCKzphlXHBM
+
+* Level 11
+#+begin_src bash :dir /ssh:bandit11@bandit.labs.overthewire.org#2220: :results output verbatim
+tr 'A-Za-z' 'N-ZA-Mn-za-m' < data.txt
+#+end_src
+
+#+RESULTS:
+: The password is JVNBBFSmZwKKOP0XbFXOoW8chDz5yVRv
+
+* Level 12
+#+begin_src bash :dir /ssh:bandit12@bandit.labs.overthewire.org#2220: :results output verbatim
+ls -l
+DIR=$(mktemp --directory -p /tmp)
+echo $DIR
+xxd -r < data.txt > $DIR/1
+file $DIR/1
+cd $DIR
+zcat < 1 > 2
+ls -l
+file 2
+bzip2 -d 2
+ls -l
+file 2.out
+zcat < 2.out > 3
+file 3
+tar -xvf 3
+file data5.bin
+tar -xvf data5.bin
+file data6.bin
+bzip2 -d data6.bin
+file data6.bin.out
+tar -xvf data6.bin.out
+file data8.bin
+zcat < data8.bin 
+#+end_src
+
+#+RESULTS:
+#+begin_example
+total 4
+-rw-r----- 1 bandit13 bandit12 2581 Jan 11 19:18 data.txt
+/tmp/tmp.kdEnTlalnh
+/tmp/tmp.kdEnTlalnh/1: gzip compressed data, was "data2.bin", last modified: Wed Jan 11 19:18:38 2023, max compression, from Unix, original size modulo 2^32 572
+total 8
+-rw-rw-r-- 1 bandit12 bandit12 605 Jan 30 16:23 1
+-rw-rw-r-- 1 bandit12 bandit12 572 Jan 30 16:23 2
+2: bzip2 compressed data, block size = 900k
+total 8
+-rw-rw-r-- 1 bandit12 bandit12 605 Jan 30 16:23 1
+-rw-rw-r-- 1 bandit12 bandit12 434 Jan 30 16:23 2.out
+2.out: gzip compressed data, was "data4.bin", last modified: Wed Jan 11 19:18:38 2023, max compression, from Unix, original size modulo 2^32 20480
+3: POSIX tar archive (GNU)
+data5.bin
+data5.bin: POSIX tar archive (GNU)
+data6.bin
+data6.bin: bzip2 compressed data, block size = 900k
+data6.bin.out: POSIX tar archive (GNU)
+data8.bin
+data8.bin: gzip compressed data, was "data9.bin", last modified: Wed Jan 11 19:18:38 2023, max compression, from Unix, original size modulo 2^32 49
+The password is 
+#+end_example
+
+* Level 13yes
+#+begin_src bash :dir /ssh:bandit13@bandit.labs.overthewire.org#2220: :results output verbatim
+ssh -p 2220 -o StrictHostKeyChecking=no -i sshkey.private bandit14@localhost cat /etc/bandit_pass/bandit14 
+#+end_src
+
+#+RESULTS:
+: fGrHPx402xGC7U7rXKDaxiWFTOiF0ENq
