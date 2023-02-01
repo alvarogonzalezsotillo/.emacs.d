@@ -266,25 +266,29 @@ echo "fGrHPx402xGC7U7rXKDaxiWFTOiF0ENq" | nc -v localhost 30000
 * Level 15
 
 #+begin_src bash :dir /ssh:bandit15@bandit.labs.overthewire.org#2220: :results output verbatim
-ps -elf
-pstree
-cat .bandit14.password
+printf  "%s\n" "jN2kgmIXJ6fShzhT2avhotn4Zcka6tnt" | openssl s_client -quiet -connect localhost:30001
 #+end_src
 
 #+RESULTS:
-#+begin_example
-F S UID          PID    PPID  C PRI  NI ADDR SZ WCHAN  STIME TTY          TIME CMD
-4 S bandit15 2678942       1  0  90  10 -  4292 ep_pol 14:43 ?        00:00:00 /lib/systemd/systemd --user
-0 S bandit15 2719164 2719163  0  90  10 -  2285 do_wai 15:13 pts/85   00:00:00 -bash
-0 S bandit15 2730785 2719164  0  90  10 -  2437 do_sel 15:21 pts/85   00:00:00 openssl s_client -connect localhost:30001
-0 S bandit15 2745298 2745297  0  90  10 -   722 do_wai 15:33 pts/11   00:00:00 /bin/sh -i
-1 S bandit15 2747974 2745298  0  90  10 -   722 do_wai 15:35 pts/11   00:00:00 /bin/sh -i
-0 S bandit15 2747975 2747974  0  90  10 -   722 do_wai 15:35 pts/11   00:00:00 /bin/sh -c bash
-0 S bandit15 2747976 2747975  0  90  10 -  1842 do_wai 15:35 pts/11   00:00:00 bash
-0 R bandit15 2747977 2747976  0  90  10 -  2517 -      15:35 pts/11   00:00:00 ps -elf
-?─┬─?───sh───sh───sh───bash───pstree
-  ├─?───bash───openssl
-  └─systemd
-fGrHPx402xGC7U7rXKDaxiWFTOiF0ENq
-#+end_example
+: Correct!
+: JQttfApK4SeyHwDlI9SXGR50qclOAil1
+:
+
+* Level 16
+#+begin_src bash :dir /ssh:bandit16@bandit.labs.overthewire.org#2220: :results output verbatim
+ports=$(netstat -ln | awk '{print $4}' | tr -d ':' | sort -n)
+for p in $ports
+do
+    if [ "$p" -ge 31000 -a "$p" -le 32000 ]
+    then
+        echo puerto "$p"
+    fi
+done
+
+#+end_src
+
+#+RESULTS:
+: puerto 31518
+: puerto 31790
+
 
