@@ -245,10 +245,46 @@ data8.bin: gzip compressed data, was "data9.bin", last modified: Wed Jan 11 19:1
 The password is 
 #+end_example
 
-* Level 13yes
+* Level 13
 #+begin_src bash :dir /ssh:bandit13@bandit.labs.overthewire.org#2220: :results output verbatim
 ssh -p 2220 -o StrictHostKeyChecking=no -i sshkey.private bandit14@localhost cat /etc/bandit_pass/bandit14 
 #+end_src
 
 #+RESULTS:
 : fGrHPx402xGC7U7rXKDaxiWFTOiF0ENq
+
+* Level 14
+#+begin_src bash :dir /ssh:bandit14@bandit.labs.overthewire.org#2220: :results output verbatim
+echo "fGrHPx402xGC7U7rXKDaxiWFTOiF0ENq" | nc -v localhost 30000
+#+end_src
+
+#+RESULTS:
+: Correct!
+: jN2kgmIXJ6fShzhT2avhotn4Zcka6tnt
+: 
+
+* Level 15
+
+#+begin_src bash :dir /ssh:bandit15@bandit.labs.overthewire.org#2220: :results output verbatim
+ps -elf
+pstree
+cat .bandit14.password
+#+end_src
+
+#+RESULTS:
+#+begin_example
+F S UID          PID    PPID  C PRI  NI ADDR SZ WCHAN  STIME TTY          TIME CMD
+4 S bandit15 2678942       1  0  90  10 -  4292 ep_pol 14:43 ?        00:00:00 /lib/systemd/systemd --user
+0 S bandit15 2719164 2719163  0  90  10 -  2285 do_wai 15:13 pts/85   00:00:00 -bash
+0 S bandit15 2730785 2719164  0  90  10 -  2437 do_sel 15:21 pts/85   00:00:00 openssl s_client -connect localhost:30001
+0 S bandit15 2745298 2745297  0  90  10 -   722 do_wai 15:33 pts/11   00:00:00 /bin/sh -i
+1 S bandit15 2747974 2745298  0  90  10 -   722 do_wai 15:35 pts/11   00:00:00 /bin/sh -i
+0 S bandit15 2747975 2747974  0  90  10 -   722 do_wai 15:35 pts/11   00:00:00 /bin/sh -c bash
+0 S bandit15 2747976 2747975  0  90  10 -  1842 do_wai 15:35 pts/11   00:00:00 bash
+0 R bandit15 2747977 2747976  0  90  10 -  2517 -      15:35 pts/11   00:00:00 ps -elf
+?─┬─?───sh───sh───sh───bash───pstree
+  ├─?───bash───openssl
+  └─systemd
+fGrHPx402xGC7U7rXKDaxiWFTOiF0ENq
+#+end_example
+
