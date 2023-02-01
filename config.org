@@ -1309,6 +1309,10 @@ Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones
 
 * Navegación
 
+#+begin_src emacs-lisp
+(use-package flx
+  :ensure t)
+#+end_src
 
 #+begin_src emacs-lisp
 (use-package deadgrep
