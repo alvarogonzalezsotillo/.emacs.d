@@ -2378,6 +2378,7 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
 
 #+begin_src emacs-lisp
 (use-package image-popup
+  :ensure t
   :straight (image-popup :type git :host gitlab :repo "OlMon/image-popup" :branch "master"))
 
 #+end_src

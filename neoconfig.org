@@ -1657,6 +1657,7 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 ** =file-info=
 #+begin_src emacs-lisp
 (use-package file-info
+  :ensure t
   :straight (:host github :repo "artawower/file-info.el")
   :bind (("C-c d" . 'file-info-show))
   :config
