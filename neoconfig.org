@@ -3,6 +3,8 @@
 #+author: Álvaro González (@alvarogonzalez)
 #+OPTIONS: toc:2 h:4 author:t
 
+#+EXPORT_EXCLUDE_TAGS: noexport
+
 
 #+latex: \newpage
 #+html: <div style="margin:auto; text-align:center; font-size:1.5em">
@@ -1553,6 +1555,8 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
       (display-line-numbers-mode 1))
   (auto-highlight-symbol-mode 1)
   (electric-pair-local-mode 1)
+  (eldoc-box-hover-at-point-mode 1)
+  (yas-minor-mode 1)
   (origami-mode 1))
 
 
@@ -2023,27 +2027,59 @@ Añado a la lista de extensiones la de los módulos.
   :defer 1
   :config
   
-  ;; uncomment for less flashiness
-  ;; (setq lsp-eldoc-hook nil)
-  ;; (setq lsp-enable-symbol-highlighting nil)
-  ;; (setq lsp-signature-auto-activate nil)
 
   ;; comment to disable rustfmt on save
   (setq rustic-format-on-save t)
   
   )
+#+end_src
+
+* Eglot
+#+begin_src emacs-lisp
+
+(use-package yasnippet
+  :ensure t
+  :defer 1
+  :config
+  (yas-reload-all)
+)
+
+(use-package eglot
+  :ensure t
+  :defer 1
+  :after (yasnippet)
+  :config
+
+     (add-to-list 'eglot-server-programs '(rustic-mode . "rustup run stable rust-analyzer"))
+  )
+
+
 
 #+end_src
 
-#+RESULTS:
-: t
+* eldoc
 
 #+begin_src emacs-lisp
-(use-package lsp-mode
+(use-package eldoc-box
   :ensure t
   :defer 1
-  :commands lsp
-  :custom
+  )
+
+
+#+end_src
+
+* LSP :noexport:
+#+begin_src emacs-lisp
+
+(use-package rustic
+  :after (lsp-mode)
+  :config
+
+  ;; uncomment for less flashiness
+  ;; (setq lsp-eldoc-hook nil)
+  ;; (setq lsp-enable-symbol-highlighting nil)
+  ;; (setq lsp-signature-auto-activate nil)
+
   ;; what to use when checking on-save. "check" is default, I prefer clippy
   (lsp-rust-analyzer-cargo-watch-command "clippy")
   (lsp-eldoc-render-all nil)
@@ -2056,15 +2092,26 @@ Añado a la lista de extensiones la de los módulos.
   (lsp-rust-analyzer-display-closure-return-type-hints t)
   (lsp-rust-analyzer-display-parameter-hints t)
   (lsp-rust-analyzer-display-reborrow-hints t)
+
+  )
+
+#+end_src
+
+
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :ensure t
+  :defer 1
+  :commands lsp
+  :custom
   :config
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
   (push 'company-lsp company-backends)
-  (yas-reload-all)
-  (add-hook 'prog-mode-hook #'yas-minor-mode)
   )
   
 
 (use-package lsp-ui
+  :after (lsp-mode)
   :ensure t
   :defer 1
   :commands lsp-ui-mode
@@ -2074,12 +2121,10 @@ Añado a la lista de extensiones la de los módulos.
   (lsp-ui-doc-enable nil))
 
 (use-package helm-lsp
+  :after (lsp-mode)
   :ensure t
   :defer 1)
 
-(use-package yasnippet
-  :ensure t
-  :defer 1)
 
 #+end_src
 
