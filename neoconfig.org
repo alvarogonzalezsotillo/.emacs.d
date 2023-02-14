@@ -93,12 +93,13 @@ Añado también el directorio de =cargo= para =rust=.
 
 (defun ags/abre-todas-las-presentaciones ()
   (interactive)
-  (dolist (orgfile (lista-de-presentaciones "/home/alvaro/Cloud/hidrive/datos-alvaro/apuntes-clase/"))
+  (dolist (orgfile (lista-de-presentaciones "/home/alvaro/apuntes-clase/"))
     (find-file orgfile)
     ))
 
 
 #+end_src
+
 
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
@@ -856,6 +857,8 @@ Estoy usando =treemacs= en vez de =neotree=.
        ))
     )
 
+  (setq treemacs-indentation 1)
+  
   (defun ags/treemacs-toggle ()
     (interactive)
     (if (eq (treemacs-current-visibility) 'visible)
@@ -997,11 +1000,9 @@ Marcar las ocurrencias de la selección
 #+begin_src emacs-lisp
   (use-package region-occurrences-highlighter 
     :ensure t
+    :straight (:host github :repo "alvarogonzalezsotillo/region-occurrences-highlighter")
     :defer 1
     :config
-    ;;(add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
-    ;;(add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
-    ;;(add-hook 'text-mode-hook #'region-occurrences-highlighter-mode)
     (global-region-occurrences-highlighter-mode 1)
     (define-key region-occurrences-highlighter-nav-mode-map "\M-n" 'region-occurrences-highlighter-next)
     (define-key region-occurrences-highlighter-nav-mode-map "\M-p" 'region-occurrences-highlighter-prev))
@@ -1455,6 +1456,9 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     (setq company-dabbrev-ignore-case 'keep-prefix)
     (setq company-dabbrev-downcase nil)
     (setq company-require-match nil)
+
+
+
     
     (global-company-mode)
 
@@ -1658,7 +1662,6 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 #+begin_src emacs-lisp
 (use-package file-info
   :ensure t
-  :straight (:host github :repo "artawower/file-info.el")
   :bind (("C-c d" . 'file-info-show))
   :config
   (setq hydra-hint-display-type 'posframe)
@@ -2053,6 +2056,7 @@ Mejores tamaños de encabezados
     ;; https://stackoverflow.com/questions/40110927/how-to-export-a-reference-to-a-begin-src-block-to-latex/40689439#40689439
     (setq org-latex-prefer-user-labels t)
 
+    (setq org-image-actual-width '(400))
 
     ;; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
     (ignore-errors
