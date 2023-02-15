@@ -396,3 +396,55 @@ EOF
 : -rwsr-x--- 1 bandit20 bandit19 14876 Jan 11 19:18 bandit20-do
 : VxCazJaVykI6W36BkBU0mJTCM8rR95XT
 
+
+* Level 20
+#+begin_src bash :results output verbatim
+sshpass -p VxCazJaVykI6W36BkBU0mJTCM8rR95XT ssh bandit20@bandit.labs.overthewire.org -p 2220 <<EOF
+printf "%s\n" VxCazJaVykI6W36BkBU0mJTCM8rR95XT | nc -N -v -l -p  4322 &
+timeout 2 ./suconnect 4322
+EOF
+#+end_src
+
+#+RESULTS:
+: Read: VxCazJaVykI6W36BkBU0mJTCM8rR95XT
+: Password matches, sending next password
+: NvEJF7oVjkddltPSrdKEFOllh9V1IBcq
+
+* Level 21
+#+begin_src bash :results output verbatim
+sshpass -p NvEJF7oVjkddltPSrdKEFOllh9V1IBcq ssh bandit21@bandit.labs.overthewire.org -p 2220 <<EOF
+ls /etc/cron.d/
+cat /etc/cron.d/cronjob_bandit22
+cat /usr/bin/cronjob_bandit22.sh
+cat  /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+EOF
+#+end_src
+
+#+RESULTS:
+#+begin_example
+cronjob_bandit15_root
+cronjob_bandit17_root
+cronjob_bandit22
+cronjob_bandit23
+cronjob_bandit24
+cronjob_bandit25_root
+e2scrub_all
+otw-tmp-dir
+sysstat
+@reboot bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+,* * * * * bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+#!/bin/bash
+chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+WdDozAdTM2z9DiFEQ2mGlwngMfj4EZff
+#+end_example
+
+
+* Level 22
+#+begin_src bash :results output verbatim
+sshpass -p VxCazJaVykI6W36BkBU0mJTCM8rR95XT ssh bandit22@bandit.labs.overthewire.org -p 2220 <<EOF
+ls -la
+EOF
+#+end_src
+
+#+RESULTS:

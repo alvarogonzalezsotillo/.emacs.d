@@ -1363,7 +1363,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
   (use-package company-fuzzy
     :ensure t
     :defer 1
-    :hook (company-mode . company-fuzzy-mode)
+    ;;:hook (company-mode . company-fuzzy-mode) no funciona a la primera
     :config
     (setq company-fuzzy-sorting-backend 'flx
           company-fuzzy-prefix-on-top t
