@@ -93,7 +93,7 @@ Añado también el directorio de =cargo= para =rust=.
 
 (defun ags/abre-todas-las-presentaciones ()
   (interactive)
-  (dolist (orgfile (lista-de-presentaciones "/home/alvaro/Cloud/hidrive/datos-alvaro/apuntes-clase/"))
+  (dolist (orgfile (lista-de-presentaciones "/home/alvaro/apuntes-clase/"))
     (find-file orgfile)
     ))
 
