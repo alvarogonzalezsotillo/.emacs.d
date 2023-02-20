@@ -1,20 +1,5 @@
 
 
-(defun ags/setup-straigth ()
-  (defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage)))
-
-
 
 (defun ags/setup-use-package (&optional refresh)
   (interactive
@@ -29,7 +14,6 @@
   (ignore-errors
     (setq package-native-compile t))
   
-  (package-initialize nil)
   (setq package-check-signature nil)
   (setq package-archives
         '(
@@ -61,8 +45,7 @@
 		 (setq auto-package-update-interval 1)
 		 (auto-package-update-maybe)))
 
-  (message "Versión inicial de org:%s" (org-version))
-  (message "Instalando org-plus-contrib para conseguir la última versión de org" )
+  (message "Instalando org-contrib para conseguir la última versión de org" )
   (use-package org :ensure org-contrib
     :config
     (require 'ob-tangle)
@@ -92,7 +75,7 @@
 
 
 
-;(ags/carga-config-org "~/.emacs.d/config.org" nil nil)
+;;(ags/carga-config-org "~/.emacs.d/config.org" nil nil)
 (ags/carga-config-org "~/.emacs.d/neoconfig.org" nil t)
 
-(find-file "~/.emacs.d/")
+

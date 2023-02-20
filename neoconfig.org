@@ -93,12 +93,13 @@ Añado también el directorio de =cargo= para =rust=.
 
 (defun ags/abre-todas-las-presentaciones ()
   (interactive)
-  (dolist (orgfile (lista-de-presentaciones "/home/alvaro/Cloud/hidrive/datos-alvaro/apuntes-clase/"))
+  (dolist (orgfile (lista-de-presentaciones "/home/alvaro/apuntes-clase/"))
     (find-file orgfile)
     ))
 
 
 #+end_src
+
 
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
@@ -455,7 +456,7 @@ Mostrar =^L= (saltos de página) como una línea horizontal
     "Close some predefined patterns, useful in SQL."
     (interactive)
     (origami-predef-apply-patterns '("create .*table" "create .*view" "begin")))
-  (add-hook 'sql-mode-hook #'ags/origami-predef-sql)
+  ;;(add-hook 'sql-mode-hook #'ags/origami-predef-sql)
 
 
   (defun ags/origami-predef-gift()
@@ -628,10 +629,22 @@ Reduzco el tamaño de todas las fuentes de =imenu=
 (use-package imenu-list
   :defer 1
   :ensure t
+  :bind
+  (("<f7>" . imenu-list-smart-toggle))
   :config 
    (set-face-attribute 'imenu-list-entry-face nil :height  0.8)
-   (add-hook 'imenu-list-major-mode-hook (lambda () (message "IMENU MAJOR MODE")(linum-mode 1))))
-   #+end_src
+   (add-hook 'imenu-list-major-mode-hook (lambda () (message "IMENU MAJOR MODE")(display-line-numbers-mode 1))))
+
+(use-package popup-imenu
+  :defer 1
+  :ensure t     
+  :bind
+  (("M-I" . popup-imenu)))
+#+end_src
+
+#+RESULTS:
+: popup-imenu
+
 
    
 ** =blamer=
@@ -856,6 +869,8 @@ Estoy usando =treemacs= en vez de =neotree=.
        ))
     )
 
+  (setq treemacs-indentation 1)
+  
   (defun ags/treemacs-toggle ()
     (interactive)
     (if (eq (treemacs-current-visibility) 'visible)
@@ -997,11 +1012,9 @@ Marcar las ocurrencias de la selección
 #+begin_src emacs-lisp
   (use-package region-occurrences-highlighter 
     :ensure t
+    :straight (:host github :repo "alvarogonzalezsotillo/region-occurrences-highlighter")
     :defer 1
     :config
-    ;;(add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
-    ;;(add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
-    ;;(add-hook 'text-mode-hook #'region-occurrences-highlighter-mode)
     (global-region-occurrences-highlighter-mode 1)
     (define-key region-occurrences-highlighter-nav-mode-map "\M-n" 'region-occurrences-highlighter-next)
     (define-key region-occurrences-highlighter-nav-mode-map "\M-p" 'region-occurrences-highlighter-prev))
@@ -1329,8 +1342,8 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 (use-package popup-switcher
   :ensure t
   :bind
-  (("<M-f6>" . psw-switch-buffer))
-
+  (("<M-f6>" . psw-switch-buffer)
+   ("<C-o>" . psw-switch-projectile-files))
   )
 
 #+end_src
@@ -1362,7 +1375,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
   (use-package company-fuzzy
     :ensure t
     :defer 1
-    :hook (company-mode . company-fuzzy-mode)
+    ;;:hook (company-mode . company-fuzzy-mode) no funciona a la primera
     :config
     (setq company-fuzzy-sorting-backend 'flx
           company-fuzzy-prefix-on-top t
@@ -1374,7 +1387,9 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     :after (company)
     :defer 1
     :config
-      (company-quickhelp-mode 1) )
+    (setq company-quickhelp-color-foreground "white")
+    (setq company-quickhelp-color-background "darkgray")
+    (company-quickhelp-mode 1) )
 
   (use-package company-web
     :ensure t
@@ -1455,6 +1470,9 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     (setq company-dabbrev-ignore-case 'keep-prefix)
     (setq company-dabbrev-downcase nil)
     (setq company-require-match nil)
+
+
+
     
     (global-company-mode)
 
@@ -1462,9 +1480,6 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
     )
 #+end_src
-
-#+RESULTS:
-: t
 
 * Edición
 
@@ -1627,10 +1642,6 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
       (define-key map (kbd "C-x C-b") 'ibuffer)
       (define-key map (kbd "C-x b") 'ibuffer)
       (define-key map (kbd "C-<f5>") 'ags/reveal-y-pdf)
-      (define-key map (kbd "M-I") 'popup-imenu)
-      (define-key map (kbd "<f7>") 'imenu-list-smart-toggle)
-      (define-key map (kbd "<C-o>") 'psw-switch-projectile-files)
-
       (define-key map (kbd "M-S-<up>") 'enlarge-window)
       (define-key map (kbd "M-S-<down>") 'shrink-window)
       (define-key map (kbd "M-S-<left>") 'shrink-window-horizontally)
@@ -1639,7 +1650,7 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
       (define-key map (kbd "C-S-l") 'toggle-truncate-lines)
       map)
     "mis-teclas-minor-mode keymap")
-
+                        
 
   (define-minor-mode mis-teclas-minor-mode
     "A minor mode so that my key settings override annoying major modes."
@@ -1657,7 +1668,7 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 ** =file-info=
 #+begin_src emacs-lisp
 (use-package file-info
-  :straight (:host github :repo "artawower/file-info.el")
+  :ensure t
   :bind (("C-c d" . 'file-info-show))
   :config
   (setq hydra-hint-display-type 'posframe)
@@ -1720,12 +1731,17 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
   :config
   (dashboard-setup-startup-hook)
   (setq dashboard-startup-banner nil)  
-  (setq dashboard-items '((recents  . 10)
-                          (bookmarks . 5)
+  (setq dashboard-items '((recents  . 0)
+                          (bookmarks . 0)
                           (projects . 10)))
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)  
   (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
   )
 #+end_src
+
+#+RESULTS:
+: t
 
 
 
@@ -2047,6 +2063,7 @@ Mejores tamaños de encabezados
     ;; https://stackoverflow.com/questions/40110927/how-to-export-a-reference-to-a-begin-src-block-to-latex/40689439#40689439
     (setq org-latex-prefer-user-labels t)
 
+    (setq org-image-actual-width '(400))
 
     ;; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
     (ignore-errors
