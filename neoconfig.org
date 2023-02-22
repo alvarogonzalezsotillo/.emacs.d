@@ -101,6 +101,17 @@ Añado también el directorio de =cargo= para =rust=.
 #+end_src
 
 
+** Poner mi servidor de nexus en gradle
+#+begin_src emacs-lisp
+(defun ags/mi-servidor-nexus-en-gradle ()
+  (interactive)
+  (insert "        maven {
+            allowInsecureProtocol true
+            url  \"http://localhost:8081/repository/google-proxy/\"
+        }
+"
+          ))
+#+end_src
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
    #+begin_src emacs-lisp
@@ -1012,10 +1023,11 @@ Marcar las ocurrencias de la selección
 #+begin_src emacs-lisp
   (use-package region-occurrences-highlighter 
     :ensure t
-    :straight (:host github :repo "alvarogonzalezsotillo/region-occurrences-highlighter")
+    ;;:straight (:host github :repo "alvarogonzalezsotillo/region-occurrences-highlighter")
     :defer 1
     :config
     (global-region-occurrences-highlighter-mode 1)
+    (setq region-occurrences-highlighter-max-size 3000)
     (define-key region-occurrences-highlighter-nav-mode-map "\M-n" 'region-occurrences-highlighter-next)
     (define-key region-occurrences-highlighter-nav-mode-map "\M-p" 'region-occurrences-highlighter-prev))
 #+end_src
