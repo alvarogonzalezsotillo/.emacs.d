@@ -1372,15 +1372,6 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     :defer 1
     :config)
 
-  (use-package company-fuzzy
-    :ensure t
-    :defer 1
-    ;;:hook (company-mode . company-fuzzy-mode) no funciona a la primera
-    :config
-    (setq company-fuzzy-sorting-backend 'flx
-          company-fuzzy-prefix-on-top t
-          company-fuzzy-show-annotation nil
-          company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")))
 
   (use-package company-quickhelp
     :ensure t
@@ -1439,22 +1430,19 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
     (defun ags/company-backends-org-mode-function ()
       (interactive)
-      (set (make-local-variable 'company-backends) ags/company-backends-org-mode)
-      (company-fuzzy-mode 1))
+      (set (make-local-variable 'company-backends) ags/company-backends-org-mode))
 
     (add-hook 'org-mode-hook #'ags/company-backends-org-mode-function)
 
     (defun ags/company-backends-prog-mode-function ()
       (interactive)
-      (set (make-local-variable 'company-backends) ags/company-backends-prog-mode)
-      (company-fuzzy-mode 1))
+      (set (make-local-variable 'company-backends) ags/company-backends-prog-mode))
 
     (add-hook 'prog-mode-hook #'ags/company-backends-prog-mode-function)
 
     (defun ags/company-backends-tex-mode-function ()
       (interactive)
-      (set (make-local-variable 'company-backends) ags/company-backends-tex-mode)
-      (company-fuzzy-mode 1))
+      (set (make-local-variable 'company-backends) ags/company-backends-tex-mode))
 
     (add-hook 'prog-mode-hook #'ags/company-backends-tex-mode-function)
     
@@ -1479,6 +1467,20 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     (define-key company-active-map (kbd "C-.") 'company-other-backend)
 
     )
+#+end_src
+
+
+
+#+begin_src lisp
+  (use-package company-fuzzy
+    :ensure t
+    :defer 1
+    :hook (company-mode . company-fuzzy-mode)
+    :config
+    (setq company-fuzzy-sorting-backend 'flx
+          company-fuzzy-prefix-on-top t
+          company-fuzzy-show-annotation nil
+          company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")))
 #+end_src
 
 * Edición
