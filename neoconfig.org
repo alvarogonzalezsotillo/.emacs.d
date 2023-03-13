@@ -105,9 +105,10 @@ Añado también el directorio de =cargo= para =rust=.
 #+begin_src emacs-lisp
 (defun ags/mi-servidor-nexus-en-gradle ()
   (interactive)
-  (insert "        maven {
+  (insert "
+        maven {
+            url "http://localhost:8888/repository/android-group"
             allowInsecureProtocol true
-            url  \"http://localhost:8081/repository/google-proxy/\"
         }
 "
           ))
@@ -765,7 +766,9 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
     (defun ags/dired-hook ()
       (interactive)
-      (all-the-icons-dired-mode 1)
+      (if (file-remote-p default-directory)
+          (all-the-icons-dired-mode -1)
+         (all-the-icons-dired-mode 1))
       (dired-hide-details-mode 1)
       (auto-revert-mode 1)
       (diff-hl-dired-mode 1)
@@ -1697,6 +1700,16 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 (setq tramp-copy-size-limit 1)
 (setq tramp-debug-buffer nil)
 (setq tramp-verbose 1)
+#+end_src
+
+Desactivo otros sistemas de control de versiones que no sean =git=. Dejo preparado un hook para cuando un fichero sea remoto.
+https://www.reddit.com/r/emacs/comments/y92y4b/tramp_users_slowness_got_you_down_check/
+#+begin_src emacs-lisp
+(setq vc-handled-backends '(Git))
+(defun ags/vc-off-if-remote ()
+  (interactive)
+  (when (file-remote-p default-directory))))
+(add-hook 'find-file-hook 'ags/vc-off-if-remote)
 #+end_src
 
 En ocasiones, =tramp= no consigue conectar con un usuario que tiene =zsh= como shell. Para ello, hay que añadir lo siguiente al fichero =.zshrc= remoto:
