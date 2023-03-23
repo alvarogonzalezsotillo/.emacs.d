@@ -1710,7 +1710,7 @@ https://www.reddit.com/r/emacs/comments/y92y4b/tramp_users_slowness_got_you_down
 (setq vc-handled-backends '(Git))
 (defun ags/vc-off-if-remote ()
   (interactive)
-  (when (file-remote-p default-directory))))
+  (when (file-remote-p default-directory)))
 (add-hook 'find-file-hook 'ags/vc-off-if-remote)
 #+end_src
 
