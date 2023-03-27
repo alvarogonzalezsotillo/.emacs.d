@@ -107,12 +107,13 @@ Añado también el directorio de =cargo= para =rust=.
   (interactive)
   (insert "
         maven {
-            url "http://localhost:8888/repository/android-group"
+            url \"http://localhost:8888/repository/android-group\"
             allowInsecureProtocol true
         }
 "
           ))
 #+end_src
+
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
    #+begin_src emacs-lisp
@@ -1710,7 +1711,7 @@ https://www.reddit.com/r/emacs/comments/y92y4b/tramp_users_slowness_got_you_down
 (setq vc-handled-backends '(Git))
 (defun ags/vc-off-if-remote ()
   (interactive)
-  (when (file-remote-p default-directory))))
+  (when (file-remote-p default-directory)))
 (add-hook 'find-file-hook 'ags/vc-off-if-remote)
 #+end_src
 
