@@ -105,13 +105,15 @@ Añado también el directorio de =cargo= para =rust=.
 #+begin_src emacs-lisp
 (defun ags/mi-servidor-nexus-en-gradle ()
   (interactive)
-  (insert "        maven {
+  (insert "
+        maven {
+            url \"http://localhost:8888/repository/android-group\"
             allowInsecureProtocol true
-            url  \"http://localhost:8081/repository/google-proxy/\"
         }
 "
           ))
 #+end_src
+
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
    #+begin_src emacs-lisp
@@ -765,7 +767,9 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
     (defun ags/dired-hook ()
       (interactive)
-      (all-the-icons-dired-mode 1)
+      (if (file-remote-p default-directory)
+          (all-the-icons-dired-mode -1)
+         (all-the-icons-dired-mode 1))
       (dired-hide-details-mode 1)
       (auto-revert-mode 1)
       (diff-hl-dired-mode 1)
@@ -1385,15 +1389,6 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     :defer 1
     :config)
 
-  (use-package company-fuzzy
-    :ensure t
-    :defer 1
-    ;;:hook (company-mode . company-fuzzy-mode) no funciona a la primera
-    :config
-    (setq company-fuzzy-sorting-backend 'flx
-          company-fuzzy-prefix-on-top t
-          company-fuzzy-show-annotation nil
-          company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")))
 
   (use-package company-quickhelp
     :ensure t
@@ -1452,22 +1447,19 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
     (defun ags/company-backends-org-mode-function ()
       (interactive)
-      (set (make-local-variable 'company-backends) ags/company-backends-org-mode)
-      (company-fuzzy-mode 1))
+      (set (make-local-variable 'company-backends) ags/company-backends-org-mode))
 
     (add-hook 'org-mode-hook #'ags/company-backends-org-mode-function)
 
     (defun ags/company-backends-prog-mode-function ()
       (interactive)
-      (set (make-local-variable 'company-backends) ags/company-backends-prog-mode)
-      (company-fuzzy-mode 1))
+      (set (make-local-variable 'company-backends) ags/company-backends-prog-mode))
 
     (add-hook 'prog-mode-hook #'ags/company-backends-prog-mode-function)
 
     (defun ags/company-backends-tex-mode-function ()
       (interactive)
-      (set (make-local-variable 'company-backends) ags/company-backends-tex-mode)
-      (company-fuzzy-mode 1))
+      (set (make-local-variable 'company-backends) ags/company-backends-tex-mode))
 
     (add-hook 'prog-mode-hook #'ags/company-backends-tex-mode-function)
     
@@ -1492,6 +1484,20 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     (define-key company-active-map (kbd "C-.") 'company-other-backend)
 
     )
+#+end_src
+
+
+
+#+begin_src lisp
+  (use-package company-fuzzy
+    :ensure t
+    :defer 1
+    :hook (company-mode . company-fuzzy-mode)
+    :config
+    (setq company-fuzzy-sorting-backend 'flx
+          company-fuzzy-prefix-on-top t
+          company-fuzzy-show-annotation nil
+          company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")))
 #+end_src
 
 * Edición
@@ -1698,6 +1704,16 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 (setq tramp-copy-size-limit 1)
 (setq tramp-debug-buffer nil)
 (setq tramp-verbose 1)
+#+end_src
+
+Desactivo otros sistemas de control de versiones que no sean =git=. Dejo preparado un hook para cuando un fichero sea remoto.
+https://www.reddit.com/r/emacs/comments/y92y4b/tramp_users_slowness_got_you_down_check/
+#+begin_src emacs-lisp
+(setq vc-handled-backends '(Git))
+(defun ags/vc-off-if-remote ()
+  (interactive)
+  (when (file-remote-p default-directory)))
+(add-hook 'find-file-hook 'ags/vc-off-if-remote)
 #+end_src
 
 En ocasiones, =tramp= no consigue conectar con un usuario que tiene =zsh= como shell. Para ello, hay que añadir lo siguiente al fichero =.zshrc= remoto:
