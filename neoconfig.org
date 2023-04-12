@@ -1339,19 +1339,31 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 #+end_src
 
 
-** =transpose-frame=
+** =transpose-frame= o =emacs-rotate.el=
 
-   #+begin_src emacs-lisp
-
-(use-package transpose-frame 
+   #+begin_src lisp
+;; ACTUALMENTE SIN USAR
+(use-package transpose-frame
   :ensure t
   :defer 1
   :bind
       (("<f5>" . transpose-frame))
 )
+   #+end_src
+
+  
+   #+begin_src emacs-lisp
+(use-package rotate
+  :ensure t
+  :defer 1
+  :bind 
+  (("<f5>" .  rotate-layout )))
 
    #+end_src
 
+   #+RESULTS:
+   : rotate-layout
+   
 ** =psw=
 
 #+begin_src emacs-lisp
@@ -1365,6 +1377,14 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 #+end_src
 
 
+
+** =ffap=
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (ffap-bindings))
+
+#+end_src
 
 ** =company=
 Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de programación y =org-mode=.
@@ -1487,7 +1507,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
 
 
-#+begin_src lisp
+#+begin_src emacs-lisp
   (use-package company-fuzzy
     :ensure t
     :defer 1
@@ -1682,6 +1702,16 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
 
 
+** Macros de teclado
+Necesario si una macro resulta interesante, para grabarla como una función
+#+begin_src emacs-lisp
+(use-package elmacro
+  :ensure t
+  :defer 1
+  :config
+  (setq elmacro-show-last-commands-default 100)
+  (elmacro-mode-on))
+#+end_src
 * Navegación
 ** =file-info=
 #+begin_src emacs-lisp
