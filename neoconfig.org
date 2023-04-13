@@ -2230,62 +2230,62 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 (use-package latex
   :ensure auctex
   :config
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq TeX-save-query nil)
-(setq TeX-PDF-mode t)
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq TeX-save-query nil)
+  (setq TeX-PDF-mode t)
 
-; Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
+  ;; Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
 
-(setq LaTeX-verbatim-environments
-      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql" "listadoshell" "listadojava"))
-
-
-(add-to-list 'auto-mode-alist '("\\.tex\\'" . latex-mode))
+  (setq LaTeX-verbatim-environments
+        '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql" "listadoshell" "listadojava"))
 
 
-; Para imenu, defino una macro de Latex que no hace nada, pero que detecto en imenu.
-(add-to-list 'TeX-outline-extra '("imenu" 2))
-(add-to-list 'TeX-outline-extra '("imenu1" 1))
-(add-to-list 'TeX-outline-extra '("imenu2" 2))
-(add-to-list 'TeX-outline-extra '("imenu3" 3))
-(add-to-list 'TeX-outline-extra '("imenu4" 4))
-
-; En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
-(setq TeX-view-program-selection '((output-pdf "Okular")))
-(setq TeX-source-correlate-mode t)
-(add-hook 'latex-mode-hook 'TeX-source-correlate-mode)
-
-(setq TeX-source-correlate-start-server t)
+  (add-to-list 'auto-mode-alist '("\\.tex\\'" . latex-mode))
 
 
+  ;; Para imenu, defino una macro de Latex que no hace nada, pero que detecto en imenu.
+  (add-to-list 'TeX-outline-extra '("imenu" 2))
+  (add-to-list 'TeX-outline-extra '("imenu1" 1))
+  (add-to-list 'TeX-outline-extra '("imenu2" 2))
+  (add-to-list 'TeX-outline-extra '("imenu3" 3))
+  (add-to-list 'TeX-outline-extra '("imenu4" 4))
 
-; Modifico el comando Latex para incluir =-shell-escape=, de forma que Latex pueda arrancar programas de ayuda (por ejemplo, *Inkscape* para convertir SVG a PDF)
+  ;; En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
+  (setq TeX-view-program-selection '((output-pdf "Okular")))
+  (setq TeX-source-correlate-mode t)
+  (add-hook 'latex-mode-hook 'TeX-source-correlate-mode)
 
-(setq LaTeX-command-style
-   (quote (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
+  ;; Para que funcione con Okular, hay que sar tools -> Browse
+
+  (setq TeX-source-correlate-start-server t)
 
 
-; Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en el buffer de Emacs ([[https://www.gnu.org/software/auctex/manual/preview-latex.html][https://www.gnu.org/software/auctex/manual/preview-latex.html]])
 
-(eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t) )
-(eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
-(eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{homeworkProblem}" t) )
+  ;; Modifico el comando Latex para incluir =-shell-escape=, de forma que Latex pueda arrancar programas de ayuda (por ejemplo, *Inkscape* para convertir SVG a PDF)
+  (setq LaTeX-command-style
+        (quote (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
 
-; Añadir XeLatex
-(eval-after-load "tex"
-  '(add-to-list 'TeX-command-list
-     		'("XeLaTeX" "xelatex -interaction=nonstopmode %s"
-		  TeX-run-command t t :help "Run xelatex") t))
 
-;; En =Termux= se necesita especificar la camino a la /shell/ para ejecutar comandos de /Latex/
-(if
+  ;; Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en el buffer de Emacs ([[https://www.gnu.org/software/auctex/manual/preview-latex.html][https://www.gnu.org/software/auctex/manual/preview-latex.html]])
+  (eval-after-load "preview"
+    '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t) )
+  (eval-after-load "preview"
+    '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
+  (eval-after-load "preview"
+    '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{homeworkProblem}" t) )
+
+  ;; Añadir XeLatex
+  (eval-after-load "tex"
+    '(add-to-list 'TeX-command-list
+     		  '("XeLaTeX" "xelatex -interaction=nonstopmode %s"
+		    TeX-run-command t t :help "Run xelatex") t))
+
+  ;; En =Termux= se necesita especificar la camino a la /shell/ para ejecutar comandos de /Latex/
+  (if
       (file-exists-p "/data/data/com.termux/files/usr/bin/sh")
       (setq TeX-shell  "/data/data/com.termux/files/usr/bin/sh"))
-)
+  )
 #+END_SRC
 
 * Javascript
