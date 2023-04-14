@@ -852,6 +852,9 @@ Estoy usando =treemacs= en vez de =neotree=.
   :defer 1
   :config
 
+  ;; https://github.com/doomemacs/doomemacs/issues/3046
+  (add-to-list 'image-types 'svg)
+
   (defun ags/hacer-treemacs-resizable ()
     (if treemacs--width-is-locked
         (treemacs-toggle-fixed-width)))
