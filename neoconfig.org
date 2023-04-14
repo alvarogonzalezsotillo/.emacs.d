@@ -815,14 +815,22 @@ El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminale
 
 ** =flycheck=
 Marca errores en el fichero
+
 #+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq flycheck-shellcheck-follow-sources t)
+  (global-flycheck-mode 1))
+#+end_src
+
+Ya no uso =flycheck-inline=, ahora uso =sideline=
+
+#+begin_src lisp
 
   (use-package flycheck-inline
     :ensure t
     :defer 1
     :config
-    (setq flycheck-shellcheck-follow-sources t)
-    (global-flycheck-mode 1)
     (global-flycheck-inline-mode 1)
   )
 #+end_src
@@ -1027,7 +1035,7 @@ Marcar las ocurrencias de la selección
 #+begin_src emacs-lisp
   (use-package region-occurrences-highlighter 
     :ensure t
-    ;;:straight (:host github :repo "alvarogonzalezsotillo/region-occurrences-highlighter")
+    :straight (:host github :repo "alvarogonzalezsotillo/region-occurrences-highlighter")
     :defer 1
     :config
     (global-region-occurrences-highlighter-mode 1)
@@ -1481,7 +1489,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
       (interactive)
       (set (make-local-variable 'company-backends) ags/company-backends-tex-mode))
 
-    (add-hook 'prog-mode-hook #'ags/company-backends-tex-mode-function)
+    (add-hook 'TeX-mode-hook #'ags/company-backends-tex-mode-function)
     
     (global-set-key (kbd "C-.") 'company-complete)
     (define-key company-active-map [escape] 'company-abort)
@@ -1495,8 +1503,6 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     (setq company-dabbrev-ignore-case 'keep-prefix)
     (setq company-dabbrev-downcase nil)
     (setq company-require-match nil)
-
-
 
     
     (global-company-mode)
@@ -1783,10 +1789,51 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 #+end_src
 
 * Visualización
+
+** =sideline=
+
+#+begin_src emacs-lisp
+
+(use-package sideline-flycheck
+  :defer 1
+  :ensure t
+  :hook (flycheck-mode . sideline-flycheck-setup))
+
+(use-package sideline-blame
+  :defer 1
+  :ensure t )
+
+(use-package sideline
+  :defer 1
+  :ensure t
+  :init
+
+  :hook (flycheck-mode . sideline-mode)
+
+  :config
+  
+  (setq sideline-backends-right '((sideline-flycheck . up)))
+
+
+
+  (setq sideline-backends-skip-current-line t  ; don't display on current line
+        sideline-order-left 'down              ; or 'up
+        sideline-order-right 'up               ; or 'down
+        sideline-format-left "%s   "           ; format for left aligment
+        sideline-format-right "   %s"          ; format for right aligment
+        sideline-priority 100                  ; overlays' priority
+        sideline-display-backend-name nil))      ; display the backend name
+#+end_src
+
+#+RESULTS:
+| sideline-mode | sideline-flycheck-setup | rustic-flycheck-setup | flycheck-mode-set-explicitly |
+
+
 ** Pantalla inicial (/dashboard/)
 #+begin_src emacs-lisp
 (use-package dashboard
   :ensure t
+  :defer 1
   :config
   (dashboard-setup-startup-hook)
   (setq dashboard-startup-banner nil)  
