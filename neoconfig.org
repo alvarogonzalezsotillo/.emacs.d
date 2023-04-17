@@ -2113,8 +2113,6 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
 
 #+begin_src emacs-lisp
   (use-package org
-    :ensure t
-    :defer 1
     :config
     (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
     (modify-syntax-entry ?= "(=" org-mode-syntax-table)
@@ -2128,19 +2126,26 @@ Mejores tamaños de encabezados
 
 #+begin_src emacs-lisp
   (use-package org
-    :ensure t
-    :defer 1
     :config
     (set-face-attribute 'org-level-1 nil :height 3.0)
     (set-face-attribute 'org-level-2 nil :height 2.0)
     (set-face-attribute 'org-level-3 nil :height 1.5)
     )
-#+end_src    
+#+end_src
+
+
+Imágenes tras evaluar
+#+begin_src emacs-lisp
+(use-package org
+  :config
+(add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
+#+end_src
+
+#+RESULTS:
+: t
 
 #+begin_src emacs-lisp
   (use-package org
-    :ensure t
-    :defer 1
     :config
 
     (use-package org-bullets
