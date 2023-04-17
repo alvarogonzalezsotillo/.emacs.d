@@ -563,6 +563,11 @@ Mostrar =^L= (saltos de página) como una línea horizontal
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
 
+  (setq magit-diff-refine-hunk 'all)
+
+  (use-package abridge-diff
+    :after magit ;; optional, if you'd like to use with magit
+    :init (abridge-diff-mode 1))
 
   (use-package magit-todos
     :ensure t
@@ -616,9 +621,6 @@ Mostrar =^L= (saltos de página) como una línea horizontal
   )
    #+end_src
 
-   #+RESULTS:
-   : magit-status
-
 
 ** =mode-icons=
 Cambia la descripción del modo por un icono en la modeline
@@ -630,10 +632,6 @@ Cambia la descripción del modo por un icono en la modeline
   (mode-icons-mode 1)
 )
    #+end_src
-
-   #+RESULTS:
-   : t
-
 
 
 ** =imenu=
