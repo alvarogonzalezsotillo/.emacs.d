@@ -1718,8 +1718,13 @@ Necesario si una macro resulta interesante, para grabarla como una función
   :defer 1
   :config
   (setq elmacro-show-last-commands-default 100)
-  (elmacro-mode-on))
+  :init
+  (elmacro-mode))
 #+end_src
+
+#+RESULTS:
+: t
+
 * Navegación
 ** =file-info=
 #+begin_src emacs-lisp
