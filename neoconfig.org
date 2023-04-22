@@ -1281,24 +1281,49 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 ** =bm=
 Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 #+BEGIN_SRC emacs-lisp
-  (defun my/bookmark-or-edit ()
-    (interactive)
+(defun my/bookmark-or-edit ()
+  (interactive)
 
-    (if (string= major-mode "dired-mode")
-        (progn
-          (all-the-icons-dired-mode -1)
-          (wdired-change-to-wdired-mode))
-        (bm-next)))
+  (if (string= major-mode "dired-mode")
+      (progn
+        (all-the-icons-dired-mode -1)
+        (wdired-change-to-wdired-mode))
+    (bm-next)))
 
 
-    (use-package bm
-      :ensure t
-      :bind
-      (( "<C-f2>" . bm-toggle))
-      (( "<f2>" . my/bookmark-or-edit ))
-      (( "<S-f2>" . bm-previous))
+(use-package bm
+  :ensure t
+  :bind
+  (( "<C-f2>" . bm-toggle))
+  (( "<f2>" . my/bookmark-or-edit ))
+  (( "<S-f2>" . bm-previous))
 
-    )
+  :config
+  (defun bm-lists (&optional direction predicate)
+    "Return a pair of lists giving all the bookmarks of the current buffer.
+The car has all the bookmarks before the overlay center;
+the cdr has all the bookmarks after the overlay center.
+A bookmark implementation of `overlay-lists'.
+
+If optional argument DIRECTION is provided, only return bookmarks
+in the specified direction.
+
+If optional argument PREDICATE is provided, it is used as a
+selection criteria for filtering the lists."
+    (if (null predicate)
+        (setq predicate 'bm-bookmarkp))
+
+    (overlay-recenter (point))
+    (cond ((equal 'forward direction)
+           (cons nil (remq nil (mapcar predicate (overlays-in (point) (point-max))))))
+          ((equal 'backward direction)
+           (cons (remq nil (mapcar predicate (overlays-in (point-min) (point)))) nil))
+          (t
+           (cons
+            (remq nil (mapcar predicate (overlays-in (point-min) (point))))
+            (remq nil (mapcar predicate (overlays-in (point) (point-max))))))))
+  
+  )
 #+END_SRC
 
 
