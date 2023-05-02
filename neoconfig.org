@@ -378,7 +378,7 @@ Mostrar =^L= (saltos de página) como una línea horizontal
   :defer t
   :ensure t
   :config
-  (global-page-break-lines-mode))
+  (global-page-break-lines-mode 1))
 #+end_src
 
 ** =gift-mode=
@@ -701,10 +701,13 @@ Muestra un /minimap/ del fichero
   :ensure t
   :defer 1
   :bind
-  (( "M-<f7>" . demap-toggle))
+  (( "C-S-<f7>" . demap-toggle))
   :config
 )
 #+end_src
+
+#+RESULTS:
+: demap-toggle
 
 ** =all-the-icons=
 #+begin_src emacs-lisp
@@ -1070,7 +1073,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   :defer 1
   :config
   (setq vertico-posframe-border-width 6)
-  (vertico-posframe-mode 1))
+  (vertico-posframe-mode 0))
 
 (use-package orderless
   :ensure t
@@ -1672,9 +1675,16 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 ** =tramp=
 =tramp= intenta optimizar las conexiones, enviando en línea los ficheros pequeños. Esto me da problemas en algunos sistemas, así que indico que los ficheros se copien a partir de 1 byte de tamaño:
 #+begin_src emacs-lisp
-(setq tramp-copy-size-limit 1)
-(setq tramp-debug-buffer nil)
-(setq tramp-verbose 1)
+(use-package tramp
+  :config
+  (setq tramp-inline-compress-start-size 1000)
+  (setq tramp-copy-size-limit 10000)
+  (setq vc-handled-backends '(Git))
+  (setq tramp-verbose 1)
+  (setq tramp-default-method "scp")
+  (setq tramp-use-ssh-controlmaster-options nil)
+  (setq projectile--mode-line "Projectile")
+  (setq tramp-verbose 1))
 #+end_src
 
 En ocasiones, =tramp= no consigue conectar con un usuario que tiene =zsh= como shell. Para ello, hay que añadir lo siguiente al fichero =.zshrc= remoto:
