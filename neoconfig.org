@@ -412,7 +412,9 @@ Mostrar =^L= (saltos de página) como una línea horizontal
 
 ** =origami=
 
-   #+begin_src emacs-lisp
+Desactivado, voy a usar vimish-fold
+
+   #+begin_src lisp
 
 (use-package origami
   :defer 1
@@ -435,7 +437,7 @@ Mostrar =^L= (saltos de página) como una línea horizontal
    #+end_src
 
 
-#+begin_src emacs-lisp
+#+begin_src lisp
 (use-package origami-predef
   :ensure t
   :defer 1
@@ -1705,6 +1707,11 @@ A veces es fácil perderse entre comandos a medio introducir y ventanas popup. M
 Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por ejemplo, prefiero que =C-Z= sea "deshacer"). Para poder definir teclas con prioridad sobre los demás modos defino un modo con mis atajos.
 #+begin_src emacs-lisp
 
+  (defun ags/toggle-truncate-lines()
+    (interactive)
+    (visual-line-mode 'toggle)
+    (adaptive-wrap-prefix-mode 1))
+
   ;; MIS TECLAS
   (defvar mis-teclas-minor-mode-map
     (let ((map (make-sparse-keymap)))
@@ -1720,7 +1727,7 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
       (define-key map (kbd "M-S-<left>") 'shrink-window-horizontally)
       (define-key map (kbd "M-S-<right>") 'enlarge-window-horizontally)
       (define-key map (kbd "C-x M-x") 'execute-extended-command)
-      (define-key map (kbd "C-S-l") 'toggle-truncate-lines)
+      (define-key map (kbd "C-S-l") 'ags/toggle-truncate-lines)
       map)
     "mis-teclas-minor-mode keymap")
                         
@@ -1817,6 +1824,25 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 #+end_src
 
 * Visualización
+
+** =vimish-fold=
+
+#+begin_src emacs-lisp
+(use-package vimish-fold
+  :ensure t
+  :defer 1
+  :bind
+  (("<C-return>" . vimish-fold-toggle)
+   ("<C-S-return>" . vimish-fold-from-marks)
+   ("<M-return>" . vimish-fold ))
+  :config
+   (vimish-fold-global-mode 1))
+   
+#+end_src
+
+#+RESULTS:
+: vimish-fold
+
 
 ** =sideline=
 
