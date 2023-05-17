@@ -12,7 +12,13 @@ La última versión de esta configuración puede encontrarse en [[https://github
 #+latex: \end{center}
 #+html: </div>
 
-
+* Compilación de emacs
+#+begin_src bash
+./autogen.sh
+./configure --with-native-compilation --with-xml2 --with-json --with-tree-sitter --with-rsvg
+make -j4
+sudo make install
+#+end_src
 
 * =init.el=
 Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplemente inicializa el sistema de paquetes y carga el paquete =org=, que es el que permite a Emacs manejar este tipo de ficheros. Después, carga este fichero interpretando los bloques de código.
@@ -410,32 +416,6 @@ Mostrar =^L= (saltos de página) como una línea horizontal
 #+end_src
 
 
-** =origami=
-
-Desactivado, voy a usar vimish-fold
-
-   #+begin_src lisp
-
-(use-package origami
-  :defer 1
-  :ensure t
-  :config
- (setq origami-show-fold-header nil)
- (setq origami-fold-replacement "⤵⤵⤵")
- (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified)
- (set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
-
-  :bind
-      (("<C-return>" . origami-recursively-toggle-node))
-      (("<C-S-return>" . origami-reset))
-      (("<M-return>" . origami-close-all-nodes))
-
-
-
-)
-
-   #+end_src
-
 
 #+begin_src lisp
 (use-package origami-predef
@@ -822,7 +802,9 @@ El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminale
 Marca errores en el fichero
 
 #+begin_src emacs-lisp
-(use-package emacs
+(use-package flycheck
+  :defer 1
+  :ensure t
   :config
   (setq flycheck-shellcheck-follow-sources t)
   (global-flycheck-mode 1))
@@ -1863,8 +1845,31 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
    
 #+end_src
 
-#+RESULTS:
-: vimish-fold
+
+
+** =origami=
+
+Desactivados los bindings, voy a usar vimish-fold
+
+   #+begin_src emacs-lisp
+
+(use-package origami
+  :defer 1
+  :ensure t
+  :config
+  (setq origami-show-fold-header nil)
+  (setq origami-fold-replacement "⤵⤵⤵")
+  (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified)
+  (set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
+
+  ;;:bind
+  ;;(("<C-return>" . origami-recursively-toggle-node))
+  ;;(("<C-S-return>" . origami-reset))
+  ;;(("<M-return>" . origami-close-all-nodes))
+
+  )
+
+   #+end_src
 
 
 ** =sideline=
