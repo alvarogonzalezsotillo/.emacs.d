@@ -1053,6 +1053,18 @@ Marcar las ocurrencias de la selección
 #+end_src
 
 
+** =breadcrumb-mode=
+Marcar las ocurrencias de la selección
+#+begin_src emacs-lisp
+  (use-package breadcrumb
+    :ensure t
+    :straight (:host github :repo "joaotavora/breadcrumb")
+    :defer 1)
+#+end_src
+
+#+RESULTS:
+
+
 ** =smartscan=
 Utilizo =smartscan= para localizar ocurrencias de símbolos.
 Las teclas rápidas son M-n y M-p, que entran en conflicto con las de region-occurrences-highlighter-nav-mode-map.
@@ -1987,6 +1999,7 @@ Mi línea de estado (modeline)
                " | %IB %Z"
                " | %l:%c %p"
                ;;" | " '(:eval (format "Point:%d" (point)))
+               " | " '(:eval (breadcrumb-project-crumbs)) " / " '(:eval (breadcrumb-imenu-crumbs))
                mode-line-end-spaces
                ) )
 
@@ -2265,8 +2278,6 @@ Imágenes tras evaluar
       (defun ags/bonito-para-org()
         (interactive)
         (toggle-word-wrap 1)
-        (adaptive-wrap-prefix-mode 1)
-        (toggle-truncate-lines -1)
         ;;(indent-guide-mode 0)
         (if (>= emacs-major-version 26)
             (display-line-numbers-mode 0))
