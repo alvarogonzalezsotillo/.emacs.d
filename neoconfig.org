@@ -2106,11 +2106,13 @@ Avoid performance issues in files with very long lines.
 ** Cambiar el tamaño de fuente de todo /emacs/ (no solo el buffer actual)
 #+begin_src emacs-lisp
   (use-package default-text-scale
-  :config
+    :ensure t
+    :config
     (setq frame-resize-pixelwise t)
     (default-text-scale-mode 1)
     )
 #+end_src
+
 
 ** Respuestas de confirmación más cortas
 #+begin_src emacs-lisp
