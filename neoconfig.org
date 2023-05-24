@@ -707,6 +707,7 @@ Muestra un /minimap/ del fichero
 #+begin_src emacs-lisp
 (use-package demap
   :ensure t
+  :straight (:host gitlab :repo "sawyerjgardner/demap.el")
   :defer 1
   :bind
   (( "C-S-<f7>" . demap-toggle))
@@ -1427,39 +1428,6 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de programación y =org-mode=.
 
 #+begin_src emacs-lisp
-  (use-package company-auctex
-    :ensure t
-    :after (company)
-    :defer 1
-    :config)
-
-  (use-package company-c-headers
-    :ensure t
-    :after (company)
-    :defer 1
-    :config)
-
-  (use-package company-emoji
-    :ensure t
-    :after (company)
-    :defer 1
-    :config)
-
-
-  (use-package company-quickhelp
-    :ensure t
-    :after (company)
-    :defer 1
-    :config
-    (setq company-quickhelp-color-foreground "white")
-    (setq company-quickhelp-color-background "darkgray")
-    (company-quickhelp-mode 1) )
-
-  (use-package company-web
-    :ensure t
-    :defer 1
-    :after (company)
-    :config)
 
   (use-package company
     :ensure t
@@ -1538,8 +1506,42 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     (define-key company-active-map (kbd "C-.") 'company-other-backend)
 
     )
-#+end_src
 
+  (use-package company-auctex
+    :ensure t
+    :after (company)
+    :defer 1
+    :config)
+
+  (use-package company-c-headers
+    :ensure t
+    :after (company)
+    :defer 1
+    :config)
+
+  (use-package company-emoji
+    :ensure t
+    :after (company)
+    :defer 1
+    :config)
+
+
+  (use-package company-quickhelp
+    :ensure t
+    :after (company)
+    :defer 1
+    :config
+    (setq company-quickhelp-color-foreground "white")
+    (setq company-quickhelp-color-background "darkgray")
+    (company-quickhelp-mode 1) )
+
+  (use-package company-web
+    :ensure t
+    :defer 1
+    :after (company)
+    :config)
+
+#+end_src
 
 
 #+begin_src emacs-lisp
@@ -1668,6 +1670,10 @@ Si empiezo una búsqueda con =C-s= o =C-r=, se empieza buscando la selección
 (advice-add 'isearch-backward :after 'ags/isearch-region)
 #+end_src
 
+Mostrar el número de ocurrencias
+#+begin_src emacs-lisp
+(setq isearch-lazy-count 't)
+#+end_src
 
 En una búsqueda incremental, utilizo =C-p= y =C-n= para ir a otras búsquedas anteriores
 #+begin_src emacs-lisp
