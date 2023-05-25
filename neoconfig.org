@@ -12,7 +12,13 @@ La última versión de esta configuración puede encontrarse en [[https://github
 #+latex: \end{center}
 #+html: </div>
 
-
+* Compilación de emacs
+#+begin_src bash
+./autogen.sh
+./configure --with-native-compilation --with-xml2 --with-json --with-tree-sitter --with-rsvg
+make -j4
+sudo make install
+#+end_src
 
 * =init.el=
 Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplemente inicializa el sistema de paquetes y carga el paquete =org=, que es el que permite a Emacs manejar este tipo de ficheros. Después, carga este fichero interpretando los bloques de código.
@@ -392,7 +398,7 @@ Mostrar =^L= (saltos de página) como una línea horizontal
   :defer t
   :ensure t
   :config
-  (global-page-break-lines-mode))
+  (global-page-break-lines-mode 1))
 #+end_src
 
 ** =gift-mode=
@@ -410,32 +416,8 @@ Mostrar =^L= (saltos de página) como una línea horizontal
 #+end_src
 
 
-** =origami=
 
-   #+begin_src emacs-lisp
-
-(use-package origami
-  :defer 1
-  :ensure t
-  :config
- (setq origami-show-fold-header nil)
- (setq origami-fold-replacement "⤵⤵⤵")
- (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified)
- (set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
-
-  :bind
-      (("<C-return>" . origami-recursively-toggle-node))
-      (("<C-S-return>" . origami-reset))
-      (("<M-return>" . origami-close-all-nodes))
-
-
-
-)
-
-   #+end_src
-
-
-#+begin_src emacs-lisp
+#+begin_src lisp
 (use-package origami-predef
   :ensure t
   :defer 1
@@ -725,12 +707,16 @@ Muestra un /minimap/ del fichero
 #+begin_src emacs-lisp
 (use-package demap
   :ensure t
+  :straight (:host gitlab :repo "sawyerjgardner/demap.el")
   :defer 1
   :bind
-  (( "M-<f7>" . demap-toggle))
+  (( "C-S-<f7>" . demap-toggle))
   :config
 )
 #+end_src
+
+#+RESULTS:
+: demap-toggle
 
 ** =all-the-icons=
 #+begin_src emacs-lisp
@@ -817,7 +803,9 @@ El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminale
 Marca errores en el fichero
 
 #+begin_src emacs-lisp
-(use-package emacs
+(use-package flycheck
+  :defer 1
+  :ensure t
   :config
   (setq flycheck-shellcheck-follow-sources t)
   (global-flycheck-mode 1))
@@ -1048,6 +1036,18 @@ Marcar las ocurrencias de la selección
 #+end_src
 
 
+** =breadcrumb-mode=
+Marcar las ocurrencias de la selección
+#+begin_src emacs-lisp
+  (use-package breadcrumb
+    :ensure t
+    :straight (:host github :repo "joaotavora/breadcrumb")
+    :defer 1)
+#+end_src
+
+#+RESULTS:
+
+
 ** =smartscan=
 Utilizo =smartscan= para localizar ocurrencias de símbolos.
 Las teclas rápidas son M-n y M-p, que entran en conflicto con las de region-occurrences-highlighter-nav-mode-map.
@@ -1112,6 +1112,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   (setq vertico-posframe-border-width 6)
   (when (posframe-workable-p)
     (vertico-posframe-mode -1)))
+
 
 (use-package orderless
   :ensure t
@@ -1427,39 +1428,6 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de programación y =org-mode=.
 
 #+begin_src emacs-lisp
-  (use-package company-auctex
-    :ensure t
-    :after (company)
-    :defer 1
-    :config)
-
-  (use-package company-c-headers
-    :ensure t
-    :after (company)
-    :defer 1
-    :config)
-
-  (use-package company-emoji
-    :ensure t
-    :after (company)
-    :defer 1
-    :config)
-
-
-  (use-package company-quickhelp
-    :ensure t
-    :after (company)
-    :defer 1
-    :config
-    (setq company-quickhelp-color-foreground "white")
-    (setq company-quickhelp-color-background "darkgray")
-    (company-quickhelp-mode 1) )
-
-  (use-package company-web
-    :ensure t
-    :defer 1
-    :after (company)
-    :config)
 
   (use-package company
     :ensure t
@@ -1538,8 +1506,42 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     (define-key company-active-map (kbd "C-.") 'company-other-backend)
 
     )
-#+end_src
 
+  (use-package company-auctex
+    :ensure t
+    :after (company)
+    :defer 1
+    :config)
+
+  (use-package company-c-headers
+    :ensure t
+    :after (company)
+    :defer 1
+    :config)
+
+  (use-package company-emoji
+    :ensure t
+    :after (company)
+    :defer 1
+    :config)
+
+
+  (use-package company-quickhelp
+    :ensure t
+    :after (company)
+    :defer 1
+    :config
+    (setq company-quickhelp-color-foreground "white")
+    (setq company-quickhelp-color-background "darkgray")
+    (company-quickhelp-mode 1) )
+
+  (use-package company-web
+    :ensure t
+    :defer 1
+    :after (company)
+    :config)
+
+#+end_src
 
 
 #+begin_src emacs-lisp
@@ -1668,6 +1670,10 @@ Si empiezo una búsqueda con =C-s= o =C-r=, se empieza buscando la selección
 (advice-add 'isearch-backward :after 'ags/isearch-region)
 #+end_src
 
+Mostrar el número de ocurrencias
+#+begin_src emacs-lisp
+(setq isearch-lazy-count 't)
+#+end_src
 
 En una búsqueda incremental, utilizo =C-p= y =C-n= para ir a otras búsquedas anteriores
 #+begin_src emacs-lisp
@@ -1705,6 +1711,11 @@ A veces es fácil perderse entre comandos a medio introducir y ventanas popup. M
 Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por ejemplo, prefiero que =C-Z= sea "deshacer"). Para poder definir teclas con prioridad sobre los demás modos defino un modo con mis atajos.
 #+begin_src emacs-lisp
 
+  (defun ags/toggle-truncate-lines()
+    (interactive)
+    (visual-line-mode 'toggle)
+    (adaptive-wrap-prefix-mode 1))
+
   ;; MIS TECLAS
   (defvar mis-teclas-minor-mode-map
     (let ((map (make-sparse-keymap)))
@@ -1720,7 +1731,7 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
       (define-key map (kbd "M-S-<left>") 'shrink-window-horizontally)
       (define-key map (kbd "M-S-<right>") 'enlarge-window-horizontally)
       (define-key map (kbd "C-x M-x") 'execute-extended-command)
-      (define-key map (kbd "C-S-l") 'toggle-truncate-lines)
+      (define-key map (kbd "C-S-l") 'ags/toggle-truncate-lines)
       map)
     "mis-teclas-minor-mode keymap")
                         
@@ -1770,9 +1781,16 @@ Necesario si una macro resulta interesante, para grabarla como una función
 ** =tramp=
 =tramp= intenta optimizar las conexiones, enviando en línea los ficheros pequeños. Esto me da problemas en algunos sistemas, así que indico que los ficheros se copien a partir de 1 byte de tamaño:
 #+begin_src emacs-lisp
-(setq tramp-copy-size-limit 1)
-(setq tramp-debug-buffer nil)
-(setq tramp-verbose 1)
+(use-package tramp
+  :config
+  (setq tramp-inline-compress-start-size 1000)
+  (setq tramp-copy-size-limit 10000)
+  (setq vc-handled-backends '(Git))
+  (setq tramp-verbose 1)
+  (setq tramp-default-method "scp")
+  (setq tramp-use-ssh-controlmaster-options nil)
+  (setq projectile--mode-line "Projectile")
+  (setq tramp-verbose 1))
 #+end_src
 
 Desactivo otros sistemas de control de versiones que no sean =git=. Dejo preparado un hook para cuando un fichero sea remoto.
@@ -1822,6 +1840,48 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 #+end_src
 
 * Visualización
+
+** =vimish-fold=
+
+#+begin_src emacs-lisp
+(use-package vimish-fold
+  :ensure t
+  :defer 1
+  :bind
+  (("<C-return>" . vimish-fold-toggle)
+   ("<C-S-return>" . vimish-fold-from-marks)
+   ("<M-return>" . vimish-fold ))
+  :config
+   (vimish-fold-global-mode 1))
+   
+#+end_src
+
+
+
+** =origami=
+
+Desactivados los bindings, voy a usar vimish-fold
+
+   #+begin_src emacs-lisp
+
+(use-package origami
+  :defer 1
+  :ensure t
+  :config
+  (setq origami-show-fold-header nil)
+  (setq origami-fold-replacement "⤵⤵⤵")
+  (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified)
+  (set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
+
+  ;;:bind
+  ;;(("<C-return>" . origami-recursively-toggle-node))
+  ;;(("<C-S-return>" . origami-reset))
+  ;;(("<M-return>" . origami-close-all-nodes))
+
+  )
+
+   #+end_src
+
 
 ** =sideline=
 
@@ -1955,6 +2015,7 @@ Mi línea de estado (modeline)
                " | %IB %Z"
                " | %l:%c %p"
                ;;" | " '(:eval (format "Point:%d" (point)))
+               " | " '(:eval (breadcrumb-project-crumbs)) " / " '(:eval (breadcrumb-imenu-crumbs))
                mode-line-end-spaces
                ) )
 
@@ -2056,11 +2117,13 @@ Avoid performance issues in files with very long lines.
 ** Cambiar el tamaño de fuente de todo /emacs/ (no solo el buffer actual)
 #+begin_src emacs-lisp
   (use-package default-text-scale
-  :config
+    :ensure t
+    :config
     (setq frame-resize-pixelwise t)
     (default-text-scale-mode 1)
     )
 #+end_src
+
 
 ** Respuestas de confirmación más cortas
 #+begin_src emacs-lisp
@@ -2233,8 +2296,6 @@ Imágenes tras evaluar
       (defun ags/bonito-para-org()
         (interactive)
         (toggle-word-wrap 1)
-        (adaptive-wrap-prefix-mode 1)
-        (toggle-truncate-lines -1)
         ;;(indent-guide-mode 0)
         (if (>= emacs-major-version 26)
             (display-line-numbers-mode 0))
