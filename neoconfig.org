@@ -1509,26 +1509,22 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
   (use-package company-auctex
     :ensure t
-    :after (company)
     :defer 1
     :config)
 
   (use-package company-c-headers
     :ensure t
-    :after (company)
     :defer 1
     :config)
 
   (use-package company-emoji
     :ensure t
-    :after (company)
     :defer 1
     :config)
 
 
   (use-package company-quickhelp
     :ensure t
-    :after (company)
     :defer 1
     :config
     (setq company-quickhelp-color-foreground "white")
@@ -1538,7 +1534,6 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
   (use-package company-web
     :ensure t
     :defer 1
-    :after (company)
     :config)
 
 #+end_src
@@ -1835,6 +1830,25 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 #+end_src
 
 * Visualización
+
+** =hl-todo=
+
+
+#+begin_src emacs-lisp
+(use-package hl-todo
+  :ensure t
+  :defer 1
+  :config
+
+  (setq hl-todo-keyword-faces
+      '(("TODO"   . "#FF0000")
+        ("FIXME"  . "#FF0000")
+        ("DEBUG"  . "#A020F0")
+        ("GOTCHA" . "#FF4500")
+        ("STUB"   . "#1E90FF")))
+  )
+
+#+end_src
 
 ** =vimish-fold=
 
