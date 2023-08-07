@@ -1839,16 +1839,22 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
   :ensure t
   :defer 1
   :config
-
-  (setq hl-todo-keyword-faces
-      '(("TODO"   . "#FF0000")
-        ("FIXME"  . "#FF0000")
-        ("DEBUG"  . "#A020F0")
-        ("GOTCHA" . "#FF4500")
-        ("STUB"   . "#1E90FF")))
-  )
+  (hl-todo-mode 1))
 
 #+end_src
+
+** =hl-todo-flycheck=
+
+#+begin_src lisp
+(use-package hl-todo-flycheck
+  :ensure t
+  :defer 5
+  :straight (:host github :repo "alvarogonzalezsotillo/hl-todo-flycheck")
+  :config
+  (hl-todo-flycheck-enable)
+)
+#+end_src
+
 
 ** =vimish-fold=
 
