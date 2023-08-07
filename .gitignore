@@ -26,3 +26,4 @@ custom-file.el
 /config.el
 /.last-package-update-day
 /eln-cache/
+/straight/
