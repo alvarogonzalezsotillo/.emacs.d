@@ -253,6 +253,14 @@ Utilizo tres repositorios de paquetes:
 - *gnu*: me hizo falta para algo que no recuerdo, lo tengo actualmente deshabilitado.
 - *org*: las versiones nuevas de org-mode se publican antes en este repositorio
 
+** Copiar con formatos
+
+#+begin_src emacs-lisp
+(use-package copy-as-format
+  :ensure t)
+
+#+end_src
+
 ** =straight=
 
 #+begin_src emacs-lisp
@@ -1300,6 +1308,7 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
   (( "<S-f2>" . bm-previous))
 
   :config
+  ;; https://github.com/joodland/bm/issues/45
   (defun bm-lists (&optional direction predicate)
     "Return a pair of lists giving all the bookmarks of the current buffer.
 The car has all the bookmarks before the overlay center;
@@ -1328,6 +1337,13 @@ selection criteria for filtering the lists."
 #+END_SRC
 
 
+** =indent-bars=
+
+#+begin_src emacs-lisp
+(use-package indent-bars
+  :ensure t
+  :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars"))
+#+end_src
 ** =multiple-cursors=
 
 #+BEGIN_SRC emacs-lisp
@@ -1985,11 +2001,14 @@ Desactivados los bindings, voy a usar vimish-fold
       (display-line-numbers-mode 1))
   (auto-highlight-symbol-mode 1)
   (electric-pair-local-mode 1)
+  (indent-bars-mode 1)
   (origami-mode 1))
-
 
   (add-hook 'prog-mode-hook 'ags/bonito-para-codigo)
 #+end_src
+
+#+RESULTS:
+| yas-minor-mode | ags/bonito-para-codigo | ags/company-backends-prog-mode-function |
 
 ** LaTeX
 #+begin_src emacs-lisp
