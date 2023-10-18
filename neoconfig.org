@@ -837,7 +837,6 @@ Marca errores en el fichero
 Ya no uso =flycheck-inline=, ahora uso =sideline=
 
 #+begin_src lisp
-
   (use-package flycheck-inline
     :ensure t
     :defer 1
@@ -845,6 +844,17 @@ Ya no uso =flycheck-inline=, ahora uso =sideline=
     (global-flycheck-inline-mode 1)
   )
 #+end_src
+
+#+begin_src emacs-lisp
+  (use-package flycheck-pos-tip
+    :ensure t
+    :defer 1
+    :config
+    (flycheck-pos-tip-mode 1)
+  )
+#+end_src
+
+#+RESULTS:
 
 ** =flycheck-hl-todo=
 #+begin_src emacs-lisp
