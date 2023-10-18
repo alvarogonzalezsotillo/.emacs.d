@@ -609,11 +609,26 @@ Mostrar =^L= (saltos de página) como una línea horizontal
     )
 
 
+
   
   )
    #+end_src
 
+   #+RESULTS:
+   : magit-status
 
+Para instalar magit-delta
+- https://scripter.co/using-git-delta-with-magit/
+- https://dandavison.github.io/delta/configuration.html  
+
+#+begin_src emacs-lisp
+  (use-package magit-delta
+    :ensure t
+    :hook (magit-mode . magit-delta-mode))
+#+end_src
+
+
+   
 ** =mode-icons=
 Cambia la descripción del modo por un icono en la modeline
    #+begin_src emacs-lisp
@@ -831,6 +846,17 @@ Ya no uso =flycheck-inline=, ahora uso =sideline=
   )
 #+end_src
 
+** =flycheck-hl-todo=
+#+begin_src emacs-lisp
+(use-package flycheck-hl-todo
+  :ensure t
+  :defer 5 ; Need to be initialized after the rest of checkers
+  ;;:straight (:host github :repo "alvarogonzalezsotillo/flycheck-hl-todo")
+  :config
+  (flycheck-hl-todo-setup))
+#+end_src  
+
+#+RESULTS:
 
 
 ** =simple-httpd=
@@ -2485,8 +2511,6 @@ Añado a la lista de extensiones la de los módulos.
   )
 #+end_src
 
-#+RESULTS:
-: [nil 0 1 0 nil require (kotlin-mode nil t) idle 0 nil]
    
 * Rust
 
@@ -2508,8 +2532,6 @@ Añado a la lista de extensiones la de los módulos.
 
 #+end_src
 
-#+RESULTS:
-: t
 
 #+begin_src emacs-lisp
 (use-package lsp-mode
@@ -2551,6 +2573,14 @@ Añado a la lista de extensiones la de los módulos.
 
 #+end_src
 
+* Frame adicional al abrir emacs
+Por alguna razón, al abrir emacsclient en kde la ventana desaparece
+#+begin_src emacs-lisp
+
+(run-at-time "5sec" nil #'make-frame)
+
+
+#+end_src
    
 * Opciones Latex para el PDF :noexport:
 # COLORES
