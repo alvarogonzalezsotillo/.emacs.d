@@ -12,6 +12,8 @@ La última versión de esta configuración puede encontrarse en [[https://github
 #+latex: \end{center}
 #+html: </div>
 
+
+
 * Compilación de emacs
 #+begin_src bash
 ./autogen.sh
@@ -756,6 +758,12 @@ Muestra un /minimap/ del fichero
 Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 #+begin_src emacs-lisp
+
+  (use-package dired-aux
+    :config
+    ;; Default action to open any file
+    (add-to-list 'dired-guess-shell-alist-default ' ("\\.pdf\\'" "okular") t))
+
   (use-package dired-x)
 
   ;; Copy and paste files
@@ -1832,7 +1840,9 @@ Necesario si una macro resulta interesante, para grabarla como una función
   (setq tramp-default-method "scp")
   (setq tramp-use-ssh-controlmaster-options nil)
   (setq projectile--mode-line "Projectile")
-  (setq tramp-verbose 1))
+  (setq tramp-verbose 1)
+  (setq tramp-connection-timeout 10))
+
 #+end_src
 
 Desactivo otros sistemas de control de versiones que no sean =git=. Dejo preparado un hook para cuando un fichero sea remoto.
@@ -1841,7 +1851,9 @@ https://www.reddit.com/r/emacs/comments/y92y4b/tramp_users_slowness_got_you_down
 (setq vc-handled-backends '(Git))
 (defun ags/vc-off-if-remote ()
   (interactive)
-  (when (file-remote-p default-directory)))
+  (when (file-remote-p default-directory)
+    (message "Desactivo VC en tramp: %s" default-directory)
+    (setq vc-handled-backends '())))
 (add-hook 'find-file-hook 'ags/vc-off-if-remote)
 #+end_src
 
@@ -2180,6 +2192,7 @@ Avoid performance issues in files with very long lines.
 =isearch= resalta las coincidencias con la búsqueda, pero se quitan al acabar de buscar. Con esto, las coincidencias quedan resaltadas hasta la siguiente búsqueda o hasta ejecutar =lazy-highlight-cleanup=
 #+begin_src emacs-lisp
 (setq lazy-highlight-cleanup nil)
+(setq isearch-lazy-highlight 'all-windows)
 (setq lazy-highlight-max-at-a-time nil)
 (setq lazy-highlight-initial-delay 0)
 #+end_src
@@ -2583,15 +2596,45 @@ Añado a la lista de extensiones la de los módulos.
 
 #+end_src
 
-* Frame adicional al abrir emacs
-Por alguna razón, al abrir emacsclient en kde la ventana desaparece
-#+begin_src emacs-lisp
-
-(run-at-time "5sec" nil #'make-frame)
+* Zona de pruebas
 
 
 #+end_src
-   
+
+
+#+begin_src lisp
+(use-package selection-highlight-mode
+  :straight (selection-highlight-mode :type git
+                                      :host github
+                                      :repo "balloneij/selection-highlight-mode")
+  :config (selection-highlight-mode))
+#+end_src
+
+
+
+#+begin_src emacs-lisp
+
+(use-package impatient-mode
+  :defer 1
+  :ensure t
+  :config 
+
+  (defun ags/org-buffer-to-html-string (buffer)
+    "Convierte el contenido del buffer Org actual a una cadena HTML."
+    (require 'ox-html) ;; Asegúrate de que el paquete ox-html esté cargado
+
+    ;; Configura las opciones de exportación según tus preferencias
+    (with-current-buffer buffer
+      (princ (org-export-string-as (buffer-string) 're-reveal t))
+      (princ "hola")))
+    
+
+
+  (add-to-list 'imp-default-user-filters '(org-mode . ags/org-buffer-to-html-string))
+  
+  )
+#+end_src
+
 * Opciones Latex para el PDF :noexport:
 # COLORES
 #+latex_header: \usepackage[usenames,dvipsnames]{color} % Required for custom colors
