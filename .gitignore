@@ -27,3 +27,4 @@ custom-file.el
 /.last-package-update-day
 /eln-cache/
 /straight/
+/devdocs/
