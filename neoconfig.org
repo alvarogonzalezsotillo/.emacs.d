@@ -1154,6 +1154,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 (use-package vertico-mouse
   :ensure nil
   :config
+  (vertico-mouse-mode 1)
   )
 
 (use-package vertico-posframe
@@ -1876,6 +1877,11 @@ fi
 (recentf-mode 1)
 (setq recentf-max-saved-items 2000)
 #+end_src
+
+#+begin_src emacs-lisp
+(savehist-mode 1)
+#+end_src
+
 ** Ratón en =xterm=
 El ratón también puede utilizarse en un =xterm=
 #+begin_src emacs-lisp
@@ -1894,6 +1900,17 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 #+end_src
 
 * Visualización
+
+** =spacious-padding=
+
+#+begin_src emacs-lisp
+(use-package spacious-padding
+  :ensure t
+  :defer 1
+  :config
+  (spacious-padding-mode 1))
+
+#+end_src
 
 ** =hl-todo=
 
