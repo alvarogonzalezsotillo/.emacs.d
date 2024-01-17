@@ -48,6 +48,15 @@ permitir_servidor_web(){
     permitir_puerto_entrada 443
 }
 
+permitir_servidor_vnc(){
+    echo "
+      Permito puertos de vnc: 5900, 5901, 5902
+    "
+    permitir_puerto_entrada 5900
+    permitir_puerto_entrada 5901
+    permitir_puerto_entrada 5902
+}
+
 permitir_servidor_oracle(){
     echo "
       Permito puertos de servidor oracle: 1521
@@ -63,6 +72,13 @@ permitir_servidor_ssh(){
     permitir_puerto_entrada 22
 }
 
+permitir_email(){
+    echo "
+      Permito entrar por email: puerto 25
+    "
+    permitir_puerto_entrada 25
+}
+
 
 
 permitir_usuario_root(){
@@ -74,7 +90,8 @@ permitir_usuario_root(){
     iptables --append OUTPUT --match owner --uid-owner root --jump ACCEPT
     iptables --append OUTPUT --match owner --uid-owner alvaro --jump ACCEPT
     iptables --append OUTPUT --match owner --uid-owner profesor --jump ACCEPT
-    iptables --append OUTPUT --match owner --gid-owner wheel --jump ACCEPT
+    iptables --append OUTPUT --match owner --gid-owner sudo --jump ACCEPT
+    iptables --append OUTPUT --match owner --uid-owner _apt --jump ACCEPT
 }
 
 enviar_paquetes_salida_a_log(){
@@ -94,8 +111,8 @@ limpiar_iptables(){
     iptables -P OUTPUT ACCEPT
     iptables -t nat -F
     iptables -t mangle -F
-    iptables -F
-    iptables -X
+    iptables -F # no borrar docker
+    iptables -X # no borrar docker
 }
 
 permitir_ya_establecido(){
@@ -116,6 +133,7 @@ permitir_ya_establecido
 permitir_loopback
 prohibir_dos
 permitir_servidor_ssh
+permitir_email
 permitir_servidor_web
 permitir_servidor_oracle
 permitir_usuario_root
@@ -125,3 +143,5 @@ prohibir_entrada_y_salida
 iptables-save > iptables-save
 
 service iptables save
+
+echo Docker habrá que reiniciarlo
