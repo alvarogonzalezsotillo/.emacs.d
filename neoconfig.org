@@ -1,9 +1,8 @@
 
+
 #+TITLE: Configuración Emacs
 #+author: Álvaro González (@alvarogonzalez)
 #+OPTIONS: toc:2 h:4 author:t
-
-#+EXPORT_EXCLUDE_TAGS: noexport
 
 
 #+latex: \newpage
@@ -14,6 +13,14 @@ La última versión de esta configuración puede encontrarse en [[https://github
 #+html: </div>
 
 
+
+* Compilación de emacs
+#+begin_src bash
+./autogen.sh
+./configure --with-native-compilation --with-xml2 --with-json --with-tree-sitter --with-rsvg
+make -j4
+sudo make install
+#+end_src
 
 * =init.el=
 Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplemente inicializa el sistema de paquetes y carga el paquete =org=, que es el que permite a Emacs manejar este tipo de ficheros. Después, carga este fichero interpretando los bloques de código.
@@ -57,25 +64,63 @@ En el directorio =~/.emacs.d/bin/= guardo algunas utilidades que me interesa ten
 
 Añado también el directorio de =cargo= para =rust=.
 #+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (let 
+      (  (exec-path-separator  (if (string-equal system-type "windows-nt") ";" ":"))
+         (paths `(
+                  ,(concat (expand-file-name user-emacs-directory) "bin")
+                  ,(concat (expand-file-name "~/") ".cargo/bin")
+                  "/opt/scala/bin" )) )
+    (dolist (path paths)
+      (message "path: %s" path)
+      (setenv "PATH" (concat path exec-path-separator (getenv "PATH")))
+      (add-to-list 'exec-path path))
 
-(let 
-  (  (exec-path-separator  (if (string-equal system-type "windows-nt") ";" ":"))
-     (paths `(
-              ,(concat (expand-file-name user-emacs-directory) "bin")
-              ,(concat (expand-file-name "~/") ".cargo/bin")
-              "/opt/scala/bin"
-              "/opt/node/bin")) )
-  (dolist (path paths)
-    (message "path: %s" path)
-    (setenv "PATH" (concat path exec-path-separator (getenv "PATH")))
-    (add-to-list 'exec-path path))
+    (message "PATH %s" (getenv "PATH"))
+    (message "exec-path %s" exec-path)))
 
-  (message "PATH %s" (getenv "PATH"))
-  (message "exec-path %s" exec-path))
+#+end_src
+
+** Abrir todos los =org= de =apuntes-clase=
+
+#+begin_src emacs-lisp
+
+(defun es-presentacion-p (filename)
+  (let* ((contents (org-file-contents filename)))
+    (string-match-p "/common/footer.org" contents)))
+
+(defun lista-de-orgs (directory)
+  (directory-files-recursively directory ".*\.org$" ))
+
+
+(defun lista-de-presentaciones (directory)
+  (let* ((all-orgs (lista-de-orgs directory))
+         (presentations (seq-filter #'es-presentacion-p all-orgs)) )
+    presentations))
+
+(defun ags/abre-todas-las-presentaciones ()
+  (interactive)
+  (dolist (orgfile (lista-de-presentaciones "/home/alvaro/apuntes-clase/"))
+    (find-file orgfile)
+    ))
+
 
 #+end_src
 
 
+** Poner mi servidor de nexus en gradle
+#+begin_src emacs-lisp
+(defun ags/mi-servidor-nexus-en-gradle ()
+  (interactive)
+  (insert "
+        maven {
+            url \"http://localhost:8888/repository/android-group\"
+            allowInsecureProtocol true
+        }
+"
+          ))
+#+end_src
 
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
@@ -100,7 +145,6 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
   (let ((comando (format "sh -c 'gifttolatex %s -t \"%s\" -q \"%s\" \"%s\"'" parametros titulo porcentajetest buffer-file-name)))
     (shell-command comando)))
 
-(defalias 'trim-string 'string-trim) 
    #+end_src
 
 
@@ -211,7 +255,33 @@ Utilizo tres repositorios de paquetes:
 - *gnu*: me hizo falta para algo que no recuerdo, lo tengo actualmente deshabilitado.
 - *org*: las versiones nuevas de org-mode se publican antes en este repositorio
 
+** Copiar con formatos
 
+#+begin_src emacs-lisp
+(use-package copy-as-format
+  :ensure t)
+
+#+end_src
+
+** =straight=
+
+#+begin_src emacs-lisp
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+#+end_src
+
+#+RESULTS:
+: t
 
 ** =use-package=
 
@@ -267,7 +337,6 @@ Utilizo tres repositorios de paquetes:
   (setq centaur-tabs-cycle-scope 'tabs)
   (setq centaur-tabs-show-navigation-buttons t)
   (setq centaur-tabs-hide-tabs-hooks '(reb-mode-hook completion-list-mode-hook))
-  (setq centaur-tabs-show-count t)
 
   (ags/centaur-tabs-font-sizes)
 
@@ -339,7 +408,7 @@ Mostrar =^L= (saltos de página) como una línea horizontal
   :defer t
   :ensure t
   :config
-  (global-page-break-lines-mode))
+  (global-page-break-lines-mode 1))
 #+end_src
 
 ** =gift-mode=
@@ -351,37 +420,14 @@ Mostrar =^L= (saltos de página) como una línea horizontal
       (("C-c C-c" . ags/gifttolatex))
 
   :config
+  (defalias 'trim-string 'string-trim) 
   
 )
 #+end_src
 
 
-** =origami=
 
-   #+begin_src emacs-lisp
-
-(use-package origami
-  :defer 1
-  :ensure t
-  :config
- (setq origami-show-fold-header nil)
- (setq origami-fold-replacement "⤵⤵⤵")
- (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified)
- (set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
-
-  :bind
-      (("<C-return>" . origami-recursively-toggle-node))
-      (("<C-S-return>" . origami-reset))
-      (("<M-return>" . origami-close-all-nodes))
-
-
-
-)
-
-   #+end_src
-
-
-#+begin_src emacs-lisp
+#+begin_src lisp
 (use-package origami-predef
   :ensure t
   :defer 1
@@ -415,7 +461,7 @@ Mostrar =^L= (saltos de página) como una línea horizontal
     "Close some predefined patterns, useful in SQL."
     (interactive)
     (origami-predef-apply-patterns '("create .*table" "create .*view" "begin")))
-  (add-hook 'sql-mode-hook #'ags/origami-predef-sql)
+  ;;(add-hook 'sql-mode-hook #'ags/origami-predef-sql)
 
 
   (defun ags/origami-predef-gift()
@@ -509,6 +555,13 @@ Mostrar =^L= (saltos de página) como una línea horizontal
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
 
+  (setq magit-diff-refine-hunk 'all)
+
+  (use-package abridge-diff
+    :ensure t
+    :defer 1
+    :after magit ;; optional, if you'd like to use with magit
+    :init (abridge-diff-mode 1))
 
   (use-package magit-todos
     :ensure t
@@ -558,6 +611,7 @@ Mostrar =^L= (saltos de página) como una línea horizontal
     )
 
 
+
   
   )
    #+end_src
@@ -565,7 +619,18 @@ Mostrar =^L= (saltos de página) como una línea horizontal
    #+RESULTS:
    : magit-status
 
+Para instalar magit-delta
+- https://scripter.co/using-git-delta-with-magit/
+- https://dandavison.github.io/delta/configuration.html  
 
+#+begin_src emacs-lisp
+  (use-package magit-delta
+    :ensure t
+    :hook (magit-mode . magit-delta-mode))
+#+end_src
+
+
+   
 ** =mode-icons=
 Cambia la descripción del modo por un icono en la modeline
    #+begin_src emacs-lisp
@@ -577,10 +642,6 @@ Cambia la descripción del modo por un icono en la modeline
 )
    #+end_src
 
-   #+RESULTS:
-   : t
-
-
 
 ** =imenu=
 Reduzco el tamaño de todas las fuentes de =imenu=
@@ -588,13 +649,22 @@ Reduzco el tamaño de todas las fuentes de =imenu=
 (use-package imenu-list
   :defer 1
   :ensure t
+  :bind
+  (("<f7>" . imenu-list-smart-toggle))
   :config 
    (set-face-attribute 'imenu-list-entry-face nil :height  0.8)
    (add-hook 'imenu-list-major-mode-hook (lambda () (message "IMENU MAJOR MODE")(display-line-numbers-mode 1))))
-   #+end_src
 
-   #+RESULTS:
-   : t
+(use-package popup-imenu
+  :defer 1
+  :ensure t     
+  :bind
+  (("M-I" . popup-imenu)))
+#+end_src
+
+#+RESULTS:
+: popup-imenu
+
 
    
 ** =blamer=
@@ -662,12 +732,16 @@ Muestra un /minimap/ del fichero
 #+begin_src emacs-lisp
 (use-package demap
   :ensure t
+  :straight (:host gitlab :repo "sawyerjgardner/demap.el")
   :defer 1
   :bind
-  (( "M-<f7>" . demap-toggle))
+  (( "C-S-<f7>" . demap-toggle))
   :config
 )
 #+end_src
+
+#+RESULTS:
+: demap-toggle
 
 ** =all-the-icons=
 #+begin_src emacs-lisp
@@ -684,6 +758,12 @@ Muestra un /minimap/ del fichero
 Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 #+begin_src emacs-lisp
+
+  (use-package dired-aux
+    :config
+    ;; Default action to open any file
+    (add-to-list 'dired-guess-shell-alist-default ' ("\\.pdf\\'" "okular") t))
+
   (use-package dired-x)
 
   ;; Copy and paste files
@@ -704,7 +784,9 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
     (defun ags/dired-hook ()
       (interactive)
-      (all-the-icons-dired-mode 1)
+      (if (file-remote-p default-directory)
+          (all-the-icons-dired-mode -1)
+         (all-the-icons-dired-mode 1))
       (dired-hide-details-mode 1)
       (auto-revert-mode 1)
       (diff-hl-dired-mode 1)
@@ -750,18 +832,49 @@ El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminale
 
 ** =flycheck=
 Marca errores en el fichero
-#+begin_src emacs-lisp
 
+#+begin_src emacs-lisp
+(use-package flycheck
+  :defer 1
+  :ensure t
+  :config
+  (setq flycheck-shellcheck-follow-sources t)
+  (global-flycheck-mode 1))
+#+end_src
+
+Ya no uso =flycheck-inline=, ahora uso =sideline=
+
+#+begin_src lisp
   (use-package flycheck-inline
     :ensure t
     :defer 1
     :config
-    (setq flycheck-shellcheck-follow-sources t)
-    (global-flycheck-mode 1)
     (global-flycheck-inline-mode 1)
   )
 #+end_src
 
+#+begin_src emacs-lisp
+  (use-package flycheck-pos-tip
+    :ensure t
+    :defer 1
+    :config
+    (flycheck-pos-tip-mode 1)
+  )
+#+end_src
+
+#+RESULTS:
+
+** =flycheck-hl-todo=
+#+begin_src emacs-lisp
+(use-package flycheck-hl-todo
+  :ensure t
+  :defer 5 ; Need to be initialized after the rest of checkers
+  ;;:straight (:host github :repo "alvarogonzalezsotillo/flycheck-hl-todo")
+  :config
+  (flycheck-hl-todo-setup))
+#+end_src  
+
+#+RESULTS:
 
 
 ** =simple-httpd=
@@ -779,12 +892,16 @@ Añado algunos /mime-type/ al servidor HTTP
 ** =treemacs=
 Estoy usando =treemacs= en vez de =neotree=.
 
+
 #+begin_src emacs-lisp
 
 (use-package treemacs
   :ensure t
   :defer 1
   :config
+
+  ;; https://github.com/doomemacs/doomemacs/issues/3046
+  (add-to-list 'image-types 'svg)
 
   (defun ags/hacer-treemacs-resizable ()
     (if treemacs--width-is-locked
@@ -793,7 +910,7 @@ Estoy usando =treemacs= en vez de =neotree=.
   (defun ags/cambiar-faces-de-treemacs ()
     ;; Cambio el tamaño por defecto del face
     (mapcar
-     (lambda (face) (set-face-attribute face nil :height 0.8) )
+     (lambda (face) (set-face-attribute face nil :height 0.7) )
      '(
        treemacs-directory-face                
        treemacs-directory-collapsed-face      
@@ -818,14 +935,22 @@ Estoy usando =treemacs= en vez de =neotree=.
        ))
     )
 
+  (setq treemacs-indentation 1)
+  
+  (defun ags/treemacs-toggle ()
+    (interactive)
+    (if (eq (treemacs-current-visibility) 'visible)
+        (delete-window (treemacs-get-local-window))
+      (treemacs-add-and-display-current-project-exclusively)))
   
   (add-hook 'treemacs-mode-hook #'ags/hacer-treemacs-resizable)
   (setq treemacs-silent-refresh t)
   (treemacs-git-mode -1)
   
   (ags/cambiar-faces-de-treemacs)
+  
   :bind
-  (("<f8>" . treemacs))
+  (("<f8>" . ags/treemacs-toggle))
   )
 #+end_src
 
@@ -953,15 +1078,26 @@ Marcar las ocurrencias de la selección
 #+begin_src emacs-lisp
   (use-package region-occurrences-highlighter 
     :ensure t
+    :straight (:host github :repo "alvarogonzalezsotillo/region-occurrences-highlighter")
     :defer 1
     :config
-    ;;(add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
-    ;;(add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
-    ;;(add-hook 'text-mode-hook #'region-occurrences-highlighter-mode)
     (global-region-occurrences-highlighter-mode 1)
+    (setq region-occurrences-highlighter-max-size 3000)
     (define-key region-occurrences-highlighter-nav-mode-map "\M-n" 'region-occurrences-highlighter-next)
     (define-key region-occurrences-highlighter-nav-mode-map "\M-p" 'region-occurrences-highlighter-prev))
 #+end_src
+
+
+** =breadcrumb-mode=
+Marcar las ocurrencias de la selección
+#+begin_src emacs-lisp
+  (use-package breadcrumb
+    :ensure t
+    :straight (:host github :repo "joaotavora/breadcrumb")
+    :defer 1)
+#+end_src
+
+#+RESULTS:
 
 
 ** =smartscan=
@@ -977,6 +1113,114 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
     (global-smartscan-mode 1))
 #+end_src
 
+** =vertico=
+
+
+#+begin_src emacs-lisp
+
+(use-package swiper
+  :ensure t
+  :defer 1)
+
+(use-package marginalia
+  :ensure t
+  :defer 1
+  :custom
+  (marginalia-max-relative-age 0)
+  (marginalia-align 'right)
+  :init
+  (marginalia-mode))
+
+
+(use-package all-the-icons-completion
+  :ensure t
+  :defer 1
+  :after (marginalia all-the-icons)
+  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :init
+  (all-the-icons-completion-mode))
+
+(use-package vertico
+  :ensure t
+  :defer 1
+  :custom
+  (vertico-count 13)                    ; Number of candidates to display
+  (vertico-resize nil)
+  (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
+
+  :config
+  (vertico-mode))
+
+(use-package vertico-mouse
+  :ensure nil
+  :config
+  (vertico-mouse-mode 1)
+  )
+
+(use-package vertico-posframe
+  :after vertico
+  :ensure t
+  :defer 1
+  :config
+  (setq vertico-posframe-border-width 6)
+  (when (posframe-workable-p)
+    (vertico-posframe-mode -1)))
+
+
+(use-package orderless
+  :ensure t
+  :defer 1
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+
+(use-package consult
+  :after projectile
+  :ensure t
+  :defer 1
+  :bind
+  (("<f6>"  . consult-buffer)
+   ("C-x r b" . consult-bookmark)
+   ("M-y" . consult-yank-pop)
+   ("M-g g" . consult-goto-line)
+   ("C-c p s s" . consult-ripgrep)
+   ("C-f" . consult-line)
+   ("C-S-f" . consult-line-multi)
+   ("M-<f7>" . consult-imenu )
+   )
+
+  :config
+  ;;(define-key minibuffer-mode-map (kbd "S-<f6>") 'previous-line-or-history-element)
+  ;;(define-key minibuffer-mode-map (kbd "<f6>") 'next-line-or-history-element)
+  (define-key projectile-command-map (kbd "s g") 'consult-git-grep)
+  )
+
+(use-package consult-projectile
+  :ensure t
+  :defer 1
+  :after projectile
+
+  :bind
+  (("C-<f6>"  . consult-projectile-switch-to-buffer) )
+
+  :config
+  (setq consult-projectile-use-projectile-switch-project t)
+  (setq xref-show-xrefs-function #'consult-xref)
+  (setq xref-show-definitions-function #'consult-xref)
+  (setq consult-narrow-key "<")
+  (setq consult-widen-key ">")
+  (define-key projectile-command-map (kbd "f") #'consult-projectile-find-file)
+  (define-key projectile-command-map (kbd "p") #'consult-projectile-switch-project)
+  (define-key projectile-command-map (kbd "s s") #'consult-ripgrep)
+  )
+
+
+#+end_src
+
+#+RESULTS:
+: consult-projectile-switch-to-buffer
+
 ** =helm=
 =helm= es un sistema para seleccionar una opción entre varias posibilidades, que se puede usar para casi todo
 - Buscar un comando
@@ -985,7 +1229,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 - Visualizar las ocurrencias de un patrón en un buffer
 - ... y más
 
-#+begin_src emacs-lisp
+#+begin_src lisp
   ;; HELM
   (use-package helm
     :ensure t
@@ -1057,7 +1301,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 #+RESULTS:
 : helm-filtered-bookmarks
 
-#+begin_src emacs-lisp
+#+begin_src lisp
     ;;https://www.reddit.com/r/emacs/comments/345vtl/make_helm_window_at_the_bottom_without_using_any/
     ;;HELM SIEMPRE ABAJO CON ANCHO COMPLETO
     (add-to-list 'display-buffer-alist
@@ -1091,27 +1335,60 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 ** =bm=
 Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 #+BEGIN_SRC emacs-lisp
-  (defun my/bookmark-or-edit ()
-    (interactive)
+(defun my/bookmark-or-edit ()
+  (interactive)
 
-    (if (string= major-mode "dired-mode")
-        (progn
-          (all-the-icons-dired-mode -1)
-          (wdired-change-to-wdired-mode))
-        (bm-next)))
+  (if (string= major-mode "dired-mode")
+      (progn
+        (all-the-icons-dired-mode -1)
+        (wdired-change-to-wdired-mode))
+    (bm-next)))
 
 
-    (use-package bm
-      :ensure t
-      :bind
-      (( "<C-f2>" . bm-toggle))
-      (( "<f2>" . my/bookmark-or-edit ))
-      (( "<S-f2>" . bm-previous))
+(use-package bm
+  :ensure t
+  :bind
+  (( "<C-f2>" . bm-toggle))
+  (( "<f2>" . my/bookmark-or-edit ))
+  (( "<S-f2>" . bm-previous))
 
-    )
+  :config
+  ;; https://github.com/joodland/bm/issues/45
+  (defun bm-lists (&optional direction predicate)
+    "Return a pair of lists giving all the bookmarks of the current buffer.
+The car has all the bookmarks before the overlay center;
+the cdr has all the bookmarks after the overlay center.
+A bookmark implementation of `overlay-lists'.
+
+If optional argument DIRECTION is provided, only return bookmarks
+in the specified direction.
+
+If optional argument PREDICATE is provided, it is used as a
+selection criteria for filtering the lists."
+    (if (null predicate)
+        (setq predicate 'bm-bookmarkp))
+
+    (overlay-recenter (point))
+    (cond ((equal 'forward direction)
+           (cons nil (remq nil (mapcar predicate (overlays-in (point) (point-max))))))
+          ((equal 'backward direction)
+           (cons (remq nil (mapcar predicate (overlays-in (point-min) (point)))) nil))
+          (t
+           (cons
+            (remq nil (mapcar predicate (overlays-in (point-min) (point))))
+            (remq nil (mapcar predicate (overlays-in (point) (point-max))))))))
+  
+  )
 #+END_SRC
 
 
+** =indent-bars=
+
+#+begin_src emacs-lisp
+(use-package indent-bars
+  :ensure t
+  :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars"))
+#+end_src
 ** =multiple-cursors=
 
 #+BEGIN_SRC emacs-lisp
@@ -1143,6 +1420,7 @@ Ayuda interactiva de teclado. En el popup-type por defecto entra en conflicto co
 (use-package which-key-posframe
   :ensure t
   :config
+  (setq which-key-posframe-border-width 6)
   (which-key-posframe-mode)
 
 )
@@ -1160,75 +1438,57 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 #+end_src
 
 
-** =transpose-frame=
+** =transpose-frame= o =emacs-rotate.el=
 
-   #+begin_src emacs-lisp
-
-(use-package transpose-frame 
+   #+begin_src lisp
+;; ACTUALMENTE SIN USAR
+(use-package transpose-frame
   :ensure t
   :defer 1
   :bind
       (("<f5>" . transpose-frame))
 )
+   #+end_src
+
+  
+   #+begin_src emacs-lisp
+(use-package rotate
+  :ensure t
+  :defer 1
+  :bind 
+  (("<f5>" .  rotate-layout )))
 
    #+end_src
 
+   #+RESULTS:
+   : rotate-layout
+   
 ** =psw=
 
 #+begin_src emacs-lisp
 (use-package popup-switcher
   :ensure t
   :bind
-  (("<M-f6>" . psw-switch-buffer))
-
+  (("<M-f6>" . psw-switch-buffer)
+   ("<C-o>" . psw-switch-projectile-files))
   )
 
 #+end_src
 
 
 
+** =ffap=
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (ffap-bindings))
+
+#+end_src
+
 ** =company=
 Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de programación y =org-mode=.
 
 #+begin_src emacs-lisp
-  (use-package company-auctex
-    :ensure t
-    :after (company)
-    :defer 1
-    :config)
-
-  (use-package company-c-headers
-    :ensure t
-    :after (company)
-    :defer 1
-    :config)
-
-  (use-package company-emoji
-    :ensure t
-    :after (company)
-    :defer 1
-    :config)
-
-  (use-package company-flx
-    :ensure t
-    :after (company)
-    :defer 1
-    :config
-      (company-flx-mode +1)
-  )
-
-  (use-package company-quickhelp
-    :ensure t
-    :after (company)
-    :defer 1
-    :config
-      (company-quickhelp-mode 1) )
-
-  (use-package company-web
-    :ensure t
-    :defer 1
-    :after (company)
-    :config)
 
   (use-package company
     :ensure t
@@ -1238,38 +1498,37 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
 
     (defvar ags/company-backends-prog-mode
-      '(
-        (company-capf :with company-yasnippet)
-         (
-         company-files
-         company-dabbrev-code
-         company-web-html
-         company-keywords
-         company-emoji
-         )
-        )
-      )
+      '((company-capf :with
+                      company-dabbrev-code
+                      company-files
+                      company-web-html
+                      company-keywords
+                      company-emoji
+                      company-yasnippet)))
 
 
     (defvar ags/company-backends-org-mode
-      '(
-        (
-         company-files
-         company-dabbrev-code
-         company-dabbrev
-         company-keywords
-         company-emoji
-         company-capf
-         )
-        )
-      )
+      '((company-capf :with
+                      company-files
+                      company-dabbrev
+                      company-keywords
+                      company-emoji
+                      company-yasnippet)))
 
+    (defvar ags/company-backends-tex-mode
+      '((company-capf :with
+                      company-auctex
+                      company-files
+                      company-dabbrev
+                      company-keywords
+                      company-emoji
+                      company-yasnippet)))
+
+    
     (defvar ags/company-backends ags/company-backends-org-mode)
 
     ;; set default `company-backends'
     (setq company-backends ags/company-backends)
-
-
 
     (defun ags/company-backends-org-mode-function ()
       (interactive)
@@ -1281,23 +1540,76 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
       (interactive)
       (set (make-local-variable 'company-backends) ags/company-backends-prog-mode))
 
-
     (add-hook 'prog-mode-hook #'ags/company-backends-prog-mode-function)
 
+    (defun ags/company-backends-tex-mode-function ()
+      (interactive)
+      (set (make-local-variable 'company-backends) ags/company-backends-tex-mode))
+
+    (add-hook 'TeX-mode-hook #'ags/company-backends-tex-mode-function)
+    
     (global-set-key (kbd "C-.") 'company-complete)
     (define-key company-active-map [escape] 'company-abort)
 
+    (setq company-transformers '(delete-consecutive-dups company-sort-by-occurrence))
 
-
-  (setq company-dabbrev-code-everywhere t)
-  (setq company-dabbrev-code-ignore-case nil)
-  (setq company-dabbrev-everywhere t)
-  (setq company-dabbrev-ignore-case 'keep-prefix)
-  (setq company-dabbrev-downcase nil)
+    (setq company-dabbrev-code-everywhere t)
+    (setq company-dabbrev-minimum-length 2)
+    (setq company-dabbrev-code-ignore-case nil)
+    (setq company-dabbrev-everywhere t)
+    (setq company-dabbrev-ignore-case 'keep-prefix)
+    (setq company-dabbrev-downcase nil)
+    (setq company-require-match nil)
 
     
     (global-company-mode)
+
+    (define-key company-active-map (kbd "C-.") 'company-other-backend)
+
     )
+
+  (use-package company-auctex
+    :ensure t
+    :defer 1
+    :config)
+
+  (use-package company-c-headers
+    :ensure t
+    :defer 1
+    :config)
+
+  (use-package company-emoji
+    :ensure t
+    :defer 1
+    :config)
+
+
+  (use-package company-quickhelp
+    :ensure t
+    :defer 1
+    :config
+    (setq company-quickhelp-color-foreground "white")
+    (setq company-quickhelp-color-background "darkgray")
+    (company-quickhelp-mode 1) )
+
+  (use-package company-web
+    :ensure t
+    :defer 1
+    :config)
+
+#+end_src
+
+
+#+begin_src emacs-lisp
+  (use-package company-fuzzy
+    :ensure t
+    :defer 1
+    :hook (company-mode . company-fuzzy-mode)
+    :config
+    (setq company-fuzzy-sorting-backend 'flx
+          company-fuzzy-prefix-on-top t
+          company-fuzzy-show-annotation nil
+          company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")))
 #+end_src
 
 * Edición
@@ -1414,6 +1726,10 @@ Si empiezo una búsqueda con =C-s= o =C-r=, se empieza buscando la selección
 (advice-add 'isearch-backward :after 'ags/isearch-region)
 #+end_src
 
+Mostrar el número de ocurrencias
+#+begin_src emacs-lisp
+(setq isearch-lazy-count 't)
+#+end_src
 
 En una búsqueda incremental, utilizo =C-p= y =C-n= para ir a otras búsquedas anteriores
 #+begin_src emacs-lisp
@@ -1433,15 +1749,16 @@ A veces es fácil perderse entre comandos a medio introducir y ventanas popup. M
 #+begin_src emacs-lisp
 ;;(define-key global-map [escape] 'keyboard-escape-quit)
 ;; (define-key key-translation-map (kbd "ESC") (kbd "C-g")) // PROBLEMAS CON EL TERMINAL
-(defun super-escape()
+(defun ags/super-escape()
   (interactive)
   (keyboard-escape-quit)
+  (minibuffer-keyboard-quit)
   (keyboard-quit)
   (company-abort)
   (abort-recursive-edit)
   (setq quit-flag t))
-(define-key global-map [escape] 'super-escape)
-(define-key minibuffer-local-map [escape] 'super-escape)
+(define-key global-map [escape] 'ags/super-escape)
+(define-key minibuffer-local-map [escape] 'ags/super-escape)
 (define-key company-active-map [escape] 'company-abort)
 #+end_src
 
@@ -1449,6 +1766,11 @@ A veces es fácil perderse entre comandos a medio introducir y ventanas popup. M
 ** Atajos de teclado varios
 Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por ejemplo, prefiero que =C-Z= sea "deshacer"). Para poder definir teclas con prioridad sobre los demás modos defino un modo con mis atajos.
 #+begin_src emacs-lisp
+
+  (defun ags/toggle-truncate-lines()
+    (interactive)
+    (visual-line-mode 'toggle)
+    (adaptive-wrap-prefix-mode 1))
 
   ;; MIS TECLAS
   (defvar mis-teclas-minor-mode-map
@@ -1460,19 +1782,15 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
       (define-key map (kbd "C-x C-b") 'ibuffer)
       (define-key map (kbd "C-x b") 'ibuffer)
       (define-key map (kbd "C-<f5>") 'ags/reveal-y-pdf)
-      (define-key map (kbd "M-I") 'popup-imenu)
-      (define-key map (kbd "<f7>") 'imenu-list-smart-toggle)
-      (define-key map (kbd "<C-o>") 'psw-switch-projectile-files)
-
       (define-key map (kbd "M-S-<up>") 'enlarge-window)
       (define-key map (kbd "M-S-<down>") 'shrink-window)
       (define-key map (kbd "M-S-<left>") 'shrink-window-horizontally)
       (define-key map (kbd "M-S-<right>") 'enlarge-window-horizontally)
       (define-key map (kbd "C-x M-x") 'execute-extended-command)
-      (define-key map (kbd "C-S-l") 'toggle-truncate-lines)
+      (define-key map (kbd "C-S-l") 'ags/toggle-truncate-lines)
       map)
     "mis-teclas-minor-mode keymap")
-
+                        
 
   (define-minor-mode mis-teclas-minor-mode
     "A minor mode so that my key settings override annoying major modes."
@@ -1486,23 +1804,73 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
 
 
 
+** Macros de teclado
+Necesario si una macro resulta interesante, para grabarla como una función
+#+begin_src emacs-lisp
+(use-package elmacro
+  :ensure t
+  :defer 1
+  :config
+  (setq elmacro-show-last-commands-default 100)
+  :init
+  (elmacro-mode))
+#+end_src
+
+#+RESULTS:
+: t
+
 * Navegación
+** =dev-docs=
+
+
+#+begin_src emacs-lisp
+(use-package devdocs
+  :ensure t
+  :defer 1)
+
+
+#+end_src
+
+** =file-info=
+#+begin_src emacs-lisp
+(use-package file-info
+  :ensure t
+  :bind (("C-c d" . 'file-info-show))
+  :config
+  (setq hydra-hint-display-type 'posframe)
+  (setq hydra-posframe-show-params `(:poshandler posframe-poshandler-frame-center
+                                               :internal-border-width 2
+                                               :internal-border-color "#61AFEF"
+                                               :left-fringe 16
+                                               :right-fringe 16)))
+#+end_src
+
 ** =tramp=
 =tramp= intenta optimizar las conexiones, enviando en línea los ficheros pequeños. Esto me da problemas en algunos sistemas, así que indico que los ficheros se copien a partir de 1 byte de tamaño:
 #+begin_src emacs-lisp
-(setq tramp-copy-size-limit 1)
-(setq tramp-debug-buffer nil)
-(setq tramp-verbose 1)
+(use-package tramp
+  :config
+  (setq tramp-inline-compress-start-size 1000)
+  (setq tramp-copy-size-limit 10000)
+  (setq vc-handled-backends '(Git))
+  (setq tramp-verbose 1)
+  (setq tramp-default-method "scp")
+  (setq tramp-use-ssh-controlmaster-options nil)
+  (setq projectile--mode-line "Projectile")
+  (setq tramp-verbose 1)
+  (setq tramp-connection-timeout 10))
+
 #+end_src
 
-Optimizaciones de https://www.reddit.com/r/emacs/comments/y92y4b/tramp_users_slowness_got_you_down_check/
+Desactivo otros sistemas de control de versiones que no sean =git=. Dejo preparado un hook para cuando un fichero sea remoto.
+https://www.reddit.com/r/emacs/comments/y92y4b/tramp_users_slowness_got_you_down_check/
 #+begin_src emacs-lisp
+(setq vc-handled-backends '(Git))
 (defun ags/vc-off-if-remote ()
-  (if (file-remote-p (buffer-file-name))
-      (setq-local vc-handled-backends nil)))
+  (when (file-remote-p (buffer-file-name))
+    (setq-local vc-handled-backends '())
+    (setq-local vc-dir-backend nil)))
 (add-hook 'find-file-hook 'ags/vc-off-if-remote)
-
-(setq remote-file-name-inhibit-locks t)
 #+end_src
 
 En ocasiones, =tramp= no consigue conectar con un usuario que tiene =zsh= como shell. Para ello, hay que añadir lo siguiente al fichero =.zshrc= remoto:
@@ -1524,6 +1892,11 @@ fi
 (recentf-mode 1)
 (setq recentf-max-saved-items 2000)
 #+end_src
+
+#+begin_src emacs-lisp
+(savehist-mode 1)
+#+end_src
+
 ** Ratón en =xterm=
 El ratón también puede utilizarse en un =xterm=
 #+begin_src emacs-lisp
@@ -1542,6 +1915,159 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 #+end_src
 
 * Visualización
+
+** =spacious-padding=
+
+#+begin_src emacs-lisp
+(use-package spacious-padding
+  :ensure t
+  :defer 1
+  :config
+  (spacious-padding-mode 1))
+
+#+end_src
+
+** =hl-todo=
+
+
+#+begin_src emacs-lisp
+(use-package hl-todo
+  :ensure t
+  :defer 1
+  :config
+  (hl-todo-mode 1))
+
+#+end_src
+
+** =hl-todo-flycheck=
+
+#+begin_src lisp
+(use-package hl-todo-flycheck
+  :ensure t
+  :defer 5
+  :straight (:host github :repo "alvarogonzalezsotillo/hl-todo-flycheck")
+  :config
+  (hl-todo-flycheck-enable)
+)
+#+end_src
+
+
+** =vimish-fold=
+
+#+begin_src emacs-lisp
+(use-package vimish-fold
+  :ensure t
+  :defer 1
+  :bind
+  (("<C-return>" . vimish-fold-toggle)
+   ("<C-S-return>" . vimish-fold-from-marks)
+   ("<M-return>" . vimish-fold ))
+  :config
+   (vimish-fold-global-mode 1))
+   
+#+end_src
+
+
+
+** =origami=
+
+Desactivados los bindings, voy a usar vimish-fold
+
+   #+begin_src emacs-lisp
+
+(use-package origami
+  :defer 1
+  :ensure t
+  :config
+  (setq origami-show-fold-header nil)
+  (setq origami-fold-replacement "⤵⤵⤵")
+  (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified)
+  (set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
+
+  ;;:bind
+  ;;(("<C-return>" . origami-recursively-toggle-node))
+  ;;(("<C-S-return>" . origami-reset))
+  ;;(("<M-return>" . origami-close-all-nodes))
+
+  )
+
+   #+end_src
+
+
+** =sideline=
+
+#+begin_src emacs-lisp
+
+(use-package sideline-flycheck
+  :defer 1
+  :ensure t
+  :hook (flycheck-mode . sideline-flycheck-setup))
+
+(use-package sideline-blame
+  :defer 1
+  :ensure t )
+
+(use-package sideline
+  :defer 1
+  :ensure t
+  :init
+
+  :hook (flycheck-mode . sideline-mode)
+
+  :config
+  
+  (setq sideline-backends-right '((sideline-flycheck . up)))
+
+
+
+  (setq sideline-backends-skip-current-line t  ; don't display on current line
+        sideline-order-left 'down              ; or 'up
+        sideline-order-right 'up               ; or 'down
+        sideline-format-left "%s   "           ; format for left aligment
+        sideline-format-right "   %s"          ; format for right aligment
+        sideline-priority 100                  ; overlays' priority
+        sideline-display-backend-name nil))      ; display the backend name
+#+end_src
+
+#+RESULTS:
+| sideline-mode | sideline-flycheck-setup | rustic-flycheck-setup | flycheck-mode-set-explicitly |
+
+
+** Pantalla inicial (/dashboard/)
+#+begin_src emacs-lisp
+(use-package dashboard
+  :ensure t
+  :defer 1
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-startup-banner nil)  
+  (setq dashboard-items '((recents  . 0)
+                          (bookmarks . 0)
+                          (projects . 10)))
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)  
+  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+  )
+#+end_src
+
+#+RESULTS:
+: t
+
+
+
+
+** /wrap/ adaptativo
+
+#+begin_src emacs-lisp
+(use-package adaptive-wrap
+  :ensure t
+  :defer 1
+  )
+#+end_src
+
+#+RESULTS:
+: [nil 0 1 0 nil require (adaptive-wrap nil t) idle 0 nil]
+
 ** Código fuente
 
 #+begin_src emacs-lisp
@@ -1555,13 +2081,14 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
       (display-line-numbers-mode 1))
   (auto-highlight-symbol-mode 1)
   (electric-pair-local-mode 1)
-  (eldoc-box-hover-at-point-mode 1)
-  (yas-minor-mode 1)
+  (indent-bars-mode 1)
   (origami-mode 1))
-
 
   (add-hook 'prog-mode-hook 'ags/bonito-para-codigo)
 #+end_src
+
+#+RESULTS:
+| yas-minor-mode | ags/bonito-para-codigo | ags/company-backends-prog-mode-function |
 
 ** LaTeX
 #+begin_src emacs-lisp
@@ -1602,6 +2129,7 @@ Mi línea de estado (modeline)
                " | %IB %Z"
                " | %l:%c %p"
                ;;" | " '(:eval (format "Point:%d" (point)))
+               " | " '(:eval (breadcrumb-project-crumbs)) " / " '(:eval (breadcrumb-imenu-crumbs))
                mode-line-end-spaces
                ) )
 
@@ -1696,15 +2224,21 @@ Avoid performance issues in files with very long lines.
 =isearch= resalta las coincidencias con la búsqueda, pero se quitan al acabar de buscar. Con esto, las coincidencias quedan resaltadas hasta la siguiente búsqueda o hasta ejecutar =lazy-highlight-cleanup=
 #+begin_src emacs-lisp
 (setq lazy-highlight-cleanup nil)
+(setq isearch-lazy-highlight 'all-windows)
 (setq lazy-highlight-max-at-a-time nil)
 (setq lazy-highlight-initial-delay 0)
 #+end_src
 
 ** Cambiar el tamaño de fuente de todo /emacs/ (no solo el buffer actual)
 #+begin_src emacs-lisp
-(default-text-scale-mode 1)
-(setq frame-resize-pixelwise t)
+  (use-package default-text-scale
+    :ensure t
+    :config
+    (setq frame-resize-pixelwise t)
+    (default-text-scale-mode 1)
+    )
 #+end_src
+
 
 ** Respuestas de confirmación más cortas
 #+begin_src emacs-lisp
@@ -1755,27 +2289,30 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
 
 
 #+begin_src emacs-lisp
-(setq  custom-safe-themes  (quote
-                            (
-                             "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2"
-                             "d916b686ba9f23a46ee9620c967f6039ca4ea0e682c1b9219450acee80e10e40" 
-                             default)))
+(use-package emacs
+  :config
+  (setq  custom-safe-themes  (quote
+                              (
+                               "b53db91fd0153783f094a2d5480119824b008f158e07d6b84d22f8e6b063d6e2"
+                               "d916b686ba9f23a46ee9620c967f6039ca4ea0e682c1b9219450acee80e10e40" 
+                               default)))
 
-(defvar my-dark-theme 'my-tangotango)
-(defvar my-light-theme 'intellij)
+  (defvar my-dark-theme 'my-tangotango)
+  (defvar my-light-theme 'intellij)
 
 
-(defun ags/tema-claro()
-  (interactive)
-  (disable-theme my-dark-theme)
-  (load-theme my-light-theme t))
+  (defun ags/tema-claro()
+    (interactive)
+    (disable-theme my-dark-theme)
+    (load-theme my-light-theme t))
 
-(defun ags/tema-oscuro ()
-  (interactive)
-  (disable-theme my-light-theme)
-  (load-theme my-dark-theme t))
+  (defun ags/tema-oscuro ()
+    (interactive)
+    (disable-theme my-light-theme)
+    (load-theme my-dark-theme t))
 
-(run-with-idle-timer 2 nil #'ags/tema-oscuro)
+  (run-with-idle-timer 2 nil #'ags/tema-oscuro)
+  )
 #+end_src
 
 * OrgMode
@@ -1784,8 +2321,6 @@ Con estos cambios, se tienen en cuenta los formatos de orgmode en =electric-pair
 
 #+begin_src emacs-lisp
   (use-package org
-    :ensure t
-    :defer 1
     :config
     (modify-syntax-entry ?~ "(~" org-mode-syntax-table)
     (modify-syntax-entry ?= "(=" org-mode-syntax-table)
@@ -1799,19 +2334,26 @@ Mejores tamaños de encabezados
 
 #+begin_src emacs-lisp
   (use-package org
-    :ensure t
-    :defer 1
     :config
     (set-face-attribute 'org-level-1 nil :height 3.0)
     (set-face-attribute 'org-level-2 nil :height 2.0)
     (set-face-attribute 'org-level-3 nil :height 1.5)
     )
-#+end_src    
+#+end_src
+
+
+Imágenes tras evaluar
+#+begin_src emacs-lisp
+(use-package org
+  :config
+(add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
+#+end_src
+
+#+RESULTS:
+: t
 
 #+begin_src emacs-lisp
   (use-package org
-    :ensure t
-    :defer 1
     :config
 
     (use-package org-bullets
@@ -1831,6 +2373,7 @@ Mejores tamaños de encabezados
     (setq org-ellipsis "⤵⤵⤵")
     (set-face-attribute 'org-ellipsis nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
     (setq org-list-allow-alphabetical t)
+    (org-element-update-syntax)
     
     ;;(setq org-hide-emphasis-markers t)
 
@@ -1843,6 +2386,7 @@ Mejores tamaños de encabezados
     ;; https://stackoverflow.com/questions/40110927/how-to-export-a-reference-to-a-begin-src-block-to-latex/40689439#40689439
     (setq org-latex-prefer-user-labels t)
 
+    (setq org-image-actual-width '(400))
 
     ;; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
     (ignore-errors
@@ -1867,8 +2411,6 @@ Mejores tamaños de encabezados
       (defun ags/bonito-para-org()
         (interactive)
         (toggle-word-wrap 1)
-        (adaptive-wrap-prefix-mode 1)
-        (toggle-truncate-lines -1)
         ;;(indent-guide-mode 0)
         (if (>= emacs-major-version 26)
             (display-line-numbers-mode 0))
@@ -1888,10 +2430,6 @@ Mejores tamaños de encabezados
 ** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
-(use-package ob-ammonite
-  :ensure t
-  :defer 1)
-
 (use-package ob-typescript
   :ensure t
   :defer 1)
@@ -1899,8 +2437,6 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 (use-package ob-restclient
   :ensure t
   :defer 1)
-
-(require 'ob-js)
 
 (if
     (file-exists-p "/usr/share/plantuml/plantuml.jar")
@@ -1916,12 +2452,15 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
    (dot . t)
    (plantuml . t)
    (maxima . t)
-   (ammonite . t)
    (typescript . t)
    (js . t)
    (restclient . t )
    (shell . t)))
+
+(add-to-list 'org-babel-tangle-lang-exts '("js" . "js"))
 #+end_src
+
+#+RESULTS:
 
 
  Además, no pido confirmación para varios lenguajes                                                                                                           
@@ -1953,62 +2492,62 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 (use-package latex
   :ensure auctex
   :config
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq TeX-save-query nil)
-(setq TeX-PDF-mode t)
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq TeX-save-query nil)
+  (setq TeX-PDF-mode t)
 
-; Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
+  ;; Para que funcione correctamente el resaltado de sintaxis, hay que informar a Auctex de los entornos /verbatim/ utilizados:
 
-(setq LaTeX-verbatim-environments
-      '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql" "listadoshell" "listadojava"))
-
-
-(add-to-list 'auto-mode-alist '("\\.tex\\'" . latex-mode))
+  (setq LaTeX-verbatim-environments
+        '("verbatim" "verbatim*" "listadotxt" "PantallazoTexto" "listadosql" "listadoshell" "listadojava"))
 
 
-; Para imenu, defino una macro de Latex que no hace nada, pero que detecto en imenu.
-(add-to-list 'TeX-outline-extra '("imenu" 2))
-(add-to-list 'TeX-outline-extra '("imenu1" 1))
-(add-to-list 'TeX-outline-extra '("imenu2" 2))
-(add-to-list 'TeX-outline-extra '("imenu3" 3))
-(add-to-list 'TeX-outline-extra '("imenu4" 4))
-
-; En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
-(setq TeX-view-program-selection '((output-pdf "Okular")))
-(setq TeX-source-correlate-mode t)
-(add-hook 'latex-mode-hook 'TeX-source-correlate-mode)
-
-(setq TeX-source-correlate-start-server t)
+  (add-to-list 'auto-mode-alist '("\\.tex\\'" . latex-mode))
 
 
+  ;; Para imenu, defino una macro de Latex que no hace nada, pero que detecto en imenu.
+  (add-to-list 'TeX-outline-extra '("imenu" 2))
+  (add-to-list 'TeX-outline-extra '("imenu1" 1))
+  (add-to-list 'TeX-outline-extra '("imenu2" 2))
+  (add-to-list 'TeX-outline-extra '("imenu3" 3))
+  (add-to-list 'TeX-outline-extra '("imenu4" 4))
 
-; Modifico el comando Latex para incluir =-shell-escape=, de forma que Latex pueda arrancar programas de ayuda (por ejemplo, *Inkscape* para convertir SVG a PDF)
+  ;; En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
+  (setq TeX-view-program-selection '((output-pdf "Okular")))
+  (setq TeX-source-correlate-mode t)
+  (add-hook 'latex-mode-hook 'TeX-source-correlate-mode)
 
-(setq LaTeX-command-style
-   (quote (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
+  ;; Para que funcione con Okular, hay que sar tools -> Browse
+
+  (setq TeX-source-correlate-start-server t)
 
 
-; Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en el buffer de Emacs ([[https://www.gnu.org/software/auctex/manual/preview-latex.html][https://www.gnu.org/software/auctex/manual/preview-latex.html]])
 
-(eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t) )
-(eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
-(eval-after-load "preview"
-  '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{homeworkProblem}" t) )
+  ;; Modifico el comando Latex para incluir =-shell-escape=, de forma que Latex pueda arrancar programas de ayuda (por ejemplo, *Inkscape* para convertir SVG a PDF)
+  (setq LaTeX-command-style
+        (quote (("" "%(PDF)%(latex) %(file-line-error) -shell-escape %(extraopts) %S%(PDFout)"))))
 
-; Añadir XeLatex
-(eval-after-load "tex"
-  '(add-to-list 'TeX-command-list
-     		'("XeLaTeX" "xelatex -interaction=nonstopmode %s"
-		  TeX-run-command t t :help "Run xelatex") t))
 
-;; En =Termux= se necesita especificar la camino a la /shell/ para ejecutar comandos de /Latex/
-(if
+  ;; Se pueden previsualizar los entornos =tikzpicture= y =tabular= directamente en el buffer de Emacs ([[https://www.gnu.org/software/auctex/manual/preview-latex.html][https://www.gnu.org/software/auctex/manual/preview-latex.html]])
+  (eval-after-load "preview"
+    '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t) )
+  (eval-after-load "preview"
+    '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tabular}" t) )
+  (eval-after-load "preview"
+    '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{homeworkProblem}" t) )
+
+  ;; Añadir XeLatex
+  (eval-after-load "tex"
+    '(add-to-list 'TeX-command-list
+     		  '("XeLaTeX" "xelatex -interaction=nonstopmode %s"
+		    TeX-run-command t t :help "Run xelatex") t))
+
+  ;; En =Termux= se necesita especificar la camino a la /shell/ para ejecutar comandos de /Latex/
+  (if
       (file-exists-p "/data/data/com.termux/files/usr/bin/sh")
       (setq TeX-shell  "/data/data/com.termux/files/usr/bin/sh"))
-)
+  )
 #+END_SRC
 
 * Javascript
@@ -2018,7 +2557,16 @@ Añado a la lista de extensiones la de los módulos.
 (add-to-list 'auto-mode-alist '("\\.mjs\\'" . js2-mode))
    #+end_src
 
+* kotlin
 
+#+begin_src emacs-lisp
+(use-package kotlin-mode
+  :ensure t
+  :defer 1
+  )
+#+end_src
+
+   
 * Rust
 
 #+begin_src emacs-lisp
@@ -2027,59 +2575,25 @@ Añado a la lista de extensiones la de los módulos.
   :defer 1
   :config
   
-
-  ;; comment to disable rustfmt on save
-  (setq rustic-format-on-save t)
-  
-  )
-#+end_src
-
-* Eglot
-#+begin_src emacs-lisp
-
-(use-package yasnippet
-  :ensure t
-  :defer 1
-  :config
-  (yas-reload-all)
-)
-
-(use-package eglot
-  :ensure t
-  :defer 1
-  :after (yasnippet)
-  :config
-
-     (add-to-list 'eglot-server-programs '(rustic-mode . "rustup run stable rust-analyzer"))
-  )
-
-
-
-#+end_src
-
-* eldoc
-
-#+begin_src emacs-lisp
-(use-package eldoc-box
-  :ensure t
-  :defer 1
-  )
-
-
-#+end_src
-
-* LSP :noexport:
-#+begin_src emacs-lisp
-
-(use-package rustic
-  :after (lsp-mode)
-  :config
-
   ;; uncomment for less flashiness
   ;; (setq lsp-eldoc-hook nil)
   ;; (setq lsp-enable-symbol-highlighting nil)
   ;; (setq lsp-signature-auto-activate nil)
 
+  ;; comment to disable rustfmt on save
+  (setq rustic-format-on-save t)
+  
+  )
+
+#+end_src
+
+
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :ensure t
+  :defer 1
+  :commands lsp
+  :custom
   ;; what to use when checking on-save. "check" is default, I prefer clippy
   (lsp-rust-analyzer-cargo-watch-command "clippy")
   (lsp-eldoc-render-all nil)
@@ -2092,26 +2606,13 @@ Añado a la lista de extensiones la de los módulos.
   (lsp-rust-analyzer-display-closure-return-type-hints t)
   (lsp-rust-analyzer-display-parameter-hints t)
   (lsp-rust-analyzer-display-reborrow-hints t)
-
-  )
-
-#+end_src
-
-
-#+begin_src emacs-lisp
-(use-package lsp-mode
-  :ensure t
-  :defer 1
-  :commands lsp
-  :custom
   :config
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-  (push 'company-lsp company-backends)
+  (yas-reload-all)
   )
   
 
 (use-package lsp-ui
-  :after (lsp-mode)
   :ensure t
   :defer 1
   :commands lsp-ui-mode
@@ -2120,15 +2621,54 @@ Añado a la lista de extensiones la de los módulos.
   (lsp-ui-sideline-show-hover t)
   (lsp-ui-doc-enable nil))
 
-(use-package helm-lsp
-  :after (lsp-mode)
+(use-package yasnippet
   :ensure t
-  :defer 1)
+  :defer 1
+  :config
+  (yas-global-mode))
 
 
 #+end_src
 
-   
+* Zona de pruebas
+
+
+#+end_src
+
+
+#+begin_src lisp
+(use-package selection-highlight-mode
+  :straight (selection-highlight-mode :type git
+                                      :host github
+                                      :repo "balloneij/selection-highlight-mode")
+  :config (selection-highlight-mode))
+#+end_src
+
+
+
+#+begin_src emacs-lisp
+
+(use-package impatient-mode
+  :defer 1
+  :ensure t
+  :config 
+
+  (defun ags/org-buffer-to-html-string (buffer)
+    "Convierte el contenido del buffer Org actual a una cadena HTML."
+    (require 'ox-html) ;; Asegúrate de que el paquete ox-html esté cargado
+
+    ;; Configura las opciones de exportación según tus preferencias
+    (with-current-buffer buffer
+      (princ (org-export-string-as (buffer-string) 're-reveal t))
+      (princ "hola")))
+    
+
+
+  (add-to-list 'imp-default-user-filters '(org-mode . ags/org-buffer-to-html-string))
+  
+  )
+#+end_src
+
 * Opciones Latex para el PDF :noexport:
 # COLORES
 #+latex_header: \usepackage[usenames,dvipsnames]{color} % Required for custom colors
