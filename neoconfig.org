@@ -1815,6 +1815,17 @@ Necesario si una macro resulta interesante, para grabarla como una función
   (elmacro-mode-on))
 #+end_src
 * Navegación
+** =dev-docs=
+
+
+#+begin_src emacs-lisp
+(use-package devdocs
+  :ensure t
+  :defer 1)
+
+
+#+end_src
+
 ** =file-info=
 #+begin_src emacs-lisp
 (use-package file-info
@@ -2594,7 +2605,6 @@ Añado a la lista de extensiones la de los módulos.
   :config
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
   (yas-reload-all)
-  (add-hook 'prog-mode-hook #'yas-minor-mode)
   )
   
 
@@ -2609,7 +2619,10 @@ Añado a la lista de extensiones la de los módulos.
 
 (use-package yasnippet
   :ensure t
-  :defer 1)
+  :defer 1
+  :config
+  (yas-global-mode))
+
 
 #+end_src
 
