@@ -15,6 +15,7 @@ La última versión de esta configuración puede encontrarse en [[https://github
 
 
 * Compilación de emacs
+Las versiones de los sistemas operativos no suelen estar actualizadas. Mejor bajarse el repositorio git y compilarlo. Estos son los flags que uso:
 #+begin_src bash
 ./autogen.sh
 ./configure --with-native-compilation --with-xml2 --with-json --with-tree-sitter --with-rsvg
@@ -759,6 +760,13 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 #+begin_src emacs-lisp
 
+  (use-package openwith
+    :ensure t
+    :defer 1
+    :config
+    (openwith-mode t)
+    (setq openwith-associations '(("\\.pdf\\'" "okular" (file)))))
+
   (use-package dired-aux
     :config
     ;; Default action to open any file
@@ -941,11 +949,19 @@ Estoy usando =treemacs= en vez de =neotree=.
     (interactive)
     (if (eq (treemacs-current-visibility) 'visible)
         (delete-window (treemacs-get-local-window))
-      (treemacs-add-and-display-current-project-exclusively)))
+      (let (filename (buffer-file-name))
+        
+        (treemacs-add-and-display-current-project-exclusively)
+        (when filename
+          (treemacs-find-file filename)
+          )
+        )
+      ))
   
   (add-hook 'treemacs-mode-hook #'ags/hacer-treemacs-resizable)
   (setq treemacs-silent-refresh t)
   (treemacs-git-mode -1)
+  (treemacs-follow-mode 1)
   
   (ags/cambiar-faces-de-treemacs)
   
@@ -1089,8 +1105,8 @@ Marcar las ocurrencias de la selección
 
 
 ** =breadcrumb-mode=
-Marcar las ocurrencias de la selección
-#+begin_src emacs-lisp
+Marcar las ocurrencias de la selección. Lo quito porque salen mensajes de error.
+#+begin_src lisp
   (use-package breadcrumb
     :ensure t
     :straight (:host github :repo "joaotavora/breadcrumb")
@@ -1820,6 +1836,36 @@ Necesario si una macro resulta interesante, para grabarla como una función
 : t
 
 * Navegación
+** =tree-sitter=
+Puede que sea una buena idea, pero de momento no le saco partido.
+
+#+begin_src lisp
+(setq treesit-language-source-alist
+   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+     (cmake "https://github.com/uyha/tree-sitter-cmake")
+     (css "https://github.com/tree-sitter/tree-sitter-css")
+     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+     (go "https://github.com/tree-sitter/tree-sitter-go")
+     (html "https://github.com/tree-sitter/tree-sitter-html")
+     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+     (json "https://github.com/tree-sitter/tree-sitter-json")
+     (make "https://github.com/alemuller/tree-sitter-make")
+     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+     (python "https://github.com/tree-sitter/tree-sitter-python")
+     (toml "https://github.com/tree-sitter/tree-sitter-toml")
+     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+
+(add-to-list 'treesit-language-source-alist '(kotlin . ("https://github.com/fwcd/tree-sitter-kotlin")))
+
+(use-package treesit-auto
+  :demand t
+  :ensure t
+  :config
+  (global-treesit-auto-mode))
+#+end_src
+
 ** =dev-docs=
 
 
@@ -1853,12 +1899,27 @@ Necesario si una macro resulta interesante, para grabarla como una función
   (setq tramp-inline-compress-start-size 1000)
   (setq tramp-copy-size-limit 10000)
   (setq vc-handled-backends '(Git))
+  (setq tramp-auto-save-directory "/tmp")
+  (setq tramp-allow-unsafe-temporary-files t)
   (setq tramp-verbose 1)
   (setq tramp-default-method "scp")
   (setq tramp-use-ssh-controlmaster-options nil)
   (setq projectile--mode-line "Projectile")
   (setq tramp-verbose 1)
   (setq tramp-connection-timeout 10))
+
+(defun ags/tramp-wait-for-regexp (original-function &rest args)
+  ;; If TIMEOUT is nil, then set it to 5 seconds
+  ;; Original args are: proc timeout regexp
+  (let ( (proc (nth 0 args))
+         (timeout (or (nth 1 args) 10 ) )
+         (regexp) (nth 2 args) )
+    (message "AGS: timeout was %d, now %d" (nth 1 args) timeout)
+    (funcall original-function proc timeout regexp)))
+
+
+;;(advice-add #'tramp-wait-for-regexp :around #'ags/tramp-wait-for-regexp)
+;;(advice-remove #'tramp-wait-for-regexp #'ags/tramp-wait-for-regexp)
 
 #+end_src
 
@@ -1953,15 +2014,15 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 
 
 ** =vimish-fold=
-
-#+begin_src emacs-lisp
+No me acaba de gustar, vuelvo a origami
+#+begin_src lisp
 (use-package vimish-fold
   :ensure t
   :defer 1
-  :bind
-  (("<C-return>" . vimish-fold-toggle)
-   ("<C-S-return>" . vimish-fold-from-marks)
-   ("<M-return>" . vimish-fold ))
+  ;; :bind
+  ;; (("<C-return>" . vimish-fold-toggle)
+  ;;  ("<C-S-return>" . vimish-fold-from-marks)
+  ;;  ("<M-return>" . vimish-fold ))
   :config
    (vimish-fold-global-mode 1))
    
@@ -1984,10 +2045,10 @@ Desactivados los bindings, voy a usar vimish-fold
   (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified)
   (set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
 
-  ;;:bind
-  ;;(("<C-return>" . origami-recursively-toggle-node))
-  ;;(("<C-S-return>" . origami-reset))
-  ;;(("<M-return>" . origami-close-all-nodes))
+  :bind
+  (("<C-return>" . origami-recursively-toggle-node))
+  (("<C-S-return>" . origami-reset))
+  (("<M-return>" . origami-close-all-nodes))
 
   )
 
@@ -2129,7 +2190,7 @@ Mi línea de estado (modeline)
                " | %IB %Z"
                " | %l:%c %p"
                ;;" | " '(:eval (format "Point:%d" (point)))
-               " | " '(:eval (breadcrumb-project-crumbs)) " / " '(:eval (breadcrumb-imenu-crumbs))
+               ;;" | " '(:eval (breadcrumb-project-crumbs)) " / " '(:eval (breadcrumb-imenu-crumbs))
                mode-line-end-spaces
                ) )
 
@@ -2349,8 +2410,6 @@ Imágenes tras evaluar
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
 #+end_src
 
-#+RESULTS:
-: t
 
 #+begin_src emacs-lisp
   (use-package org
@@ -2391,7 +2450,6 @@ Imágenes tras evaluar
     ;; Desde la versión 9 de orgmode, los templates rápidos no están activados por defecto si no se carga org-tempo
     (ignore-errors
       (require 'org-tempo)
-
       ;; si no existe org-tempo no se llega aquí, lo cual está bien porque lo siguiente solo hay que hacerlo para org-tempo
       (setq org-structure-template-alist 
             '(("n" . "notes")
@@ -2405,7 +2463,6 @@ Imágenes tras evaluar
               ("q" . "quote")
               ("s" . "src")
               ("v" . "verse")))
-
       )
 
       (defun ags/bonito-para-org()
@@ -2627,8 +2684,29 @@ Añado a la lista de extensiones la de los módulos.
   :config
   (yas-global-mode))
 
+(use-package yasnippet-snippets
+  :ensure t
+  :defer 1)
+
 
 #+end_src
+
+
+
+
+
+* Mastodon
+#+begin_src emacs-lisp
+
+(use-package mastodon
+  :ensure t
+  :config
+  (setq mastodon-instance-url "https://fosstodon.org"
+        mastodon-active-user "@alvarogonzalezsotillo"))
+#+end_src
+
+#+RESULTS:
+: t
 
 * Zona de pruebas
 

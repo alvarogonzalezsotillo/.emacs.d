@@ -587,10 +587,9 @@ EOF
 #+begin_src bash :results output verbatim
 sshpass -p p7TaowMYrmu23Ol8hiZh9UvD0O9hpx8d ssh bandit25@bandit.labs.overthewire.org -p 2220 <<EOF
 ls -la
-#cat bandit26.sshkey
+cat bandit26.sshkey
 cat /usr/bin/showtext
 grep bandit26 /etc/passwd
-ssh -o StrictHostKeyChecking=no -i bandit26.sshkey bandit26@localhost -p 2220
 
 EOF
 #+end_src
@@ -598,14 +597,41 @@ EOF
 #+RESULTS:
 #+begin_example
 total 32
-drwxr-xr-x  2 root     root     4096 Feb 21 22:03 .
-drwxr-xr-x 70 root     root     4096 Feb 21 22:04 ..
--rw-r-----  1 bandit25 bandit25   33 Feb 21 22:03 .bandit24.password
+drwxr-xr-x  2 root     root     4096 Oct  5 06:19 .
+drwxr-xr-x 70 root     root     4096 Oct  5 06:20 ..
+-rw-r-----  1 bandit25 bandit25   33 Oct  5 06:19 .bandit24.password
 -rw-r--r--  1 root     root      220 Jan  6  2022 .bash_logout
 -rw-r--r--  1 root     root     3771 Jan  6  2022 .bashrc
--rw-r-----  1 bandit25 bandit25    4 Feb 21 22:03 .pin
+-rw-r-----  1 bandit25 bandit25    4 Oct  5 06:19 .pin
 -rw-r--r--  1 root     root      807 Jan  6  2022 .profile
--r--------  1 bandit25 bandit25 1679 Feb 21 22:03 bandit26.sshkey
+-r--------  1 bandit25 bandit25 1679 Oct  5 06:19 bandit26.sshkey
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpQIBAAKCAQEApis2AuoooEqeYWamtwX2k5z9uU1Afl2F8VyXQqbv/LTrIwdW
+pTfaeRHXzr0Y0a5Oe3GB/+W2+PReif+bPZlzTY1XFwpk+DiHk1kmL0moEW8HJuT9
+/5XbnpjSzn0eEAfFax2OcopjrzVqdBJQerkj0puv3UXY07AskgkyD5XepwGAlJOG
+xZsMq1oZqQ0W29aBtfykuGie2bxroRjuAPrYM4o3MMmtlNE5fC4G9Ihq0eq73MDi
+1ze6d2jIGce873qxn308BA2qhRPJNEbnPev5gI+5tU+UxebW8KLbk0EhoXB953Ix
+3lgOIrT9Y6skRjsMSFmC6WN/O7ovu8QzGqxdywIDAQABAoIBAAaXoETtVT9GtpHW
+qLaKHgYtLEO1tOFOhInWyolyZgL4inuRRva3CIvVEWK6TcnDyIlNL4MfcerehwGi
+il4fQFvLR7E6UFcopvhJiSJHIcvPQ9FfNFR3dYcNOQ/IFvE73bEqMwSISPwiel6w
+e1DjF3C7jHaS1s9PJfWFN982aublL/yLbJP+ou3ifdljS7QzjWZA8NRiMwmBGPIh
+Yq8weR3jIVQl3ndEYxO7Cr/wXXebZwlP6CPZb67rBy0jg+366mxQbDZIwZYEaUME
+zY5izFclr/kKj4s7NTRkC76Yx+rTNP5+BX+JT+rgz5aoQq8ghMw43NYwxjXym/MX
+c8X8g0ECgYEA1crBUAR1gSkM+5mGjjoFLJKrFP+IhUHFh25qGI4Dcxxh1f3M53le
+wF1rkp5SJnHRFm9IW3gM1JoF0PQxI5aXHRGHphwPeKnsQ/xQBRWCeYpqTme9amJV
+tD3aDHkpIhYxkNxqol5gDCAt6tdFSxqPaNfdfsfaAOXiKGrQESUjIBcCgYEAxvmI
+2ROJsBXaiM4Iyg9hUpjZIn8TW2UlH76pojFG6/KBd1NcnW3fu0ZUU790wAu7QbbU
+i7pieeqCqSYcZsmkhnOvbdx54A6NNCR2btc+si6pDOe1jdsGdXISDRHFb9QxjZCj
+6xzWMNvb5n1yUb9w9nfN1PZzATfUsOV+Fy8CbG0CgYEAifkTLwfhqZyLk2huTSWm
+pzB0ltWfDpj22MNqVzR3h3d+sHLeJVjPzIe9396rF8KGdNsWsGlWpnJMZKDjgZsz
+JQBmMc6UMYRARVP1dIKANN4eY0FSHfEebHcqXLho0mXOUTXe37DWfZza5V9Oify3
+JquBd8uUptW1Ue41H4t/ErsCgYEArc5FYtF1QXIlfcDz3oUGz16itUZpgzlb71nd
+1cbTm8EupCwWR5I1j+IEQU+JTUQyI1nwWcnKwZI+5kBbKNJUu/mLsRyY/UXYxEZh
+ibrNklm94373kV1US/0DlZUDcQba7jz9Yp/C3dT/RlwoIw5mP3UxQCizFspNKOSe
+euPeaxUCgYEAntklXwBbokgdDup/u/3ms5Lb/bm22zDOCg2HrlWQCqKEkWkAO6R5
+/Wwyqhp/wTl8VXjxWo+W+DmewGdPHGQQ5fFdqgpuQpGUq24YZS8m66v5ANBwd76t
+IZdtF5HXs2S5CADTwniUS5mX1HO9l5gUkk+h0cH5JnPtsMCnAUM+BRY=
+-----END RSA PRIVATE KEY-----
 #!/bin/sh
 
 export TERM=linux
@@ -613,15 +639,205 @@ export TERM=linux
 exec more ~/text.txt
 exit 0
 bandit26:x:11026:11026:bandit level 26:/home/bandit26:/usr/bin/showtext
-
-::::::::::::::
-/home/bandit26/text.txt
-::::::::::::::
-  _                     _ _ _   ___   __  
- | |                   | (_) | |__ \ / /  
- | |__   __ _ _ __   __| |_| |_   ) / /_  
- | '_ \ / _` | '_ \ / _` | | __| / / '_ \ 
- | |_) | (_| | | | | (_| | | |_ / /| (_) |
- |_.__/ \__,_|_| |_|\__,_|_|\__|____\___/ 
 #+end_example
 
+* Level 26
+
+#+begin_src bash :results output verbatim
+cat <<EOF > bandit26.sshkey
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpQIBAAKCAQEApis2AuoooEqeYWamtwX2k5z9uU1Afl2F8VyXQqbv/LTrIwdW
+pTfaeRHXzr0Y0a5Oe3GB/+W2+PReif+bPZlzTY1XFwpk+DiHk1kmL0moEW8HJuT9
+/5XbnpjSzn0eEAfFax2OcopjrzVqdBJQerkj0puv3UXY07AskgkyD5XepwGAlJOG
+xZsMq1oZqQ0W29aBtfykuGie2bxroRjuAPrYM4o3MMmtlNE5fC4G9Ihq0eq73MDi
+1ze6d2jIGce873qxn308BA2qhRPJNEbnPev5gI+5tU+UxebW8KLbk0EhoXB953Ix
+3lgOIrT9Y6skRjsMSFmC6WN/O7ovu8QzGqxdywIDAQABAoIBAAaXoETtVT9GtpHW
+qLaKHgYtLEO1tOFOhInWyolyZgL4inuRRva3CIvVEWK6TcnDyIlNL4MfcerehwGi
+il4fQFvLR7E6UFcopvhJiSJHIcvPQ9FfNFR3dYcNOQ/IFvE73bEqMwSISPwiel6w
+e1DjF3C7jHaS1s9PJfWFN982aublL/yLbJP+ou3ifdljS7QzjWZA8NRiMwmBGPIh
+Yq8weR3jIVQl3ndEYxO7Cr/wXXebZwlP6CPZb67rBy0jg+366mxQbDZIwZYEaUME
+zY5izFclr/kKj4s7NTRkC76Yx+rTNP5+BX+JT+rgz5aoQq8ghMw43NYwxjXym/MX
+c8X8g0ECgYEA1crBUAR1gSkM+5mGjjoFLJKrFP+IhUHFh25qGI4Dcxxh1f3M53le
+wF1rkp5SJnHRFm9IW3gM1JoF0PQxI5aXHRGHphwPeKnsQ/xQBRWCeYpqTme9amJV
+tD3aDHkpIhYxkNxqol5gDCAt6tdFSxqPaNfdfsfaAOXiKGrQESUjIBcCgYEAxvmI
+2ROJsBXaiM4Iyg9hUpjZIn8TW2UlH76pojFG6/KBd1NcnW3fu0ZUU790wAu7QbbU
+i7pieeqCqSYcZsmkhnOvbdx54A6NNCR2btc+si6pDOe1jdsGdXISDRHFb9QxjZCj
+6xzWMNvb5n1yUb9w9nfN1PZzATfUsOV+Fy8CbG0CgYEAifkTLwfhqZyLk2huTSWm
+pzB0ltWfDpj22MNqVzR3h3d+sHLeJVjPzIe9396rF8KGdNsWsGlWpnJMZKDjgZsz
+JQBmMc6UMYRARVP1dIKANN4eY0FSHfEebHcqXLho0mXOUTXe37DWfZza5V9Oify3
+JquBd8uUptW1Ue41H4t/ErsCgYEArc5FYtF1QXIlfcDz3oUGz16itUZpgzlb71nd
+1cbTm8EupCwWR5I1j+IEQU+JTUQyI1nwWcnKwZI+5kBbKNJUu/mLsRyY/UXYxEZh
+ibrNklm94373kV1US/0DlZUDcQba7jz9Yp/C3dT/RlwoIw5mP3UxQCizFspNKOSe
+euPeaxUCgYEAntklXwBbokgdDup/u/3ms5Lb/bm22zDOCg2HrlWQCqKEkWkAO6R5
+/Wwyqhp/wTl8VXjxWo+W+DmewGdPHGQQ5fFdqgpuQpGUq24YZS8m66v5ANBwd76t
+IZdtF5HXs2S5CADTwniUS5mX1HO9l5gUkk+h0cH5JnPtsMCnAUM+BRY=
+-----END RSA PRIVATE KEY-----
+EOF
+chmod 500 bandit26.sshkey
+ssh -o StrictHostKeyChecking=no -i bandit26.sshkey bandit26@bandit.labs.overthewire.org -p 2220 /bin/bash <<EOF
+Usar un terminal pequeño
+En more, tecla v para editar con vim
+En vim, cambiar la shell a /bin/bash
+:set shell=/bin/bash
+:! bash
+EOF
+
+#+end_src
+
+Con la shell del 26:
+#+begin_src bash
+./bandit27-do  cat /etc/bandit_pass/*
+#+end_src
+
+#+begin_results
+YnQpBuifNMas1hcUFk70ZmqkhUU2EuaS
+#+end_results
+
+* Level 27
+#+begin_src bash :results output verbatim
+sshpass -p YnQpBuifNMas1hcUFk70ZmqkhUU2EuaS git clone ssh://bandit27-git@bandit.labs.overthewire.org:2220/home/bandit27-git/repo
+cat repo/*
+#+end_src
+
+#+RESULTS:
+: total 20
+: drwxr-xr-x  2 root root 4096 Oct  5 06:19 .
+: drwxr-xr-x 70 root root 4096 Oct  5 06:20 ..
+: -rw-r--r--  1 root root  220 Jan  6  2022 .bash_logout
+: -rw-r--r--  1 root root 3771 Jan  6  2022 .bashrc
+: -rw-r--r--  1 root root  807 Jan  6  2022 .profile
+: The password to the next level is: AVanL161y9rsbcJIsFHuw35rjaOM19nR
+
+
+* Level 28
+
+#+begin_src bash :results output verbatim
+sshpass -p AVanL161y9rsbcJIsFHuw35rjaOM19nR ssh bandit28@bandit.labs.overthewire.org -p 2220 <<EOF
+ls -la
+EOF
+#+end_src
+
+#+begin_src bash :results output verbatim
+rm -r repo
+sshpass -p AVanL161y9rsbcJIsFHuw35rjaOM19nR git clone ssh://bandit28-git@bandit.labs.overthewire.org:2220/home/bandit28-git/repo
+cat repo/*
+#+end_src
+
+#+RESULTS:
+: # Bandit Notes
+: Some notes for level29 of bandit.
+: 
+: ## credentials
+: 
+: - username: bandit29
+: - password: xxxxxxxxxx
+: 
+
+Hay que usar la historia del git
+* Level 29
+#+begin_src bash :results output verbatim
+rm -r repo
+sshpass -p tQKvmcwNYcFS6vmPHIUSI3ShmsrQZK8S git clone ssh://bandit29-git@bandit.labs.overthewire.org:2220/home/bandit29-git/repo
+cat repo/*
+#+end_src
+
+#+RESULTS:
+: # Bandit Notes
+: Some notes for bandit30 of bandit.
+: 
+: ## credentials
+: 
+: - username: bandit30
+: - password: <no passwords in production!>
+: 
+
+Hay que usar la historia del git
+
+xbhV3HpNGlTIdnjUrdAlPzc2L6y9EOnS
+
+* Level 30
+#+begin_src bash :results output verbatim
+rm -r repo
+sshpass -p xbhV3HpNGlTIdnjUrdAlPzc2L6y9EOnS git clone ssh://bandit30-git@bandit.labs.overthewire.org:2220/home/bandit30-git/repo
+cat repo/*
+pushd repo
+sshpass -p xbhV3HpNGlTIdnjUrdAlPzc2L6y9EOnS git fetch --tags origin
+git show secret
+popd
+#+end_src
+
+#+RESULTS:
+: just an epmty file... muahaha
+: ~/.emacs.d/repo ~/.emacs.d
+: OoffzGDlzhAlerFJ2cAiz1D41JW1Mhmt
+: ~/.emacs.d
+
+* Level 31
+#+begin_src bash :results output verbatim
+rm -r repo
+sshpass -p OoffzGDlzhAlerFJ2cAiz1D41JW1Mhmt git clone ssh://bandit31-git@bandit.labs.overthewire.org:2220/home/bandit31-git/repo
+pushd repo
+sshpass -p OoffzGDlzhAlerFJ2cAiz1D41JW1Mhmt git fetch --tags origin
+git log
+popd
+cat repo/*
+pushd repo
+echo "May I come in?" > key.txt
+git add -f key.txt
+git commit -m "May I come in?"
+sshpass -p OoffzGDlzhAlerFJ2cAiz1D41JW1Mhmt git push origin master
+#+end_src
+
+#+RESULTS:
+#+begin_example
+~/.emacs.d/repo ~/.emacs.d
+commit 12c8b5c836110b00471d51a3d59bfb5efc1d8020
+Author: Ben Dover <noone@overthewire.org>
+Date:   Thu Oct 5 06:19:47 2023 +0000
+
+    initial commit
+~/.emacs.d
+This time your task is to push a file to the remote repository.
+
+Details:
+    File name: key.txt
+    Content: 'May I come in?'
+    Branch: master
+
+~/.emacs.d/repo ~/.emacs.d
+[master 93e1235] May I come in?
+ 1 file changed, 1 insertion(+)
+ create mode 100644 key.txt
+
+ rmCBvG56y58BXzv98yZGdO7ATVL5dW8y
+#+end_example
+
+* Level 32
+#+begin_src bash :results output verbatim
+sshpass -p rmCBvG56y58BXzv98yZGdO7ATVL5dW8y ssh bandit32@bandit.labs.overthewire.org -p 2220 <<EOF
+\$0 # por alguna razón no funciona así, tiene que ser interactivo
+cat /etc/bandit_pass/bandit33
+EOF
+#+end_src
+
+#+RESULTS:
+: WELCOME TO THE UPPERCASE SHELL
+: >> >> >>
+: odHo63fHiFqcWWJG9rLiLDtPm45KzUKy
+
+* Level 33
+#+begin_src bash :results output verbatim
+sshpass -p odHo63fHiFqcWWJG9rLiLDtPm45KzUKy ssh bandit33@bandit.labs.overthewire.org -p 2220 <<EOF
+cat *
+EOF
+#+end_src
+
+#+RESULTS:
+: Congratulations on solving the last level of this game!
+: 
+: At this moment, there are no more levels to play in this game. However, we are constantly working
+: on new levels and will most likely expand this game with more levels soon.
+: Keep an eye out for an announcement on our usual communication channels!
+: In the meantime, you could play some of our other wargames.
+: 
+: If you have an idea for an awesome new level, please let us know!
