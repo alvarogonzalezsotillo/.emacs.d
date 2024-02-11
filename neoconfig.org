@@ -1533,7 +1533,6 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
     (defvar ags/company-backends-tex-mode
       '((company-capf :with
-                      company-auctex
                       company-files
                       company-dabbrev
                       company-keywords
@@ -1588,6 +1587,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     :ensure t
     :defer 1
     :config)
+
 
   (use-package company-c-headers
     :ensure t
@@ -2546,6 +2546,11 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 * Latex 
 
 #+begin_src emacs-lisp
+
+(use-package magic-latex-buffer
+  :ensure t
+  :defer 1)
+
 (use-package latex
   :ensure auctex
   :config
@@ -2705,8 +2710,6 @@ Añado a la lista de extensiones la de los módulos.
         mastodon-active-user "@alvarogonzalezsotillo"))
 #+end_src
 
-#+RESULTS:
-: t
 
 * Zona de pruebas
 
