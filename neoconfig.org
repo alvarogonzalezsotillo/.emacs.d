@@ -2482,10 +2482,10 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 
   ;; Para imenu, defino una macro de Latex que no hace nada, pero que detecto en imenu.
   (add-to-list 'TeX-outline-extra '("imenu" 2))
-  (add-to-list 'TeX-outline-extra '("imenu1" 1))
-  (add-to-list 'TeX-outline-extra '("imenu2" 2))
-  (add-to-list 'TeX-outline-extra '("imenu3" 3))
-  (add-to-list 'TeX-outline-extra '("imenu4" 4))
+  (add-to-list 'TeX-outline-extra '("imenuone" 1))
+  (add-to-list 'TeX-outline-extra '("imenutwo" 2))
+  (add-to-list 'TeX-outline-extra '("imenuthree" 3))
+  (add-to-list 'TeX-outline-extra '("imenufour" 4))
 
   ;; En Ubuntu, Evince puede sincronizarse con Emacs para saber a qué parte de código corresponde una parte del PDF y viceversa
   (setq TeX-view-program-selection '((output-pdf "Okular")))
