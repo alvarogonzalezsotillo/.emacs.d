@@ -1020,7 +1020,8 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
     :ensure t
     :config
       (setq ahs-idle-interval 3.0)
-      (setq ahs-default-range 'ahs-range-display))
+      (setq ahs-default-range 'ahs-range-display)
+      (global-auto-highlight-symbol-mode))
 #+end_src
 
 
@@ -1168,6 +1169,9 @@ Intento de colocar la ventana de helm siempre abajo
 
 #+end_src
 
+#+begin_src emacs-lisp
+(add-to-list 'helm-commands-using-frame #'helm-M-x)
+#+end_src
 
 
 
@@ -1310,6 +1314,11 @@ Emacs tiene algunos compandos considerados confusos deshabilitados. Hay opciones
 
 
 * Navegación
+
+#+begin_src emacs-lisp
+(use-package flx
+  :ensure t)
+#+end_src
 
 #+begin_src emacs-lisp
 (use-package deadgrep
@@ -1512,7 +1521,6 @@ Avoid performance issues in files with very long lines.
   :config
   (add-hook 'prog-mode-hook #'region-occurrences-highlighter-mode)
   (add-hook 'org-mode-hook #'region-occurrences-highlighter-mode)
-
   (add-hook 'text-mode-hook #'region-occurrences-highlighter-mode)
 
   (define-key region-occurrences-highlighter-nav-mode-map "\M-n" 'region-occurrences-highlighter-next)
@@ -1570,8 +1578,13 @@ Marca errores en el fichero
   :config
     (with-eval-after-load 'flycheck
       (add-hook 'flycheck-mode-hook #'turn-on-flycheck-inline))
+    (add-hook 'after-init-hook #'global-flycheck-mode)
+
 )
 #+end_src
+
+#+RESULTS:
+: t
 
 ** /scroll/
 El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminales modo texto que costaba refrescar. Con los ordenadores actuales, mejor un /scroll/ suave
@@ -2063,13 +2076,26 @@ ag --nofilename --nonumbers --silent -o "^[[:space:]]*(\;+[[:space:]]+|\#+[[:spa
   :ensure t
   :defer 1
   :config
-  (setq magit-todos-scanner 'magit-todos--scan-with-git-grep)
-  (setq magit-todos-auto-group-items 'always)
-  (setq magit-todos-exclude-globs '(".git/" "common/reveal.js*" "**/jquery-ui*" "**/qrcode.sty" "common/mathjax/" "themes/alvaro/resources/"))
+  (setq   magit-todos-scanner 'magit-todos--scan-with-git-grep)
+  (setq  magit-todos-auto-group-items 'always)
+  (setq  magit-todos-exclude-globs
+         '(
+           ".git/"
+           "common/reveal.js*"
+           "**/jquery-ui*"
+           "**/qrcode.sty"
+           "common/mathjax/"
+           "site.educa.madrid.org/ies.alonsodeavellan.alcala/"
+           "themes/alvaro/resources/"
+           "**/reveal.js*"))
 
   (magit-todos-mode 1))
 
 #+end_src
+
+#+RESULTS:
+: t
+
 * =vdiff-magit=
 #+begin_src emacs-lisp
   (use-package vdiff-magit
@@ -2354,9 +2380,20 @@ No lo uso mucho, quizás si cambio el nombre autogenerado sea más útil.
 
 
 * Apariencia
+** =image-popup=
+
+#+begin_src emacs-lisp
+(use-package image-popup
+  :ensure t
+  :straight (image-popup :type git :host gitlab :repo "OlMon/image-popup" :branch "master"))
+
+#+end_src
+
+#+RESULTS:
+
 ** =mode-icons=
 Cambia la descripción del modo por un icono en la modeline
-   #+begin_src lisp
+   #+begin_src emacs-lisp
 (use-package mode-icons
   :defer 1
   :ensure t
@@ -2365,7 +2402,6 @@ Cambia la descripción del modo por un icono en la modeline
 )
    #+end_src
 
-   #+RESULTS:
 
 ** =origami=
 
@@ -2458,8 +2494,10 @@ Reduzco el tamaño de todas las fuentes de =imenu=
 ** /Modeline/, =mini-frame= y =feebleline=
 Mi línea de estado (modeline)
 #+begin_src emacs-lisp
-(setq my-mode-line-format
+(setq my/mode-line-format
               (list
+               " "
+               '(:eval (propertize "[☰]" 'local-map (make-mode-line-mouse-map 'mouse-1 'menu-bar-open)))
                " "
                mode-line-modified
                " %[" mode-line-buffer-identification " %] "
@@ -2471,8 +2509,11 @@ Mi línea de estado (modeline)
                mode-line-end-spaces
                ) )
 
-(setq-default mode-line-format my-mode-line-format)
+(setq-default mode-line-format my/mode-line-format)
 #+end_src
+
+#+RESULTS:
+|   | (:eval (propertize [☰] 'local-map (make-mode-line-mouse-map 'mouse-1 'menu-bar-open))) |   | ((:eval (mode-icons--read-only-status)) (:eval (mode-icons--modified-status))) | %[ | (%12b) | %] |   |   | (vc-mode vc-mode) |   | %m %n |   | %IB %Z |   | %l:%c %p | (:eval (unless (display-graphic-p) -%-)) |
 
 
 Pone en lo alto el minibuffer. No sé si me gusta, funciona algo raro, y lo mismo no va bien con =febbleline= y =mini-modeline=.
@@ -2507,7 +2548,7 @@ Prefiero =mini-modeline= para quitar la modeline.
   :defer 10
   :config
   (setq mini-modeline-enhance-visual t)
-  (setq mini-modeline-r-format my-mode-line-format)
+  (setq mini-modeline-r-format my//mode-line-format)
   (my-centaur-tabs-font-sizes 100)
   (mini-modeline-mode t))
 #+end_src
@@ -2518,9 +2559,9 @@ Cursor como barra vertical
 #+begin_src emacs-lisp
 (set-default 'cursor-type 'bar)
 (set-default 'cursor-in-non-selected-windows 'hollow)
-(defun my/change-cursor-when-overwrite ()
+(defun my-change-cursor-when-overwrite ()
   (setq cursor-type (if overwrite-mode 'box 'bar)))
-(add-hook 'overwrite-mode-hook #'my/change-cursor-when-overwrite)
+(add-hook 'overwrite-mode-hook #'my-change-cursor-when-overwrite)
 (blink-cursor-mode 1)
 (setq blink-cursor-blinks 0)
 #+end_src
@@ -2762,7 +2803,7 @@ https://github.com/elarkasi/raspi-kms
 
 
 
-
+#+begin_src emacs-lisp
 (use-package tree-sitter-langs
   :ensure t)
 (use-package tree-sitter
@@ -2771,7 +2812,9 @@ https://github.com/elarkasi/raspi-kms
   (require 'tree-sitter-langs)
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-(provide 'treesitter-rcp)
+
+#+end_src
+  
 
 vi-tilde-fringe
 
