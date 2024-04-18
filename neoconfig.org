@@ -1,6 +1,3 @@
-https://www.shadertoy.com/view/Xds3zN
-https://www.shadertoy.com/playlist/43cXRl
-
 #+TITLE: Configuración Emacs
 #+author: Álvaro González (@alvarogonzalez)
 #+OPTIONS: toc:2 h:4 author:t
@@ -761,17 +758,18 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 #+begin_src emacs-lisp
 
-  (use-package openwith
-    :ensure t
-    :defer 1
-    :config
-    (openwith-mode t)
-    (setq openwith-associations '(("\\.pdf\\'" "okular" (file)))))
+    (use-package openwith
+      :ensure t
+      :defer 1
+      :config
+      (openwith-mode t)
+      (setq openwith-associations '(("\\.pdf\\'" "okular" (file)))))
 
-  (use-package dired-aux
-    :config
-    ;; Default action to open any file
-    (add-to-list 'dired-guess-shell-alist-default ' ("\\.pdf\\'" "okular") t))
+    (use-package dired-aux
+      :config
+      ;; Default action to open any file
+      (when (boundp 'dired-guess-shell-alist-default)
+        (add-to-list 'dired-guess-shell-alist-default ' ("\\.pdf\\'" "okular") t)))
 
     (use-package dired-x)
 
