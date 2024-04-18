@@ -2494,26 +2494,29 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
   :ensure t
   :defer 1)
 
-(if
-    (file-exists-p "/usr/share/plantuml/plantuml.jar")
-    (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar")
-  (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.1.2018.11.jar")))
+(use-package emacs
+  :config
+  (if
+      (file-exists-p "/usr/share/plantuml/plantuml.jar")
+      (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar")
+    (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.1.2018.11.jar")))
 
-(setq plantuml-jar-path org-plantuml-jar-path)
+  (setq plantuml-jar-path org-plantuml-jar-path)
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '(
-   (C . t )
-   (dot . t)
-   (plantuml . t)
-   (maxima . t)
-   (typescript . t)
-   (js . t)
-   (restclient . t )
-   (shell . t)))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '(
+     (C . t )
+     (dot . t)
+     (plantuml . t)
+     (maxima . t)
+     (typescript . t)
+     (js . t)
+     (restclient . t )
+     (shell . t)))
 
-(add-to-list 'org-babel-tangle-lang-exts '("js" . "js"))
+  (add-to-list 'org-babel-tangle-lang-exts '("js" . "js"))
+)
 #+end_src
 
 #+RESULTS:
@@ -2696,6 +2699,19 @@ Añado a la lista de extensiones la de los módulos.
 #+end_src
 
 
+
+
+
+* XQuery
+https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
+#+begin_src emacs-lisp
+(use-package xquery-tool
+  :ensure t
+  :straight (:host github :repo "paddymcall/xquery-tool.el")
+  :defer 1
+  :config
+)
+#+end_src
 
 
 
