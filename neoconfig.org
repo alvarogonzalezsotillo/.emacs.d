@@ -1133,10 +1133,6 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 
 #+begin_src emacs-lisp
 
-(use-package swiper
-  :ensure t
-  :defer 1)
-
 (use-package marginalia
   :ensure t
   :defer 1
@@ -1199,7 +1195,6 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
    ("C-x r b" . consult-bookmark)
    ("M-y" . consult-yank-pop)
    ("M-g g" . consult-goto-line)
-   ("C-c p s s" . consult-ripgrep)
    ("C-f" . consult-line)
    ("C-S-f" . consult-line-multi)
    ("M-<f7>" . consult-imenu )
