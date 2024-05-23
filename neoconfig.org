@@ -545,7 +545,8 @@ Mostrar =^L= (saltos de página) como una línea horizontal
   :defer 1
   :bind
   (("<f9>" . magit-status)
-   ("C-x g" . magit-status))
+   ("C-x g" . magit-status)
+   ("M-<f9>" . magit-dispatch))
 
   :config
   (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
@@ -616,7 +617,7 @@ Mostrar =^L= (saltos de página) como una línea horizontal
    #+end_src
 
    #+RESULTS:
-   : magit-status
+   : magit-dispatch
 
 Para instalar magit-delta
 - https://scripter.co/using-git-delta-with-magit/
@@ -1226,10 +1227,47 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   )
 
 
+(use-package embark
+  :ensure t
+
+  :bind
+  (("C-ç" . embark-act)         ;; pick some comfortable binding
+   ("C-ñ" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+  :init
+
+  ;; Optionally replace the key help with a completing-read interface
+  ;; (setq prefix-help-command #'embark-prefix-help-command)
+
+  ;; Show the Embark target at point via Eldoc. You may adjust the
+  ;; Eldoc strategy, if you want to see the documentation from
+  ;; multiple providers. Beware that using this can be a little
+  ;; jarring since the message shown in the minibuffer can be more
+  ;; than one line, causing the modeline to move up and down:
+
+  ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+  ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
+
+  :config
+
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :ensure t ; only need to install it, embark loads it after consult if found
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
 #+end_src
 
 #+RESULTS:
-: consult-projectile-switch-to-buffer
+| consult-preview-at-point-mode |
+
 
 ** =helm=
 =helm= es un sistema para seleccionar una opción entre varias posibilidades, que se puede usar para casi todo
@@ -2489,6 +2527,15 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
   :ensure t
   :defer 1)
 
+(use-package d2-mode
+  :ensure t
+  ;; DEBE SER CARGADO ANTES QUE ob-d2, para ob-d2 sobreescriba la función de babel de d2-mode, para que funcionen los flags
+  )
+
+(use-package ob-d2
+  :ensure t
+  :defer 1)
+
 (use-package emacs
   :config
   (if
@@ -2508,6 +2555,7 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
      (typescript . t)
      (js . t)
      (restclient . t )
+     (d2 . t)
      (shell . t)))
 
   (add-to-list 'org-babel-tangle-lang-exts '("js" . "js"))
@@ -2515,6 +2563,7 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 #+end_src
 
 #+RESULTS:
+: t
 
 
  Además, no pido confirmación para varios lenguajes                                                                                                           
@@ -2711,8 +2760,7 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
 
 
 * Mastodon
-#+begin_src emacs-lisp
-
+#+begin_src lisp
 (use-package mastodon
   :ensure t
   :config
@@ -2724,7 +2772,19 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
 * Zona de pruebas
 
 
+#+begin_src emacs-lisp
+(use-package ellama
+  :defer 1
+  :ensure t
+  :config
+  ;;fx-3EyjaAPRl4pK3cgyIDptG3OyoxSWPInCMh8dv4SN4Utws3h9
+  )
+
+
 #+end_src
+
+#+RESULTS:
+: [nil 0 1 0 nil require (ellama nil t) idle 0 nil]
 
 
 #+begin_src lisp
