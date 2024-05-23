@@ -2532,6 +2532,15 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
   :ensure t
   :defer 1)
 
+(use-package d2-mode
+  :ensure t
+  ;; DEBE SER CARGADO ANTES QUE ob-d2, para ob-d2 sobreescriba la función de babel de d2-mode, para que funcionen los flags
+  )
+
+(use-package ob-d2
+  :ensure t
+  :defer 1)
+
 (use-package emacs
   :config
   (if
@@ -2551,6 +2560,7 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
      (typescript . t)
      (js . t)
      (restclient . t )
+     (d2 . t)
      (shell . t)))
 
   (add-to-list 'org-babel-tangle-lang-exts '("js" . "js"))
@@ -2558,6 +2568,7 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 #+end_src
 
 #+RESULTS:
+: t
 
 
  Además, no pido confirmación para varios lenguajes                                                                                                           
