@@ -4,5 +4,11 @@ if [ "$file" = "" ]
 then
     file="."
 fi
-   
-emacsclient -c -a "" -n $file
+
+NOWAIT="-n"
+if [ "$DISPLAY" = "" ]
+then
+    NOWAIT=""
+fi    
+
+emacsclient -c -a "" $NOWAIT $file
