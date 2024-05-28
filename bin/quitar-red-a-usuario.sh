@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+IPTABLES=/sbin/iptables
+
 mis_ip(){
     cat <(echo 127.0.0.0/24) <(hostname -I)
 }
@@ -9,9 +12,9 @@ prohibir_dos(){
       Evito algunos problemas de ataques DOS. 
       Ver https://www.digitalocean.com/community/tutorials/how-to-set-up-a-basic-iptables-firewall-on-centos-6
     "
-    iptables --append MICADENAENTRADA --protocol tcp --tcp-flags ALL NONE --jump DROP
-    iptables --append MICADENAENTRADA --protocol tcp ! --syn --match state --state NEW --jump DROP
-    iptables --append MICADENAENTRADA --protocol tcp --tcp-flags ALL ALL --jump DROP
+    $IPTABLES --append MICADENAENTRADA --protocol tcp --tcp-flags ALL NONE --jump DROP
+    $IPTABLES --append MICADENAENTRADA --protocol tcp ! --syn --match state --state NEW --jump DROP
+    $IPTABLES --append MICADENAENTRADA --protocol tcp --tcp-flags ALL ALL --jump DROP
 }
 
 permitir_loopback(){
@@ -19,14 +22,14 @@ permitir_loopback(){
       Toda la comunicación entrante y saliente por loopback se permite
       Así consigo que una conexión ssh realice túneles a esta misma máquina
     "
-    iptables --append MICADENAENTRADA --in-interface lo --jump ACCEPT
-    iptables --append MICADENAENTRADA --out-interface lo --jump ACCEPT    
+    $IPTABLES --append MICADENAENTRADA --in-interface lo --jump ACCEPT
+    $IPTABLES --append MICADENASALIDA --out-interface lo --jump ACCEPT    
 }
 
 permitir_puerto_entrada(){
     local PUERTO=$1
-    iptables --append MICADENAENTRADA --protocol tcp --match tcp --dport $PUERTO --jump ACCEPT
-    iptables --append MICADENAENTRADA --protocol tcp --match tcp --sport $PUERTO --jump ACCEPT    
+    $IPTABLES --append MICADENAENTRADA --protocol tcp --match tcp --dport $PUERTO --jump ACCEPT
+    $IPTABLES --append MICADENASALIDA --protocol tcp --match tcp --sport $PUERTO --jump ACCEPT    
 }
 
 prohibir_entrada_y_salida(){
@@ -34,8 +37,8 @@ prohibir_entrada_y_salida(){
       Todas las comunicaciones tcp de entrada y salida se prohiben.
       Esta debería ser la última regla, así que si no se ha admitido antes un paquete, ya no se admite
     "
-    iptables --append MICADENAENTRADA --protocol tcp --jump DROP
-    iptables --append MICADENASALIDA --protocol tcp --jump DROP    
+    $IPTABLES --append MICADENAENTRADA --protocol tcp --jump DROP
+    $IPTABLES --append MICADENASALIDA --protocol tcp --jump DROP    
 
 }
 
@@ -88,11 +91,13 @@ permitir_usuario_root(){
       También los del grupo wheel, administrador de centos.
       Tabmién alvaro, el usuario del profesor.
     "
-    iptables --append MICADENASALIDA --match owner --uid-owner root --jump ACCEPT
-    iptables --append MICADENASALIDA --match owner --uid-owner alvaro --jump ACCEPT
-    iptables --append MICADENASALIDA --match owner --uid-owner profesor --jump ACCEPT
-    iptables --append MICADENASALIDA --match owner --gid-owner sudo --jump ACCEPT
-    iptables --append MICADENASALIDA --match owner --uid-owner _apt --jump ACCEPT
+    $IPTABLES --append MICADENASALIDA --match owner --uid-owner root --jump ACCEPT
+    $IPTABLES --append MICADENASALIDA --match owner --uid-owner alvaro --jump ACCEPT
+    $IPTABLES --append MICADENASALIDA --match owner --uid-owner profesor --jump ACCEPT
+    $IPTABLES --append MICADENASALIDA --match owner --gid-owner sudo --jump ACCEPT
+    $IPTABLES --append MICADENASALIDA --match owner --uid-owner _apt --jump ACCEPT
+    $IPTABLES --append MICADENASALIDA --match owner --uid-owner www-data --jump ACCEPT
+    $IPTABLES --append MICADENASALIDA --match owner --uid-owner postfix --jump ACCEPT
 }
 
 enviar_paquetes_salida_a_log(){
@@ -100,28 +105,28 @@ enviar_paquetes_salida_a_log(){
       Los paquetes que llegan los mando a syslog.
       Se pueden consultar con tail -f /var/log/messages | grep -i iptables
     "
-    iptables --append MICADENAENTRADA --match limit --limit 2/min --jump LOG --log-prefix "IPTables-output-dropped: " --log-level 4   
+    $IPTABLES --append MICADENAENTRADA --match limit --limit 2/min --jump LOG --log-prefix "IPTables-output-dropped: " --log-level 4   
 }
 
 limpiar_iptables(){
     echo "
       Limpio mi cadena y la conecto a la entrada
     "
-    iptables --flush MICADENAENTRADA
-    iptables --new-chain MICADENAENTRADA
+    $IPTABLES --flush MICADENAENTRADA
+    $IPTABLES --new-chain MICADENAENTRADA
     
-    iptables --flush MICADENASALIDA
-    iptables --new-chain MICADENASALIDA
+    $IPTABLES --flush MICADENASALIDA
+    $IPTABLES --new-chain MICADENASALIDA
     
-    iptables --append OUTPUT --jump MICADENASALIDA
-    iptables --append INPUT --jump MICADENAENTRADA
+    $IPTABLES --check --append OUTPUT --jump MICADENASALIDA || $IPTABLES --apend OUTPUT --jump MICADENASALIDA
+    $IPTABLES --check --append INPUT --jump MICADENAENTRADA || $IPTABLES --append INPUT --jump MICADENAENTRADA
 }
 
 permitir_ya_establecido(){
     echo "
       Permitir conexiones ya establecidas
     "
-    iptables --insert MICADENAENTRADA --match state --state ESTABLISHED,RELATED --jump ACCEPT
+    $IPTABLES --insert MICADENAENTRADA --match state --state ESTABLISHED,RELATED --jump ACCEPT
 }
 
 if [ "$1" = "limpiar" ]
@@ -143,8 +148,5 @@ permitir_servidor_vnc
 enviar_paquetes_salida_a_log
 prohibir_entrada_y_salida
 
-iptables-save > iptables-save
-
-service iptables save
 
 echo Docker habrá que reiniciarlo
