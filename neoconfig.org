@@ -1,4 +1,4 @@
-#+TITLE: Configuración Emacs
++TITLE: Configuración Emacs
 #+author: Álvaro González (@alvarogonzalez)
 #+OPTIONS: toc:2 h:4 author:t
 
@@ -1109,8 +1109,13 @@ Marcar las ocurrencias de la selección
     (global-region-occurrences-highlighter-mode 1)
     (setq region-occurrences-highlighter-max-size 3000)
     (define-key region-occurrences-highlighter-nav-mode-map "\M-n" 'region-occurrences-highlighter-next)
-    (define-key region-occurrences-highlighter-nav-mode-map "\M-p" 'region-occurrences-highlighter-prev))
+    (define-key region-occurrences-highlighter-nav-mode-map "\M-p" 'region-occurrences-highlighter-prev)
+    (define-key region-occurrences-highlighter-nav-mode-map (kbd "<wheel-up>") 'region-occurrences-highlighter-next)
+    (define-key region-occurrences-highlighter-nav-mode-map (kbd "<wheel-down>") 'region-occurrences-highlighter-prev))
 #+end_src
+
+#+RESULTS:
+: region-occurrences-highlighter-prev
 
 
 ** =breadcrumb-mode=
@@ -1622,6 +1627,15 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
     (define-key company-active-map (kbd "C-.") 'company-other-backend)
 
+    (defun ags/company-quitar-candidatos-muy-largos (candidatos)
+      (delq nil
+            (mapcar (lambda (cadena)
+                      (when (< (length cadena) 50)
+                        cadena))
+                    candidatos)))
+    
+    (add-to-list 'company-transformers #'ags/company-quitar-candidatos-muy-largos )
+
     )
 
   (use-package company-auctex
@@ -1877,6 +1891,25 @@ Necesario si una macro resulta interesante, para grabarla como una función
 : t
 
 * Navegación
+** =toggle-term=
+
+#+begin_src emacs-lisp
+(use-package toggle-term
+  :bind (;;("M-o f" . toggle-term-find)
+         ("M-o t" . toggle-term-term)
+         ;;("M-o s" . toggle-term-shell)
+         ;;("M-o e" . toggle-term-eshell)
+         ;;("M-o i" . toggle-term-ielm)
+         ;;("M-o o" . toggle-term-toggle)
+         )
+  :config
+    (setq toggle-term-size 25)
+    (setq toggle-term-switch-upon-toggle t))
+#+end_src
+
+#+RESULTS:
+: toggle-term-term
+
 ** =tree-sitter=
 Puede que sea una buena idea, pero de momento no le saco partido.
 
@@ -2543,7 +2576,9 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 
 (use-package ob-d2
   :ensure t
-  :defer 1)
+  :defer 1
+  ;; DEBE SER CARGADO TRAS d2-mode
+  )
 
 (use-package emacs
   :config
@@ -2578,7 +2613,7 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
  Además, no pido confirmación para varios lenguajes                                                                                                           
  #+begin_src emacs-lisp
  (defun ags/org-confirm-babel-evaluate (lang body)
-   (not (member lang '("dot" "emacs-lisp" "shell" "plantuml" "maxima"))))
+   (not (member lang '("dot" "emacs-lisp" "shell" "plantuml" "maxima" "d2"))))
  (setq org-confirm-babel-evaluate 'ags/org-confirm-babel-evaluate)
 #+end_src
 
