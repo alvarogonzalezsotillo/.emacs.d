@@ -1110,8 +1110,8 @@ Marcar las ocurrencias de la selección
     (setq region-occurrences-highlighter-max-size 3000)
     (define-key region-occurrences-highlighter-nav-mode-map "\M-n" 'region-occurrences-highlighter-next)
     (define-key region-occurrences-highlighter-nav-mode-map "\M-p" 'region-occurrences-highlighter-prev)
-    (define-key region-occurrences-highlighter-nav-mode-map (kbd "<wheel-up>") 'region-occurrences-highlighter-next)
-    (define-key region-occurrences-highlighter-nav-mode-map (kbd "<wheel-down>") 'region-occurrences-highlighter-prev))
+    (define-key region-occurrences-highlighter-nav-mode-map (kbd "<wheel-down>") 'region-occurrences-highlighter-next)
+    (define-key region-occurrences-highlighter-nav-mode-map (kbd "<wheel-up>") 'region-occurrences-highlighter-prev))
 #+end_src
 
 #+RESULTS:
@@ -1612,7 +1612,6 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     (global-set-key (kbd "C-.") 'company-complete)
     (define-key company-active-map [escape] 'company-abort)
 
-    (setq company-transformers '(delete-consecutive-dups company-sort-by-occurrence))
 
     (setq company-dabbrev-code-everywhere t)
     (setq company-dabbrev-minimum-length 2)
@@ -1628,15 +1627,20 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     (define-key company-active-map (kbd "C-.") 'company-other-backend)
 
     (defun ags/company-quitar-candidatos-muy-largos (candidatos)
-      (delq nil
-            (mapcar (lambda (cadena)
-                      (when (< (length cadena) 50)
-                        cadena))
-                    candidatos)))
+      (let ((ret
+             (seq-filter (lambda (candidato) (length< candidato 50)) candidatos)))
+        ret)
+
+      ;; Intentarlo con advice arround (defun company-dabbrev--filter (prefix candidates)
+
+      )
     
     (add-to-list 'company-transformers #'ags/company-quitar-candidatos-muy-largos )
+    (add-to-list 'company-transformers #'delete-consecutive-dups )
+    (add-to-list 'company-transformers #'company-sort-by-occurrence )
 
     )
+
 
   (use-package company-auctex
     :ensure t
@@ -1669,7 +1673,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     :config)
 
 #+end_src
-
+code
 
 #+begin_src emacs-lisp
   (use-package company-fuzzy
@@ -2026,10 +2030,9 @@ fi
 #+begin_src emacs-lisp
 (recentf-mode 1)
 (setq recentf-max-saved-items 2000)
-#+end_src
-
-#+begin_src emacs-lisp
+(save-place-mode 1)
 (savehist-mode 1)
+(setq savehist-autosave-interval 30)
 #+end_src
 
 ** Ratón en =xterm=
