@@ -70,6 +70,8 @@ Añado también el directorio de =cargo= para =rust=.
          (paths `(
                   ,(concat (expand-file-name user-emacs-directory) "bin")
                   ,(concat (expand-file-name "~/") ".cargo/bin")
+                  ,(concat (expand-file-name "~/") "node_modules/.bin")
+                  "/opt/node/bin"
                   "/opt/scala/bin" )) )
     (dolist (path paths)
       (message "path: %s" path)
@@ -80,6 +82,9 @@ Añado también el directorio de =cargo= para =rust=.
     (message "exec-path %s" exec-path)))
 
 #+end_src
+
+#+RESULTS:
+: t
 
 ** Abrir todos los =org= de =apuntes-clase=
 
@@ -1538,7 +1543,6 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 #+end_src
 
 
-
 ** =ffap=
 #+begin_src emacs-lisp
 (use-package emacs
@@ -1635,10 +1639,12 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
       )
     
-    (add-to-list 'company-transformers #'ags/company-quitar-candidatos-muy-largos )
-    (add-to-list 'company-transformers #'delete-consecutive-dups )
-    (add-to-list 'company-transformers #'company-sort-by-occurrence )
+    ;;(add-to-list 'company-transformers #'ags/company-quitar-candidatos-muy-largos )
+    ;;(add-to-list 'company-transformers #'delete-consecutive-dups )
+    ;;(add-to-list 'company-transformers #'company-sort-by-occurrence )
 
+    (setq company-idle-delay 0.2)
+    (setq company-minimum-prefix-length 2)
     )
 
 
@@ -1673,7 +1679,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
     :config)
 
 #+end_src
-code
+
 
 #+begin_src emacs-lisp
   (use-package company-fuzzy
@@ -1685,6 +1691,15 @@ code
           company-fuzzy-prefix-on-top t
           company-fuzzy-show-annotation nil
           company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")))
+
+(defun company-fuzzy--insert-candidate (candidate &rest otro)
+  "Insertion for CANDIDATE."
+  (when company-fuzzy-mode
+    ;; NOTE: Here we force to change `company-prefix' so the completion
+    ;; will do what we expected.
+    (let ((backend (company-fuzzy--get-backend-by-candidate candidate)))
+      (setq company-prefix (company-fuzzy--backend-prefix backend 'complete)))))
+
 #+end_src
 
 * Edición
