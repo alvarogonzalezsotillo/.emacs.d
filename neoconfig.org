@@ -1936,7 +1936,7 @@ Necesario si una macro resulta interesante, para grabarla como una función
 ** =tree-sitter=
 Puede que sea una buena idea, pero de momento no le saco partido.
 
-#+begin_src lisp
+#+begin_src emacs-lisp
 (setq treesit-language-source-alist
    '((bash "https://github.com/tree-sitter/tree-sitter-bash")
      (cmake "https://github.com/uyha/tree-sitter-cmake")
@@ -1962,6 +1962,9 @@ Puede que sea una buena idea, pero de momento no le saco partido.
   :config
   (global-treesit-auto-mode))
 #+end_src
+
+#+RESULTS:
+: t
 
 ** =dev-docs=
 
@@ -2138,8 +2141,8 @@ Desactivados los bindings, voy a usar vimish-fold
   :config
   (setq origami-show-fold-header nil)
   (setq origami-fold-replacement "⤵⤵⤵")
-  (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified)
-  (set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
+  (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified :height 0.5)
+  (set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified :height  0.5)
 
   :bind
   (("<C-return>" . origami-recursively-toggle-node))
@@ -2150,6 +2153,17 @@ Desactivados los bindings, voy a usar vimish-fold
 
    #+end_src
 
+** =
+#+begin_src emacs-lisp
+(use-package outline-indent
+  :ensure t
+  :defer 1
+  :custom
+  (outline-indent-ellipsis " ▼ "))
+#+end_src 
+
+#+RESULTS:
+: [nil 0 1 0 nil require (outline-indent nil t) idle 0 nil]
 
 ** =sideline=
 
