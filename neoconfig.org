@@ -357,23 +357,31 @@ Utilizo tres repositorios de paquetes:
 Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual. 
 
 #+BEGIN_SRC emacs-lisp
-(use-package diff-hl
-  :defer 1
-  :ensure t
-  :config
+  (use-package diff-hl
+    :defer 1
+    :ensure t
+    :straight (:host github :repo "dgutov/diff-hl")
+    :config
 
-  (use-package diff-hl-margin)
-  
+    (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+    (global-diff-hl-mode 1))
+
+  (use-package diff-hl-margin
+    :after diff-hl)
+
 
   (use-package diff-hl-dired
+    :after diff-hl
     :config
     (diff-hl-dired-mode 1))
 
   (use-package diff-hl-flydiff
+    :after diff-hl
     :config
     (diff-hl-flydiff-mode 1))
 
   (use-package diff-hl-show-hunk
+    :after diff-hl
     :config
     (require 'diff-hl-show-hunk-posframe)
 
@@ -381,25 +389,23 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
       (interactive)
       (setq diff-hl-show-hunk-posframe-poshandler 'posframe-poshandler-point-window-center)
       (if (eq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)
-          (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-inline-popup)
-        (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)))
- 
+	  (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-inline-popup)
+	(setq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)))
+
     (defun ags/diff-hl-show-hunk-toggle-style()
       (interactive)
       (if diff-hl-show-hunk-inline-popup-hide-hunk
-          (progn
-            (setq diff-hl-show-hunk-inline-popup-hide-hunk nil)
-            (setq diff-hl-show-hunk-inline-popup-smart-lines t))
-        (setq diff-hl-show-hunk-inline-popup-hide-hunk t)
-        (setq diff-hl-show-hunk-inline-popup-smart-lines nil)))
+	  (progn
+	    (setq diff-hl-show-hunk-inline-popup-hide-hunk nil)
+	    (setq diff-hl-show-hunk-inline-popup-smart-lines t))
+	(setq diff-hl-show-hunk-inline-popup-hide-hunk t)
+	(setq diff-hl-show-hunk-inline-popup-smart-lines nil)))
 
     (setq diff-hl-show-hunk-inline-popup-hide-hunk t)
     (setq diff-hl-show-hunk-inline-popup-smart-lines nil)
-    
+
     (global-diff-hl-show-hunk-mouse-mode 1))
-  
-  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
-  (global-diff-hl-mode 1))
+
 
 
 #+END_SRC
@@ -1696,13 +1702,17 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
           company-fuzzy-show-annotation nil
           company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")))
 
-(defun company-fuzzy--insert-candidate (candidate &rest otro)
-  "Insertion for CANDIDATE."
-  (when company-fuzzy-mode
-    ;; NOTE: Here we force to change `company-prefix' so the completion
-    ;; will do what we expected.
-    (let ((backend (company-fuzzy--get-backend-by-candidate candidate)))
-      (setq company-prefix (company-fuzzy--backend-prefix backend 'complete)))))
+(run-with-timer 2 nil (lambda ()
+                         (message "Defino la función problemática company-fuzzy--insert-candidate")
+ 
+                         (defun company-fuzzy--insert-candidate (candidate &rest otro)
+                           "Insertion for CANDIDATE."
+                           (when company-fuzzy-mode
+                             ;; NOTE: Here we force to change `company-prefix' so the completion
+                             ;; will do what we expected.
+                             (let ((backend (company-fuzzy--get-backend-by-candidate candidate)))
+                               (setq company-prefix (company-fuzzy--backend-prefix backend 'complete)))))
+                         ))
 
 #+end_src
 
