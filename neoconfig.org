@@ -1251,7 +1251,8 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   (setq consult-narrow-key "<")
   (setq consult-widen-key ">")
   (define-key projectile-command-map (kbd "f") #'consult-projectile-find-file)
-  (define-key projectile-command-map (kbd "p") #'consult-projectile-switch-project)
+  ;;(define-key projectile-command-map (kbd "p") #'consult-projectile-switch-project) ;; MIENTRAS SE QUEDE ENGANCHADO CON TRAMP
+  (define-key projectile-command-map (kbd "p") #'projectile-switch-project) ;; MIENTRAS SE QUEDE ENGANCHADO CON TRAMP
   (define-key projectile-command-map (kbd "s s") #'consult-ripgrep)
   )
 
@@ -1691,7 +1692,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 #+end_src
 
 
-#+begin_src emacs-lisp
+#+begin_src lisp
   (use-package company-fuzzy
     :ensure t
     :defer 1
@@ -1702,7 +1703,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
           company-fuzzy-show-annotation nil
           company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")))
 
-(run-with-timer 2 nil (lambda ()
+    (run-with-timer 2 nil (lambda ()
                          (message "Defino la función problemática company-fuzzy--insert-candidate")
  
                          (defun company-fuzzy--insert-candidate (candidate &rest otro)
