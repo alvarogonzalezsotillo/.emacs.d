@@ -2525,6 +2525,7 @@ Imágenes tras evaluar
     (advice-add #'org-export-new-reference :override #'ags/org-export-deterministic-reference)
 
 
+    (setq org-export-allow-bind-keywords t)
     (setq org-ellipsis "⤵⤵⤵")
     (set-face-attribute 'org-ellipsis nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
     (setq org-list-allow-alphabetical t)
