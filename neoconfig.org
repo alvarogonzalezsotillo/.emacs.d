@@ -357,23 +357,31 @@ Utilizo tres repositorios de paquetes:
 Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual. 
 
 #+BEGIN_SRC emacs-lisp
-(use-package diff-hl
-  :defer 1
-  :ensure t
-  :config
+  (use-package diff-hl
+    :defer 1
+    :ensure t
+    :straight (:host github :repo "dgutov/diff-hl")
+    :config
 
-  (use-package diff-hl-margin)
-  
+    (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+    (global-diff-hl-mode 1))
+
+  (use-package diff-hl-margin
+    :after diff-hl)
+
 
   (use-package diff-hl-dired
+    :after diff-hl
     :config
     (diff-hl-dired-mode 1))
 
   (use-package diff-hl-flydiff
+    :after diff-hl
     :config
     (diff-hl-flydiff-mode 1))
 
   (use-package diff-hl-show-hunk
+    :after diff-hl
     :config
     (require 'diff-hl-show-hunk-posframe)
 
@@ -381,25 +389,23 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
       (interactive)
       (setq diff-hl-show-hunk-posframe-poshandler 'posframe-poshandler-point-window-center)
       (if (eq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)
-          (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-inline-popup)
-        (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)))
- 
+	  (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-inline-popup)
+	(setq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)))
+
     (defun ags/diff-hl-show-hunk-toggle-style()
       (interactive)
       (if diff-hl-show-hunk-inline-popup-hide-hunk
-          (progn
-            (setq diff-hl-show-hunk-inline-popup-hide-hunk nil)
-            (setq diff-hl-show-hunk-inline-popup-smart-lines t))
-        (setq diff-hl-show-hunk-inline-popup-hide-hunk t)
-        (setq diff-hl-show-hunk-inline-popup-smart-lines nil)))
+	  (progn
+	    (setq diff-hl-show-hunk-inline-popup-hide-hunk nil)
+	    (setq diff-hl-show-hunk-inline-popup-smart-lines t))
+	(setq diff-hl-show-hunk-inline-popup-hide-hunk t)
+	(setq diff-hl-show-hunk-inline-popup-smart-lines nil)))
 
     (setq diff-hl-show-hunk-inline-popup-hide-hunk t)
     (setq diff-hl-show-hunk-inline-popup-smart-lines nil)
-    
+
     (global-diff-hl-show-hunk-mouse-mode 1))
-  
-  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
-  (global-diff-hl-mode 1))
+
 
 
 #+END_SRC
@@ -1245,7 +1251,8 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   (setq consult-narrow-key "<")
   (setq consult-widen-key ">")
   (define-key projectile-command-map (kbd "f") #'consult-projectile-find-file)
-  (define-key projectile-command-map (kbd "p") #'consult-projectile-switch-project)
+  ;;(define-key projectile-command-map (kbd "p") #'consult-projectile-switch-project) ;; MIENTRAS SE QUEDE ENGANCHADO CON TRAMP
+  (define-key projectile-command-map (kbd "p") #'projectile-switch-project) ;; MIENTRAS SE QUEDE ENGANCHADO CON TRAMP
   (define-key projectile-command-map (kbd "s s") #'consult-ripgrep)
   )
 
@@ -1685,7 +1692,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 #+end_src
 
 
-#+begin_src emacs-lisp
+#+begin_src lisp
   (use-package company-fuzzy
     :ensure t
     :defer 1
@@ -1696,13 +1703,17 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
           company-fuzzy-show-annotation nil
           company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")))
 
-(defun company-fuzzy--insert-candidate (candidate &rest otro)
-  "Insertion for CANDIDATE."
-  (when company-fuzzy-mode
-    ;; NOTE: Here we force to change `company-prefix' so the completion
-    ;; will do what we expected.
-    (let ((backend (company-fuzzy--get-backend-by-candidate candidate)))
-      (setq company-prefix (company-fuzzy--backend-prefix backend 'complete)))))
+    (run-with-timer 2 nil (lambda ()
+                         (message "Defino la función problemática company-fuzzy--insert-candidate")
+ 
+                         (defun company-fuzzy--insert-candidate (candidate &rest otro)
+                           "Insertion for CANDIDATE."
+                           (when company-fuzzy-mode
+                             ;; NOTE: Here we force to change `company-prefix' so the completion
+                             ;; will do what we expected.
+                             (let ((backend (company-fuzzy--get-backend-by-candidate candidate)))
+                               (setq company-prefix (company-fuzzy--backend-prefix backend 'complete)))))
+                         ))
 
 #+end_src
 
@@ -1936,7 +1947,7 @@ Necesario si una macro resulta interesante, para grabarla como una función
 ** =tree-sitter=
 Puede que sea una buena idea, pero de momento no le saco partido.
 
-#+begin_src lisp
+#+begin_src emacs-lisp
 (setq treesit-language-source-alist
    '((bash "https://github.com/tree-sitter/tree-sitter-bash")
      (cmake "https://github.com/uyha/tree-sitter-cmake")
@@ -1962,6 +1973,9 @@ Puede que sea una buena idea, pero de momento no le saco partido.
   :config
   (global-treesit-auto-mode))
 #+end_src
+
+#+RESULTS:
+: t
 
 ** =dev-docs=
 
@@ -2138,8 +2152,8 @@ Desactivados los bindings, voy a usar vimish-fold
   :config
   (setq origami-show-fold-header nil)
   (setq origami-fold-replacement "⤵⤵⤵")
-  (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified)
-  (set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
+  (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified :height 0.5)
+  (set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified :height  0.5)
 
   :bind
   (("<C-return>" . origami-recursively-toggle-node))
@@ -2150,6 +2164,17 @@ Desactivados los bindings, voy a usar vimish-fold
 
    #+end_src
 
+** =
+#+begin_src emacs-lisp
+(use-package outline-indent
+  :ensure t
+  :defer 1
+  :custom
+  (outline-indent-ellipsis " ▼ "))
+#+end_src 
+
+#+RESULTS:
+: [nil 0 1 0 nil require (outline-indent nil t) idle 0 nil]
 
 ** =sideline=
 
