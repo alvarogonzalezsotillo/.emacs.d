@@ -1119,6 +1119,7 @@ Marcar las ocurrencias de la selección
     :config
     (global-region-occurrences-highlighter-mode 1)
     (setq region-occurrences-highlighter-max-size 3000)
+    (set-face-attribute 'region-occurrences-highlighter-face nil :background "dark blue")
     (define-key region-occurrences-highlighter-nav-mode-map "\M-n" 'region-occurrences-highlighter-next)
     (define-key region-occurrences-highlighter-nav-mode-map "\M-p" 'region-occurrences-highlighter-prev)
     (define-key region-occurrences-highlighter-nav-mode-map (kbd "<wheel-down>") 'region-occurrences-highlighter-next)
