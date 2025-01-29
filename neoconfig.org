@@ -2164,8 +2164,8 @@ Desactivados los bindings, voy a usar vimish-fold
 
    #+end_src
 
-** =
-#+begin_src emacs-lisp
+** Para yaml, =outline-indent=
+#+begin_src lisp
 (use-package outline-indent
   :ensure t
   :defer 1
