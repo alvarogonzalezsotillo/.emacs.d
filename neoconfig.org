@@ -176,38 +176,56 @@ Generalmente utilizo un fichero orgmode para hacer transparencias y materiales p
   (interactive)
 
   (save-window-excursion
-    (ignore-errors
-      (org-html-export-to-html)
-      (let* (
-             (filename (buffer-file-name))
-             (html-filename (concat (file-name-sans-extension filename) ".html"))
-             (html-wp-filename (concat (file-name-sans-extension filename) ".wp.html")) )
-        (message "Copiando fichero: %s -> %s" html-filename html-wp-filename)
-        (copy-file html-filename html-wp-filename t) ))
+      (let* ((filename (buffer-file-name))
+             (filename-no-extension (file-name-sans-extension filename))
+             (html-filename (concat filename-no-extension ".html"))
+             (html-wp-filename (concat filename-no-extension ".wp.html"))
+             (html-reveal-filename (concat filename-no-extension ".reveal.html"))
+             (tex-filename (concat filename-no-extension ".tex"))
+             (pdf-filename (concat filename-no-extension ".pdf")))
+        (ignore-errors
+          (org-html-export-to-html)
+          (message "Copiando fichero: %s -> %s" html-filename html-wp-filename)
+          (copy-file html-filename html-wp-filename t))
 
-    (ignore-errors
-      (org-re-reveal-export-to-html)
-      (let* (
-             (filename (buffer-file-name))
-             (html-filename (concat (file-name-sans-extension filename) ".html"))
-             (html-reveal-filename (concat (file-name-sans-extension filename) ".reveal.html")) )
-        (message "renombrando fichero: %s -> %s" html-filename html-reveal-filename)
-        (rename-file html-filename html-reveal-filename t)))
+        (ignore-errors
+          (org-re-reveal-export-to-html)
+          (message "renombrando fichero: %s -> %s" html-filename html-reveal-filename)
+          (rename-file html-filename html-reveal-filename t))
 
-    (ignore-errors
-      (org-epub-export-to-epub))
+        (ignore-errors
+          (org-epub-export-to-epub))
 
-    (ignore-errors
-      (org-latex-export-to-pdf)
-      (let* (
-             (filename (buffer-file-name))
-             (tex-filename (concat (file-name-sans-extension filename) ".tex")))
-
-        
-        (message "Borrando fichero: %s" tex-filename)
-        (delete-file tex-filename) ) )))
+        (ignore-errors
+          (org-latex-export-to-pdf)
+          (message "Borrando fichero: %s" tex-filename)
+          (delete-file tex-filename)))))
 #+end_src
 
+** PDF no copiable fácilmente
+#+begin_src emacs-lisp
+(defun ags/org-latex-export-to-pdf-outlines ()
+  "PDF de ORG, con outlines."
+  (interactive)
+
+  (save-window-excursion
+    (let* ((filename (buffer-file-name))
+           (filename-no-extension (file-name-sans-extension filename))
+           (tex-filename (concat filename-no-extension ".tex"))
+           (pdfoutline-filename (concat filename-no-extension ".outline.pdf"))
+           (pdf-filename (concat filename-no-extension ".pdf")))
+      (ignore-errors
+        (org-latex-export-to-pdf)
+        (message "Borrando fichero: %s" tex-filename)
+        (delete-file tex-filename)
+        (let ((comando (format "sh -c 'pdf2outlines.sh \"%s\" \"%s\"'" pdf-filename pdfoutline-filename)))
+          (shell-command comando))
+        (delete-file pdf-filename)
+        (rename-file pdfoutline-filename pdf-filename)))))
+
+
+        
+#+end_src
 
 ** Función para decodificar una URL
 #+begin_src emacs-lisp
@@ -1114,11 +1132,12 @@ Marcar las ocurrencias de la selección
 #+begin_src emacs-lisp
   (use-package region-occurrences-highlighter 
     :ensure t
-    :straight (:host github :repo "alvarogonzalezsotillo/region-occurrences-highlighter")
+    ;; :straight (:host github :repo "alvarogonzalezsotillo/region-occurrences-highlighter")
     :defer 1
     :config
     (global-region-occurrences-highlighter-mode 1)
     (setq region-occurrences-highlighter-max-size 3000)
+    (set-face-attribute 'region-occurrences-highlighter-face nil :background "dark blue")
     (define-key region-occurrences-highlighter-nav-mode-map "\M-n" 'region-occurrences-highlighter-next)
     (define-key region-occurrences-highlighter-nav-mode-map "\M-p" 'region-occurrences-highlighter-prev)
     (define-key region-occurrences-highlighter-nav-mode-map (kbd "<wheel-down>") 'region-occurrences-highlighter-next)
