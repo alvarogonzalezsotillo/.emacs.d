@@ -799,7 +799,10 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
       :defer 1
       :config
       (openwith-mode t)
-      (setq openwith-associations '(("\\.pdf\\'" "okular" (file)))))
+      (setq openwith-associations '(
+                                    ("\\.pdf\\'" "okular" (file))
+                                    ("\\.reveal.html\\'" "browse" (file))
+                                    )))
 
     (use-package dired-aux
       :config
@@ -1309,8 +1312,9 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
   :ensure t ; only need to install it, embark loads it after consult if found
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
+  ;;:hook
+  ;;(embark-collect-mode . consult-preview-at-point-mode)
+  )
 
 #+end_src
 

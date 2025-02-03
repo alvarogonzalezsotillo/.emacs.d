@@ -79,3 +79,4 @@
 (ags/carga-config-org "~/.emacs.d/neoconfig.org" nil t)
 
 
+(put 'dired-find-alternate-file 'disabled nil)
