@@ -2504,13 +2504,17 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
 
   (defun ags/tema-claro()
     (interactive)
+    (spacious-padding-mode -1)
     (disable-theme my-dark-theme)
-    (load-theme my-light-theme t))
+    (load-theme my-light-theme t)
+    (spacious-padding-mode 1))
 
   (defun ags/tema-oscuro ()
     (interactive)
+    (spacious-padding-mode -1)
     (disable-theme my-light-theme)
-    (load-theme my-dark-theme t))
+    (load-theme my-dark-theme t)
+    (spacious-padding-mode 1))
 
   (run-with-idle-timer 2 nil #'ags/tema-oscuro)
   )
