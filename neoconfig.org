@@ -21,6 +21,11 @@ make -j4
 sudo make install
 #+end_src
 
+* /lexical binding/
+#+begin_src emacs-lisp
+;; -*- lexical-binding: t -*-
+#+end_src
+
 * =init.el=
 Emacs comienza cargando el fichero =~/.emacs.d/init.el=. Este fichero simplemente inicializa el sistema de paquetes y carga el paquete =org=, que es el que permite a Emacs manejar este tipo de ficheros. Después, carga este fichero interpretando los bloques de código.
 
@@ -204,24 +209,32 @@ Generalmente utilizo un fichero orgmode para hacer transparencias y materiales p
 
 ** PDF no copiable fácilmente
 #+begin_src emacs-lisp
-(defun ags/org-latex-export-to-pdf-outlines ()
-  "PDF de ORG, con outlines."
+
+(defun ags/export-to-pdf-outlines ()
+  "PDF de ORG o de TEX, con outlines."
   (interactive)
 
   (save-window-excursion
     (let* ((filename (buffer-file-name))
+           (extension (file-name-extension filename))
            (filename-no-extension (file-name-sans-extension filename))
            (tex-filename (concat filename-no-extension ".tex"))
            (pdfoutline-filename (concat filename-no-extension ".outline.pdf"))
            (pdf-filename (concat filename-no-extension ".pdf")))
-      (ignore-errors
-        (org-latex-export-to-pdf)
-        (message "Borrando fichero: %s" tex-filename)
-        (delete-file tex-filename)
-        (let ((comando (format "sh -c 'pdf2outlines.sh \"%s\" \"%s\"'" pdf-filename pdfoutline-filename)))
-          (shell-command comando))
-        (delete-file pdf-filename)
-        (rename-file pdfoutline-filename pdf-filename)))))
+      (cond ((string= "org" extension)
+             (org-latex-export-to-pdf)
+             (ignore-errors
+               (message "Borrando fichero: %s" tex-filename)
+               (delete-file tex-filename)))
+            ((string= "tex" extension)
+             (TeX-command-master)))
+      (run-with-idle-timer 1 nil (lambda()
+                                   (let ((comando (format "sh -c 'pdf2outlines.sh \"%s\" \"%s\"'" pdf-filename pdfoutline-filename)))
+                                     (message "Lanzando el comando: %s" comando)
+                                     (shell-command comando))
+                                   (delete-file pdf-filename)
+                                   (rename-file pdfoutline-filename pdf-filename))))))
+  
 
 
         
