@@ -150,6 +150,7 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
   (setq gifttolatex-titulo titulo)
   (setq gifttolatex-porcentajetest porcentajetest)
   (setq gifttolatex-parametros parametros)
+  (save-buffer)
   
   (let ((comando (format "sh -c 'gifttolatex %s -t \"%s\" -q \"%s\" \"%s\"'" parametros titulo porcentajetest buffer-file-name)))
     (shell-command comando)))
@@ -1003,14 +1004,10 @@ Estoy usando =treemacs= en vez de =neotree=.
     (interactive)
     (if (eq (treemacs-current-visibility) 'visible)
         (delete-window (treemacs-get-local-window))
-      (let (filename (buffer-file-name))
-        
+      (let ((window (selected-window)))
         (treemacs-add-and-display-current-project-exclusively)
-        (when filename
-          (treemacs-find-file filename)
-          )
-        )
-      ))
+        (select-window window))))
+            
   
   (add-hook 'treemacs-mode-hook #'ags/hacer-treemacs-resizable)
   (setq treemacs-silent-refresh t)
@@ -1239,8 +1236,9 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   ;;(setq vertico-posframe-poshandler #'ags/posframe-poshandler-right-verticaly-centered)
   (setq vertico-posframe-poshandler #'posframe-poshandler-frame-bottom-center)
   
-  (when (posframe-workable-p)
-    (vertico-posframe-mode 1)))
+  ;;(when (posframe-workable-p)
+  ;;  (vertico-posframe-mode 1))
+  )
 
 
 (use-package orderless
@@ -1280,6 +1278,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   (("C-<f6>"  . consult-projectile-switch-to-buffer) )
 
   :config
+  (setq consult-preview-key "M-.") ;; https://github.com/minad/consult#live-previews
   (setq consult-projectile-use-projectile-switch-project t)
   (setq xref-show-xrefs-function #'consult-xref)
   (setq xref-show-definitions-function #'consult-xref)
@@ -1325,8 +1324,6 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
   :ensure t ; only need to install it, embark loads it after consult if found
-  ;;:hook
-  ;;(embark-collect-mode . consult-preview-at-point-mode)
   )
 
 #+end_src
@@ -1427,12 +1424,6 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 
 
 
-
-
-
-
-
-
 ** =expand-region=
 #+begin_src emacs-lisp
 (use-package expand-region
@@ -1449,13 +1440,15 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 ** =bm=
 Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
 #+BEGIN_SRC emacs-lisp
-(defun my/bookmark-or-edit ()
+(defun ags/bookmark-or-edit ()
   (interactive)
 
   (if (string= major-mode "dired-mode")
       (progn
         (all-the-icons-dired-mode -1)
-        (wdired-change-to-wdired-mode))
+        (wdired-change-to-wdired-mode)
+        (region-occurrences-highlighter-mode 1)
+        )
     (bm-next)))
 
 
@@ -1463,7 +1456,7 @@ Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
   :ensure t
   :bind
   (( "<C-f2>" . bm-toggle))
-  (( "<f2>" . my/bookmark-or-edit ))
+  (( "<f2>" . ags/bookmark-or-edit ))
   (( "<S-f2>" . bm-previous))
 
   :config
@@ -1494,6 +1487,9 @@ selection criteria for filtering the lists."
   
   )
 #+END_SRC
+
+#+RESULTS:
+: bm-previous
 
 
 ** =indent-bars=
@@ -2123,6 +2119,31 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 
 * Visualización
 
+
+
+** =stillness-mode=
+No encuentro ninguna diferencia
+
+#+begin_src lisp
+(use-package stillness-mode
+  :ensure t
+  :defer 5
+  :straight (:host github :repo "neeasade/stillness-mode.el" :branch "main")
+  :config (stillness-mode 1))
+#+end_src
+
+#+RESULTS:
+
+
+** =mini-ontop=
+No encuentro ninguna diferencia
+#+begin_src lisp
+(use-package mini-ontop
+  :ensure t
+  :defer 5
+  :straight (:host github :repo "hkjels/mini-ontop.el")
+  :config (mini-ontop-mode 1))
+#+end_src
 ** =spacious-padding=
 
 #+begin_src emacs-lisp
