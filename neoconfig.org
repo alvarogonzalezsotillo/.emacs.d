@@ -802,78 +802,80 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 
 #+begin_src emacs-lisp
 
-    (use-package casual-dired
-      :ensure t
-      :bind
-      (:map dired-mode-map ("C-o" . 'casual-dired-tmenu))
-      (:map dired-mode-map ("h" . 'casual-dired-tmenu)))
+  (use-package dired
+    :config
+    (setq dired-kill-when-opening-new-dired-buffer nil)
 
-    (use-package openwith
-      :ensure t
-      :defer 1
-      :config
-      (openwith-mode t)
-      (setq openwith-associations '(
-                                    ("\\.pdf\\'" "okular" (file))
-                                    ("\\.reveal.html\\'" "browse" (file))
-                                    )))
-
-    (use-package dired-aux
-      :config
-      ;; Default action to open any file
-      (when (boundp 'dired-guess-shell-alist-default)
-        (add-to-list 'dired-guess-shell-alist-default ' ("\\.pdf\\'" "okular") t)))
-
-    (use-package dired-x)
-
-    ;; Copy and paste files
-    (use-package dired-ranger
-      :ensure t
-      :defer t
-      :bind (:map dired-mode-map
-		  ("W" . dired-ranger-copy)
-		  ("X" . dired-ranger-move)
-		  ("Y" . dired-ranger-paste)))
-
-    (use-package dired
-      :config
-      (setq dired-kill-when-opening-new-dired-buffer nil)
-
-      (setq dired-listing-switches "-aBhl --group-directories-first")
+    (setq dired-listing-switches "-aBhl --group-directories-first")
 
 
-      (defun ags/dired-hook ()
-	(interactive)
-	(if (file-remote-p default-directory)
-	    (all-the-icons-dired-mode -1)
-	   (all-the-icons-dired-mode 1))
-	(dired-hide-details-mode 1)
-	(auto-revert-mode 1)
-	(diff-hl-dired-mode 1)
-	(setq  indent-line-function 'dired-subtree-toggle))
+    (defun ags/dired-hook ()
+  	(interactive)
+  	(if (file-remote-p default-directory)
+  	    (all-the-icons-dired-mode -1)
+  	   (all-the-icons-dired-mode 1))
+  	(dired-hide-details-mode 1)
+  	(auto-revert-mode 1)
+  	(diff-hl-dired-mode 1)
+  	(setq  indent-line-function 'dired-subtree-toggle))
 
-      (add-hook 'dired-mode-hook 'ags/dired-hook)
-      )
+    (add-hook 'dired-mode-hook 'ags/dired-hook)
+    )
 
-    (use-package dired-subtree 
-      :ensure t
-      :defer 1
-      :config
+  
+  (use-package casual
+    :ensure t
+    :bind
+    (:map dired-mode-map ("C-o" . 'casual-dired-tmenu)))
 
-      (set-face-attribute 'dired-subtree-depth-1-face nil :background 'unspecified)
-      (set-face-attribute 'dired-subtree-depth-2-face nil :background 'unspecified)
-      (set-face-attribute 'dired-subtree-depth-3-face nil :background 'unspecified)
-      (set-face-attribute 'dired-subtree-depth-4-face nil :background 'unspecified)
-      (set-face-attribute 'dired-subtree-depth-5-face nil :background 'unspecified)
-      (set-face-attribute 'dired-subtree-depth-6-face nil :background 'unspecified)
 
-      )
+
+  (use-package openwith
+    :ensure t
+    :defer 1
+    :config
+    (openwith-mode t)
+    (setq openwith-associations '(
+                                  ("\\.pdf\\'" "okular" (file))
+                                  ("\\.reveal.html\\'" "browse" (file))
+                                  )))
+
+  (use-package dired-aux
+    :config
+    ;; Default action to open any file
+    (when (boundp 'dired-guess-shell-alist-default)
+      (add-to-list 'dired-guess-shell-alist-default ' ("\\.pdf\\'" "okular") t)))
+
+  (use-package dired-x)
+
+  ;; Copy and paste files
+  (use-package dired-ranger
+    :ensure t
+    :defer t
+    :bind (:map dired-mode-map
+  		  ("W" . dired-ranger-copy)
+  		  ("X" . dired-ranger-move)
+  		  ("Y" . dired-ranger-paste)))
+
+
+  (use-package dired-subtree 
+    :ensure t
+    :defer 1
+    :config
+
+    (set-face-attribute 'dired-subtree-depth-1-face nil :background 'unspecified)
+    (set-face-attribute 'dired-subtree-depth-2-face nil :background 'unspecified)
+    (set-face-attribute 'dired-subtree-depth-3-face nil :background 'unspecified)
+    (set-face-attribute 'dired-subtree-depth-4-face nil :background 'unspecified)
+    (set-face-attribute 'dired-subtree-depth-5-face nil :background 'unspecified)
+    (set-face-attribute 'dired-subtree-depth-6-face nil :background 'unspecified)
+
+    )
 
 
 #+end_src
 
 #+RESULTS:
-: t
 
 
 ** =good-scroll=
@@ -1278,7 +1280,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   (("C-<f6>"  . consult-projectile-switch-to-buffer) )
 
   :config
-  (setq consult-preview-key "M-.") ;; https://github.com/minad/consult#live-previews
+  (setq consult-preview-key "M-+") ;; https://github.com/minad/consult#live-previews
   (setq consult-projectile-use-projectile-switch-project t)
   (setq xref-show-xrefs-function #'consult-xref)
   (setq xref-show-definitions-function #'consult-xref)
@@ -1957,6 +1959,25 @@ Necesario si una macro resulta interesante, para grabarla como una función
 : t
 
 * Navegación
+
+** =float-narrow-indirect=
+
+No me ha gustado
+
+#+begin_src lisp
+(use-package float-narrow-indirect
+  :ensure t
+  :defer 1
+  :bind (
+         ("C-c n f". fni-narrow-to-region-floating)
+         ("C-c n t". fni-toggle-focus)
+         ("C-c n c". fni-clear-aggregation)         
+         )
+  :straight (:host github :repo "yibie/float-narrow-indirect" :branch "main")
+)
+#+end_src
+
+
 ** =toggle-term=
 
 #+begin_src emacs-lisp
@@ -2210,7 +2231,7 @@ Desactivados los bindings, voy a usar vimish-fold
   (setq origami-show-fold-header nil)
   (setq origami-fold-replacement "⤵⤵⤵")
   (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified :height 0.5)
-  (set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified :height  0.5)
+  ;;(set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified :height  0.5)
 
   :bind
   (("<C-return>" . origami-recursively-toggle-node))
@@ -2600,16 +2621,18 @@ Imágenes tras evaluar
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images))
 #+end_src
 
+#+begin_src emacs-lisp
+    (use-package org-superstar
+      :ensure t
+      :defer 1
+      :config
+      (org-superstar-mode 1))
+#+end_src
 
 #+begin_src emacs-lisp
   (use-package org
     :config
 
-    (use-package org-bullets
-      :ensure t
-      :defer t
-      :config
-      (org-bullets-mode 1))
 
 
     (defun ags/org-export-deterministic-reference (references)
@@ -2621,7 +2644,7 @@ Imágenes tras evaluar
 
     (setq org-export-allow-bind-keywords t)
     (setq org-ellipsis "⤵⤵⤵")
-    (set-face-attribute 'org-ellipsis nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
+    ;;(set-face-attribute 'org-ellipsis nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
     (setq org-list-allow-alphabetical t)
     (org-element-update-syntax)
     
@@ -2664,7 +2687,7 @@ Imágenes tras evaluar
             (display-line-numbers-mode 0))
         (org-display-inline-images)
         (auto-highlight-symbol-mode 1)
-        (org-bullets-mode 1)
+        (org-superstar-mode 1)
         (blamer-mode -1)
         (electric-pair-local-mode 1))
 
@@ -2862,6 +2885,7 @@ Añado a la lista de extensiones la de los módulos.
   :ensure t
   :defer 1
   :commands lsp
+  :after yasnippet
   :custom
   ;; what to use when checking on-save. "check" is default, I prefer clippy
   (lsp-rust-analyzer-cargo-watch-command "clippy")
