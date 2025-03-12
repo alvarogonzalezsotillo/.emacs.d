@@ -2231,7 +2231,7 @@ Desactivados los bindings, voy a usar vimish-fold
   (setq origami-show-fold-header nil)
   (setq origami-fold-replacement "⤵⤵⤵")
   (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified :height 0.5)
-  ;;(set-face-attribute 'origami-fold-replacement-face nil :box '(:line-width 1 :color unspecified) :background 'unspecified :height  0.5)
+  (set-face-attribute 'origami-fold-replacement-face nil :box t :background 'unspecified :height  0.5)
 
   :bind
   (("<C-return>" . origami-recursively-toggle-node))
@@ -2251,8 +2251,6 @@ Desactivados los bindings, voy a usar vimish-fold
   (outline-indent-ellipsis " ▼ "))
 #+end_src 
 
-#+RESULTS:
-: [nil 0 1 0 nil require (outline-indent nil t) idle 0 nil]
 
 ** =sideline=
 
@@ -2468,7 +2466,7 @@ Scroll lateral con el touchpad
 
 
 ** Números de línea
-
+        
 #+begin_src emacs-lisp
 (setq display-line-numbers-width 3)
 #+end_src
@@ -2626,6 +2624,7 @@ Imágenes tras evaluar
       :ensure t
       :defer 1
       :config
+      (setq org-superstar-prettify-item-bullets t)
       (org-superstar-mode 1))
 #+end_src
 
@@ -2644,7 +2643,7 @@ Imágenes tras evaluar
 
     (setq org-export-allow-bind-keywords t)
     (setq org-ellipsis "⤵⤵⤵")
-    ;;(set-face-attribute 'org-ellipsis nil :box '(:line-width 1 :color unspecified) :background 'unspecified)
+    (set-face-attribute 'org-ellipsis nil :box t )
     (setq org-list-allow-alphabetical t)
     (org-element-update-syntax)
     
