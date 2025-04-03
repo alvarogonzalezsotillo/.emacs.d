@@ -697,16 +697,8 @@ Reduzco el tamaño de todas las fuentes de =imenu=
   :config 
    (set-face-attribute 'imenu-list-entry-face nil :height  0.8)
    (add-hook 'imenu-list-major-mode-hook (lambda () (message "IMENU MAJOR MODE")(display-line-numbers-mode 1))))
-
-(use-package popup-imenu
-  :defer 1
-  :ensure t     
-  :bind
-  (("M-I" . popup-imenu)))
 #+end_src
 
-#+RESULTS:
-: popup-imenu
 
 
    
@@ -1262,7 +1254,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
    ("M-g g" . consult-goto-line)
    ("C-f" . consult-line)
    ("C-S-f" . consult-line-multi)
-   ("M-<f7>" . consult-imenu )
+   ("M-<f7>" . consult-imenu-multi )
    )
 
   :config
@@ -1331,7 +1323,6 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 #+end_src
 
 #+RESULTS:
-| embark-consult--upgrade-markers | consult-preview-at-point-mode |
 
 
 ** =helm=
@@ -2002,21 +1993,21 @@ Puede que sea una buena idea, pero de momento no le saco partido.
 
 #+begin_src emacs-lisp
 (setq treesit-language-source-alist
-   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-     (cmake "https://github.com/uyha/tree-sitter-cmake")
-     (css "https://github.com/tree-sitter/tree-sitter-css")
-     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-     (go "https://github.com/tree-sitter/tree-sitter-go")
-     (html "https://github.com/tree-sitter/tree-sitter-html")
-     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-     (json "https://github.com/tree-sitter/tree-sitter-json")
-     (make "https://github.com/alemuller/tree-sitter-make")
-     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-     (python "https://github.com/tree-sitter/tree-sitter-python")
-     (toml "https://github.com/tree-sitter/tree-sitter-toml")
-     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+      '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+        (cmake "https://github.com/uyha/tree-sitter-cmake")
+        (css "https://github.com/tree-sitter/tree-sitter-css")
+        (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+        (go "https://github.com/tree-sitter/tree-sitter-go")
+        (html "https://github.com/tree-sitter/tree-sitter-html")
+        (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+        (json "https://github.com/tree-sitter/tree-sitter-json")
+        (make "https://github.com/alemuller/tree-sitter-make")
+        (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+        (python "https://github.com/tree-sitter/tree-sitter-python")
+        (toml "https://github.com/tree-sitter/tree-sitter-toml")
+        (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+        (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+        (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
 (add-to-list 'treesit-language-source-alist '(kotlin . ("https://github.com/fwcd/tree-sitter-kotlin")))
 
@@ -2025,7 +2016,25 @@ Puede que sea una buena idea, pero de momento no le saco partido.
   :ensure t
   :config
   (global-treesit-auto-mode))
+
+(use-package treesit-fold
+  :config
+
+  (push '(subshell . treesit-fold-range-seq) (alist-get 'bash-ts-mode
+                                                        treesit-fold-range-alist))
+  (push '(case_statement . (treesit-fold-range-seq 4 -3)) (alist-get 'bash-ts-mode
+                                                        treesit-fold-range-alist))
+
+  (push '(if_statement . (treesit-fold-range-seq 3 -2)) (alist-get 'bash-ts-mode
+                                                        treesit-fold-range-alist))
+  
+)
+
+
+
 #+end_src
+
+
 
 #+RESULTS:
 : t
