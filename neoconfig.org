@@ -1950,6 +1950,15 @@ Necesario si una macro resulta interesante, para grabarla como una función
 : t
 
 * Navegación
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (global-set-key (kbd "C-<tab>") #'other-frame))
+#+end_src
+
+#+RESULTS:
+: t
+
 
 ** =float-narrow-indirect=
 
@@ -1973,6 +1982,8 @@ No me ha gustado
 
 #+begin_src emacs-lisp
 (use-package toggle-term
+  :ensure t
+  :defer 1
   :bind (;;("M-o f" . toggle-term-find)
          ("M-o t" . toggle-term-term)
          ;;("M-o s" . toggle-term-shell)
@@ -2570,6 +2581,11 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
 
   (defun ags/tema-claro()
     (interactive)
+
+    (call-process-shell-command "lookandfeeltool --apply org.kde.breeze.desktop")
+    (run-with-idle-timer 1 nil (lambda()
+                                 (call-process-shell-command "kwriteconfig5 --file kwinrc --group 'TabBox' --key 'LayoutName' 'big_icons'")
+                                 (call-process-shell-command "qdbus org.kde.KWin /KWin reconfigure")))
     
     (run-with-idle-timer .1 nil (lambda()
                                   (spacious-padding-mode -1) ))
@@ -2581,6 +2597,11 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
 
   (defun ags/tema-oscuro ()
     (interactive)
+
+    (call-process-shell-command "lookandfeeltool --apply org.kde.breezedark.desktop")
+    (run-with-idle-timer 1 nil (lambda()
+                                 (call-process-shell-command "kwriteconfig5 --file kwinrc --group 'TabBox' --key 'LayoutName' 'big_icons'")
+                                 (call-process-shell-command "qdbus org.kde.KWin /KWin reconfigure")))
     
     (run-with-idle-timer .1 nil (lambda()
                                   (spacious-padding-mode -1) ))
