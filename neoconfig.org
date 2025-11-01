@@ -2260,55 +2260,43 @@ No encuentro ninguna diferencia
 #+end_src
 
 
-** =vimish-fold=
-No me acaba de gustar, vuelvo a origami
-#+begin_src lisp
-(use-package vimish-fold
-  :ensure t
-  :defer 1
-  ;; :bind
-  ;; (("<C-return>" . vimish-fold-toggle)
-  ;;  ("<C-S-return>" . vimish-fold-from-marks)
-  ;;  ("<M-return>" . vimish-fold ))
-  :config
-   (vimish-fold-global-mode 1))
-   
-#+end_src
-
-
-
-** =origami=
-
-Desactivados los bindings, voy a usar vimish-fold
-
-   #+begin_src emacs-lisp
-
-(use-package origami
-  :defer 1
-  :ensure t
-  :config
-  (setq origami-show-fold-header nil)
-  (setq origami-fold-replacement "⤵⤵⤵")
-  (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified :height 0.5)
-  (set-face-attribute 'origami-fold-replacement-face nil :box t :background 'unspecified :height  0.5)
-
-  :bind
-  (("<C-return>" . origami-recursively-toggle-node))
-  (("<C-S-return>" . origami-reset))
-  (("<M-return>" . origami-close-all-nodes))
-
-  )
-
-   #+end_src
 
 ** Para yaml, =outline-indent=
-#+begin_src lisp
+#+begin_src emacs-lisp
 (use-package outline-indent
   :ensure t
   :defer 1
   :custom
-  (outline-indent-ellipsis " ▼ "))
+  (outline-indent-ellipsis " ▼ ")
+  :config
+  ;; Fold management
+  (setq-local make-window-start-visible t)
+  (define-key outline-indent-minor-mode-map (kbd "C-c o o") 'outline-indent-open-fold)     ; Open fold at point
+  (define-key outline-indent-minor-mode-map (kbd "C-c o c") 'outline-indent-close-fold)    ; Close fold at point
+  (define-key outline-indent-minor-mode-map (kbd "C-c o m") 'outline-indent-close-folds)   ; Close all folds
+  (define-key outline-indent-minor-mode-map (kbd "C-c o r") 'outline-indent-open-folds)    ; Open all folds
+  (define-key outline-indent-minor-mode-map (kbd "C-c o O") 'outline-indent-open-fold-rec) ; Open fold recursively
+  (define-key outline-indent-minor-mode-map (kbd "C-c o TAB") 'outline-indent-toggle-fold) ; Toggle fold at point
+  (define-key outline-indent-minor-mode-map (kbd "C-c o t") 'outline-indent-toggle-level-at-point) ; Toggle level at point
+
+  ;; Selection
+  (define-key outline-indent-minor-mode-map (kbd "C-c o v") 'outline-indent-select) ; Select current indented block
+
+  ;; Navigation at same indentation level
+  (define-key outline-indent-minor-mode-map (kbd "C-c o n") 'outline-indent-forward-same-level) ; Next heading at same level
+  (define-key outline-indent-minor-mode-map (kbd "C-c o p") 'outline-indent-backward-same-level) ; Previous heading at same level
+
+  ;; Shift left or right
+  (define-key outline-indent-minor-mode-map (kbd "C-c o <right>") 'outline-indent-shift-right)
+  (define-key outline-indent-minor-mode-map (kbd "C-c o <left>") 'outline-indent-shift-left)
+
+  ;; Insert heading
+  (define-key outline-indent-minor-mode-map (kbd "C-c o i") 'outline-indent-insert-heading))
+
+
 #+end_src 
+
+#+RESULTS:
 
 
 ** =sideline=
@@ -2316,10 +2304,10 @@ Desactivados los bindings, voy a usar vimish-fold
 #+begin_src emacs-lisp
 
 ;; Pruebo flycheck-pos-tip
-;; (use-package sideline-flycheck
-;;  :defer 1
-;;  :ensure t
-;;  :hook (flycheck-mode . sideline-flycheck-setup))
+ (use-package sideline-flycheck
+  :defer 1
+  :ensure t
+  :hook (flycheck-mode . sideline-flycheck-setup))
 
 (use-package sideline-blame
   :defer 1
@@ -3076,6 +3064,42 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
 
 #+RESULTS:
 : aidermacs-transient-menu
+
+
+* polymode latex php
+
+#+begin_src emacs-lisp
+;; https://chatgpt.com/share/68f20fe7-4f7c-8006-9b59-546e76ae02e3
+;; https://chatgpt.com/c/68f20f58-749c-8326-b0b8-945205b5a4db
+
+;; Host: plain LaTeX (uses built-in latex-mode, or change to TeX-latex-mode if you prefer AUCTeX)
+(define-hostmode latex-hostmode
+  :mode 'latex-mode)
+
+;; Inner: PHP. This inner mode will detect two common embedding styles:
+;; - \begin{php} ... \end{php} (LaTeX-like environment)
+;; - <?php ... ?> (PHP tags)
+;; The head/tail matchers are deliberately simple and fairly permissive; tweak
+;; the regexes if you need to avoid false matches.
+(define-innermode php-innermode
+  :mode 'php-mode
+  :head-matcher "<\?php"
+  :tail-matcher "\?>"
+  :head-mode 'host
+  :tail-mode 'host)
+
+
+;; Polymode that ties host and inner together
+(define-polymode poly-latex+php-mode
+  :hostmode 'latex-hostmode
+  :innermodes '(php-innermode))
+
+
+#+end_src
+
+#+RESULTS:
+| keymap | keymap | (menu-bar keymap (polymode menu-item Polymode (keymap Polymode (Next chunk menu-item Next chunk polymode-next-chunk) (Previous chunk menu-item Previous chunk polymode-previous-chunk) (Next chunk same type menu-item Next chunk same type polymode-next-chunk-same-type) (Previous chunk same type menu-item Previous chunk same type polymode-previous-chunk-same-type) (Mark or extend chunk menu-item Mark or extend chunk polymode-mark-or-extend-chunk) (Kill chunk menu-item Kill chunk polymode-kill-chunk) (nil --) (Weave menu-item Weave polymode-weave) (Set Weaver menu-item Set Weaver polymode-set-weaver) (nil-9 --) (Export menu-item Export polymode-export) (Set Exporter menu-item Set Exporter polymode-set-exporter)))) | (27 keymap (110 . polymode-map)) |
+
 
 * Zona de pruebas
 
