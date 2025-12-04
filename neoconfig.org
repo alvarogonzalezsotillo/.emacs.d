@@ -36,6 +36,26 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
   (setq custom-file "~/.emacs.d/custom-file.el")
   #+end_src
 
+** =straight=
+
+#+begin_src emacs-lisp
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+#+end_src
+
+#+RESULTS:
+: t
+  
   
 * Optimizaciones
   #+begin_src emacs-lisp
@@ -348,25 +368,6 @@ Utilizo tres repositorios de paquetes:
 
 #+end_src
 
-** =straight=
-
-#+begin_src emacs-lisp
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-#+end_src
-
-#+RESULTS:
-: t
 
 ** =use-package=
 
@@ -1041,6 +1042,7 @@ Estoy usando =treemacs= en vez de =neotree=.
   (setq treemacs-silent-refresh t)
   (treemacs-git-mode -1)
   (treemacs-follow-mode 1)
+  (treemacs-project-follow-mode 1)
   
   (ags/cambiar-faces-de-treemacs)
   
@@ -2271,6 +2273,7 @@ No encuentro ninguna diferencia
   :config
   ;; Fold management
   (setq-local make-window-start-visible t)
+  (define-key outline-indent-minor-mode-map (kbd "M-+") 'outline-indent-toggle-fold)     ; Open fold at point
   (define-key outline-indent-minor-mode-map (kbd "C-c o o") 'outline-indent-open-fold)     ; Open fold at point
   (define-key outline-indent-minor-mode-map (kbd "C-c o c") 'outline-indent-close-fold)    ; Close fold at point
   (define-key outline-indent-minor-mode-map (kbd "C-c o m") 'outline-indent-close-folds)   ; Close all folds
@@ -2853,7 +2856,9 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 ** Listados /Latex/
 Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 #+begin_src emacs-lisp
-(setq org-latex-listings t)
+(setq org-latex-src-block-backend 'listings)
+(add-to-list 'org-latex-packages-alist '("" "listings"))
+(add-to-list 'org-latex-packages-alist '("" "color"))
 #+end_src
 
 ** Selección con mayúsculas 
@@ -2901,7 +2906,7 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
   (setq TeX-source-correlate-mode t)
   (add-hook 'latex-mode-hook 'TeX-source-correlate-mode)
 
-  ;; Para que funcione con Okular, hay que sar tools -> Browse
+  ;; Para que funcione con Okular, hay que usar tools -> Browse
 
   (setq TeX-source-correlate-start-server t)
 
