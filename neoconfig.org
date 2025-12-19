@@ -2263,7 +2263,27 @@ No encuentro ninguna diferencia
 
 
 
-** Para yaml, =outline-indent=
+** /Folding/
+
+Pareque que lo bueno es una mezcla de =outline-indent= y =kirigami=
+#+begin_src emacs-lisp
+(use-package kirigami
+  :ensure t
+  :defer 1
+  :config
+  ;;(global-set-key (kbd "C-c k o") 'kirigami-open-fold)     ; Open fold at point
+  ;;(global-set-key (kbd "C-c k O") 'kirigami-open-fold-rec) ; Open fold recursively
+  ;;(global-set-key (kbd "C-c k m") 'kirigami-close-folds)   ; Close all folds
+  ;;(global-set-key (kbd "C-c k c") 'kirigami-close-fold)    ; Close fold at point
+  (global-set-key (kbd "M-+") 'kirigami-open-folds)    ; Open all folds
+  (global-set-key (kbd "<backtab>") 'kirigami-toggle-fold) ; Toggle fold at point  
+  )
+
+#+end_src
+
+ #+RESULTS:
+: t
+
 #+begin_src emacs-lisp
 (use-package outline-indent
   :ensure t
