@@ -36,6 +36,26 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
   (setq custom-file "~/.emacs.d/custom-file.el")
   #+end_src
 
+** =straight=
+
+#+begin_src emacs-lisp
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+#+end_src
+
+#+RESULTS:
+: t
+  
   
 * Optimizaciones
   #+begin_src emacs-lisp
@@ -76,6 +96,7 @@ Añado también el directorio de =cargo= para =rust=.
                   ,(concat (expand-file-name user-emacs-directory) "bin")
                   ,(concat (expand-file-name "~/") ".cargo/bin")
                   ,(concat (expand-file-name "~/") "node_modules/.bin")
+                  ,(concat (expand-file-name "~/") ".local/bin")
                   "/opt/node/bin"
                   "/opt/scala/bin" )) )
     (dolist (path paths)
@@ -90,6 +111,10 @@ Añado también el directorio de =cargo= para =rust=.
 
 #+RESULTS:
 : t
+
+#+begin_src emacs_lisp
+      (message "FF")
+#+end_src
 
 ** Abrir todos los =org= de =apuntes-clase=
 
@@ -117,6 +142,9 @@ Añado también el directorio de =cargo= para =rust=.
 
 #+end_src
 
+#+begin_src emacs-lisp
+      (message "EE")
+#+end_src
 
 ** Poner mi servidor de nexus en gradle
 #+begin_src emacs-lisp
@@ -131,6 +159,36 @@ Añado también el directorio de =cargo= para =rust=.
           ))
 #+end_src
 
+** Cortar de un buffer y pegar a otro
+Me es útil para quitar preguntas de los ficheros gift y pegarlas en otro fichero gift de descartadas, para recuperaciones.
+
+#+begin_src emacs-lisp
+(defun ags/kill-and-append-to-buffer(buffer start end)
+  "Like append-to-buffer, allways at end."
+  (interactive
+   (list (read-buffer "Append to buffer: " (other-buffer (current-buffer) t))
+	 (region-beginning)
+         (region-end)))
+  (let* ((oldbuf (current-buffer))
+         (append-to (get-buffer-create buffer))
+         (windows (get-buffer-window-list append-to t t))
+         point)
+    (save-excursion
+      (with-current-buffer append-to
+        (goto-char (point-max))
+        (setq point (point-max))
+        (barf-if-buffer-read-only)
+        (insert-buffer-substring oldbuf start end)
+        (dolist (window windows)
+          (when (= (window-point window) point)
+            (set-window-point window (point)))))))
+  (call-interactively #'kill-region))  
+#+end_src
+
+#+RESULTS:
+: ags/kill-and-append-to-buffer
+
+
 ** Convertir un fichero =gift= en un examen =pdf=
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
    #+begin_src emacs-lisp
@@ -138,6 +196,10 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
 (defvar gifttolatex-titulo nil)
 (defvar gifttolatex-porcentajetest nil)
 (defvar gifttolatex-parametros nil)
+
+(make-variable-buffer-local 'gifttolatex-titulo)
+(make-variable-buffer-local 'gifttolatex-porcentajetest)
+(make-variable-buffer-local 'gifttolatex-parametros)
 
 (defun ags/gifttolatex (titulo porcentajetest parametros)
   "ejecuta giftolatex en el buffer actual."
@@ -158,6 +220,11 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
    #+end_src
 
 
+#+begin_src emacs-lisp
+      (message "CC")
+#+end_src
+
+   
 ** Arrancar el servidor http de emacs en el directorio actual
 #+begin_src emacs-lisp
   (defun ags/servidor-httpd-aqui (directory host port)
@@ -282,7 +349,9 @@ Generalmente utilizo un fichero orgmode para hacer transparencias y materiales p
 #+end_src
 
 
-
+#+begin_src emacs-lisp
+      (message "A")
+#+end_src
 
 * Carga de paquetes
 
@@ -299,25 +368,6 @@ Utilizo tres repositorios de paquetes:
 
 #+end_src
 
-** =straight=
-
-#+begin_src emacs-lisp
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-#+end_src
-
-#+RESULTS:
-: t
 
 ** =use-package=
 
@@ -870,21 +920,6 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 #+RESULTS:
 
 
-** =good-scroll=
-El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminales modo texto que costaba refrescar. Con los ordenadores actuales, mejor un /scroll/ suave
-#+begin_src emacs-lisp
-(use-package good-scroll
-  :ensure t
-  :config
-  (good-scroll-mode 1))
-
-
-#+end_src
-
-
-#+begin_src emacs-lisp
-(setq scroll-error-top-bottom t)
-#+end_src
 
 
 ** =flycheck=
@@ -967,7 +1002,7 @@ Estoy usando =treemacs= en vez de =neotree=.
   (defun ags/cambiar-faces-de-treemacs ()
     ;; Cambio el tamaño por defecto del face
     (mapcar
-     (lambda (face) (set-face-attribute face nil :height 0.7) )
+     (lambda (face) (set-face-attribute face nil :height 0.85) )
      '(
        treemacs-directory-face                
        treemacs-directory-collapsed-face      
@@ -1007,6 +1042,7 @@ Estoy usando =treemacs= en vez de =neotree=.
   (setq treemacs-silent-refresh t)
   (treemacs-git-mode -1)
   (treemacs-follow-mode 1)
+  (treemacs-project-follow-mode 1)
   
   (ags/cambiar-faces-de-treemacs)
   
@@ -1014,6 +1050,9 @@ Estoy usando =treemacs= en vez de =neotree=.
   (("<f8>" . ags/treemacs-toggle))
   )
 #+end_src
+
+#+RESULTS:
+: ags/treemacs-toggle
 
 
 ** =dumb-jump=
@@ -1590,6 +1629,8 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 ** =company=
 Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de programación y =org-mode=.
 
+
+
 #+begin_src emacs-lisp
 
   (use-package company
@@ -1600,7 +1641,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
 
     (defvar ags/company-backends-prog-mode
-      '((company-capf :with
+      '((company-capf 
                       company-dabbrev-code
                       company-files
                       company-web-html
@@ -1610,8 +1651,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
 
     (defvar ags/company-backends-org-mode
-      '((company-capf :with
-                      company-files
+      '((company-capf                       company-files
                       company-dabbrev
                       company-keywords
                       company-emoji
@@ -2029,6 +2069,7 @@ Puede que sea una buena idea, pero de momento no le saco partido.
   (global-treesit-auto-mode))
 
 (use-package treesit-fold
+  :ensure t
   :config
 
   (push '(subshell . treesit-fold-range-seq) (alist-get 'bash-ts-mode
@@ -2221,69 +2262,59 @@ No encuentro ninguna diferencia
 #+end_src
 
 
-** =vimish-fold=
-No me acaba de gustar, vuelvo a origami
-#+begin_src lisp
-(use-package vimish-fold
-  :ensure t
-  :defer 1
-  ;; :bind
-  ;; (("<C-return>" . vimish-fold-toggle)
-  ;;  ("<C-S-return>" . vimish-fold-from-marks)
-  ;;  ("<M-return>" . vimish-fold ))
-  :config
-   (vimish-fold-global-mode 1))
-   
-#+end_src
-
-
-
-** =origami=
-
-Desactivados los bindings, voy a usar vimish-fold
-
-   #+begin_src emacs-lisp
-
-(use-package origami
-  :defer 1
-  :ensure t
-  :config
-  (setq origami-show-fold-header nil)
-  (setq origami-fold-replacement "⤵⤵⤵")
-  (set-face-attribute 'origami-fold-header-face nil :box nil :background 'unspecified :height 0.5)
-  (set-face-attribute 'origami-fold-replacement-face nil :box t :background 'unspecified :height  0.5)
-
-  :bind
-  (("<C-return>" . origami-recursively-toggle-node))
-  (("<C-S-return>" . origami-reset))
-  (("<M-return>" . origami-close-all-nodes))
-
-  )
-
-   #+end_src
 
 ** Para yaml, =outline-indent=
-#+begin_src lisp
+#+begin_src emacs-lisp
 (use-package outline-indent
   :ensure t
   :defer 1
   :custom
-  (outline-indent-ellipsis " ▼ "))
+  (outline-indent-ellipsis " ▼ ")
+  :config
+  ;; Fold management
+  (setq-local make-window-start-visible t)
+  (define-key outline-indent-minor-mode-map (kbd "M-+") 'outline-indent-toggle-fold)     ; Open fold at point
+  (define-key outline-indent-minor-mode-map (kbd "C-c o o") 'outline-indent-open-fold)     ; Open fold at point
+  (define-key outline-indent-minor-mode-map (kbd "C-c o c") 'outline-indent-close-fold)    ; Close fold at point
+  (define-key outline-indent-minor-mode-map (kbd "C-c o m") 'outline-indent-close-folds)   ; Close all folds
+  (define-key outline-indent-minor-mode-map (kbd "C-c o r") 'outline-indent-open-folds)    ; Open all folds
+  (define-key outline-indent-minor-mode-map (kbd "C-c o O") 'outline-indent-open-fold-rec) ; Open fold recursively
+  (define-key outline-indent-minor-mode-map (kbd "C-c o TAB") 'outline-indent-toggle-fold) ; Toggle fold at point
+  (define-key outline-indent-minor-mode-map (kbd "C-c o t") 'outline-indent-toggle-level-at-point) ; Toggle level at point
+
+  ;; Selection
+  (define-key outline-indent-minor-mode-map (kbd "C-c o v") 'outline-indent-select) ; Select current indented block
+
+  ;; Navigation at same indentation level
+  (define-key outline-indent-minor-mode-map (kbd "C-c o n") 'outline-indent-forward-same-level) ; Next heading at same level
+  (define-key outline-indent-minor-mode-map (kbd "C-c o p") 'outline-indent-backward-same-level) ; Previous heading at same level
+
+  ;; Shift left or right
+  (define-key outline-indent-minor-mode-map (kbd "C-c o <right>") 'outline-indent-shift-right)
+  (define-key outline-indent-minor-mode-map (kbd "C-c o <left>") 'outline-indent-shift-left)
+
+  ;; Insert heading
+  (define-key outline-indent-minor-mode-map (kbd "C-c o i") 'outline-indent-insert-heading))
+
+
 #+end_src 
+
+#+RESULTS:
 
 
 ** =sideline=
 
 #+begin_src emacs-lisp
 
-(use-package sideline-flycheck
+;; Pruebo flycheck-pos-tip
+ (use-package sideline-flycheck
   :defer 1
   :ensure t
   :hook (flycheck-mode . sideline-flycheck-setup))
 
 (use-package sideline-blame
   :defer 1
-  :ensure t )
+  :ensure t)
 
 (use-package sideline
   :defer 1
@@ -2294,7 +2325,8 @@ Desactivados los bindings, voy a usar vimish-fold
 
   :config
   
-  (setq sideline-backends-right '((sideline-flycheck . up)))
+  (setq sideline-backends-right '((sideline-flycheck . up) (sideline-blame . down)))
+  (setq sideline-backends-left '())
 
 
 
@@ -2308,7 +2340,11 @@ Desactivados los bindings, voy a usar vimish-fold
 #+end_src
 
 #+RESULTS:
-| sideline-mode | sideline-flycheck-setup | rustic-flycheck-setup | flycheck-mode-set-explicitly |
+| rustic-flycheck-setup | flycheck-mode-set-explicitly | sideline-mode | sideline-flycheck-setup |
+
+#+begin_src emacs-lisp
+      (message "B")
+#+end_src
 
 
 ** Pantalla inicial (/dashboard/)
@@ -2318,7 +2354,7 @@ Desactivados los bindings, voy a usar vimish-fold
   :defer 1
   :config
   (dashboard-setup-startup-hook)
-  (setq dashboard-startup-banner nil)  
+  (setq dashboard-startup-banner 'official)  
   (setq dashboard-items '((recents  . 0)
                           (bookmarks . 0)
                           (projects . 10)))
@@ -2343,8 +2379,9 @@ Desactivados los bindings, voy a usar vimish-fold
   )
 #+end_src
 
-#+RESULTS:
-: [nil 0 1 0 nil require (adaptive-wrap nil t) idle 0 nil]
+#+begin_src emacs-lisp
+      (message "GG")
+#+end_src
 
 ** Código fuente
 
@@ -2453,7 +2490,7 @@ Los ficheros deben tener una línea nueva al final. Además, indicar el fin de f
 #+end_src
 
 ** /scroll/
-#+begin_src emacs-lisp
+#+begin_src lisp
   (setq scroll-margin 0
        scroll-step 1
        scroll-conservatively 10000
@@ -2462,7 +2499,32 @@ Los ficheros deben tener una línea nueva al final. Además, indicar el fin de f
   (setq jit-lock-defer-time 0)
   (setq fast-but-imprecise-scrolling t)
 
+  (setq scroll-error-top-bottom t)
+#+end_src
 
+
+*** =good-scroll=
+El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminales modo texto que costaba refrescar. Con los ordenadores actuales, mejor un /scroll/ suave
+#+begin_src lisp
+(use-package good-scroll
+  :ensure t
+  :config
+  (good-scroll-mode 1))
+
+
+#+end_src
+
+
+*** =ultra-scroll=
+#+begin_src emacs-lisp
+(use-package ultra-scroll
+  ;:vc (:url "https://github.com/jdtsmith/ultra-scroll") ; if desired (emacs>=v30)
+  :ensure t
+  :init
+  (setq scroll-conservatively 3 ; or whatever value you prefer, since v0.4
+        scroll-margin 0)        ; important: scroll-margin>0 not yet supported
+  :config
+  (ultra-scroll-mode 1))
 #+end_src
 
 ** Ratón
@@ -2552,12 +2614,15 @@ La barra de menú y la de herramientas es de lo primero que se quita al personal
 ** Servidor emacs
 Arranco el servidor para utilizar /emacsclient/
 #+begin_src emacs-lisp
-  (use-package server
-    :config
-    (setenv "EDITOR" "emacsclient -c")
-    (unless (server-running-p)
-      (server-start))
-    )
+    (use-package server
+      :config
+      (setenv "EDITOR" "emacsclient -c")
+      )
+
+      (unless (server-running-p)
+        (server-start)
+        (message "SERVIDOR ARRANCADO" ))
+    
 #+end_src
 
 * Temas
@@ -2791,7 +2856,9 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 ** Listados /Latex/
 Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
 #+begin_src emacs-lisp
-(setq org-latex-listings t)
+(setq org-latex-src-block-backend 'listings)
+(add-to-list 'org-latex-packages-alist '("" "listings"))
+(add-to-list 'org-latex-packages-alist '("" "color"))
 #+end_src
 
 ** Selección con mayúsculas 
@@ -2839,7 +2906,7 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
   (setq TeX-source-correlate-mode t)
   (add-hook 'latex-mode-hook 'TeX-source-correlate-mode)
 
-  ;; Para que funcione con Okular, hay que sar tools -> Browse
+  ;; Para que funcione con Okular, hay que usar tools -> Browse
 
   (setq TeX-source-correlate-start-server t)
 
@@ -2983,6 +3050,62 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
 #+end_src
 
 
+
+
+* aider
+
+
+#+begin_src emacs-lisp
+(use-package aidermacs
+  :bind (("C-c a" . aidermacs-transient-menu))
+  :ensure t
+  :config
+  
+  :custom
+  ; See the Configuration section below
+  (aidermacs-default-model "openrouter/deepseek/deepseek-r1"))
+  
+#+end_src
+
+#+RESULTS:
+: aidermacs-transient-menu
+
+
+* polymode latex php
+
+#+begin_src emacs-lisp
+;; https://chatgpt.com/share/68f20fe7-4f7c-8006-9b59-546e76ae02e3
+;; https://chatgpt.com/c/68f20f58-749c-8326-b0b8-945205b5a4db
+
+;; Host: plain LaTeX (uses built-in latex-mode, or change to TeX-latex-mode if you prefer AUCTeX)
+(define-hostmode latex-hostmode
+  :mode 'latex-mode)
+
+;; Inner: PHP. This inner mode will detect two common embedding styles:
+;; - \begin{php} ... \end{php} (LaTeX-like environment)
+;; - <?php ... ?> (PHP tags)
+;; The head/tail matchers are deliberately simple and fairly permissive; tweak
+;; the regexes if you need to avoid false matches.
+(define-innermode php-innermode
+  :mode 'php-mode
+  :head-matcher "<\?php"
+  :tail-matcher "\?>"
+  :head-mode 'host
+  :tail-mode 'host)
+
+
+;; Polymode that ties host and inner together
+(define-polymode poly-latex+php-mode
+  :hostmode 'latex-hostmode
+  :innermodes '(php-innermode))
+
+
+#+end_src
+
+#+RESULTS:
+| keymap | keymap | (menu-bar keymap (polymode menu-item Polymode (keymap Polymode (Next chunk menu-item Next chunk polymode-next-chunk) (Previous chunk menu-item Previous chunk polymode-previous-chunk) (Next chunk same type menu-item Next chunk same type polymode-next-chunk-same-type) (Previous chunk same type menu-item Previous chunk same type polymode-previous-chunk-same-type) (Mark or extend chunk menu-item Mark or extend chunk polymode-mark-or-extend-chunk) (Kill chunk menu-item Kill chunk polymode-kill-chunk) (nil --) (Weave menu-item Weave polymode-weave) (Set Weaver menu-item Set Weaver polymode-set-weaver) (nil-9 --) (Export menu-item Export polymode-export) (Set Exporter menu-item Set Exporter polymode-set-exporter)))) | (27 keymap (110 . polymode-map)) |
+
+
 * Zona de pruebas
 
 
@@ -3033,6 +3156,11 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
   
   )
 #+end_src
+
+#+begin_src emacs-lisp
+      (message "HH")
+#+end_src
+
 
 * Opciones Latex para el PDF :noexport:
 # COLORES

@@ -5,10 +5,4 @@ then
     file="."
 fi
 
-NOWAIT="-n"
-if [ "$DISPLAY" = "" ]
-then
-    NOWAIT=""
-fi    
-
-emacsclient -c -a "" $NOWAIT $file
+emacsclient -c -a "emacs" --no-wait $file
