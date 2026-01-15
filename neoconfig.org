@@ -1617,6 +1617,12 @@ Resaltar el símbolo bajo el cursor de forma dinámica. Antes lo resaltaba en to
 
 #+end_src
 
+** =async-shell-command=
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setopt async-shell-command-buffer 'new-buffer))
+#+end_src
 
 ** =ffap=
 #+begin_src emacs-lisp
@@ -2261,6 +2267,13 @@ No encuentro ninguna diferencia
 )
 #+end_src
 
+** =hl-line=
+#+begin_src emacs-lisp
+(use-package hl-line
+  :config
+  (global-hl-line-mode 1))
+
+#+end_src
 
 
 ** /Folding/
