@@ -1183,7 +1183,11 @@ Marcar las ocurrencias de la selección
     :config
     (global-region-occurrences-highlighter-mode 1)
     (setq region-occurrences-highlighter-max-size 3000)
-    (set-face-attribute 'region-occurrences-highlighter-face nil :background "dark blue")
+    (setq region-occurrences-highlighter-max-buffer-size 999999999)
+    ;;(set-face-attribute 'region-occurrences-highlighter-face nil :background "dark blue")
+    (custom-set-faces
+     '(region-occurrences-highlighter-face ((t (:inherit region :extend t)))))
+    
     (define-key region-occurrences-highlighter-nav-mode-map "\M-n" 'region-occurrences-highlighter-next)
     (define-key region-occurrences-highlighter-nav-mode-map "\M-p" 'region-occurrences-highlighter-prev)
     (define-key region-occurrences-highlighter-nav-mode-map (kbd "<wheel-down>") 'region-occurrences-highlighter-next)
@@ -1191,7 +1195,7 @@ Marcar las ocurrencias de la selección
 #+end_src
 
 #+RESULTS:
-: region-occurrences-highlighter-prev
+: t
 
 
 ** =breadcrumb-mode=
@@ -1266,11 +1270,10 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   :config
   (setq vertico-posframe-border-width 6)
 
-  ;;(setq vertico-posframe-poshandler #'ags/posframe-poshandler-right-verticaly-centered)
   (setq vertico-posframe-poshandler #'posframe-poshandler-frame-bottom-center)
   
-  ;;(when (posframe-workable-p)
-  ;;  (vertico-posframe-mode 1))
+  (when (posframe-workable-p)
+    (vertico-posframe-mode 1))
   )
 
 
@@ -2271,9 +2274,14 @@ No encuentro ninguna diferencia
 #+begin_src emacs-lisp
 (use-package hl-line
   :config
-  (global-hl-line-mode 1))
+(custom-set-faces
+ '(hl-line ((t (:underline (:color "gray50" :style line :position nil) :extend t)))))
+(global-hl-line-mode 1))
 
 #+end_src
+
+#+RESULTS:
+: t
 
 
 ** /Folding/
@@ -2709,7 +2717,7 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
     (run-with-idle-timer 1 nil (lambda()                         
                                   (spacious-padding-mode 1))))
 
-  (run-with-idle-timer 2 nil #'ags/tema-oscuro)
+  (run-with-idle-timer 2 nil #'ags/tema-claro)
   )
 #+end_src
 
