@@ -2275,7 +2275,7 @@ No encuentro ninguna diferencia
 (use-package hl-line
   :config
 (custom-set-faces
- '(hl-line ((t (:underline (:color "gray50" :style line :position nil) :extend t)))))
+ '(hl-line ((t (:underline (:color "gray50" :style line :position t) :extend t)))))
 (global-hl-line-mode 1))
 
 #+end_src
