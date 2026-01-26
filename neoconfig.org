@@ -2611,7 +2611,7 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
     (run-with-idle-timer 1 nil (lambda()                         
                                   (spacious-padding-mode 1))))
 
-  (run-with-idle-timer 2 nil #'ags/tema-oscuro)
+  (run-with-idle-timer 2 nil #'ags/tema-claro)
   )
 #+end_src
 
