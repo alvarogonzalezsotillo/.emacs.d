@@ -2006,17 +2006,19 @@ Necesario si una macro resulta interesante, para grabarla como una función
   (defun ags/open-file-explorer ()
     "Open the file explorer in the current working directory based on the operating system asynchronously."
     (interactive)
-    (cond
-     ((eq system-type 'gnu/linux)
-      (start-process "file-explorer" nil "xdg-open" default-directory))
-     ((eq system-type 'darwin)
-      (start-process "file-explorer" nil "open" default-directory))
-     ((eq system-type 'windows-nt)
-      (start-process "file-explorer" nil "explorer" default-directory))
-     (t
-      (message "Unsupported operating system."))))
+    (let ((file-explorer (cond
+                          ((eq system-type 'gnu/linux)
+                           "xdg-open")
+                          ((eq system-type 'darwin)
+                           "open" default-directory)
+                          ((eq system-type 'windows-nt)
+                           "explorer" default-directory)
+                          (t
+                           (error "Unsupported operating system, no file-explorer: %s" system-type)))))
+      (start-process "file-explorer" nil file-explorer default-directory)))
+  
   (global-set-key (kbd "M-s-e") #'ags/open-file-explorer))
-  )
+)
 
 #+end_src
 
@@ -2026,7 +2028,7 @@ Necesario si una macro resulta interesante, para grabarla como una función
 ** =float-narrow-indirect=
 
 No me ha gustado
-
+ 
 #+begin_src lisp
 (use-package float-narrow-indirect
   :ensure t
