@@ -2008,6 +2008,28 @@ Necesario si una macro resulta interesante, para grabarla como una función
 #+RESULTS:
 : t
 
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (defun ags/open-file-explorer ()
+    "Open the file explorer in the current working directory based on the operating system asynchronously."
+    (interactive)
+    (cond
+     ((eq system-type 'gnu/linux)
+      (start-process "file-explorer" nil "xdg-open" default-directory))
+     ((eq system-type 'darwin)
+      (start-process "file-explorer" nil "open" default-directory))
+     ((eq system-type 'windows-nt)
+      (start-process "file-explorer" nil "explorer" default-directory))
+     (t
+      (message "Unsupported operating system."))))
+  (global-set-key (kbd "M-s-e") #'ags/open-file-explorer))
+  )
+
+#+end_src
+
+#+RESULTS:
+: t
 
 ** =float-narrow-indirect=
 
