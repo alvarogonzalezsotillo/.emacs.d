@@ -109,13 +109,6 @@ Añado también el directorio de =cargo= para =rust=.
 
 #+end_src
 
-#+RESULTS:
-: t
-
-#+begin_src emacs_lisp
-      (message "FF")
-#+end_src
-
 ** Abrir todos los =org= de =apuntes-clase=
 
 #+begin_src emacs-lisp
@@ -140,10 +133,6 @@ Añado también el directorio de =cargo= para =rust=.
     ))
 
 
-#+end_src
-
-#+begin_src emacs-lisp
-      (message "EE")
 #+end_src
 
 ** Poner mi servidor de nexus en gradle
@@ -218,11 +207,6 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
     (shell-command comando)))
 
    #+end_src
-
-
-#+begin_src emacs-lisp
-      (message "CC")
-#+end_src
 
    
 ** Arrancar el servidor http de emacs en el directorio actual
@@ -348,10 +332,6 @@ Generalmente utilizo un fichero orgmode para hacer transparencias y materiales p
 		 (insert (funcall maybe-cap "#+end_src\n")))))))))
 #+end_src
 
-
-#+begin_src emacs-lisp
-      (message "A")
-#+end_src
 
 * Carga de paquetes
 
@@ -647,6 +627,7 @@ Mostrar =^L= (saltos de página) como una línea horizontal
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
+  (add-hook 'magit-status-sections-hook 'magit-insert-worktrees)
 
   (setq magit-diff-refine-hunk 'all)
 
@@ -1255,6 +1236,17 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
 
   :config
+
+  ;; https://emacs.stackexchange.com/questions/80866/in-shell-buffer-how-do-to-configure-tab-key-to-behave-vertically-like-ve
+  ;; Use `consult-completion-in-region' if Vertico is enabled.
+  ;; Otherwise use the default `completion--in-region' function.
+  (setq completion-in-region-function
+        (lambda (&rest args)
+          (apply (if vertico-mode
+                     #'consult-completion-in-region
+                   #'completion--in-region)
+                 args)))
+  
   (vertico-mode))
 
 (use-package vertico-mouse
@@ -2036,7 +2028,7 @@ No me ha gustado
   :bind (;;("M-o f" . toggle-term-find)
          ("M-o t" . toggle-term-term)
          ;;("M-o s" . toggle-term-shell)
-         ;;("M-o e" . toggle-term-eshell)
+         ("M-o e" . toggle-term-eshell)
          ;;("M-o i" . toggle-term-ielm)
          ;;("M-o o" . toggle-term-toggle)
          )
@@ -2044,9 +2036,6 @@ No me ha gustado
     (setq toggle-term-size 25)
     (setq toggle-term-switch-upon-toggle t))
 #+end_src
-
-#+RESULTS:
-: toggle-term-term
 
 ** =tree-sitter=
 Puede que sea una buena idea, pero de momento no le saco partido.
@@ -2383,10 +2372,6 @@ Pareque que lo bueno es una mezcla de =outline-indent= y =kirigami=
 #+RESULTS:
 | rustic-flycheck-setup | flycheck-mode-set-explicitly | sideline-mode | sideline-flycheck-setup |
 
-#+begin_src emacs-lisp
-      (message "B")
-#+end_src
-
 
 ** Pantalla inicial (/dashboard/)
 #+begin_src emacs-lisp
@@ -2420,10 +2405,6 @@ Pareque que lo bueno es una mezcla de =outline-indent= y =kirigami=
   )
 #+end_src
 
-#+begin_src emacs-lisp
-      (message "GG")
-#+end_src
-
 ** Código fuente
 
 #+begin_src emacs-lisp
@@ -2453,7 +2434,6 @@ Pareque que lo bueno es una mezcla de =outline-indent= y =kirigami=
   (toggle-truncate-lines -1)
   (setq magic-latex-enable-suscript nil)
   (company-auctex-init)
-  (message "LATEX")
   (magic-latex-buffer 1))
 
 (add-hook 'LaTeX-mode-hook 'ags/bonito-para-latex)
@@ -2473,23 +2453,29 @@ Antes ocultaba los fringes, ahora los dejo para =diff-hl=
 ** /Modeline/
 Mi línea de estado (modeline)
 #+begin_src emacs-lisp
-(setq ags/mode-line-format
-              (list
-               " "
-               '(:eval (propertize "[☰]" 'local-map (make-mode-line-mouse-map 'mouse-1 'menu-bar-open)))
-               " "
-               mode-line-modified
-               " %[" mode-line-buffer-identification " %] "
-               " | " '(vc-mode vc-mode)
-               " | %m %n "
-               " | %IB %Z"
-               " | %l:%c %p"
-               ;;" | " '(:eval (format "Point:%d" (point)))
-               ;;" | " '(:eval (breadcrumb-project-crumbs)) " / " '(:eval (breadcrumb-imenu-crumbs))
-               mode-line-end-spaces
-               ) )
+(use-package emacs
+  :config
+  (setq ags/mode-line-format
+        (list
+         " "
+         '(:eval (propertize "[☰]" 'local-map (make-mode-line-mouse-map 'mouse-1 'menu-bar-open)))
+         " "
+         mode-line-modified
+         " %[" mode-line-buffer-identification " %] "
+         " | " '(vc-mode vc-mode)
+         " | %m %n "
+         " | %IB %Z"
+         " | %l:%c %p"
+         ;;" | " '(:eval (format "Point:%d" (point)))
+         " | " '(:eval (breadcrumb-project-crumbs)) " / " '(:eval (breadcrumb-imenu-crumbs))
+         mode-line-end-spaces
+         ) )
+  (setq-default mode-line-format ags/mode-line-format)
+  )
 
-(setq-default mode-line-format ags/mode-line-format)
+(use-package breadcrumb
+  :ensure t
+  :defer 1)
 
 (use-package mode-icons
   :ensure t
@@ -2836,6 +2822,12 @@ Imágenes tras evaluar
 ** Lenguajes =org-babel=
 Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques de =orgmode=.
 #+begin_src emacs-lisp
+
+;; PARA EJECUCION CON :async
+(use-package ob-async
+  :ensure t
+  :defer 1)
+
 (use-package ob-typescript
   :ensure t
   :defer 1)
@@ -3093,64 +3085,11 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
 
 
 
-* aider
-
-
-#+begin_src emacs-lisp
-(use-package aidermacs
-  :bind (("C-c a" . aidermacs-transient-menu))
-  :ensure t
-  :config
-  
-  :custom
-  ; See the Configuration section below
-  (aidermacs-default-model "openrouter/deepseek/deepseek-r1"))
-  
-#+end_src
-
-#+RESULTS:
-: aidermacs-transient-menu
-
-
-* polymode latex php
-
-#+begin_src emacs-lisp
-;; https://chatgpt.com/share/68f20fe7-4f7c-8006-9b59-546e76ae02e3
-;; https://chatgpt.com/c/68f20f58-749c-8326-b0b8-945205b5a4db
-
-;; Host: plain LaTeX (uses built-in latex-mode, or change to TeX-latex-mode if you prefer AUCTeX)
-(define-hostmode latex-hostmode
-  :mode 'latex-mode)
-
-;; Inner: PHP. This inner mode will detect two common embedding styles:
-;; - \begin{php} ... \end{php} (LaTeX-like environment)
-;; - <?php ... ?> (PHP tags)
-;; The head/tail matchers are deliberately simple and fairly permissive; tweak
-;; the regexes if you need to avoid false matches.
-(define-innermode php-innermode
-  :mode 'php-mode
-  :head-matcher "<\?php"
-  :tail-matcher "\?>"
-  :head-mode 'host
-  :tail-mode 'host)
-
-
-;; Polymode that ties host and inner together
-(define-polymode poly-latex+php-mode
-  :hostmode 'latex-hostmode
-  :innermodes '(php-innermode))
-
-
-#+end_src
-
-#+RESULTS:
-| keymap | keymap | (menu-bar keymap (polymode menu-item Polymode (keymap Polymode (Next chunk menu-item Next chunk polymode-next-chunk) (Previous chunk menu-item Previous chunk polymode-previous-chunk) (Next chunk same type menu-item Next chunk same type polymode-next-chunk-same-type) (Previous chunk same type menu-item Previous chunk same type polymode-previous-chunk-same-type) (Mark or extend chunk menu-item Mark or extend chunk polymode-mark-or-extend-chunk) (Kill chunk menu-item Kill chunk polymode-kill-chunk) (nil --) (Weave menu-item Weave polymode-weave) (Set Weaver menu-item Set Weaver polymode-set-weaver) (nil-9 --) (Export menu-item Export polymode-export) (Set Exporter menu-item Set Exporter polymode-set-exporter)))) | (27 keymap (110 . polymode-map)) |
-
 
 * Zona de pruebas
 
 
-#+begin_src emacs-lisp
+#+begin_src lisp
 (use-package ellama
   :defer 1
   :ensure t
@@ -3196,10 +3135,6 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
   (add-to-list 'imp-default-user-filters '(org-mode . ags/org-buffer-to-html-string))
   
   )
-#+end_src
-
-#+begin_src emacs-lisp
-      (message "HH")
 #+end_src
 
 
