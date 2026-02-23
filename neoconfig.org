@@ -3114,7 +3114,7 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
 
 * polymode latex php
 
-#+begin_src emacs-lisp
+#+begin_src lisp
 ;; https://chatgpt.com/share/68f20fe7-4f7c-8006-9b59-546e76ae02e3
 ;; https://chatgpt.com/c/68f20f58-749c-8326-b0b8-945205b5a4db
 
@@ -3143,8 +3143,6 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
 
 #+end_src
 
-#+RESULTS:
-| keymap | keymap | (menu-bar keymap (polymode menu-item Polymode (keymap Polymode (Next chunk menu-item Next chunk polymode-next-chunk) (Previous chunk menu-item Previous chunk polymode-previous-chunk) (Next chunk same type menu-item Next chunk same type polymode-next-chunk-same-type) (Previous chunk same type menu-item Previous chunk same type polymode-previous-chunk-same-type) (Mark or extend chunk menu-item Mark or extend chunk polymode-mark-or-extend-chunk) (Kill chunk menu-item Kill chunk polymode-kill-chunk) (nil --) (Weave menu-item Weave polymode-weave) (Set Weaver menu-item Set Weaver polymode-set-weaver) (nil-9 --) (Export menu-item Export polymode-export) (Set Exporter menu-item Set Exporter polymode-set-exporter)))) | (27 keymap (110 . polymode-map)) |
 
 
 * Zona de pruebas
