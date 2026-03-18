@@ -622,6 +622,8 @@ Mostrar =^L= (saltos de página) como una línea horizontal
    ("M-<f9>" . magit-dispatch))
 
   :config
+  (setopt magit-show-long-lines-warning t)
+  
   (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
@@ -629,7 +631,7 @@ Mostrar =^L= (saltos de página) como una línea horizontal
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
   (add-hook 'magit-status-sections-hook 'magit-insert-worktrees)
 
-  (setq magit-diff-refine-hunk 'all)
+  (setopt magit-diff-refine-hunk 'all)
 
   (use-package abridge-diff
     :ensure t
@@ -2001,24 +2003,25 @@ Necesario si una macro resulta interesante, para grabarla como una función
 : t
 
 #+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (defun ags/open-file-explorer ()
-    "Open the file explorer in the current working directory based on the operating system asynchronously."
-    (interactive)
-    (let ((file-explorer (cond
-                          ((eq system-type 'gnu/linux)
-                           "xdg-open")
-                          ((eq system-type 'darwin)
-                           "open" default-directory)
-                          ((eq system-type 'windows-nt)
-                           "explorer" default-directory)
-                          (t
-                           (error "Unsupported operating system, no file-explorer: %s" system-type)))))
-      (start-process "file-explorer" nil file-explorer default-directory)))
-  
-  (global-set-key (kbd "M-s-e") #'ags/open-file-explorer))
-)
+  (use-package emacs
+    :config
+    (defun ags/open-file-explorer ()
+      "Open the file explorer in the current working directory based on the operating system asynchronously."
+      (interactive)
+      (let ((file-explorer (cond
+                            ((eq system-type 'gnu/linux)
+                             "xdg-open")
+                            ((eq system-type 'darwin)
+                             "open" default-directory)
+                            ((eq system-type 'windows-nt)
+                             "explorer" default-directory)
+                            (t
+                             (error "Unsupported operating system, no file-explorer: %s" system-type)))))
+        (start-process "file-explorer" nil file-explorer default-directory)))
+    
+    (global-set-key (kbd "M-s-e") #'ags/open-file-explorer)
+    )
+
 
 #+end_src
 
@@ -2094,6 +2097,8 @@ Puede que sea una buena idea, pero de momento no le saco partido.
   :ensure t
   :config
 
+  (setq treesit-fold-line-count-show t)
+  
   (push '(subshell . treesit-fold-range-seq) (alist-get 'bash-ts-mode
                                                         treesit-fold-range-alist))
   (push '(case_statement . (treesit-fold-range-seq 4 -3)) (alist-get 'bash-ts-mode
@@ -2223,6 +2228,15 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 
 * Visualización
 
+** =conflict-buttons=
+#+begin_src emacs-lisp
+(use-package conflict-buttons
+  :ensure t
+  :defer 5
+  :config
+  (conflict-buttons-global-mode 1))
+#+end_src
+
 
 
 ** =stillness-mode=
@@ -2309,14 +2323,14 @@ Pareque que lo bueno es una mezcla de =outline-indent= y =kirigami=
   ;;(global-set-key (kbd "C-c k O") 'kirigami-open-fold-rec) ; Open fold recursively
   ;;(global-set-key (kbd "C-c k m") 'kirigami-close-folds)   ; Close all folds
   ;;(global-set-key (kbd "C-c k c") 'kirigami-close-fold)    ; Close fold at point
-  (global-set-key (kbd "M-+") 'kirigami-open-folds)    ; Open all folds
-  (global-set-key (kbd "<backtab>") 'kirigami-toggle-fold) ; Toggle fold at point  
+  ;;(global-set-key (kbd "M-+") 'kirigami-open-folds)    ; Open all folds
+  (global-set-key (kbd "M-+") 'kirigami-toggle-fold) ; Toggle fold at point  
   )
 
 #+end_src
 
  #+RESULTS:
-: t
+ : t
 
 #+begin_src emacs-lisp
 (use-package outline-indent
@@ -2327,14 +2341,14 @@ Pareque que lo bueno es una mezcla de =outline-indent= y =kirigami=
   :config
   ;; Fold management
   (setq-local make-window-start-visible t)
-  (define-key outline-indent-minor-mode-map (kbd "M-+") 'outline-indent-toggle-fold)     ; Open fold at point
-  (define-key outline-indent-minor-mode-map (kbd "C-c o o") 'outline-indent-open-fold)     ; Open fold at point
-  (define-key outline-indent-minor-mode-map (kbd "C-c o c") 'outline-indent-close-fold)    ; Close fold at point
-  (define-key outline-indent-minor-mode-map (kbd "C-c o m") 'outline-indent-close-folds)   ; Close all folds
-  (define-key outline-indent-minor-mode-map (kbd "C-c o r") 'outline-indent-open-folds)    ; Open all folds
-  (define-key outline-indent-minor-mode-map (kbd "C-c o O") 'outline-indent-open-fold-rec) ; Open fold recursively
-  (define-key outline-indent-minor-mode-map (kbd "C-c o TAB") 'outline-indent-toggle-fold) ; Toggle fold at point
-  (define-key outline-indent-minor-mode-map (kbd "C-c o t") 'outline-indent-toggle-level-at-point) ; Toggle level at point
+  ;;(define-key outline-indent-minor-mode-map (kbd "M-+") 'outline-indent-toggle-fold)     ; Open fold at point
+  ;;(define-key outline-indent-minor-mode-map (kbd "C-c o o") 'outline-indent-open-fold)     ; Open fold at point
+  ;;(define-key outline-indent-minor-mode-map (kbd "C-c o c") 'outline-indent-close-fold)    ; Close fold at point
+  ;;(define-key outline-indent-minor-mode-map (kbd "C-c o m") 'outline-indent-close-folds)   ; Close all folds
+  ;;(define-key outline-indent-minor-mode-map (kbd "C-c o r") 'outline-indent-open-folds)    ; Open all folds
+  ;;(define-key outline-indent-minor-mode-map (kbd "C-c o O") 'outline-indent-open-fold-rec) ; Open fold recursively
+  ;;(define-key outline-indent-minor-mode-map (kbd "C-c o TAB") 'outline-indent-toggle-fold) ; Toggle fold at point
+  ;;(define-key outline-indent-minor-mode-map (kbd "C-c o t") 'outline-indent-toggle-level-at-point) ; Toggle level at point
 
   ;; Selection
   (define-key outline-indent-minor-mode-map (kbd "C-c o v") 'outline-indent-select) ; Select current indented block
@@ -2349,6 +2363,8 @@ Pareque que lo bueno es una mezcla de =outline-indent= y =kirigami=
 
   ;; Insert heading
   (define-key outline-indent-minor-mode-map (kbd "C-c o i") 'outline-indent-insert-heading))
+
+
 
 
 #+end_src 
@@ -2442,8 +2458,8 @@ Pareque que lo bueno es una mezcla de =outline-indent= y =kirigami=
       (display-line-numbers-mode 1))
   (auto-highlight-symbol-mode 1)
   (electric-pair-local-mode 1)
-  (indent-bars-mode 1)
-  (origami-mode 1))
+  (outline-indent-minor-mode 1)
+  (indent-bars-mode 1))
 
   (add-hook 'prog-mode-hook 'ags/bonito-para-codigo)
 #+end_src
@@ -2458,6 +2474,8 @@ Pareque que lo bueno es una mezcla de =outline-indent= y =kirigami=
   (toggle-truncate-lines -1)
   (setq magic-latex-enable-suscript nil)
   (company-auctex-init)
+  (outline-indent-minor-mode 1)
+
   (magic-latex-buffer 1))
 
 (add-hook 'LaTeX-mode-hook 'ags/bonito-para-latex)
@@ -2778,7 +2796,7 @@ Imágenes tras evaluar
   (use-package org
     :config
 
-
+    (setopt org-yank-image-save-method "")
 
     (defun ags/org-export-deterministic-reference (references)
       (let ((new (length references)))
@@ -3109,7 +3127,23 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
 
 
 
-* aider
+* LLM
+
+#+begin_src emacs-lisp
+(use-package agent-shell
+    :ensure t
+    :config
+    ;;(setq agent-shell-qwen-authentication
+    ;;      (agent-shell-qwen-make-authentication :login t))
+    (setq agent-shell-qwen-authentication
+          (agent-shell-qwen-make-authentication :none t))
+    )
+  
+#+end_src
+
+#+RESULTS:
+: t
+
 
 
 #+begin_src lisp
