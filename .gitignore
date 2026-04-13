@@ -28,3 +28,4 @@ custom-file.el
 /eln-cache/
 /straight/
 /devdocs/
+/.agent-shell/

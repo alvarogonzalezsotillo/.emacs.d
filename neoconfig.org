@@ -2329,7 +2329,20 @@ Pareque que lo bueno es una mezcla de =outline-indent= y =kirigami=
 
 #+end_src
 
- #+RESULTS:
+#+begin_src emacs-lisp
+(use-package occult
+  :ensure t
+  :defer 1
+  :config
+  
+  )
+
+#+end_src
+
+#+RESULTS:
+: [nil 0 1 0 nil require (occult nil t) idle 0 nil]
+
+ ,#+RESULTS:
  : t
 
 #+begin_src emacs-lisp
@@ -2370,6 +2383,7 @@ Pareque que lo bueno es una mezcla de =outline-indent= y =kirigami=
 #+end_src 
 
 #+RESULTS:
+: t
 
 
 ** =sideline=
@@ -3159,21 +3173,30 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
 
 #+begin_src emacs-lisp
 (use-package agent-shell
-    :ensure t
-    :config
-    ;;(setq agent-shell-qwen-authentication
-    ;;      (agent-shell-qwen-make-authentication :login t))
-    (setq agent-shell-qwen-authentication
-          (agent-shell-qwen-make-authentication :none t))
-    )
-  
+  :ensure t
+  :config
+  ;;(setq agent-shell-qwen-authentication
+  ;;      (agent-shell-qwen-make-authentication :login t))
+  (setq agent-shell-qwen-authentication
+        (agent-shell-qwen-make-authentication :none t))
+
+
+  (defun ags/qwen-yolo-mode-on ()
+    (interactive)
+    (setq agent-shell-permission-responder-function #'agent-shell-permission-allow-always))
+
+  (defun ags/qwen-yolo-mode-off ()
+    (interactive)
+    (setq agent-shell-permission-responder-function nil))
+  )
+
 #+end_src
 
 #+RESULTS:
 : t
 
 
-
+Ya no uso aider, prefiero qwen
 #+begin_src lisp
 (use-package aidermacs
   :bind (("C-c a" . aidermacs-transient-menu))
@@ -3224,6 +3247,21 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
 
 
 * Zona de pruebas
+
+#+begin_src emacs-lisp
+(use-package whisper
+  :vc (:url "https://github.com/natrys/whisper.el" :branch "master")
+  :config
+  (setopt whisper-model "small")
+  (setopt whisper-use-threads 6)
+  )
+
+#+end_src
+
+#+RESULTS:
+: t
+
+
 
 
 #+begin_src lisp
