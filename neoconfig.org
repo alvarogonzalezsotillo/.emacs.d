@@ -2915,6 +2915,7 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 (use-package ob-typescript
   :ensure t
   :defer 1)
+(setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar")
 
 (use-package ob-restclient
   :ensure t
@@ -2934,9 +2935,9 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
 (use-package emacs
   :config
   (if
-      (file-exists-p "/usr/share/plantuml/plantuml.jar")
-      (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar")
-    (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.1.2018.11.jar")))
+      (not (file-exists-p "/usr/share/plantuml/plantuml.jar"))
+      (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml-1.2026.2.jar"))
+    (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar"))
 
   (setq plantuml-jar-path org-plantuml-jar-path)
 
@@ -2954,7 +2955,7 @@ Habilito varios lenguajes que pueden ejecutarse directamente desde los bloques d
      (shell . t)))
 
   (add-to-list 'org-babel-tangle-lang-exts '("js" . "js"))
-)
+  )
 #+end_src
 
 #+RESULTS:
@@ -3247,6 +3248,53 @@ Ya no uso aider, prefiero qwen
 
 
 * Zona de pruebas
+
+#+begin_src emacs-lisp
+(defun ags/git-root ()
+  "Return the git root for current buffer."
+  (let ((default-directory (or (file-name-directory (buffer-file-name))
+                               default-directory)))
+    (string-trim
+     (shell-command-to-string "git rev-parse --show-toplevel"))))
+
+(defun ags/git-worktrees ()
+  "Return list of git worktree root paths."
+  (let* ((default-directory (ags/git-root))
+         (output (shell-command-to-string "git worktree list --porcelain"))
+         (lines (split-string output "\n" t))
+         worktrees)
+    (dolist (line lines)
+      (when (string-prefix-p "worktree " line)
+        (push (string-trim (substring line (length "workspace"))) worktrees)))
+    worktrees))
+
+(defun ags/jump-to-worktree-file ()
+  "Jump to the same file in another git worktree."
+  (interactive)
+  (let ((file (buffer-file-name)))
+    (unless file
+      (user-error "Not visiting a file"))
+    (let* ((root (ags/git-root))
+           (rel (file-relative-name file root))
+           (worktrees (ags/git-worktrees))
+           (others (remove root worktrees)))
+      (unless others
+        (user-error "No other worktrees found"))
+      (let* ((target-root
+              (if (= (length others) 1)
+                  (car others)
+                (completing-read "Select worktree: " others nil t)))
+             (target-file (expand-file-name rel target-root)))
+        (if (file-exists-p target-file)
+            (progn
+              (find-file target-file)
+              (message (format "Changed to worktree: %s" target-root)))
+          (user-error (format "File %s does not found in worktree %s" rel target-root)))))))
+#+end_src
+
+#+RESULTS:
+: ags/jump-to-worktree-file
+
 
 #+begin_src emacs-lisp
 (use-package whisper

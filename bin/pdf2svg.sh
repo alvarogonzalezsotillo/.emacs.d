@@ -1,4 +1,4 @@
-for fichero in $*
+for fichero in "$@"
 do
     echo $fichero
     
