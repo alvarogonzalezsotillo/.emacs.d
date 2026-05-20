@@ -3249,6 +3249,11 @@ Ya no uso aider, prefiero qwen
 
 * Zona de pruebas
 
+I recently discovered git worktrees, so I need a way to jump between worktrees.
+
+So this is my quick solution `ags/jump-to-worktree-file`, that handles multiple worktrees and some edge cases like file not present in other worktrees.
+
+
 #+begin_src emacs-lisp
 (defun ags/git-root ()
   "Return the git root for current buffer."
@@ -3259,8 +3264,7 @@ Ya no uso aider, prefiero qwen
 
 (defun ags/git-worktrees ()
   "Return list of git worktree root paths."
-  (let* ((default-directory (ags/git-root))
-         (output (shell-command-to-string "git worktree list --porcelain"))
+  (let* ((output (shell-command-to-string "git worktree list --porcelain"))
          (lines (split-string output "\n" t))
          worktrees)
     (dolist (line lines)
