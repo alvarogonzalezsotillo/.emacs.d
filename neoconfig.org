@@ -3301,6 +3301,28 @@ So this is my quick solution `ags/jump-to-worktree-file`, that handles multiple 
 
 
 #+begin_src emacs-lisp
+(use-package region-pin
+  :vc (:url "https://github.com/vmargb/region-pin/")
+
+  :config
+  (global-set-key (kbd "C-c C-p i") #'region-pin-instant) ; instantly pin region (without a name)
+  (global-set-key (kbd "C-c C-p p") #'region-pin-save)    ; save region with a name
+  (global-set-key (kbd "C-c C-p s") #'region-pin-show)    ; show a saved/named region
+  (global-set-key (kbd "C-c C-p h") #'region-pin-hide)    ; hide any existing region pins
+  (global-set-key (kbd "C-c C-p n") #'region-pin-next)    ; go to next named region
+  (global-set-key (kbd "C-c C-p P") #'region-pin-previous); go to previous named region
+  (global-set-key (kbd "C-c C-p d") #'region-pin-delete)  ; delete a named region
+  (global-set-key (kbd "C-c C-p f") #'region-pin-follow)  ; find + pin definition at point
+  (global-set-key (kbd "C-c C-p m") #'region-pin-imenu)       ; search + pin a symbol in this buffer
+  (global-set-key (kbd "C-c C-p M") #'region-pin-imenu-multi) ; search + pin a symbol from any open project buffer
+  )
+#+end_src
+
+#+RESULTS:
+: t
+
+
+#+begin_src emacs-lisp
 (use-package whisper
   :vc (:url "https://github.com/natrys/whisper.el" :branch "master")
   :config
