@@ -1,6 +1,7 @@
 +TITLE: Configuración Emacs
 #+author: Álvaro González (@alvarogonzalez)
-#+OPTIONS: toc:2 h:4 author:t
+#+OPTIONS: toc:2
+#+options: author:t
 
 
 #+latex: \newpage
@@ -35,26 +36,6 @@ El fichero de /customize/ lo mantengo aparte del =init.el=, para separar entorno
   #+begin_src emacs-lisp
   (setq custom-file "~/.emacs.d/custom-file.el")
   #+end_src
-
-** =straight=
-
-#+begin_src emacs-lisp
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-#+end_src
-
-#+RESULTS:
-: t
   
   
 * Optimizaciones
@@ -98,6 +79,7 @@ Añado también el directorio de =cargo= para =rust=.
                   ,(concat (expand-file-name "~/") "node_modules/.bin")
                   ,(concat (expand-file-name "~/") ".local/bin")
                   "/opt/node/bin"
+                  "/opt/flutter/bin"
                   "/opt/scala/bin" )) )
     (dolist (path paths)
       (message "path: %s" path)
@@ -109,26 +91,83 @@ Añado también el directorio de =cargo= para =rust=.
 
 #+end_src
 
+#+RESULTS:
+: t
+
+I recently discovered git worktrees, so I need a way to jump between worktrees.
+
+So this is my quick solution `ags/jump-to-worktree-file`, that handles multiple worktrees and some edge cases like file not present in other worktrees.
+
+
+#+begin_src emacs-lisp
+(defun ags/git-root ()
+  "Return the git root for current buffer."
+  (let ((default-directory (if (derived-mode-p 'dired-mode)
+                               (dired-current-directory)
+                             (buffer-file-name))))
+    (string-trim
+     (shell-command-to-string "git rev-parse --show-toplevel"))))
+
+(defun ags/git-worktrees ()
+  "Return list of git worktree root paths."
+  (let* ((output (shell-command-to-string "git worktree list --porcelain"))
+         (lines (split-string output "\n" t))
+         worktrees)
+    (dolist (line lines)
+      (when (string-prefix-p "worktree " line)
+        (push (string-trim (substring line (length "workspace"))) worktrees)))
+    worktrees))
+
+(defun ags/jump-to-worktree-file ()
+  "Jump to the same file in another git worktree."
+  (interactive)
+  (let ((file (if (derived-mode-p 'dired-mode)
+                  (dired-current-directory)
+                (buffer-file-name))))
+    (unless file
+      (user-error "Not visiting a file or directory"))
+    (let* ((root (ags/git-root))
+           (rel (file-relative-name file root))
+           (worktrees (ags/git-worktrees))
+           (others (remove root worktrees)))
+      (unless others
+        (user-error "No other worktrees found"))
+      (let* ((target-root
+              (if (= (length others) 1)
+                  (car others)
+                (completing-read "Select worktree: " others nil t)))
+             (target-file (expand-file-name rel target-root)))
+        (if (or (file-exists-p target-file)
+                (file-directory-p target-file))
+            (progn
+              (find-file target-file)
+              (message (format "Changed to worktree: %s" target-root)))
+          (user-error (format "File %s does not found in worktree %s" rel target-root)))))))
+#+end_src
+
+#+RESULTS:
+: ags/jump-to-worktree-file
+
 ** Abrir todos los =org= de =apuntes-clase=
 
 #+begin_src emacs-lisp
 
-(defun es-presentacion-p (filename)
+(defun ags/es-presentacion-p (filename)
   (let* ((contents (org-file-contents filename)))
     (string-match-p "/common/footer.org" contents)))
 
-(defun lista-de-orgs (directory)
+(defun ags/lista-de-orgs (directory)
   (directory-files-recursively directory ".*\.org$" ))
 
 
-(defun lista-de-presentaciones (directory)
-  (let* ((all-orgs (lista-de-orgs directory))
-         (presentations (seq-filter #'es-presentacion-p all-orgs)) )
+(defun ags/lista-de-presentaciones (directory)
+  (let* ((all-orgs (ags/lista-de-orgs directory))
+         (presentations (seq-filter #'ags/es-presentacion-p all-orgs)) )
     presentations))
 
 (defun ags/abre-todas-las-presentaciones ()
   (interactive)
-  (dolist (orgfile (lista-de-presentaciones "/home/alvaro/apuntes-clase/"))
+  (dolist (orgfile (ags/lista-de-presentaciones "/home/alvaro/apuntes-clase/"))
     (find-file orgfile)
     ))
 
@@ -196,7 +235,7 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
    (list 
     (read-string "Título: " (or gifttolatex-titulo (buffer-name)))
     (read-number "Porcentaje del test: " (or gifttolatex-porcentajetest 60))
-    (read-string "Otros parámetros:" (or gifttolatex-parametros "-k" ))))
+    (read-string "Otros parámetros:" (or gifttolatex-parametros "-k -m 100 -n 2" ))))
   
   (setq gifttolatex-titulo titulo)
   (setq gifttolatex-porcentajetest porcentajetest)
@@ -207,6 +246,9 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
     (shell-command comando)))
 
    #+end_src
+
+   #+RESULTS:
+   : ags/gifttolatex
 
    
 ** Arrancar el servidor http de emacs en el directorio actual
@@ -222,8 +264,12 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
     (setq httpd-host host)
     (setq httpd-port port)
     (httpd-start)
+    (add-to-list 'httpd-mime-types '("json" . "application/json"))
     (browse-url (concat "http://localhost:" (number-to-string port) "/")))
 #+end_src
+
+#+RESULTS:
+: ags/servidor-httpd-aqui
 
 ** Generar /reveal/ y PDF
 Generalmente utilizo un fichero orgmode para hacer transparencias y materiales para clase, y quiero generar a la vez las transparencias, la versión HTML y el PDF.
@@ -489,13 +535,15 @@ Mostrar =^L= (saltos de página) como una línea horizontal
   :defer t
   :ensure t
   :bind
-      (("C-c C-c" . ags/gifttolatex))
-
+      (:map gift-mode-map ("C-c C-c" . ags/gifttolatex) )
   :config
   (defalias 'trim-string 'string-trim) 
   
 )
 #+end_src
+
+#+RESULTS:
+: ags/gifttolatex
 
 
 
@@ -1211,150 +1259,151 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 
 #+begin_src emacs-lisp
 
-(use-package marginalia
-  :ensure t
-  :defer 1
-  :custom
-  (marginalia-max-relative-age 0)
-  (marginalia-align 'right)
-  :init
-  (marginalia-mode))
+  (use-package marginalia
+    :ensure t
+    :defer 1
+    :custom
+    (marginalia-max-relative-age 0)
+    (marginalia-align 'right)
+    :init
+    ;;(marginalia-mode)
+    )
 
 
-(use-package all-the-icons-completion
-  :ensure t
-  :defer 1
-  :after (marginalia all-the-icons)
-  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
-  :init
-  (all-the-icons-completion-mode))
+  (use-package all-the-icons-completion
+    :ensure t
+    :defer 1
+    :after (marginalia all-the-icons)
+    :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+    :init
+    (all-the-icons-completion-mode))
 
-(use-package vertico
-  :ensure t
-  :defer 1
-  :custom
-  (vertico-count 13)                    ; Number of candidates to display
-  (vertico-resize nil)
-  (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
+  (use-package vertico
+    :ensure t
+    :defer 1
+    :custom
+    (vertico-count 13)                    ; Number of candidates to display
+    (vertico-resize nil)
+    (vertico-cycle nil) ; Go from last to first candidate and first to last (cycle)?
 
-  :config
+    :config
 
-  ;; https://emacs.stackexchange.com/questions/80866/in-shell-buffer-how-do-to-configure-tab-key-to-behave-vertically-like-ve
-  ;; Use `consult-completion-in-region' if Vertico is enabled.
-  ;; Otherwise use the default `completion--in-region' function.
-  (setq completion-in-region-function
-        (lambda (&rest args)
-          (apply (if vertico-mode
-                     #'consult-completion-in-region
-                   #'completion--in-region)
-                 args)))
-  
-  (vertico-mode))
+    ;; https://emacs.stackexchange.com/questions/80866/in-shell-buffer-how-do-to-configure-tab-key-to-behave-vertically-like-ve
+    ;; Use `consult-completion-in-region' if Vertico is enabled.
+    ;; Otherwise use the default `completion--in-region' function.
+    (setq completion-in-region-function
+          (lambda (&rest args)
+            (apply (if vertico-mode
+                       #'consult-completion-in-region
+                     #'completion--in-region)
+                   args)))
+    
+    (vertico-mode))
 
-(use-package vertico-mouse
-  :ensure nil
-  :config
-  (vertico-mouse-mode 1)
-  )
+  (use-package vertico-mouse
+    :ensure nil
+    :config
+    (vertico-mouse-mode 1)
+    )
 
-(use-package vertico-posframe
-  :after vertico
-  :ensure t
-  :defer 1
-  :config
-  (setq vertico-posframe-border-width 6)
+  (use-package vertico-posframe
+    :after vertico
+    :ensure t
+    :defer 1
+    :config
+    (setq vertico-posframe-border-width 6)
 
-  (setq vertico-posframe-poshandler #'posframe-poshandler-frame-bottom-center)
-  
-  (when (posframe-workable-p)
-    (vertico-posframe-mode 1))
-  )
-
-
-(use-package orderless
-  :ensure t
-  :defer 1
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
+    (setq vertico-posframe-poshandler #'posframe-poshandler-frame-bottom-center)
+    
+    (when (posframe-workable-p)
+      (vertico-posframe-mode 1))
+    )
 
 
-(use-package consult
-  :after projectile
-  :ensure t
-  :defer 1
-  :bind
-  (("<f6>"  . consult-buffer)
-   ("C-x r b" . consult-bookmark)
-   ("M-y" . consult-yank-pop)
-   ("M-g g" . consult-goto-line)
-   ("C-f" . consult-line)
-   ("C-S-f" . consult-line-multi)
-   ("M-<f7>" . consult-imenu-multi )
-   )
-
-  :config
-  ;;(define-key minibuffer-mode-map (kbd "S-<f6>") 'previous-line-or-history-element)
-  ;;(define-key minibuffer-mode-map (kbd "<f6>") 'next-line-or-history-element)
-  (define-key projectile-command-map (kbd "s g") 'consult-git-grep)
-  )
-
-(use-package consult-projectile
-  :ensure t
-  :defer 1
-  :after projectile
-
-  :bind
-  (("C-<f6>"  . consult-projectile-switch-to-buffer) )
-
-  :config
-  (setq consult-preview-key "M-+") ;; https://github.com/minad/consult#live-previews
-  (setq consult-projectile-use-projectile-switch-project t)
-  (setq xref-show-xrefs-function #'consult-xref)
-  (setq xref-show-definitions-function #'consult-xref)
-  (setq consult-narrow-key "<")
-  (setq consult-widen-key ">")
-  (define-key projectile-command-map (kbd "f") #'consult-projectile-find-file)
-  ;;(define-key projectile-command-map (kbd "p") #'consult-projectile-switch-project) ;; MIENTRAS SE QUEDE ENGANCHADO CON TRAMP
-  (define-key projectile-command-map (kbd "p") #'projectile-switch-project) ;; MIENTRAS SE QUEDE ENGANCHADO CON TRAMP
-  (define-key projectile-command-map (kbd "s s") #'consult-ripgrep)
-  )
+  (use-package orderless
+    :ensure t
+    :defer 1
+    :custom
+    (completion-styles '(orderless basic))
+    (completion-category-overrides '((file (styles basic partial-completion)))))
 
 
-(use-package embark
-  :ensure t
+  (use-package consult
+    :after projectile
+    :ensure t
+    :defer 1
+    :bind
+    (("<f6>"  . consult-buffer)
+     ("C-x r b" . consult-bookmark)
+     ("M-y" . consult-yank-pop)
+     ("M-g g" . consult-goto-line)
+     ("C-f" . consult-line)
+     ("C-S-f" . consult-line-multi)
+     ("M-<f7>" . consult-imenu-multi )
+     )
 
-  :bind
-  (("C-ñ" . embark-act)         ;; pick some comfortable binding
-   ("C--" . embark-dwim)        ;; good alternative: M-.
-   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+    :config
+    ;;(define-key minibuffer-mode-map (kbd "S-<f6>") 'previous-line-or-history-element)
+    ;;(define-key minibuffer-mode-map (kbd "<f6>") 'next-line-or-history-element)
+    (define-key projectile-command-map (kbd "s g") 'consult-git-grep)
+    )
 
-  :init
+  (use-package consult-projectile
+    :ensure t
+    :defer 1
+    :after projectile
 
-  ;; Optionally replace the key help with a completing-read interface
-  ;; (setq prefix-help-command #'embark-prefix-help-command)
+    :bind
+    (("C-<f6>"  . consult-projectile-switch-to-buffer) )
 
-  ;; Show the Embark target at point via Eldoc. You may adjust the
-  ;; Eldoc strategy, if you want to see the documentation from
-  ;; multiple providers. Beware that using this can be a little
-  ;; jarring since the message shown in the minibuffer can be more
-  ;; than one line, causing the modeline to move up and down:
+    :config
+    (setq consult-preview-key "M-+") ;; https://github.com/minad/consult#live-previews
+    (setq consult-projectile-use-projectile-switch-project t)
+    (setq xref-show-xrefs-function #'consult-xref)
+    (setq xref-show-definitions-function #'consult-xref)
+    (setq consult-narrow-key "<")
+    (setq consult-widen-key ">")
+    (define-key projectile-command-map (kbd "f") #'consult-projectile-find-file)
+    ;;(define-key projectile-command-map (kbd "p") #'consult-projectile-switch-project) ;; MIENTRAS SE QUEDE ENGANCHADO CON TRAMP
+    (define-key projectile-command-map (kbd "p") #'projectile-switch-project) ;; MIENTRAS SE QUEDE ENGANCHADO CON TRAMP
+    (define-key projectile-command-map (kbd "s s") #'consult-ripgrep)
+    )
 
-  ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
-  ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
 
-  :config
+  (use-package embark
+    :ensure t
 
-  ;; Hide the mode line of the Embark live/completions buffers
-  (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                 nil
-                 (window-parameters (mode-line-format . none)))))
+    :bind
+    (("C-ñ" . embark-act)         ;; pick some comfortable binding
+     ("C--" . embark-dwim)        ;; good alternative: M-.
+     ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
-;; Consult users will also want the embark-consult package.
-(use-package embark-consult
-  :ensure t ; only need to install it, embark loads it after consult if found
-  )
+    :init
+
+    ;; Optionally replace the key help with a completing-read interface
+    ;; (setq prefix-help-command #'embark-prefix-help-command)
+
+    ;; Show the Embark target at point via Eldoc. You may adjust the
+    ;; Eldoc strategy, if you want to see the documentation from
+    ;; multiple providers. Beware that using this can be a little
+    ;; jarring since the message shown in the minibuffer can be more
+    ;; than one line, causing the modeline to move up and down:
+
+    ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+    ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
+
+    :config
+
+    ;; Hide the mode line of the Embark live/completions buffers
+    (add-to-list 'display-buffer-alist
+                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                   nil
+                   (window-parameters (mode-line-format . none)))))
+
+  ;; Consult users will also want the embark-consult package.
+  (use-package embark-consult
+    :ensure t ; only need to install it, embark loads it after consult if found
+    )
 
 #+end_src
 
@@ -2238,6 +2287,15 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 #+end_src
 
 
+** =occult=
+
+#+begin_src emacs-lisp
+(use-package occult
+  :ensure t)
+#+end_src
+
+#+RESULTS:
+
 
 ** =stillness-mode=
 No encuentro ninguna diferencia
@@ -2628,6 +2686,8 @@ Scroll lateral con el touchpad
 (put 'scroll-left 'disabled nil)
 (put 'scroll-right 'disabled nil)
 #+end_src
+
+#+RESULTS:
 
 
 ** Números de línea
@@ -3072,50 +3132,41 @@ Añado a la lista de extensiones la de los módulos.
   )
 #+end_src
 
-   
-* Rust
-
+* lsp
 #+begin_src emacs-lisp
-(use-package rustic
-  :ensure t
-  :defer 1
-  :config
-  
-  ;; uncomment for less flashiness
-  ;; (setq lsp-eldoc-hook nil)
-  ;; (setq lsp-enable-symbol-highlighting nil)
-  ;; (setq lsp-signature-auto-activate nil)
+;;pip3 install epc orjson sexpdata six setuptools paramiko rapidfuzz watchdog packaging
+(use-package lsp-bridge
+  :straight '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge"
+            :files (:defaults "*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
+            :build (:not compile))
+  :init
+  (global-lsp-bridge-mode))
 
-  ;; comment to disable rustfmt on save
-  (setq rustic-format-on-save t)
-  
-  )
-
-#+end_src
-
-
-#+begin_src emacs-lisp
 (use-package lsp-mode
   :ensure t
   :defer 1
   :commands lsp
   :after yasnippet
   :custom
+
+  ;; (setq lsp-enable-symbol-highlighting nil)
+  ;; (setq lsp-signature-auto-activate nil)
+
   ;; what to use when checking on-save. "check" is default, I prefer clippy
-  (lsp-rust-analyzer-cargo-watch-command "clippy")
+  (lsp-eldoc-hook nil)
   (lsp-eldoc-render-all nil)
   (lsp-idle-delay 0.6)
-  ;; enable / disable the hints as you prefer:
-  (lsp-rust-analyzer-server-display-inlay-hints t)
-  (lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial")
-  (lsp-rust-analyzer-display-chaining-hints t)
-  (lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names nil)
-  (lsp-rust-analyzer-display-closure-return-type-hints t)
-  (lsp-rust-analyzer-display-parameter-hints t)
-  (lsp-rust-analyzer-display-reborrow-hints t)
+
+  (lsp-disabled-clients '(semgrep-ls))
+
   :config
+  ;; uncomment for less flashiness
+  (setq lsp-eldoc-hook nil)
+  
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
   (yas-reload-all)
+
+  
   )
   
 
@@ -3141,8 +3192,58 @@ Añado a la lista de extensiones la de los módulos.
 
 #+end_src
 
+#+RESULTS:
+: [nil 0 1 0 nil require (yasnippet-snippets nil t) idle 0 nil]
 
 
+** Dart
+#+begin_src emacs-lisp
+(use-package dart-mode
+  :ensure t
+  :defer 1
+  :config
+  (add-hook 'dart-mode-hook #'lsp)
+)
+
+
+
+#+end_src
+
+#+RESULTS:
+
+** Rust
+
+#+begin_src emacs-lisp
+(use-package rustic
+  :ensure t
+  :defer 1
+  :after lsp
+  :config
+  
+  ;; comment to disable rustfmt on save
+  (setq rustic-format-on-save t)
+
+  :custom
+  ;; what to use when checking on-save. "check" is default, I prefer clippy
+  (lsp-rust-analyzer-cargo-watch-command "clippy")
+  ;; enable / disable the hints as you prefer:
+  (lsp-rust-analyzer-server-display-inlay-hints t)
+  (lsp-rust-analyzer-display-lifetime-elision-hints-enable "skip_trivial")
+  (lsp-rust-analyzer-display-chaining-hints t)
+  (lsp-rust-analyzer-display-lifetime-elision-hints-use-parameter-names nil)
+  (lsp-rust-analyzer-display-closure-return-type-hints t)
+  (lsp-rust-analyzer-display-parameter-hints t)
+  (lsp-rust-analyzer-display-reborrow-hints t)
+  
+  
+  )
+
+#+end_src
+
+#+RESULTS:
+
+
+  
 
 
 * XQuery
@@ -3176,17 +3277,15 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
 (use-package agent-shell
   :ensure t
   :config
-  ;;(setq agent-shell-qwen-authentication
-  ;;      (agent-shell-qwen-make-authentication :login t))
-  (setq agent-shell-qwen-authentication
-        (agent-shell-qwen-make-authentication :none t))
+  ;;(setq agent-shell-qwen-authentication (agent-shell-qwen-make-authentication :login t))
+  ;;(setq agent-shell-qwen-authentication (agent-shell-qwen-make-authentication :none t))
 
 
-  (defun ags/qwen-yolo-mode-on ()
+  (defun ags/agent-yolo-mode-on ()
     (interactive)
     (setq agent-shell-permission-responder-function #'agent-shell-permission-allow-always))
 
-  (defun ags/qwen-yolo-mode-off ()
+  (defun ags/agent-yolo-mode-off ()
     (interactive)
     (setq agent-shell-permission-responder-function nil))
   )
@@ -3197,22 +3296,81 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
 : t
 
 
-Ya no uso aider, prefiero qwen
-#+begin_src lisp
-(use-package aidermacs
-  :bind (("C-c a" . aidermacs-transient-menu))
-  :ensure t
-  :config
-  
-  :custom
-  ; See the Configuration section below
-  (aidermacs-default-model "openrouter/deepseek/deepseek-r1"))
-  
+
+
+* live-command-mode
+#+begin_src emacs-lisp
+;; emacs: major mode: 
+;; first line is editable, a bash line command. The rest of the buffer is not editable.
+;; emacs executes the line command on iddle, and puts the result from line 3 onwards
+;; if the first line is modified, the command is reexecuted and displayed on iddle.
+
+
+(defvar-local live-command--idle-timer nil)
+
+(defun live-command--command ()
+  (save-excursion
+    (goto-char (point-min))
+    (buffer-substring-no-properties
+     (line-beginning-position)
+     (line-end-position))))
+
+(defun live-command--update ()
+  (when (eq major-mode 'live-command-mode)
+    (let ((inhibit-read-only t)
+          (cmd (live-command--command)))
+      (save-excursion
+        ;; Remove old output
+        (goto-char (point-min))
+        (forward-line 2)
+        (delete-region (point) (point-max))
+
+        ;; Insert new output
+        (let ((output
+               (with-temp-buffer
+                 (call-process-shell-command
+                  cmd nil t nil)
+                 (buffer-string))))
+          (goto-char (point-max))
+          (insert output))))))
+
+(defun live-command--schedule-update (&rest _)
+  (when live-command--idle-timer
+    (cancel-timer live-command--idle-timer))
+  (setq live-command--idle-timer
+        (run-with-idle-timer
+         0.5 nil
+         #'live-command--update)))
+
+(defun live-command--protect-output (_beg end _len)
+  (when (> end (save-excursion
+                 (goto-char (point-min))
+                 (forward-line 2)
+                 (point)))
+    (user-error "Output area is read-only")))
+
+(define-derived-mode live-command-mode fundamental-mode "LiveCmd"
+  "Live command buffer."
+
+  (setq-local buffer-read-only nil)
+
+  (unless (> (buffer-size) 0)
+    (insert "date\n")
+    (insert "----------------------------------------\n"))
+
+  ;; Make output region read-only.
+  (add-hook 'after-change-functions
+            #'live-command--schedule-update
+            nil t)
+
+  ;; Initial update
+  (live-command--update))
+
+(defun live-command-buffer ()
+  (interactive) e8>=5
+  (switch-to-buffer "*Live Command*")
+  (live-command-mode))
 #+end_src
-
-#+RESULTS:
-: aidermacs-transient-menu
-
 
 * polymode latex php
 
@@ -3249,55 +3407,64 @@ Ya no uso aider, prefiero qwen
 
 * Zona de pruebas
 
-I recently discovered git worktrees, so I need a way to jump between worktrees.
+emacs: interactive function. when invoked on a buffer, it monitorizes the clipboard, every 5s  extract a list of numbers separated by "\n". The buffer contents become the list of numbers and a line with the variance of the numbers.
+Add a function to cancel monitoring
 
-So this is my quick solution `ags/jump-to-worktree-file`, that handles multiple worktrees and some edge cases like file not present in other worktrees.
+#+begin_src emacs-lisp :lexical t 
+(defvar-local my-clipboard-monitor-timer nil
+  "Timer used to monitor the clipboard.")
 
+(defun my-clipboard-monitor-update ()
+  "Read numbers from clipboard and replace current buffer contents.
+The clipboard must contain one number per line."
+  (when-let ((text (current-kill 0 t)))
+    (let* ((numbers
+            (cl-loop for line in (split-string text nil t)
+                     for n = (string-to-number line)
+                     collect n)))
+      (when numbers
+        (let* ((n (length numbers))
+               (mean (/ (apply #'+ numbers) (float n)))
+               (variance
+                (/ (apply #'+
+                          (mapcar (lambda (x)
+                                    (expt (- x mean) 2))
+                                  numbers))
+                   (float n)))
+               (tipica (sqrt variance)))
+          (with-current-buffer (current-buffer)
+            (let ((inhibit-read-only t))
+              (erase-buffer)
+              (insert
+               (mapconcat #'number-to-string numbers "\n"))
+              (insert (format "\n\nCuántos: %f\n\nMedia: %f\n\nVarianza: %f\n\nDesviación típica:%f \n" n mean variance tipica)))))))))
 
-#+begin_src emacs-lisp
-(defun ags/git-root ()
-  "Return the git root for current buffer."
-  (let ((default-directory (or (file-name-directory (buffer-file-name))
-                               default-directory)))
-    (string-trim
-     (shell-command-to-string "git rev-parse --show-toplevel"))))
-
-(defun ags/git-worktrees ()
-  "Return list of git worktree root paths."
-  (let* ((output (shell-command-to-string "git worktree list --porcelain"))
-         (lines (split-string output "\n" t))
-         worktrees)
-    (dolist (line lines)
-      (when (string-prefix-p "worktree " line)
-        (push (string-trim (substring line (length "workspace"))) worktrees)))
-    worktrees))
-
-(defun ags/jump-to-worktree-file ()
-  "Jump to the same file in another git worktree."
+(defun my-start-clipboard-monitor ()
+  "Monitor clipboard every 2 seconds and update current buffer."
   (interactive)
-  (let ((file (buffer-file-name)))
-    (unless file
-      (user-error "Not visiting a file"))
-    (let* ((root (ags/git-root))
-           (rel (file-relative-name file root))
-           (worktrees (ags/git-worktrees))
-           (others (remove root worktrees)))
-      (unless others
-        (user-error "No other worktrees found"))
-      (let* ((target-root
-              (if (= (length others) 1)
-                  (car others)
-                (completing-read "Select worktree: " others nil t)))
-             (target-file (expand-file-name rel target-root)))
-        (if (file-exists-p target-file)
-            (progn
-              (find-file target-file)
-              (message (format "Changed to worktree: %s" target-root)))
-          (user-error (format "File %s does not found in worktree %s" rel target-root)))))))
+  (my-stop-clipboard-monitor)
+  (let ((buffer (current-buffer)))
+    (setq my-clipboard-monitor-timer
+          (run-at-time
+           nil 2
+           (lambda ()
+             (if (buffer-live-p buffer)
+                 (with-current-buffer buffer
+                   (my-clipboard-monitor-update))
+               (my-stop-clipboard-monitor))))))
+  (message "Clipboard monitoring started."))
+
+(defun my-stop-clipboard-monitor ()
+  "Stop clipboard monitoring."
+  (interactive)
+  (when (timerp my-clipboard-monitor-timer)
+    (cancel-timer my-clipboard-monitor-timer)
+    (setq my-clipboard-monitor-timer nil))
+  (message "Clipboard monitoring stopped."))
 #+end_src
 
 #+RESULTS:
-: ags/jump-to-worktree-file
+: my-stop-clipboard-monitor
 
 
 #+begin_src emacs-lisp

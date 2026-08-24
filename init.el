@@ -1,4 +1,18 @@
 
+(defun ags/setup-straight ()
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 6))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+)
 
 
 (defun ags/setup-use-package (&optional refresh)
@@ -63,6 +77,7 @@
    
    )
   (setq debug-on-error debug)
+  (ags/setup-straight)
   (ags/setup-use-package refresh)
 
   (message "Cargo el fichero org de configuración con org-version:%s" (org-version))
