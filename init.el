@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 
 (defun ags/setup-straight ()
   (defvar bootstrap-version)
