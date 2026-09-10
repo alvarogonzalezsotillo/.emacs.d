@@ -1266,7 +1266,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
     (marginalia-max-relative-age 0)
     (marginalia-align 'right)
     :init
-    ;;(marginalia-mode)
+    (marginalia-mode)
     )
 
 
@@ -1685,95 +1685,96 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
 #+begin_src emacs-lisp
 
-  (use-package company
-    :ensure t
-    :config
+(use-package company
+  :ensure t
+  :config
 
-    (setq company-tooltip-minimum-width 70)
-
-
-    (defvar ags/company-backends-prog-mode
-      '((company-capf 
-                      company-dabbrev-code
-                      company-files
-                      company-web-html
-                      company-keywords
-                      company-emoji
-                      company-yasnippet)))
+  (setq company-tooltip-minimum-width 70)
 
 
-    (defvar ags/company-backends-org-mode
-      '((company-capf                       company-files
-                      company-dabbrev
-                      company-keywords
-                      company-emoji
-                      company-yasnippet)))
+  (defun ags/company-backends-prog-mode()
+    '((company-capf
+       company-dabbrev-code
+       company-files
+       company-web-html
+       company-keywords
+       company-emoji
+       company-yasnippet)))
 
-    (defvar ags/company-backends-tex-mode
-      '((company-capf :with
-                      company-files
-                      company-dabbrev
-                      company-keywords
-                      company-emoji
-                      company-yasnippet)))
+  (defun ags/company-backends-org-mode()
+    '((company-yasnippet
+       company-capf
+       company-files
+       company-dabbrev
+       company-keywords
+       company-emoji
+       )))
 
-    
-    (defvar ags/company-backends ags/company-backends-org-mode)
+  (defun ags/company-backends-tex-mode()
+    '((company-capf :with
+                    company-files
+                    company-dabbrev
+                    company-keywords
+                    company-emoji
+                    company-yasnippet)))
 
-    ;; set default `company-backends'
-    (setq company-backends ags/company-backends)
+  
+  (defun ags/company-backends() (ags/company-backends-org-mode))
 
-    (defun ags/company-backends-org-mode-function ()
-      (interactive)
-      (set (make-local-variable 'company-backends) ags/company-backends-org-mode))
+  ;; set default `company-backends'
+  (setq company-backends (ags/company-backends))
 
-    (add-hook 'org-mode-hook #'ags/company-backends-org-mode-function)
+  (defun ags/company-backends-org-mode-function ()
+    (interactive)
+    (set (make-local-variable 'company-backends) (ags/company-backends-org-mode)))
 
-    (defun ags/company-backends-prog-mode-function ()
-      (interactive)
-      (set (make-local-variable 'company-backends) ags/company-backends-prog-mode))
+  (add-hook 'org-mode-hook #'ags/company-backends-org-mode-function)
 
-    (add-hook 'prog-mode-hook #'ags/company-backends-prog-mode-function)
+  (defun ags/company-backends-prog-mode-function ()
+    (interactive)
+    (set (make-local-variable 'company-backends) (ags/company-backends-prog-mode)))
 
-    (defun ags/company-backends-tex-mode-function ()
-      (interactive)
-      (set (make-local-variable 'company-backends) ags/company-backends-tex-mode))
+  (add-hook 'prog-mode-hook #'ags/company-backends-prog-mode-function)
 
-    (add-hook 'TeX-mode-hook #'ags/company-backends-tex-mode-function)
-    
-    (global-set-key (kbd "C-.") 'company-complete)
-    (define-key company-active-map [escape] 'company-abort)
+  (defun ags/company-backends-tex-mode-function ()
+    (interactive)
+    (set (make-local-variable 'company-backends) (ags/company-backends-tex-mode)))
+
+  (add-hook 'TeX-mode-hook #'ags/company-backends-tex-mode-function)
+  
+  (global-set-key (kbd "C-.") 'company-complete)
+  (define-key company-active-map [escape] 'company-abort)
 
 
-    (setq company-dabbrev-code-everywhere t)
-    (setq company-dabbrev-minimum-length 2)
-    (setq company-dabbrev-code-ignore-case nil)
-    (setq company-dabbrev-everywhere t)
-    (setq company-dabbrev-ignore-case 'keep-prefix)
-    (setq company-dabbrev-downcase nil)
-    (setq company-require-match nil)
+  (setq company-dabbrev-code-everywhere t)
+  (setq company-dabbrev-minimum-length 2)
+  (setq company-dabbrev-code-ignore-case nil)
+  (setq company-dabbrev-everywhere t)
+  (setq company-dabbrev-ignore-case 'keep-prefix)
+  (setq company-dabbrev-downcase nil)
+  (setq company-require-match nil)
 
-    
-    (global-company-mode)
+  
+  (global-company-mode)
 
-    (define-key company-active-map (kbd "C-.") 'company-other-backend)
+  (define-key company-active-map (kbd "C-.") 'company-other-backend)
 
-    (defun ags/company-quitar-candidatos-muy-largos (candidatos)
-      (let ((ret
-             (seq-filter (lambda (candidato) (length< candidato 50)) candidatos)))
-        ret)
+  (defun ags/company-quitar-candidatos-muy-largos (candidatos)
+    (let ((ret
+           (seq-filter (lambda (candidato) (length< candidato 50)) candidatos)))
+      ret)
 
-      ;; Intentarlo con advice arround (defun company-dabbrev--filter (prefix candidates)
+    ;; Intentarlo con advice arround (defun company-dabbrev--filter (prefix candidates)
 
-      )
-    
-    ;;(add-to-list 'company-transformers #'ags/company-quitar-candidatos-muy-largos )
-    ;;(add-to-list 'company-transformers #'delete-consecutive-dups )
-    ;;(add-to-list 'company-transformers #'company-sort-by-occurrence )
-
-    (setq company-idle-delay 0.2)
-    (setq company-minimum-prefix-length 2)
     )
+  
+  ;;(add-to-list 'company-transformers #'ags/company-quitar-candidatos-muy-largos )
+  ;;(add-to-list 'company-transformers #'delete-consecutive-dups )
+  ;;(add-to-list 'company-transformers #'company-sort-by-occurrence )
+
+  (setq company-idle-delay 0.2)
+  (setq company-minimum-prefix-length 2)
+  )
 
 
   (use-package company-auctex
@@ -1808,31 +1809,32 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
 #+end_src
 
+#+RESULTS:
+: [nil 0 1 0 nil require (company-web nil t) idle 0 nil]
 
-#+begin_src lisp
-  (use-package company-fuzzy
-    :ensure t
-    :defer 1
-    :hook (company-mode . company-fuzzy-mode)
-    :config
-    (setq company-fuzzy-sorting-backend 'flx
-          company-fuzzy-prefix-on-top t
-          company-fuzzy-show-annotation nil
-          company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")))
 
-    (run-with-timer 2 nil (lambda ()
-                         (message "Defino la función problemática company-fuzzy--insert-candidate")
- 
-                         (defun company-fuzzy--insert-candidate (candidate &rest otro)
-                           "Insertion for CANDIDATE."
-                           (when company-fuzzy-mode
-                             ;; NOTE: Here we force to change `company-prefix' so the completion
-                             ;; will do what we expected.
-                             (let ((backend (company-fuzzy--get-backend-by-candidate candidate)))
-                               (setq company-prefix (company-fuzzy--backend-prefix backend 'complete)))))
-                         ))
+#+begin_src emacs-lisp
+(use-package company-fuzzy
+  :hook (company-mode . company-fuzzy-mode)
+  :init
+  (setq company-fuzzy-sorting-backend 'flx
+        company-fuzzy-reset-selection t
+        company-fuzzy-prefix-on-top nil
+        company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")))
+
+(use-package company
+  :init
+  (setq company-require-match nil            ; Don't require match, so you can still move your cursor as expected.
+        company-tooltip-align-annotations t  ; Align annotation to the right side.
+        company-eclim-auto-save nil          ; Stop eclim auto save.
+        company-dabbrev-downcase nil)        ; No downcase when completion.
+  :config)
+
 
 #+end_src
+
+#+RESULTS:
+
 
 * Edición
 
@@ -1981,7 +1983,7 @@ A veces es fácil perderse entre comandos a medio introducir y ventanas popup. M
   (setq quit-flag t))
 (define-key global-map [escape] 'ags/super-escape)
 (define-key minibuffer-local-map [escape] 'ags/super-escape)
-(define-key company-active-map [escape] 'company-abort)
+;;(define-key company-active-map [escape] 'company-abort)
 #+end_src
 
 
@@ -3139,8 +3141,32 @@ Añado a la lista de extensiones la de los módulos.
   :straight '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge"
             :files (:defaults "*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
             :build (:not compile))
-  :init
-  (global-lsp-bridge-mode))
+  )
+
+#+end_src
+
+#+RESULTS:
+
+#+begin_src emacs-lisp
+
+
+(use-package yasnippet
+  :ensure t
+  :defer 1
+  :config
+  (yas-global-mode))
+
+(use-package yasnippet-snippets
+  :ensure t
+  :defer 1)
+
+#+end_src
+
+#+RESULTS:
+: [nil 0 1 0 nil require (yasnippet-snippets nil t) idle 0 nil]
+
+
+#+begin_src emacs-lisp
 
 (use-package lsp-mode
   :ensure t
@@ -3152,7 +3178,6 @@ Añado a la lista de extensiones la de los módulos.
   ;; (setq lsp-enable-symbol-highlighting nil)
   ;; (setq lsp-signature-auto-activate nil)
 
-  ;; what to use when checking on-save. "check" is default, I prefer clippy
   (lsp-eldoc-hook nil)
   (lsp-eldoc-render-all nil)
   (lsp-idle-delay 0.6)
@@ -3161,14 +3186,16 @@ Añado a la lista de extensiones la de los módulos.
 
   :config
   ;; uncomment for less flashiness
-  (setq lsp-eldoc-hook nil)
-  
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+  (add-hook 'lsp-mode-hook 'lsp-bridge-mode)
   (yas-reload-all)
 
   
   )
-  
+
+(use-package consult-lsp
+  :ensure t
+  :defer 1)
 
 (use-package lsp-ui
   :ensure t
@@ -3178,16 +3205,6 @@ Añado a la lista de extensiones la de los módulos.
   (lsp-ui-peek-always-show t)
   (lsp-ui-sideline-show-hover t)
   (lsp-ui-doc-enable nil))
-
-(use-package yasnippet
-  :ensure t
-  :defer 1
-  :config
-  (yas-global-mode))
-
-(use-package yasnippet-snippets
-  :ensure t
-  :defer 1)
 
 
 #+end_src
@@ -3203,13 +3220,27 @@ Añado a la lista de extensiones la de los módulos.
   :defer 1
   :config
   (add-hook 'dart-mode-hook #'lsp)
-)
+  )
 
+
+(use-package lsp-dart
+  :ensure t
+  :defer 1
+  :config
+
+
+  (add-hook 'dart-mode-hook 'lsp)
+  (add-hook 'dart-mode-hook (lambda ()(company-mode -1)))
+
+  (setq gc-cons-threshold (* 128 1024 1024)
+        read-process-output-max (* 16 1024 1024))
+  )
 
 
 #+end_src
 
 #+RESULTS:
+: t
 
 ** Rust
 
