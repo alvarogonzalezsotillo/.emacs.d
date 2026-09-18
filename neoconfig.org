@@ -464,6 +464,14 @@ Utilizo tres repositorios de paquetes:
 ** =diff-hl=
 Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual. 
 
+
+#+begin_src lisp
+  (use-package diff-hl-dired
+    :after diff-hl
+    :config
+    (diff-hl-dired-mode 1))
+#+end_src
+
 #+BEGIN_SRC emacs-lisp
   (use-package diff-hl
     :defer 1
@@ -478,10 +486,6 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
     :after diff-hl)
 
 
-  (use-package diff-hl-dired
-    :after diff-hl
-    :config
-    (diff-hl-dired-mode 1))
 
   (use-package diff-hl-flydiff
     :after diff-hl
