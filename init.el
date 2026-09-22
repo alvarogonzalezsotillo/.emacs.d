@@ -17,8 +17,8 @@
   (setq package-check-signature nil)
   (setq package-archives
         '(
-          ("melpa" . "http://melpa.org/packages/")
-          ("gnu" . "http://elpa.gnu.org/packages/")
+          ("melpa" . "https://melpa.org/packages/")
+          ("gnu" . "https://elpa.gnu.org/packages/")
           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
 	  ;;("org" . "http://orgmode.org/elpa/")
           )

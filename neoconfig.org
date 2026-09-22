@@ -3176,42 +3176,20 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
 (use-package agent-shell
   :ensure t
   :config
-  ;;(setq agent-shell-qwen-authentication
-  ;;      (agent-shell-qwen-make-authentication :login t))
-  (setq agent-shell-qwen-authentication
-        (agent-shell-qwen-make-authentication :none t))
-
-
-  (defun ags/qwen-yolo-mode-on ()
+  (defun ags/agent-yolo-mode-on ()
     (interactive)
     (setq agent-shell-permission-responder-function #'agent-shell-permission-allow-always))
 
-  (defun ags/qwen-yolo-mode-off ()
+  (defun ags/agent-yolo-mode-off ()
     (interactive)
     (setq agent-shell-permission-responder-function nil))
   )
-
 #+end_src
 
 #+RESULTS:
 : t
 
 
-Ya no uso aider, prefiero qwen
-#+begin_src lisp
-(use-package aidermacs
-  :bind (("C-c a" . aidermacs-transient-menu))
-  :ensure t
-  :config
-  
-  :custom
-  ; See the Configuration section below
-  (aidermacs-default-model "openrouter/deepseek/deepseek-r1"))
-  
-#+end_src
-
-#+RESULTS:
-: aidermacs-transient-menu
 
 
 * polymode latex php
