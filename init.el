@@ -29,19 +29,20 @@
   (ignore-errors
     (setq package-native-compile t))
   
-  (setq package-check-signature nil)
+  (setq package-check-signature 'allow-unsigned)
   (setq package-archives
         '(
-          ("melpa" . "http://melpa.org/packages/")
-          ("gnu" . "http://elpa.gnu.org/packages/")
+          ("melpa" . "https://melpa.org/packages/")
+          ("gnu" . "https://elpa.gnu.org/packages/")
           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-	  ;;("org" . "http://orgmode.org/elpa/")
+	  ;;("org" . "https://orgmode.org/elpa/")
           )
         )
   (package-initialize t)
   (message "Comprobando si use-package está instalado...")
-  (when (or refresh (not (require 'use-package nil t)))
-    (package-refresh-contents)
+  (when (or refresh (not package-archive-contents))
+    (package-refresh-contents))
+  (unless (package-installed-p 'use-package)
     (package-install 'use-package))
 
   (message "use-package está instalado")
@@ -60,8 +61,8 @@
 		 (setq auto-package-update-interval 1)
 		 (auto-package-update-maybe)))
 
-  (message "Instalando org-contrib para conseguir la última versión de org" )
-  (use-package org :ensure org-contrib
+  (message "Cargando org (última versión disponible) y su módulo de tangle" )
+  (use-package org :ensure t
     :config
     (require 'ob-tangle)
     )
@@ -72,6 +73,7 @@
   "Carga la configuración, refrescando la lista de paquetes si se indica REFRESH, con debug si se indica DEBUG"
   (interactive
    (list
+    (read-file-name "Config file: " "~/.emacs.d/" nil t "neoconfig.org")
     (y-or-n-p "Refresh packages? ")
     (y-or-n-p "Enable debug? ")
     )
@@ -93,6 +95,9 @@
 
 ;;(ags/carga-config-org "~/.emacs.d/config.org" nil nil)
 (ags/carga-config-org "~/.emacs.d/neoconfig.org" nil t)
+
+;; Cargar las personalizaciones guardadas por `customize'
+(load custom-file t)
 
 
 (put 'dired-find-alternate-file 'disabled nil)

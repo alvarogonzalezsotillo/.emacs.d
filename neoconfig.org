@@ -104,7 +104,7 @@ So this is my quick solution `ags/jump-to-worktree-file`, that handles multiple 
   "Return the git root for current buffer."
   (let ((default-directory (if (derived-mode-p 'dired-mode)
                                (dired-current-directory)
-                             (buffer-file-name))))
+                             (or (buffer-file-name) default-directory))))
     (string-trim
      (shell-command-to-string "git rev-parse --show-toplevel"))))
 
@@ -115,7 +115,7 @@ So this is my quick solution `ags/jump-to-worktree-file`, that handles multiple 
          worktrees)
     (dolist (line lines)
       (when (string-prefix-p "worktree " line)
-        (push (string-trim (substring line (length "workspace"))) worktrees)))
+        (push (string-trim (substring line (length "worktree "))) worktrees)))
     worktrees))
 
 (defun ags/jump-to-worktree-file ()
@@ -153,11 +153,11 @@ So this is my quick solution `ags/jump-to-worktree-file`, that handles multiple 
 #+begin_src emacs-lisp
 
 (defun ags/es-presentacion-p (filename)
-  (let* ((contents (org-file-contents filename)))
-    (string-match-p "/common/footer.org" contents)))
+  (ignore-errors
+    (string-match-p "/common/footer\\.org" (org-file-contents filename))))
 
 (defun ags/lista-de-orgs (directory)
-  (directory-files-recursively directory ".*\.org$" ))
+  (directory-files-recursively directory ".*\\.org$" ))
 
 
 (defun ags/lista-de-presentaciones (directory)
@@ -260,6 +260,7 @@ Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading
     (read-string "Host: " "127.0.0.1" )
     (read-number "Port: " 8080)))
 
+    (require 'simple-httpd)
     (setq httpd-root directory)
     (setq httpd-host host)
     (setq httpd-port port)
@@ -781,7 +782,7 @@ Reduzco el tamaño de todas las fuentes de =imenu=
   (("<f7>" . imenu-list-smart-toggle))
   :config 
    (set-face-attribute 'imenu-list-entry-face nil :height  0.8)
-   (add-hook 'imenu-list-major-mode-hook (lambda () (message "IMENU MAJOR MODE")(display-line-numbers-mode 1))))
+   (add-hook 'imenu-list-major-mode-hook (lambda () (display-line-numbers-mode 1))))
 #+end_src
 
 
@@ -894,7 +895,7 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
   	(dired-hide-details-mode 1)
   	(auto-revert-mode 1)
   	(diff-hl-dired-mode 1)
-  	(setq  indent-line-function 'dired-subtree-toggle))
+  	(setq-local  indent-line-function 'dired-subtree-toggle))
 
     (add-hook 'dired-mode-hook 'ags/dired-hook)
     )
@@ -1202,7 +1203,6 @@ Retroceder en la historia de disposición de ventanas y búferes
   :ensure t
   :defer 1 
   :config
-    (setq winner-dont-bind-ags/keys nil)
     (winner-mode 1)
     (define-key winner-mode-map (kbd "M-<left>") #'winner-undo)
     (define-key winner-mode-map (kbd "M-<right>") #'winner-redo))
@@ -1307,6 +1307,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
   (use-package vertico-mouse
     :ensure nil
     :config
+    (require 'vertico-mouse)
     (vertico-mouse-mode 1)
     )
 
@@ -1414,110 +1415,6 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
 #+RESULTS:
 
 
-** =helm=
-=helm= es un sistema para seleccionar una opción entre varias posibilidades, que se puede usar para casi todo
-- Buscar un comando
-- Cambiar de buffer
-- Navegar por la historia del portapapeles
-- Visualizar las ocurrencias de un patrón en un buffer
-- ... y más
-
-#+begin_src lisp
-  ;; HELM
-  (use-package helm
-    :ensure t
-    :defer 1
-    :config
-    (setq helm-split-window-inside-p t)
-    (setq helm-display-header-line nil)
-    (setq helm-autoresize-max-height 40)
-    (setq helm-autoresize-min-height 30)
-    (setq helm-autoresize-min-width 100)
-    (helm-autoresize-mode 1)
-    (helm-mode 1)
-    (helm-flx-mode +1)
-    (setq helm-display-buffer-reuse-frame t)
-    (setq helm-use-undecorated-frame-option t)
-
-    ;;(setq helm-display-function 'helm-display-buffer-in-own-frame)
-    ;;(setq helm-display-buffer-width 120)
-
-    ;; PROBLEMAS DE REDISPLAY: hasta que no doy una tecla no se muestra nada
-    ;;(defun ags/try-to-redisplay-helm ()
-    ;;  (redisplay t))
-    ;;(add-hook 'helm-minibuffer-set-up-hook 'ags/try-to-redisplay-helm)
-
-    (defun ags/helm-hook()
-      (setq helm-truncate-lines t))
-
-    (add-hook 'helm-major-mode-hook #'ags/helm-hook)
-    
-    (use-package dumb-jump
-      :config
-      (setq dumb-jump-selector 'helm)
-      )
-
-    (use-package helm-projectile
-      :ensure t
-      :defer 1
-      :config 
-      (helm-projectile-on)
-      (setq projectile-completion-system 'helm)
-      )
-
-    (use-package helm-swoop
-      :ensure t
-      :config
-      (setq helm-display-buffer-width 140)
-      (setq helm-display-buffer-height 20)
-      (setq helm-swoop-split-window-function helm-display-function)
-      :after (helm)
-      :bind
-	  (("C-f" . helm-swoop))
-	  (("C-S-f" . helm-multi-swoop-all))
-    )
-
-    :bind
-    (("M-x"  . helm-M-x))
-    (("<menu>"  . helm-M-x))
-    (("C-x C-f"  . helm-find-files))
-    (("<f6>"  . helm-mini))
-    (("M-y"  . helm-show-kill-ring))
-    (("C-x r b"  . helm-filtered-bookmarks))
-
-    :config
-    (add-to-list 'helm-commands-using-frame #'helm-M-x)
-
-    )
-#+end_src
-
-#+RESULTS:
-: helm-filtered-bookmarks
-
-#+begin_src lisp
-    ;;https://www.reddit.com/r/emacs/comments/345vtl/make_helm_window_at_the_bottom_without_using_any/
-    ;;HELM SIEMPRE ABAJO CON ANCHO COMPLETO
-    (add-to-list 'display-buffer-alist
-                    `(,(rx bos "*helm" (* not-newline) "*" eos)
-                         (display-buffer-in-side-window)
-                         (inhibit-same-window . t)
-                         (window-height . 0.3)))
-#+end_src
-
-
-
-** =expand-region=
-#+begin_src emacs-lisp
-(use-package expand-region
-  :ensure t
-  :defer 1
-  :bind
-      (( "C-e" . 'er/expand-region))
-      (( "C-S-e" . 'er/contract-region))
-      (( "M-<up>" . 'er/expand-region))
-      (( "M-<down>" . 'er/contract-region))
-)
-#+end_src
 
 ** =bm=
 Siempre me gustaron los /bookmarks/ dentro de un fichero de Microsoft Visual C++
@@ -1581,22 +1478,6 @@ selection criteria for filtering the lists."
   :ensure t
   :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars"))
 #+end_src
-** =multiple-cursors=
-
-#+BEGIN_SRC emacs-lisp
-  (use-package multiple-cursors
-    :ensure t
-    :custom (mc/always-run-for-all t)
-    :bind
-
-      (("C-S-c C-S-c" . mc/edit-lines ))
-      (("C->" . mc/mark-next-like-this ))
-      (("C-<" . mc/mark-previous-like-this ))
-      (("C-S-<mouse-1>" . mc/add-cursor-on-click ))
-      (("C-S-c C-S-v" . mc/mark-all-like-this ))
-)
-#+END_SRC
-
 
 ** =which-key=
 
@@ -1778,6 +1659,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
   (setq company-idle-delay 0.2)
   (setq company-minimum-prefix-length 2)
+  (setq company-tooltip-align-annotations t)
   )
 
 
@@ -1825,14 +1707,6 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
         company-fuzzy-reset-selection t
         company-fuzzy-prefix-on-top nil
         company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")))
-
-(use-package company
-  :init
-  (setq company-require-match nil            ; Don't require match, so you can still move your cursor as expected.
-        company-tooltip-align-annotations t  ; Align annotation to the right side.
-        company-eclim-auto-save nil          ; Stop eclim auto save.
-        company-dabbrev-downcase nil)        ; No downcase when completion.
-  :config)
 
 
 #+end_src
@@ -1980,10 +1854,10 @@ A veces es fácil perderse entre comandos a medio introducir y ventanas popup. M
 (defun ags/super-escape()
   (interactive)
   (keyboard-escape-quit)
-  (minibuffer-keyboard-quit)
+  (when (active-minibuffer-window) (minibuffer-keyboard-quit))
   (keyboard-quit)
-  (company-abort)
-  (abort-recursive-edit)
+  (ignore-errors (company-abort))
+  (when (> (recursion-depth) 0) (abort-recursive-edit))
   (setq quit-flag t))
 (define-key global-map [escape] 'ags/super-escape)
 (define-key minibuffer-local-map [escape] 'ags/super-escape)
@@ -2067,14 +1941,14 @@ Necesario si una macro resulta interesante, para grabarla como una función
                             ((eq system-type 'gnu/linux)
                              "xdg-open")
                             ((eq system-type 'darwin)
-                             "open" default-directory)
+                             "open")
                             ((eq system-type 'windows-nt)
-                             "explorer" default-directory)
+                             "explorer")
                             (t
                              (error "Unsupported operating system, no file-explorer: %s" system-type)))))
         (start-process "file-explorer" nil file-explorer default-directory)))
     
-    (global-set-key (kbd "M-s-e") #'ags/open-file-explorer)
+    (global-set-key (kbd "M-S-e") #'ags/open-file-explorer)
     )
 
 
@@ -2207,7 +2081,7 @@ Puede que sea una buena idea, pero de momento no le saco partido.
   (setq tramp-copy-size-limit 10000)
   (setq vc-handled-backends '(Git))
   (setq tramp-auto-save-directory "/tmp")
-  (setq tramp-allow-unsafe-temporary-files t)
+  (setq tramp-allow-unsafe-temporary-files nil)
   (setq tramp-verbose 1)
   (setq tramp-default-method "scp")
   (setq tramp-use-ssh-controlmaster-options nil)
@@ -2220,7 +2094,7 @@ Puede que sea una buena idea, pero de momento no le saco partido.
   ;; Original args are: proc timeout regexp
   (let ( (proc (nth 0 args))
          (timeout (or (nth 1 args) 10 ) )
-         (regexp) (nth 2 args) )
+         (regexp (nth 2 args)) )
     (message "AGS: timeout was %d, now %d" (nth 1 args) timeout)
     (funcall original-function proc timeout regexp)))
 
@@ -2394,22 +2268,6 @@ Pareque que lo bueno es una mezcla de =outline-indent= y =kirigami=
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package occult
-  :ensure t
-  :defer 1
-  :config
-  
-  )
-
-#+end_src
-
-#+RESULTS:
-: [nil 0 1 0 nil require (occult nil t) idle 0 nil]
-
- ,#+RESULTS:
- : t
-
-#+begin_src emacs-lisp
 (use-package outline-indent
   :ensure t
   :defer 1
@@ -2531,9 +2389,7 @@ Pareque que lo bueno es una mezcla de =outline-indent= y =kirigami=
   (blamer-mode -1)
   (toggle-truncate-lines 1)
   ;;(indent-guide-mode 1)
-  (toggle-word-wrap 1)
-  (if (>= emacs-major-version 26)
-      (display-line-numbers-mode 1))
+  (display-line-numbers-mode 1)
   (auto-highlight-symbol-mode 1)
   (electric-pair-local-mode 1)
   (outline-indent-minor-mode 1)
@@ -2550,7 +2406,7 @@ Pareque que lo bueno es una mezcla de =outline-indent= y =kirigami=
 (defun ags/bonito-para-latex()
   (interactive)
   (toggle-truncate-lines -1)
-  (setq magic-latex-enable-suscript nil)
+  (setq magic-latex-enable-subscript nil)
   (company-auctex-init)
   (outline-indent-minor-mode 1)
 
@@ -2595,7 +2451,7 @@ Mi línea de estado (modeline)
 
 (use-package breadcrumb
   :ensure t
-  :defer 1)
+  :demand t)
 
 (use-package mode-icons
   :ensure t
@@ -2647,18 +2503,6 @@ Los ficheros deben tener una línea nueva al final. Además, indicar el fin de f
   (setq fast-but-imprecise-scrolling t)
 
   (setq scroll-error-top-bottom t)
-#+end_src
-
-
-*** =good-scroll=
-El /scroll/  de /emacs/ es de media en media pantalla, heredado de los terminales modo texto que costaba refrescar. Con los ordenadores actuales, mejor un /scroll/ suave
-#+begin_src lisp
-(use-package good-scroll
-  :ensure t
-  :config
-  (good-scroll-mode 1))
-
-
 #+end_src
 
 
@@ -2804,7 +2648,8 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
     (run-with-idle-timer .1 nil (lambda()
                                   (spacious-padding-mode -1) ))
     (run-with-idle-timer .5 nil (lambda()
-                                  (disable-theme my-dark-theme)
+                                  (when (custom-theme-enabled-p my-dark-theme)
+                                    (disable-theme my-dark-theme))
                                   (load-theme my-light-theme t)))
     (run-with-idle-timer 1 nil (lambda()                         
                                   (spacious-padding-mode 1))))
@@ -2820,7 +2665,8 @@ Hay que marcar los temas como seguros. Para eso se deben registrar sus huellas e
     (run-with-idle-timer .1 nil (lambda()
                                   (spacious-padding-mode -1) ))
     (run-with-idle-timer .5 nil (lambda()
-                                  (disable-theme my-light-theme)
+                                  (when (custom-theme-enabled-p my-light-theme)
+                                    (disable-theme my-light-theme))
                                   (load-theme my-dark-theme t)))
     (run-with-idle-timer 1 nil (lambda()                         
                                   (spacious-padding-mode 1))))
@@ -2877,7 +2723,7 @@ Imágenes tras evaluar
   :config
 
   ;; yank-media of images
-  (setopt org-yank-image-save-method "")
+  (setopt org-yank-image-save-method "file")
   (setopt org-yank-image-file-name-function #'org-yank-image-read-filename)
 
   (defun ags/org-export-deterministic-reference (references)
@@ -3402,7 +3248,7 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
   (live-command--update))
 
 (defun live-command-buffer ()
-  (interactive) e8>=5
+  (interactive)
   (switch-to-buffer "*Live Command*")
   (live-command-mode))
 #+end_src
@@ -3472,7 +3318,7 @@ The clipboard must contain one number per line."
               (erase-buffer)
               (insert
                (mapconcat #'number-to-string numbers "\n"))
-              (insert (format "\n\nCuántos: %f\n\nMedia: %f\n\nVarianza: %f\n\nDesviación típica:%f \n" n mean variance tipica)))))))))
+              (insert (format "\n\nCuántos: %d\n\nMedia: %f\n\nVarianza: %f\n\nDesviación típica:%f \n" n mean variance tipica)))))))))
 
 (defun my-start-clipboard-monitor ()
   "Monitor clipboard every 2 seconds and update current buffer."
@@ -3502,27 +3348,6 @@ The clipboard must contain one number per line."
 : my-stop-clipboard-monitor
 
 
-#+begin_src emacs-lisp
-(use-package region-pin
-  :vc (:url "https://github.com/vmargb/region-pin/")
-
-  :config
-  (global-set-key (kbd "C-c C-p i") #'region-pin-instant) ; instantly pin region (without a name)
-  (global-set-key (kbd "C-c C-p p") #'region-pin-save)    ; save region with a name
-  (global-set-key (kbd "C-c C-p s") #'region-pin-show)    ; show a saved/named region
-  (global-set-key (kbd "C-c C-p h") #'region-pin-hide)    ; hide any existing region pins
-  (global-set-key (kbd "C-c C-p n") #'region-pin-next)    ; go to next named region
-  (global-set-key (kbd "C-c C-p P") #'region-pin-previous); go to previous named region
-  (global-set-key (kbd "C-c C-p d") #'region-pin-delete)  ; delete a named region
-  (global-set-key (kbd "C-c C-p f") #'region-pin-follow)  ; find + pin definition at point
-  (global-set-key (kbd "C-c C-p m") #'region-pin-imenu)       ; search + pin a symbol in this buffer
-  (global-set-key (kbd "C-c C-p M") #'region-pin-imenu-multi) ; search + pin a symbol from any open project buffer
-  )
-#+end_src
-
-#+RESULTS:
-: t
-
 
 #+begin_src emacs-lisp
 (use-package whisper
@@ -3545,7 +3370,7 @@ The clipboard must contain one number per line."
   :defer 1
   :ensure t
   :config
-  ;;fx-3EyjaAPRl4pK3cgyIDptG3OyoxSWPInCMh8dv4SN4Utws3h9
+  ;; NOTA: aquí había un posible token/clave; se ha eliminado por seguridad.
   )
 
 
@@ -3574,12 +3399,10 @@ The clipboard must contain one number per line."
 
   (defun ags/org-buffer-to-html-string (buffer)
     "Convierte el contenido del buffer Org actual a una cadena HTML."
-    (require 'ox-html) ;; Asegúrate de que el paquete ox-html esté cargado
+    (require 'ox-html)
 
-    ;; Configura las opciones de exportación según tus preferencias
     (with-current-buffer buffer
-      (princ (org-export-string-as (buffer-string) 're-reveal t))
-      (princ "hola")))
+      (org-export-string-as (buffer-string) 're-reveal t)))
     
 
 
