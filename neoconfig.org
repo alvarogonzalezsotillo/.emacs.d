@@ -3158,10 +3158,6 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
 (use-package agent-shell
   :ensure t
   :config
-  ;;(setq agent-shell-qwen-authentication (agent-shell-qwen-make-authentication :login t))
-  ;;(setq agent-shell-qwen-authentication (agent-shell-qwen-make-authentication :none t))
-
-
   (defun ags/agent-yolo-mode-on ()
     (interactive)
     (setq agent-shell-permission-responder-function #'agent-shell-permission-allow-always))
@@ -3170,7 +3166,6 @@ https://github.com/paddymcall/xquery-tool.el/blob/master/xquery-tool.el
     (interactive)
     (setq agent-shell-permission-responder-function nil))
   )
-
 #+end_src
 
 #+RESULTS:
