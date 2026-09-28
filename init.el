@@ -12,9 +12,12 @@
            'silent 'inhibit-cookies)
         (goto-char (point-max))
         (eval-print-last-sexp)))
-    (load bootstrap-file nil 'nomessage))
-)
+    (load bootstrap-file nil 'nomessage)
+    ;; Make use-package use straight by default
+    (setq straight-use-package-by-default t)
 
+    ;; Install/use use-package itself through straight
+    (straight-use-package 'use-package)))
 
 (defun ags/setup-use-package (&optional refresh)
   (interactive
@@ -39,13 +42,8 @@
           )
         )
   (package-initialize t)
-  (message "Comprobando si use-package está instalado...")
   (when (or refresh (not package-archive-contents))
     (package-refresh-contents))
-  (unless (package-installed-p 'use-package)
-    (package-install 'use-package))
-
-  (message "use-package está instalado")
   (require 'use-package)
   
   (when refresh
@@ -60,13 +58,10 @@
 		 (setq auto-package-update-hide-results t)
 		 (setq auto-package-update-interval 1)
 		 (auto-package-update-maybe)))
-
-  (message "Cargando org (última versión disponible) y su módulo de tangle" )
-  (use-package org :ensure t
-    :config
-    (require 'ob-tangle)
-    )
   )
+
+(defun ags/install-org-mode ()
+  (straight-use-package 'org))
 
 ;;; Code:
 (defun ags/carga-config-org (config.org refresh debug)
@@ -83,6 +78,7 @@
   (ags/setup-straight)
   (ags/setup-use-package refresh)
 
+  (ags/install-org-mode)
   (message "Cargo el fichero org de configuración con org-version:%s" (org-version))
 
   

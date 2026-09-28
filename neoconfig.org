@@ -482,41 +482,48 @@ Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquie
 
     (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
     (global-diff-hl-mode 1))
+#+end_src
+
+Con straigth no cargan, luego lo investigo
+#+begin_src emacs-lisp
 
   (use-package diff-hl-margin
+    :straight diff-hl  
     :after diff-hl)
 
 
 
   (use-package diff-hl-flydiff
+    :straight diff-hl  
     :after diff-hl
     :config
     (diff-hl-flydiff-mode 1))
 
   (use-package diff-hl-show-hunk
+    :straight diff-hl
     :after diff-hl
     :config
     (require 'diff-hl-show-hunk-posframe)
-
+    
     (defun ags/diff-hl-show-hunk-toggle-backend()
       (interactive)
       (setq diff-hl-show-hunk-posframe-poshandler 'posframe-poshandler-point-window-center)
       (if (eq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)
-	  (setq diff-hl-show-hunk-function 'diff-hl-show-hunk-inline-popup)
-	(setq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)))
+  	(setq diff-hl-show-hunk-function 'diff-hl-show-hunk-inline-popup)
+  	(setq diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)))
 
     (defun ags/diff-hl-show-hunk-toggle-style()
       (interactive)
       (if diff-hl-show-hunk-inline-popup-hide-hunk
-	  (progn
-	    (setq diff-hl-show-hunk-inline-popup-hide-hunk nil)
-	    (setq diff-hl-show-hunk-inline-popup-smart-lines t))
-	(setq diff-hl-show-hunk-inline-popup-hide-hunk t)
-	(setq diff-hl-show-hunk-inline-popup-smart-lines nil)))
-
+  	(progn
+  	  (setq diff-hl-show-hunk-inline-popup-hide-hunk nil)
+  	  (setq diff-hl-show-hunk-inline-popup-smart-lines t))
+  	(setq diff-hl-show-hunk-inline-popup-hide-hunk t)
+  	(setq diff-hl-show-hunk-inline-popup-smart-lines nil)))
+    
     (setq diff-hl-show-hunk-inline-popup-hide-hunk t)
     (setq diff-hl-show-hunk-inline-popup-smart-lines nil)
-
+    
     (global-diff-hl-show-hunk-mouse-mode 1))
 
 
@@ -881,6 +888,7 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
 #+begin_src emacs-lisp
 
   (use-package dired
+    :straight nil
     :config
     (setq dired-kill-when-opening-new-dired-buffer nil)
 
@@ -900,7 +908,7 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
     (add-hook 'dired-mode-hook 'ags/dired-hook)
     )
 
-  
+
   (use-package casual
     :ensure t
     :bind
@@ -919,12 +927,14 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
                                   )))
 
   (use-package dired-aux
+    :straight nil
     :config
     ;; Default action to open any file
     (when (boundp 'dired-guess-shell-alist-default)
       (add-to-list 'dired-guess-shell-alist-default ' ("\\.pdf\\'" "okular") t)))
 
-  (use-package dired-x)
+  (use-package dired-x
+    :straight nil)
 
   ;; Copy and paste files
   (use-package dired-ranger
@@ -1305,6 +1315,7 @@ Cargo este paquete después para que en minor-mode-map-alist aparezca antes el k
     (vertico-mode))
 
   (use-package vertico-mouse
+    :straight vertico
     :ensure nil
     :config
     (require 'vertico-mouse)
@@ -1571,6 +1582,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 #+begin_src emacs-lisp
 
 (use-package company
+  :straight (:host github :repo "company-mode/company-mode" :branch "master")
   :ensure t
   :config
 
@@ -1643,21 +1655,21 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
   (global-company-mode)
 
   (define-key company-active-map (kbd "C-.") 'company-other-backend)
+  (defun ags/company-filter-long-candidates (candidates)
 
-  (defun ags/company-quitar-candidatos-muy-largos (candidatos)
-    (let ((ret
-           (seq-filter (lambda (candidato) (length< candidato 50)) candidatos)))
-      ret)
+    (message "candidates: %s" candidates)
+    (let ((filtered (seq-filter (lambda (candidate)
+                  (<= (length candidate) 30))
+                                candidates)))
+      (message "filtered: %s" filtered)
+      filtered))
 
-    ;; Intentarlo con advice arround (defun company-dabbrev--filter (prefix candidates)
+  (add-hook 'company-transformers
+            #'ags/company-filter-long-candidates)
 
-    )
+
   
-  ;;(add-to-list 'company-transformers #'ags/company-quitar-candidatos-muy-largos )
-  ;;(add-to-list 'company-transformers #'delete-consecutive-dups )
-  ;;(add-to-list 'company-transformers #'company-sort-by-occurrence )
-
-  (setq company-idle-delay 0.2)
+(setq company-idle-delay 0.2)
   (setq company-minimum-prefix-length 2)
   (setq company-tooltip-align-annotations t)
   )
@@ -1666,23 +1678,27 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
   (use-package company-auctex
     :ensure t
     :defer 1
+    :after company
     :config)
 
 
   (use-package company-c-headers
     :ensure t
     :defer 1
+    :after company
     :config)
 
   (use-package company-emoji
     :ensure t
     :defer 1
+    :after company
     :config)
 
 
   (use-package company-quickhelp
     :ensure t
     :defer 1
+    :after company
     :config
     (setq company-quickhelp-color-foreground "white")
     (setq company-quickhelp-color-background "darkgray")
@@ -1690,6 +1706,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 
   (use-package company-web
     :ensure t
+    :after company
     :defer 1
     :config)
 
@@ -1699,7 +1716,8 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 : [nil 0 1 0 nil require (company-web nil t) idle 0 nil]
 
 
-#+begin_src emacs-lisp
+Company fuzzy está deshabilitado, porque interfiere con el filtro de candidatos muy largos
+#+begin_src lisp
 (use-package company-fuzzy
   :hook (company-mode . company-fuzzy-mode)
   :init
@@ -2723,7 +2741,7 @@ Imágenes tras evaluar
   :config
 
   ;; yank-media of images
-  (setopt org-yank-image-save-method "file")
+  (setopt org-yank-image-save-method "./media")
   (setopt org-yank-image-file-name-function #'org-yank-image-read-filename)
 
   (defun ags/org-export-deterministic-reference (references)
@@ -2908,6 +2926,7 @@ Utilizo el paquete =listings= de /Latex/ en vez de bloques /verbatim/.
   :defer 1)
 
 (use-package latex
+  :straight auctex
   :ensure auctex
   :config
   (setq TeX-auto-save t)
@@ -3346,7 +3365,7 @@ The clipboard must contain one number per line."
 
 #+begin_src emacs-lisp
 (use-package whisper
-  :vc (:url "https://github.com/natrys/whisper.el" :branch "master")
+  :straight (:host github :repo "natrys/whisper.el")
   :config
   (setopt whisper-model "small")
   (setopt whisper-use-threads 6)
@@ -3360,16 +3379,6 @@ The clipboard must contain one number per line."
 
 
 
-#+begin_src lisp
-(use-package ellama
-  :defer 1
-  :ensure t
-  :config
-  ;; NOTA: aquí había un posible token/clave; se ha eliminado por seguridad.
-  )
-
-
-#+end_src
 
 #+RESULTS:
 : [nil 0 1 0 nil require (ellama nil t) idle 0 nil]
