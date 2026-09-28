@@ -466,13 +466,6 @@ Utilizo tres repositorios de paquetes:
 Utilizo /git/ para casi todos mis ficheros. =diff-hl=  marca en el margen izquierdo las líneas cambiadas, añadidas o borradas respecto de la versión de la rama actual. 
 
 
-#+begin_src lisp
-  (use-package diff-hl-dired
-    :after diff-hl
-    :config
-    (diff-hl-dired-mode 1))
-#+end_src
-
 #+BEGIN_SRC emacs-lisp
   (use-package diff-hl
     :defer 1
@@ -902,7 +895,7 @@ Coloco primero los directorios, y hago que la tecla =Tab= abra un subárbol
   	   (all-the-icons-dired-mode 1))
   	(dired-hide-details-mode 1)
   	(auto-revert-mode 1)
-  	(diff-hl-dired-mode 1)
+  	(diff-hl-dired-mode -1)
   	(setq-local  indent-line-function 'dired-subtree-toggle))
 
     (add-hook 'dired-mode-hook 'ags/dired-hook)
@@ -1657,11 +1650,11 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
   (define-key company-active-map (kbd "C-.") 'company-other-backend)
   (defun ags/company-filter-long-candidates (candidates)
 
-    (message "candidates: %s" candidates)
+    ;;(message "candidates: %s" candidates)
     (let ((filtered (seq-filter (lambda (candidate)
                   (<= (length candidate) 30))
                                 candidates)))
-      (message "filtered: %s" filtered)
+      ;;(message "filtered: %s" filtered)
       filtered))
 
   (add-hook 'company-transformers
@@ -1716,20 +1709,21 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 : [nil 0 1 0 nil require (company-web nil t) idle 0 nil]
 
 
-Company fuzzy está deshabilitado, porque interfiere con el filtro de candidatos muy largos
-#+begin_src lisp
-(use-package company-fuzzy
-  :hook (company-mode . company-fuzzy-mode)
-  :init
-  (setq company-fuzzy-sorting-backend 'flx
-        company-fuzzy-reset-selection t
-        company-fuzzy-prefix-on-top nil
-        company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")))
-
+#+begin_src emacs-lisp
+  (use-package flx
+    :ensure t)
+    
+  (use-package company-fuzzy
+    :hook (company-mode . company-fuzzy-mode)
+    :ensure t
+    :init
+    (setq company-fuzzy-sorting-backend 'flx
+          company-fuzzy-reset-selection t
+          company-fuzzy-prefix-on-top nil
+          company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")))
 
 #+end_src
 
-#+RESULTS:
 
 
 * Edición
