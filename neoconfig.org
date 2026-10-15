@@ -191,12 +191,16 @@ So this is my quick solution `ags/jump-to-worktree-file`, that handles multiple 
 Me es útil para quitar preguntas de los ficheros gift y pegarlas en otro fichero gift de descartadas, para recuperaciones.
 
 #+begin_src emacs-lisp
+(defvar ags/kill-and-append-to-buffer-last nil
+  "Last buffer selected for `ags/kill-and-append-to-buffer'.")
+
 (defun ags/kill-and-append-to-buffer(buffer start end)
   "Like append-to-buffer, allways at end."
   (interactive
-   (list (read-buffer "Append to buffer: " (other-buffer (current-buffer) t))
+   (list (read-buffer "Append to buffer: " (or ags/kill-and-append-to-buffer-last (other-buffer (current-buffer) t)))
 	 (region-beginning)
          (region-end)))
+  (setq ags/kill-and-append-to-buffer-last buffer)
   (let* ((oldbuf (current-buffer))
          (append-to (get-buffer-create buffer))
          (windows (get-buffer-window-list append-to t t))
@@ -218,6 +222,15 @@ Me es útil para quitar preguntas de los ficheros gift y pegarlas en otro ficher
 
 
 ** Convertir un fichero =gift= en un examen =pdf=
+
+#+begin_src emacs-lisp
+(use-package gift-mode
+  :ensure t
+  :defer 1)
+
+#+end_src
+
+
 Tengo un proyecto personal en [[https://github.com/alvarogonzalezsotillo/grading-questionnaire]] que [[https://alvarogonzalezsotillo.github.io/blog/plantilla-latex-para-examenes/][convierte un fichero =gift= en un =pdf=]] para exámenes. Esta función me facilita la conversión.
    #+begin_src emacs-lisp
 
@@ -1709,6 +1722,7 @@ Utilizo =company= como mecanismo de autocomplección. Distingo entre modos de pr
 : [nil 0 1 0 nil require (company-web nil t) idle 0 nil]
 
 
+=company-fuzzy= hay que deshabilitarlo si no está git@github.com:alvarogonzalezsotillo/company-mode.git
 #+begin_src emacs-lisp
   (use-package flx
     :ensure t)
@@ -2168,6 +2182,19 @@ Para enviar email utilizo =sendmail= (lo suelo tener configurado con un /smartho
 #+end_src
 
 * Visualización
+
+** =calendar=
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq calendar-week-start-day 1)
+  (setq calendar-total-months 12)
+)
+#+end_src
+
+#+RESULTS:
+: t
 
 ** =conflict-buttons=
 #+begin_src emacs-lisp
@@ -2996,6 +3023,30 @@ Añado a la lista de extensiones la de los módulos.
   :defer 1
   )
 #+end_src
+
+#+begin_src emacs-lisp
+(use-package scala-ts-mode
+  :ensure t
+  :defer 1
+  )
+
+#+end_src
+
+#+RESULTS:
+: [nil 0 1 0 nil require (scala-ts-mode nil t) idle 0 nil]
+
+#+begin_src emacs-lisp
+(use-package powershell
+  :ensure t
+  :defer 1
+  )
+#+end_src
+
+#+RESULTS:
+: [nil 0 1 0 nil require (powershell nil t) idle 0 nil]
+
+: [nil 0 1 0 nil require (scala-mode nil t) idle 0 nil]
+
 
 * lsp
 #+begin_src emacs-lisp
