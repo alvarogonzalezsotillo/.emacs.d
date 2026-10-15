@@ -553,6 +553,7 @@ Mostrar =^L= (saltos de página) como una línea horizontal
   :defer t
   :ensure t
   :bind
+
       (:map gift-mode-map ("C-c C-c" . ags/gifttolatex) )
   :config
   (defalias 'trim-string 'string-trim) 
@@ -756,10 +757,16 @@ Mostrar =^L= (saltos de página) como una línea horizontal
 
   
   )
+
+(use-package magit-dired
+  :straight magit
+  :ensure t
+  :defer 1)
+
    #+end_src
 
    #+RESULTS:
-   : magit-dispatch
+   : [nil 0 1 0 nil require (magit-dired nil t) idle 0 nil]
 
 Para instalar magit-delta
 - https://scripter.co/using-git-delta-with-magit/
@@ -1916,6 +1923,7 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
       (define-key map (kbd "M-S-<right>") 'enlarge-window-horizontally)
       (define-key map (kbd "C-x M-x") 'execute-extended-command)
       (define-key map (kbd "C-S-l") 'ags/toggle-truncate-lines)
+      (define-key map (kbd "C-S-k") 'ags/kill-and-append-to-buffer)
       map)
     "mis-teclas-minor-mode keymap")
                         
@@ -1928,6 +1936,9 @@ Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por
   (mis-teclas-minor-mode 1)
 
 #+end_src
+
+#+RESULTS:
+: t
 
 
 
