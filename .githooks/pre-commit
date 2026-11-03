@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Block staged files that GitHub will reject (>= 100 MiB).
+# https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github
+#
+# This is a client-side guard: it can be bypassed with `git commit --no-verify`
+# or `ALLOW_LARGE_FILES=1 git commit ...`, and it only protects clones where the
+# hook is installed. GitHub's server-side limit is the real enforcement.
+
+set -euo pipefail
+
+limit=${LARGE_FILE_LIMIT:-$((100 * 1024 * 1024))} # 100 MiB: GitHub hard limit
+warn=${LARGE_FILE_WARN:-$((50 * 1024 * 1024))}    # 50 MiB: GitHub warning
+
+if [[ ${ALLOW_LARGE_FILES:-0} == 1 ]]; then
+  exit 0
+fi
+
+human() { printf '%6.1f MiB' "$(awk -v n="$1" 'BEGIN { print n / 1048576 }')"; }
+
+tree=$(git write-tree) || {
+  echo "pre-commit: cannot inspect the index (unmerged files?)" >&2
+  exit 1
+}
+
+tmp=$(mktemp) || exit 1
+trap 'rm -f "$tmp"' EXIT
+if ! git ls-tree -r -l -z "$tree" >"$tmp"; then
+  echo "pre-commit: cannot list the staged tree" >&2
+  exit 1
+fi
+
+blocked=0
+while IFS= read -r -d '' entry; do
+  meta=${entry%%$'\t'*}
+  path=${entry#*$'\t'}
+  read -r mode type sha size <<<"$meta"
+  [[ $type == blob ]] || continue
+  if ((size >= limit)); then
+    printf '  x %s  %s\n' "$(human "$size")" "$path" >&2
+    blocked=1
+  elif ((size >= warn)); then
+    printf '  ! %s  %s (GitHub warns above 50 MiB)\n' "$(human "$size")" "$path" >&2
+  fi
+done <"$tmp"
+
+if ((blocked)); then
+  cat >&2 <<'EOF'
+
+Commit blocked: the staged tree contains a file at or above GitHub's 100 MiB limit.
+GitHub will reject a push containing it.
+
+Fix it with one of:
+  1. Keep it out of Git:  git rm --cached <file>  (and add it to .gitignore)
+  2. Track it with Git LFS:  git lfs track <file>  (requires git-lfs)
+  3. Publish it as a GitHub release asset instead of a tracked file
+
+To bypass this hook intentionally: ALLOW_LARGE_FILES=1 git commit ...
+EOF
+  exit 1
+fi
