@@ -148,6 +148,102 @@ So this is my quick solution `ags/jump-to-worktree-file`, that handles multiple 
 #+RESULTS:
 : ags/jump-to-worktree-file
 
+** Saltar entre puntos de montaje /bind/
+En Linux, un /bind mount/ permite ver el mismo directorio a través de varias rutas. `ags/jump-to-bind-mount-file` busca en =/proc/self/mountinfo= otras rutas del mismo dispositivo, recompone la ruta relativa y salta al mismo fichero (o directorio) usando otro punto de montaje.
+
+#+begin_src emacs-lisp
+(defun ags/unescape-mount-path (path)
+  "Decode octal escapes used by /proc mount files."
+  (replace-regexp-in-string
+   "\\\\\\([0-7][0-7][0-7]\\)"
+   (lambda (match)
+     (string (string-to-number (substring match 1) 8)))
+   path t t))
+
+(defun ags/mountinfo ()
+  "Return mount entries as a list of (DEVICE ROOT MOUNT-POINT)."
+  (when (file-readable-p "/proc/self/mountinfo")
+    (with-temp-buffer
+      (insert-file-contents "/proc/self/mountinfo")
+      (let (mounts)
+        (dolist (line (split-string (buffer-string) "\n" t))
+          (let ((fields (split-string line " " t)))
+            (when (>= (length fields) 5)
+              (push (list (nth 2 fields)
+                          (ags/unescape-mount-path (nth 3 fields))
+                          (ags/unescape-mount-path (nth 4 fields)))
+                    mounts))))
+        (nreverse mounts)))))
+
+(defun ags/file-mount (file mounts)
+  "Return the entry in MOUNTS that contains FILE."
+  (let* ((file (file-name-as-directory (expand-file-name file)))
+         (best nil)
+         (best-length 0))
+    (dolist (mount mounts)
+      (let* ((mount-point (file-name-as-directory
+                           (expand-file-name (nth 2 mount))))
+             (length (length mount-point)))
+        (when (and (string-prefix-p mount-point file)
+                   (> length best-length))
+          (setq best mount
+                best-length length))))
+    best))
+
+(defun ags/bind-mount-targets (file mounts)
+  "Return other paths by which FILE is reachable through mount points."
+  (let* ((file (expand-file-name file))
+         (mount (ags/file-mount file mounts)))
+    (unless mount
+      (user-error "Cannot find a mount point for %s" file))
+    (let* ((device (nth 0 mount))
+           (mount-point (file-name-as-directory
+                         (expand-file-name (nth 2 mount))))
+           (relative (substring file (length mount-point)))
+           (fs-path (expand-file-name relative (nth 1 mount)))
+           (fs-path-dir (file-name-as-directory fs-path))
+           targets)
+      (dolist (other mounts)
+        (when (and (equal device (nth 0 other))
+                   (not (equal (nth 2 mount) (nth 2 other))))
+          (let* ((root (file-name-as-directory
+                        (expand-file-name (nth 1 other))))
+                 (other-mount-point (nth 2 other)))
+            (when (string-prefix-p root fs-path-dir)
+              (let* ((tail (substring fs-path (length root)))
+                     (target (expand-file-name tail other-mount-point)))
+                (push target targets))))))
+      (sort (delete-dups
+             (delete (directory-file-name file) targets))
+            #'string<))))
+
+(defun ags/jump-to-bind-mount-file ()
+  "Jump to the same file through another bind mount point."
+  (interactive)
+  (let ((file (if (derived-mode-p 'dired-mode)
+                  (dired-current-directory)
+                (buffer-file-name))))
+    (unless file
+      (user-error "Not visiting a file or directory"))
+    (let ((targets (seq-filter #'file-exists-p
+                               (ags/bind-mount-targets file (ags/mountinfo)))))
+      (unless targets
+        (user-error "No other bind mount points found"))
+      (let* ((target
+              (if (= (length targets) 1)
+                  (car targets)
+                (completing-read "Select bind mount point: " targets nil t)))
+             (target (expand-file-name target)))
+        (if (file-exists-p target)
+            (progn
+              (find-file target)
+              (message "Changed to mount point: %s" target))
+          (user-error "File %s not found at %s" file target))))))
+#+end_src
+
+#+RESULTS:
+: ags/jump-to-bind-mount-file
+
 ** Abrir todos los =org= de =apuntes-clase=
 
 #+begin_src emacs-lisp
