@@ -149,31 +149,22 @@ So this is my quick solution `ags/jump-to-worktree-file`, that handles multiple 
 : ags/jump-to-worktree-file
 
 ** Saltar entre puntos de montaje /bind/
-En Linux, un /bind mount/ permite ver el mismo directorio a través de varias rutas. `ags/jump-to-bind-mount-file` busca en =/proc/self/mountinfo= otras rutas del mismo dispositivo, recompone la ruta relativa y salta al mismo fichero (o directorio) usando otro punto de montaje.
+En Linux, un /bind mount/ permite ver el mismo directorio a través de varias rutas. `ags/jump-to-bind-mount-file` usa =findmnt= para localizar otras rutas del mismo dispositivo, recompone la ruta relativa y salta al mismo fichero (o directorio) usando otro punto de montaje.
 
 #+begin_src emacs-lisp
-(defun ags/unescape-mount-path (path)
-  "Decode octal escapes used by /proc mount files."
-  (replace-regexp-in-string
-   "\\\\\\([0-7][0-7][0-7]\\)"
-   (lambda (match)
-     (string (string-to-number (substring match 1) 8)))
-   path t t))
-
 (defun ags/mountinfo ()
   "Return mount entries as a list of (DEVICE ROOT MOUNT-POINT)."
-  (when (file-readable-p "/proc/self/mountinfo")
-    (with-temp-buffer
-      (insert-file-contents "/proc/self/mountinfo")
-      (let (mounts)
-        (dolist (line (split-string (buffer-string) "\n" t))
-          (let ((fields (split-string line " " t)))
-            (when (>= (length fields) 5)
-              (push (list (nth 2 fields)
-                          (ags/unescape-mount-path (nth 3 fields))
-                          (ags/unescape-mount-path (nth 4 fields)))
-                    mounts))))
-        (nreverse mounts)))))
+  (when (executable-find "findmnt")
+    (let* ((output (shell-command-to-string
+                    "findmnt -J -l -o TARGET,FSROOT,MAJ:MIN"))
+           (json (ignore-errors
+                   (json-parse-string output :object-type 'alist)))
+           (mounts (alist-get 'filesystems json)))
+      (seq-map (lambda (mount)
+                 (list (alist-get 'maj:min mount)
+                       (alist-get 'fsroot mount)
+                       (alist-get 'target mount)))
+               mounts))))
 
 (defun ags/file-mount (file mounts)
   "Return the entry in MOUNTS that contains FILE."
@@ -185,7 +176,8 @@ En Linux, un /bind mount/ permite ver el mismo directorio a través de varias ru
                            (expand-file-name (nth 2 mount))))
              (length (length mount-point)))
         (when (and (string-prefix-p mount-point file)
-                   (> length best-length))
+                   (> length best-length)
+                   )
           (setq best mount
                 best-length length))))
     best))
@@ -235,8 +227,11 @@ En Linux, un /bind mount/ permite ver el mismo directorio a través de varias ru
                 (completing-read "Select bind mount point: " targets nil t)))
              (target (expand-file-name target)))
         (if (file-exists-p target)
-            (progn
+            (let ((position (point)))
+              (save-buffer)
+              (kill-this-buffer-dont-ask)
               (find-file target)
+              (goto-char position)
               (message "Changed to mount point: %s" target))
           (user-error "File %s not found at %s" file target))))))
 #+end_src
