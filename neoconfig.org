@@ -102,11 +102,8 @@ So this is my quick solution `ags/jump-to-worktree-file`, that handles multiple 
 #+begin_src emacs-lisp
 (defun ags/git-root ()
   "Return the git root for current buffer."
-  (let ((default-directory (if (derived-mode-p 'dired-mode)
-                               (dired-current-directory)
-                             (or (buffer-file-name) default-directory))))
-    (string-trim
-     (shell-command-to-string "git rev-parse --show-toplevel"))))
+  (string-trim
+   (shell-command-to-string "git rev-parse --show-toplevel")))
 
 (defun ags/git-worktrees ()
   "Return list of git worktree root paths."
@@ -2013,43 +2010,64 @@ A veces es fácil perderse entre comandos a medio introducir y ventanas popup. M
 Algunas teclas definidas a nivel global son sobreescritas por algunos modos (por ejemplo, prefiero que =C-Z= sea "deshacer"). Para poder definir teclas con prioridad sobre los demás modos defino un modo con mis atajos.
 #+begin_src emacs-lisp
 
-  (defun ags/toggle-truncate-lines()
-    (interactive)
-    (visual-line-mode 'toggle)
-    (adaptive-wrap-prefix-mode 1))
+(defun ags/toggle-truncate-lines()
+  (interactive)
+  (visual-line-mode 'toggle)
+  (adaptive-wrap-prefix-mode 1))
 
-  ;; MIS TECLAS
-  (defvar mis-teclas-minor-mode-map
-    (let ((map (make-sparse-keymap)))
 
-      (define-key map (kbd "C-z") 'undo )
-      (define-key map (kbd "C-x C-d") 'dired)
-      (define-key map (kbd "C-x d") 'dired-other-frame)
-      (define-key map (kbd "C-x C-b") 'ibuffer)
-      (define-key map (kbd "C-x b") 'ibuffer)
-      (define-key map (kbd "C-<f5>") 'ags/reveal-y-pdf)
-      (define-key map (kbd "M-S-<up>") 'enlarge-window)
-      (define-key map (kbd "M-S-<down>") 'shrink-window)
-      (define-key map (kbd "M-S-<left>") 'shrink-window-horizontally)
-      (define-key map (kbd "M-S-<right>") 'enlarge-window-horizontally)
-      (define-key map (kbd "C-x M-x") 'execute-extended-command)
-      (define-key map (kbd "C-S-l") 'ags/toggle-truncate-lines)
-      (define-key map (kbd "C-S-k") 'ags/kill-and-append-to-buffer)
-      map)
-    "mis-teclas-minor-mode keymap")
-                        
 
-  (define-minor-mode mis-teclas-minor-mode
-    "A minor mode so that my key settings override annoying major modes."
-    :init-value t
-    :lighter "mis-teclas")
+(defun ags/open-file-explorer ()
+  "Open the file explorer in the current working directory based on the operating system asynchronously."
+  (interactive)
+  (let ((file-explorer (cond
+                        ((eq system-type 'gnu/linux)
+                         "xdg-open")
+                        ((eq system-type 'darwin)
+                         "open")
+                        ((eq system-type 'windows-nt)
+                         "explorer")
+                        (t
+                         (error "Unsupported operating system, no file-explorer: %s" system-type)))))
+    (start-process "file-explorer" nil file-explorer default-directory)))
 
-  (mis-teclas-minor-mode 1)
+)
+
+
+
+;; MIS TECLAS
+(defvar mis-teclas-minor-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "M-S-e") #'ags/open-file-explorer)
+    (define-key map (kbd "C-<tab>") #'other-frame)
+    (define-key map (kbd "C-z") 'undo )
+    (define-key map (kbd "C-x C-d") 'dired)
+    (define-key map (kbd "C-x d") 'dired-other-frame)
+    (define-key map (kbd "C-x C-b") 'ibuffer)
+    (define-key map (kbd "C-x b") 'ibuffer)
+    (define-key map (kbd "C-<f5>") 'ags/reveal-y-pdf)
+    (define-key map (kbd "M-S-<up>") 'enlarge-window)
+    (define-key map (kbd "M-S-<down>") 'shrink-window)
+    (define-key map (kbd "M-S-<left>") 'shrink-window-horizontally)
+    (define-key map (kbd "M-S-<right>") 'enlarge-window-horizontally)
+    (define-key map (kbd "C-x M-x") 'execute-extended-command)
+    (define-key map (kbd "C-S-l") 'ags/toggle-truncate-lines)
+    (define-key map (kbd "C-S-k") 'ags/kill-and-append-to-buffer)
+    map)
+  "mis-teclas-minor-mode keymap")
+
+
+(define-minor-mode mis-teclas-minor-mode
+  "A minor mode so that my key settings override annoying major modes."
+  :init-value t
+  :lighter "mis-teclas")
+
+(mis-teclas-minor-mode 1)
 
 #+end_src
 
 #+RESULTS:
-: t
+: ags/open-file-explorer
 
 
 
@@ -2070,40 +2088,6 @@ Necesario si una macro resulta interesante, para grabarla como una función
 : t
 
 * Navegación
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (global-set-key (kbd "C-<tab>") #'other-frame))
-#+end_src
-
-#+RESULTS:
-: t
-
-#+begin_src emacs-lisp
-  (use-package emacs
-    :config
-    (defun ags/open-file-explorer ()
-      "Open the file explorer in the current working directory based on the operating system asynchronously."
-      (interactive)
-      (let ((file-explorer (cond
-                            ((eq system-type 'gnu/linux)
-                             "xdg-open")
-                            ((eq system-type 'darwin)
-                             "open")
-                            ((eq system-type 'windows-nt)
-                             "explorer")
-                            (t
-                             (error "Unsupported operating system, no file-explorer: %s" system-type)))))
-        (start-process "file-explorer" nil file-explorer default-directory)))
-    
-    (global-set-key (kbd "M-S-e") #'ags/open-file-explorer)
-    )
-
-
-#+end_src
-
-#+RESULTS:
-: t
 
 ** =float-narrow-indirect=
 
